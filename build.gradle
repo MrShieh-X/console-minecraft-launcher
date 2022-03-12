@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'com.mrshiehx'
+String versionString='1.0'
+version versionString
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:22.0.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation 'org.json:json:20211205'
+}
+
+test {
+    useJUnitPlatform()
+}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.mrshiehx.cmcl.ConsoleMinecraftLauncher',
+                'Created-By': 'Copyright (C) 2021-2022 MrShiehX',
+                'Program-Version': versionString)
+    }
+}
