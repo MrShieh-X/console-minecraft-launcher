@@ -31,40 +31,46 @@ import java.util.*;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.versionsDir;
+import static com.mrshiehx.cmcl.utils.Utils.addDoubleQuotationMark;
 
 public class InstallOption implements Option {
     @Override
     public void execute(Arguments arguments) {
+        //JSONObject jsonObject = Utils.getConfig();
+        Argument first = arguments.opt(0);
+
+        if (first instanceof ValueArgument) {
+            String version = ((ValueArgument) first).value;
+            String storage = version;
+            Argument name = arguments.optArgument("n");
+            if ((name instanceof ValueArgument)) {
+                String nameString = ((ValueArgument) name).value;
+                storage = Utils.isEmpty(nameString) ? version : nameString;
+            }
+            if (new File(versionsDir, storage + "/" + storage + ".jar").exists() || new File(versionsDir, storage + "/" + storage + ".json").exists()) {
+                Utils.printfln(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), storage);
+                return;
+            }
+            try {
+                File versionsFile = Utils.downloadVersionsFile();
+                JSONArray versions = new JSONObject(Utils.readFileContent(versionsFile)).optJSONArray("versions");
+                int threadCount = arguments.optInt("t");
+                VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), arguments.contains("f"), threadCount > 0 ? threadCount : 10);
+            } catch (Exception exception) {
+                //exception.printStackTrace();
+                Utils.printfln(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION"), exception);
+                return;
+            }
+            return;
+        }
         Argument subOption = arguments.opt(1);
         if (subOption == null) {
             System.out.println(getString("CONSOLE_GET_USAGE"));
             return;
         }
         String key = subOption.key;
-        //JSONObject jsonObject = Utils.getConfig();
+
         switch (key.toLowerCase()) {
-            case "n": {
-                if (!(arguments.opt(0) instanceof ValueArgument) || !(subOption instanceof ValueArgument)) {
-                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
-                    return;
-                }
-                String storage = ((ValueArgument) subOption).value;
-                String version = ((ValueArgument) arguments.opt(0)).value;
-                if (new File(versionsDir, storage).exists()) {
-                    Utils.printfln(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), storage);
-                    return;
-                }
-                try {
-                    File versionsFile = Utils.downloadVersionsFile();
-                    JSONArray versions = new JSONObject(Utils.readFileContent(versionsFile)).optJSONArray("versions");
-                    int threadCount = arguments.optInt("t");
-                    VersionInstaller.showDialog(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), threadCount > 0 ? threadCount : 10);
-                } catch (Exception exception) {
-                    Utils.printfln(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION"), exception);
-                    return;
-                }
-            }
-            break;
             case "s":
                 if (!(subOption instanceof ValueArgument)) {
                     System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
@@ -176,7 +182,7 @@ public class InstallOption implements Option {
                         }
 
                     }
-                    System.out.println(Arrays.toString(versions.toArray()));
+                    System.out.println(Arrays.toString(addDoubleQuotationMark(versions).toArray()));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     Utils.printfln(getString("CONSOLE_FAILED_LIST_VERSIONS"), exception);
@@ -184,7 +190,7 @@ public class InstallOption implements Option {
                 }
                 break;
             default:
-                System.out.println(String.format(getString("CONSOLE_UNKNOWN_OPTION"), key));
+                System.out.println(getString("CONSOLE_UNKNOWN_OPTION", key));
                 break;
         }
 

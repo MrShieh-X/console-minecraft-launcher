@@ -17,10 +17,7 @@
  */
 package com.mrshiehx.cmcl.options;
 
-import com.mrshiehx.cmcl.bean.arguments.Argument;
-import com.mrshiehx.cmcl.bean.arguments.Arguments;
-import com.mrshiehx.cmcl.bean.arguments.SingleArgument;
-import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
+import com.mrshiehx.cmcl.bean.arguments.*;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
@@ -38,6 +35,16 @@ public class ConfigOption implements Option {
         }
         String key = subOption.key;
         JSONObject jsonObject = Utils.getConfig();
+
+        Argument second = arguments.optArgument(2);
+        if (subOption instanceof TextArgument && second instanceof TextArgument) {
+            TextArgument value = (TextArgument) second;
+            if ("javaPath".equals(key)) javaPath = value.key;
+            jsonObject.put(key, value.key);
+            Utils.saveConfig(jsonObject);
+            return;
+        }
+
         switch (key.toLowerCase()) {
             case "p":
                 if (subOption instanceof SingleArgument) {
@@ -50,16 +57,30 @@ public class ConfigOption implements Option {
                         System.out.println(value +
                                 '=' +
                                 obj +
-                                "(" +
-                                obj.getClass().getSimpleName() +
+                                " (" +
+                                Utils.getTypeText(obj.getClass().getSimpleName()) +
                                 ")");
                     } else {
                         System.out.println("null");
                     }
                 }
                 break;
+            case "o":
+                int indentFactor = 2;
+                if (subOption instanceof ValueArgument) {
+                    ValueArgument valueA = ((ValueArgument) subOption);
+                    try {
+                        indentFactor = Integer.parseInt(valueA.value);
+                    } catch (NumberFormatException e) {
+                        System.out.println(getString("CONSOLE_UNSUPPORTED_VALUE", valueA.value));
+                        return;
+                    }
+                }
+                System.out.println(jsonObject.toString(indentFactor));
+                break;
+
             case "a":
-                Map<String, Object> map = Utils.getConfig().toMap();
+                Map<String, Object> map = jsonObject.toMap();
                 if (map != null && map.size() > 0) {
                     StringBuilder stringBuilder = new StringBuilder();
                     int size = map.entrySet().size();
@@ -68,8 +89,8 @@ public class ConfigOption implements Option {
                         stringBuilder.append(entry.getKey())
                                 .append('=')
                                 .append(entry.getValue())
-                                .append("(")
-                                .append(entry.getValue().getClass().getSimpleName())
+                                .append(" (")
+                                .append(Utils.getTypeText(entry.getValue().getClass().getSimpleName()))
                                 .append(")");
                         if (i + 1 < size) {
                             stringBuilder.append("\n");
@@ -123,7 +144,7 @@ public class ConfigOption implements Option {
                                 if ("javaPath".equals(nameA.value)) javaPath = "";
                                 Utils.saveConfig(jsonObject);
                             } catch (NumberFormatException e) {
-                                System.out.println(String.format(getString("CONSOLE_UNSUPPORTED_VALUE"), valueA.value));
+                                System.out.println(getString("CONSOLE_UNSUPPORTED_VALUE", valueA.value));
                             }
                             break;
                         case "f":
@@ -132,7 +153,7 @@ public class ConfigOption implements Option {
                                 if ("javaPath".equals(nameA.value)) javaPath = "";
                                 Utils.saveConfig(jsonObject);
                             } catch (NumberFormatException e) {
-                                System.out.println(String.format(getString("CONSOLE_UNSUPPORTED_VALUE"), valueA.value));
+                                System.out.println(getString("CONSOLE_UNSUPPORTED_VALUE", valueA.value));
                             }
                             break;
                         default:
@@ -144,7 +165,7 @@ public class ConfigOption implements Option {
                 }
                 break;
             default:
-                System.out.println(String.format(getString("CONSOLE_UNKNOWN_OPTION"), key));
+                System.out.println(getString("CONSOLE_UNKNOWN_OPTION", key));
                 break;
         }
     }

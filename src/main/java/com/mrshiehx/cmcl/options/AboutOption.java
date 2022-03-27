@@ -20,34 +20,70 @@ package com.mrshiehx.cmcl.options;
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.utils.Utils;
+
+import static com.mrshiehx.cmcl.utils.Utils.getString;
 
 public class AboutOption implements Option {
     @Override
     public void execute(Arguments arguments) {
+        System.out.println("-------------------------------------------------------------------------------------");
         System.out.println("                  **");
         System.out.println("               **    **");
         System.out.println("            **          **");
-        System.out.println("         **         ==     **          -------------------------------------------------------------");
-        Utils.printfln("      **          ==  =       **        %s", String.format(Utils.getString("DIALOG_ABOUT_DESCRIPTION_1"), ConsoleMinecraftLauncher.CMCL_VERSION));
-        Utils.printfln("   **           == + = == ==     **     %s", Utils.getString("DIALOG_ABOUT_DESCRIPTION_2"));
-        Utils.printfln("**            =     +    ==         **  %s", Utils.getString("DIALOG_ABOUT_DESCRIPTION_3"));
-        Utils.printfln("**  **        =   +  + ==       **  **  %s", Utils.getString("DIALOG_ABOUT_DESCRIPTION_4"));
-        Utils.printfln("**      **    =========     **      **  %s", Utils.getString("DIALOG_ABOUT_DESCRIPTION_5"));
-        Utils.printfln("**          **          **          **  %s", Constants.COPYRIGHT);
+        System.out.println("         **         ==     **");
+        System.out.println("      **          ==  =       **");
+        System.out.println("   **           == + = == ==     ** ");
+        System.out.println("**            =     +    ==         **");
+        System.out.println("**  **        =   +  + ==       **  **");
+        System.out.println("**      **    =========     **      **");
+        System.out.println("**          **          **          **");
         System.out.println("**              **  **              **");
-        Utils.printfln("**       ==       **       ======   **  %s", Utils.getString("DIALOG_ABOUT_DESCRIPTION_6"));
-        System.out.println("**     ==  ==     **     == +  =    **     json");
-        System.out.println("**   ==  ++  ==   **   ==  ++ =     **        Copyright (c) 2002 JSON.org");
+        System.out.println("**       ==       **       ======   **");
         System.out.println("**     ==  ==     **     == +  =    **");
-        System.out.println("**       ==       **       ======   **     nanohttpd");
-        System.out.println("**                **                **        Copyright (C) 2012 - 2015 nanohttpd");
-        System.out.println("    **            **            **            Licensed under the BSD-3-Clause License.");
-        System.out.println("        **        **        **         -------------------------------------------------------------");
+        System.out.println("**   ==  ++  ==   **   ==  ++ =     **");
+        System.out.println("**     ==  ==     **     == +  =    **");
+        System.out.println("**       ==       **       ======   **");
+        System.out.println("**                **                **");
+        System.out.println("    **            **            **");
+        System.out.println("        **        **        **");
         System.out.println("            **    **    **");
         System.out.println("               ** ** **");
         System.out.println("                  **");
-        //Utils.printfln(String.format(Utils.getString("DIALOG_ABOUT_DESCRIPTION"), ConsoleMinecraftLauncher.CMCL_VERSION, ConsoleMinecraftLauncher.CMCL_COPYRIGHT));
+
+
+        System.out.println("-------------------------------------------------------------------------------------\n" +
+                " " + String.format(getString("MESSAGE_ABOUT_DESCRIPTION_1"), ConsoleMinecraftLauncher.CMCL_VERSION) + ": " + getString("MESSAGE_ABOUT_DESCRIPTION_2") + "\n" +
+                "\n" +
+                " " + Constants.COPYRIGHT + "\n" +
+                "\n" +
+                " " + getString("MESSAGE_ABOUT_DESCRIPTION_MAIN_DEVELOPERS") + "\n" +
+                "   MrShiehX\n" +
+                "     Github: https://github.com/MrShieh-X\n" +
+                "     Bilibili: https://space.bilibili.com/323674091\n" +
+                "   Graetpro-X\n" +
+                "     Github: https://github.com/Graetpro\n" +
+                "     Bilibili: https://space.bilibili.com/122352984\n" +
+                "\n" +
+                " " + getString("MESSAGE_ABOUT_DESCRIPTION_4") + "https://www.github.com/MrShieh-X/console-minecraft-launcher\n" +
+                "\n" +
+                " " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS") + "\n" +
+                "   yushijinhun\n" +
+                "     " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR") + "\n" +
+                "   bangbang93\n" +
+                "     " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI") + "\n" +
+                "   " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME") + "\n" +
+                "     " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS") + "\n" +
+                "\n" +
+                " " + getString("MESSAGE_ABOUT_DESCRIPTION_6") + "\n" +
+                "   json\n" +
+                "     Copyright (c) 2002 JSON.org\n" +
+                "   nanohttpd\n" +
+                "     Copyright (C) 2012 - 2015 nanohttpd\n" +
+                "     Licensed under the BSD-3-Clause License.\n" +
+                "   jansi\n" +
+                "     Copyright (C) 2009-2021 the original author(s).\n" +
+                "     Licensed under the Apache-2.0 License.\n" +
+                "-------------------------------------------------------------------------------------");
     }
 
     @Override

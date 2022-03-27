@@ -1,19 +1,39 @@
+/*
+ * Console Minecraft Launcher
+ * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.mrshiehx.cmcl.utils;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
+import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.constants.Constants;
+import com.mrshiehx.cmcl.exceptions.NotSelectedException;
+import com.sun.management.OperatingSystemMXBean;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,6 +88,10 @@ public class Utils {
         return ConsoleMinecraftLauncher.getString(name);
     }
 
+    public static String getString(String name, Object... objects) {
+        return ConsoleMinecraftLauncher.getString(name, objects);
+    }
+
     public static <K, V> Map<K, V> mapOf(Iterable<Pair<K, V>> pairs) {
         Map<K, V> map = new LinkedHashMap<>();
         for (Pair<K, V> pair : pairs)
@@ -91,49 +115,18 @@ public class Utils {
         } else return null;
     }
 
-    public static String readData(HttpURLConnection con) throws IOException {
-        try {
-            try (InputStream stdout = con.getInputStream()) {
-                return IOUtils.readFullyAsString(stdout, UTF_8);
-            }
-        } catch (IOException e) {
-            try (InputStream stderr = con.getErrorStream()) {
-                if (stderr == null)
-                    throw e;
-                return IOUtils.readFullyAsString(stderr, UTF_8);
-            }
-        }
-    }
 
     public static boolean isEmpty(CharSequence c) {
         return c == null || c.length() == 0;
     }
 
-    public static JSONObject parseJSONObject(String j) {
-        if (isEmpty(j)) return null;
-        try {
-            return new JSONObject(j);
-        } catch (Exception ignore) {
-        }
-        return null;
+
+    public static String post(String url, String content) throws IOException {
+        return post(url, content, "application/json", null);
     }
 
-    public static JSONArray parseJSONArray(String j) {
-        if (isEmpty(j)) return null;
-        try {
-            return new JSONArray(j);
-        } catch (Exception ignore) {
-        }
-        return null;
-    }
-
-
-    public static String post(String first, String second) throws IOException {
-        return post(first, second, "application/json", null);
-    }
-
-    public static String post(String first, String second, String contentType, String accept) throws IOException {
-        URL ConnectUrl = new URL(first);
+    public static String post(String url, String content, String contentType, String accept) throws IOException {
+        URL ConnectUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
         //here is your code above
         connection.setDoInput(true);
@@ -143,29 +136,43 @@ public class Utils {
         if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
         OutputStream wrt = ((connection.getOutputStream()));
 
-        if (second != null) wrt.write(second.getBytes());
-        return (Utils.readData(connection));
+        if (content != null) wrt.write(content.getBytes());
+        String s = Utils.httpURLConnection2String(connection);
+        wrt.close();
+        return (s);
     }
 
-    public static String get(String url, String tokenType, String token) throws IOException {
-        return get(url, tokenType, token, "application/json", "application/json");
+    public static String getWithToken(String url, String tokenType, String token) throws IOException {
+        return getWithToken(url, tokenType, token, "application/json", "application/json");
     }
 
-    public static String get(String url, String tokenType, String token, String contentType, String accept) throws IOException {
+    public static String getWithToken(String url, String tokenType, String token, String contentType, String accept) throws IOException {
         URL ConnectUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
-        //here is your code above
         connection.setDoInput(true);
         connection.setUseCaches(false);
         connection.setDoOutput(true);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", contentType);
         connection.setRequestProperty("Authorization", tokenType + " " + token);
-        //System.out.println(tokenType);
-        //System.out.println(token);
         if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
-        //connection.getOutputStream();//.write("\"publicCreateProfileDTO\":\"45\"".getBytes(UTF_8));
-        return (Utils.readData(connection));
+        return (Utils.httpURLConnection2String(connection));
+    }
+
+    public static String get(String url) throws IOException {
+        return get(url, "application/json", "application/json");
+    }
+
+    public static String get(String url, String contentType, String accept) throws IOException {
+        URL ConnectUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setDoOutput(true);
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", contentType);
+        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+        return (Utils.httpURLConnection2String(connection));
     }
 
     public static String delete(String url, String tokenType, String token) throws IOException {
@@ -186,7 +193,7 @@ public class Utils {
         //System.out.println(token);
         if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
         //connection.getOutputStream();//.write("\"publicCreateProfileDTO\":\"45\"".getBytes(UTF_8));
-        return (Utils.readData(connection));
+        return (Utils.httpURLConnection2String(connection));
     }
 
     public static String getLibraryName(String path) {
@@ -213,40 +220,6 @@ public class Utils {
         return strings[strings.length - 3];
     }
 
-
-    public static String[] listVersions(File versionsDir) {
-        List<String> versionsStrings = new ArrayList<>();
-        if (versionsDir == null) return new String[0];
-        File[] files = versionsDir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (!pathname.isDirectory()) return false;
-                File[] files = pathname.listFiles();
-                if (files == null || files.length < 2) return false;
-                return new File(pathname, pathname.getName() + ".json").exists() && new File(pathname, pathname.getName() + ".jar").exists();
-            }
-        });
-        if (files != null && files.length > 0) {
-            for (File file : files) {
-                versionsStrings.add(getVersion(file.getAbsolutePath()));
-            }
-            String[] strArray = new String[versionsStrings.size()];
-            return versionsStrings.toArray(strArray);
-        } else {
-            return new String[0];
-        }
-    }
-
-    public static String getVersion(String path) {
-        /*String split = "/";
-        if (path.contains("\\")) {
-            path=path.replace('\\','/');
-        }
-        String noDriver = path.substring(path.indexOf(split));
-        int indexOf = noDriver.lastIndexOf(split);
-        return noDriver.substring(indexOf + 1);*/
-        return new File(path).getName();
-    }
 
     public static void deleteDirectory(File directory) {
         if (directory != null) {
@@ -296,8 +269,9 @@ public class Utils {
     }
 
     public static File createFile(File file, boolean delete) throws IOException {
-        if (file.getParentFile() != null && !file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
         }
         if (delete && file.exists()) file.delete();
         if (!file.exists()) file.createNewFile();
@@ -534,6 +508,11 @@ public class Utils {
         System.out.println();
     }
 
+    public static void printflnErr(String str, Object... object) {
+        System.out.printf(str, object);
+        System.out.println();
+    }
+
     public static boolean versionContain(String name) {
         return new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".json").exists() && new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".json").exists();
     }
@@ -583,13 +562,289 @@ public class Utils {
         }
     }
 
+    public static String inputStream2String(InputStream stream, int length) throws IOException {
+        try (InputStream is = stream) {
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buf = new byte[length];
+
+            int len = is.read(buf, 0, length);
+            result.write(buf, 0, len);
+            return result.toString(UTF_8.name());
+        }
+    }
+
     public static File downloadVersionsFile() throws IOException {
         File cmcl = new File("cmcl");
         cmcl.mkdirs();
         File versionsFile = new File(cmcl, "versions.json");
         createFile(versionsFile, true);
-        ConsoleMinecraftLauncher.downloadFile("https://launchermeta.mojang.com/mc/game/version_manifest.json", versionsFile);
+        ConsoleMinecraftLauncher.downloadFile(DownloadSource.getProvider().versionManifest(), versionsFile);
         return versionsFile;
     }
 
+    public static String getTypeText(String simpleName) {
+        if ("String".equals(simpleName)) {
+            return getString("DATATYPE_STRING");
+        } else if ("Boolean".equals(simpleName)) {
+            return getString("DATATYPE_BOOLEAN");
+        } else if ("Integer".equals(simpleName)) {
+            return getString("DATATYPE_INTEGER");
+        } else if ("Double".equals(simpleName) || "Float".equals(simpleName) || "BigDecimal".equals(simpleName)) {
+            return getString("DATATYPE_FRACTION");
+        } else if ("ArrayList".equals(simpleName)) {
+            return getString("DATATYPE_JSON_ARRAY");
+        } else if ("HashMap".equals(simpleName)) {
+            return getString("DATATYPE_JSON_OBJECT");
+        } else return simpleName;
+    }
+
+    public static List<String> parseJVMArgs(JSONArray jvmArgs) {
+        List<Object> objs;
+        List<String> result = new LinkedList<>();
+        if (jvmArgs == null) return result;
+        else {
+            objs = jvmArgs.toList();
+        }
+        for (Object obj : objs) {
+            String v = valueOf(obj);
+            if (!isEmpty(v)) {
+                if (!v.contains("-Dminecraft.launcher.brand") && !v.contains("-Dminecraft.launcher.version") && !result.contains(v)) {
+                    result.add(v);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Map<String, String> parseGameArgs(JSONObject gameArgs) {
+        Map<String, Object> map;
+        Map<String, String> result = new HashMap<>();
+        if (gameArgs == null) {
+            return result;
+        } else {
+            map = gameArgs.toMap();
+        }
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String va = valueOf(entry.getValue());
+            String key = entry.getKey();
+            if (!isEmpty(key) && !entry.getKey().equals("version") && !entry.getKey().equals("versionType") && !result.containsKey(key)) {
+                result.put(key, va);
+            }
+        }
+        return result;
+    }
+
+    public static int parse(String value) throws Exception {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            System.out.println(getString("CONSOLE_UNSUPPORTED_VALUE", value));
+            throw new Exception();
+        }
+    }
+
+    public static JSONObject getSelectedAccount() throws NotSelectedException {
+        return getSelectedAccount(getConfig());
+    }
+
+    public static JSONObject getSelectedAccount(JSONObject config) throws NotSelectedException {
+        JSONArray accounts = config.optJSONArray("accounts");
+        if (accounts == null || accounts.length() == 0) {
+            System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
+            throw new NotSelectedException();
+        }
+        for (Object o : accounts) {
+            if (o instanceof JSONObject) {
+                JSONObject jsonObject1 = (JSONObject) o;
+                if (jsonObject1.optBoolean("selected")) {
+                    return jsonObject1;
+                }
+            }
+        }
+        System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
+        throw new NotSelectedException();
+    }
+
+    public static String getWithToken(String url) throws IOException {
+        BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        byte[] dataBuffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+            byteOutputStream.write(dataBuffer, 0, bytesRead);
+        }
+        byteOutputStream.close();
+        in.close();
+        return byteOutputStream.toString();
+    }
+
+    public static String addSlashIfMissing(String url) {
+        if (!url.endsWith("/")) url = url + "/";
+        return url;
+    }
+
+    /**
+     * @return 如果jsonObjectString是一个JSONObject，就返回被解析的JSONObject，否则返回null
+     **/
+    public static JSONObject parseJSONObject(String jsonObjectString) {
+        if (Utils.isEmpty(jsonObjectString)) return null;
+        try {
+            return new JSONObject(jsonObjectString);
+        } catch (Throwable ignored) {
+        }
+        return null;
+    }
+
+    /**
+     * @return 如果jsonObjectString是一个JSONObject，就返回被解析的JSONObject，否则返回null
+     **/
+    public static JSONArray parseJSONArray(String jsonArrayString) {
+        if (Utils.isEmpty(jsonArrayString)) return null;
+        try {
+            return new JSONArray(jsonArrayString);
+        } catch (Throwable ignored) {
+        }
+        return null;
+    }
+
+
+    public static String bytesToString(byte[] bytes) {
+        StringBuilder builder = new StringBuilder();
+        if (bytes != null && bytes.length > 0) {
+            for (byte aByte : bytes) {
+                builder.append(String.format("%02X", aByte));
+            }
+        }
+        return builder.toString().toUpperCase();
+    }
+
+    public static String getInputStreamHashSHA256String(InputStream inputStream) throws Exception {
+        return bytesToString(getInputStreamHashSHA256(inputStream)).toLowerCase();
+    }
+
+    public static byte[] getInputStreamHashSHA256(InputStream inputStream) throws Exception {
+
+        BufferedInputStream in = new BufferedInputStream(inputStream);
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        int bufferSize = 16384;
+        byte[] buffer = new byte[bufferSize];
+        int sizeRead;
+        while ((sizeRead = in.read(buffer)) != -1) {
+            digest.update(buffer, 0, sizeRead);
+        }
+        in.close();
+        return digest.digest();
+    }
+
+    public static String getBytesHashSHA256String(byte[] bytes) throws Exception {
+        return bytesToString(getBytesHashSHA256(bytes)).toLowerCase();
+    }
+
+    public static byte[] getBytesHashSHA256(byte[] bytes) throws Exception {
+
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+        digest.update(bytes, 0, bytes.length);
+        return digest.digest();
+    }
+
+    public static int getDefaultMemory() {
+        return (int) ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / (4 * 1024 * 1024);
+    }
+
+    public static byte[] getBytes(File file) throws IOException {
+        return FileUtils.toByteArray(file);
+    }
+
+    public static List<String> addDoubleQuotationMark(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).contains(" ")) {
+                list.set(i, "\"" + list.get(i) + "\"");
+            }
+        }
+        return list;
+    }
+
+    public static String randomUUIDNoSymbol() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    public static String getUUIDByName(String playerName) {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes(StandardCharsets.UTF_8)).toString().replace("-", "");
+    }
+
+    public static void setProxy(String host, String port, String userName, String password) {
+        if (Utils.isEmpty(host)) return;
+        System.setProperty("java.net.useSystemProxies", "true");
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("http.proxyHost", host);
+        if (!isEmpty(port)) {
+            System.setProperty("https.proxyPort", port);
+            System.setProperty("http.proxyPort", port);
+        }
+        if (!isEmpty(userName)) {
+            System.setProperty("http.proxyUserName", userName);
+            System.setProperty("https.proxyUserName", userName);
+            if (!isEmpty(password)) {
+                System.setProperty("http.proxyPassword", password);
+                System.setProperty("https.proxyPassword", password);
+            }
+
+        }
+    }
+
+    public static void writeFile(File file, String content, boolean append) throws IOException {
+        createFile(file, false);
+        FileWriter writer = new FileWriter(file, append);
+        writer.write(content);
+        writer.close();
+    }
+
+    /**
+     * @return KEY is downloadURL and VALUE is storage path
+     **/
+    public static Pair<String, String> getLibraryDownloadURLAndStoragePath(JSONObject library) {
+        JSONObject downloads = library.optJSONObject("downloads");
+        if (downloads != null) {
+            JSONObject artifactJo = downloads.optJSONObject("artifact");
+            if (artifactJo != null) {
+                String path = artifactJo.optString("path");
+                String url = artifactJo.optString("url");
+                if (!isEmpty(path) && !isEmpty(url)) {
+                    url = url.replace("https://libraries.minecraft.net/", DownloadSource.getProvider().libraries());
+                    return new Pair<>(url, path);
+                }
+            }
+        } else {
+            String name = library.optString("name");
+            String url = library.optString("url", DownloadSource.getProvider().libraries());
+            if (url.equals("https://maven.fabricmc.net/") || url.equals("https://maven.fabricmc.net")) {
+                url = DownloadSource.getProvider().fabricMaven();
+            } else if (url.equals("http://repo.maven.apache.org/maven2/") || url.equals("http://repo.maven.apache.org/maven2")) {
+                url = "https://repo.maven.apache.org/maven2/";
+            }
+            if (isEmpty(name)) return null;
+            String[] nameSplit = name.split(":");
+            if (nameSplit.length < 3) return null;
+            String fileName = nameSplit[1] + "-" + nameSplit[2] + ".jar";
+            String path = nameSplit[0].replace(".", "/") + "/" + nameSplit[1] + "/" + nameSplit[2] + "/" + fileName;
+            return new Pair<>(addSlashIfMissing(url) + path, path);
+        }
+        return null;
+    }
+
+    public static List<JSONObject> jsonArrayToJSONObjectList(JSONArray jsonArray) {
+        List<JSONObject> list = new LinkedList<>();
+        if (jsonArray == null || jsonArray.length() == 0) return list;
+        for (Object object : jsonArray) {
+            if (object instanceof JSONObject) {
+                list.add((JSONObject) object);
+            }
+        }
+        return list;
+    }
+
+    public static String getTimezoneName() {
+        return TimeZone.getDefault().getDisplayName();
+    }
 }

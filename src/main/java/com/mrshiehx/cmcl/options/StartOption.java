@@ -17,6 +17,7 @@
  */
 package com.mrshiehx.cmcl.options;
 
+import com.mrshiehx.cmcl.bean.AuthlibInformation;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
@@ -24,6 +25,7 @@ import com.mrshiehx.cmcl.enums.GameCrashError;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
+import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
@@ -65,10 +67,18 @@ public class StartOption implements Option {
             File versionJarFile = new File(versionFolder, version + ".jar");
             File versionJsonFile = new File(versionFolder, version + ".json");
             try {
-                String at = "0", uu = null;
-                if (config.optInt("loginMethod") > 0) {
-                    at = config.optString("accessToken", "0");
-                    uu = config.optString("uuid", null);
+
+                JSONObject account;
+                try {
+                    account = Utils.getSelectedAccount();
+                } catch (NotSelectedException e) {
+                    return;
+                }
+
+                String at = Utils.randomUUIDNoSymbol(), uu = Utils.getUUIDByName(account.optString("playerName", "XPlayer"));
+                if (account.optInt("loginMethod") > 0) {
+                    at = account.optString("accessToken", at);
+                    uu = account.optString("uuid", uu);
                 }
 
                 runningMc = launchMinecraft(
@@ -77,9 +87,9 @@ public class StartOption implements Option {
                         gameDir,
                         assetsDir,
                         respackDir,
-                        config.optString("playerName", "XPlayer"),
+                        account.optString("playerName", "XPlayer"),
                         config.optString("javaPath", Utils.getDefaultJavaPath()),
-                        config.optInt("maxMemory", 1024),
+                        config.optInt("maxMemory", Utils.getDefaultMemory()),
                         128,
                         config.optInt("windowSizeWidth", 854),
                         config.optInt("windowSizeHeight", 480),
@@ -87,7 +97,10 @@ public class StartOption implements Option {
                         at,
                         uu,
                         false,
-                        !config.optBoolean("isFullscreen"));
+                        !config.optBoolean("isFullscreen"),
+                        Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
+                        Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
+                        StartOption.getAuthlibInformation(account, at, uu, true));
 
                 final GameCrashError[] crashError = {null};
                 new Thread(new Runnable() {
@@ -118,7 +131,7 @@ public class StartOption implements Option {
                             runningMc.waitFor();
                             System.out.println(getString("MESSAGE_FINISHED_GAME"));
                             if (crashError[0] != null)
-                                System.out.println(String.format(getString("MESSAGE_GAME_CRASH_CAUSE_TIPS"), crashError[0].cause));
+                                System.out.println(getString("MESSAGE_GAME_CRASH_CAUSE_TIPS", crashError[0].cause));
                         } catch (InterruptedException interruptedException) {
                             interruptedException.printStackTrace();
                         }
@@ -132,7 +145,7 @@ public class StartOption implements Option {
                 //ex.printStackTrace();
                 System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex.getMessage());
             } catch (Exception ex) {
-                //ex.printStackTrace();
+                ex.printStackTrace();
                 System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex);
             }
         }
@@ -141,5 +154,9 @@ public class StartOption implements Option {
     @Override
     public String getUsageName() {
         return null;
+    }
+
+    public static AuthlibInformation getAuthlibInformation(JSONObject account, String token, String uuid, boolean allowOfflineSkin) {
+        return AuthlibInformation.valuesOf(account, token, uuid, allowOfflineSkin);
     }
 }

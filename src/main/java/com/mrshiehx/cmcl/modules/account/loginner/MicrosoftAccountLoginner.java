@@ -17,13 +17,15 @@
  */
 package com.mrshiehx.cmcl.modules.account.loginner;
 
-import com.mrshiehx.cmcl.microsoft.MicrosoftAuthenticationServer;
+import com.mrshiehx.cmcl.server.MicrosoftAuthenticationServer;
+import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.Waiter;
 import fi.iki.elonen.NanoHTTPD;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.CLIENT_ID;
@@ -31,15 +33,13 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.utils.Utils.post;
 
 public class MicrosoftAccountLoginner {
-    public static void loginMicrosoftAccount(JSONObject jsonObject) {
+    public static void loginMicrosoftAccount(JSONObject config, boolean select) {
         System.out.println(Utils.getString("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE"));
 
         //new Thread(()->{
         Waiter w = new Waiter();
         MicrosoftAuthenticationServer server = null;
         MicrosoftAuthenticationServer.OnGotCode o = (code, rUrl) -> {
-            //if (dialog.isVisible()) {
-            //stem.ut.println(code);
             try {
                 String secret = System.currentTimeMillis() + UUID.randomUUID().toString();
                 String ACCESS_TOKEN_URL = "https://login.live.com/oauth20_token.srf" +
@@ -60,7 +60,7 @@ public class MicrosoftAccountLoginner {
                 if (result != null) {
                     if (result.has("error") || result.has("error_description")) {
                         String var = result.optString("error_description");
-                        System.out.println(String.format(String.format(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TEXT"), result.optString("error"), var)));
+                        System.out.println(getString("ERROR_WITH_MESSAGE", result.optString("error"), var));
                     } else {
                         String tokenType = result.optString("token_type");
                         //String scope=result.optString("scope");
@@ -87,7 +87,7 @@ public class MicrosoftAccountLoginner {
                         if (result2 != null) {
                             if (result2.has("error") || result2.has("error_description")) {
                                 String var = result2.optString("error_description");
-                                System.out.println(String.format(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TEXT"), result2.optString("error"), var));
+                                System.out.println(getString("ERROR_WITH_MESSAGE", result2.optString("error"), var));
                             } else {
                                 String xboxLive = post("https://user.auth.xboxlive.com/user/authenticate", "{\"Properties\":{\"AuthMethod\":\"RPS\",\"SiteName\":\"user.auth.xboxlive.com\",\"RpsTicket\":\"d=" + result2.optString("access_token") + "\"},\"RelyingParty\":\"http://auth.xboxlive.com\",\"TokenType\":\"JWT\"}", "application/json", "application/json");
 
@@ -112,69 +112,95 @@ public class MicrosoftAccountLoginner {
 
                                         if (mcFirst != null && !mcFirst.has("error")) {
                                             String access_token = mcFirst.optString("access_token");
-                                            JSONObject mcSecond = Utils.parseJSONObject(Utils.get("https://api.minecraftservices.com/minecraft/profile", tokenType, access_token));
+                                            JSONObject mcSecond = Utils.parseJSONObject(Utils.getWithToken("https://api.minecraftservices.com/minecraft/profile", tokenType, access_token));
 
                                             if (mcSecond != null) {
 
-                                                //stem.ut.println("microsoft_first : " + first);
-                                                //stem.ut.println("microsoft_second: " + second);
-                                                //stem.ut.println("xboxLive first  : " + xboxLive);
-                                                //stem.ut.println("xstsResult first: " + xstsResult);
-                                                //stem.ut.println("mc         first: " + mcFirst);
-                                                //stem.ut.println("mc        second: " + mcSecond);
+                                                /*System.out.println("microsoft_first : " + first);
+                                                System.out.println("microsoft_second: " + second);
+                                                System.out.println("xboxLive first  : " + xboxLive);
+                                                System.out.println("xstsResult first: " + xstsResult);
+                                                System.out.println("mc         first: " + mcFirst);
+                                                System.out.println("mc        second: " + mcSecond);*/
                                                 if (mcSecond.has("error") || mcSecond.has("errorMessage")) {
                                                     String var = mcSecond.optString("errorMessage");
-                                                    System.out.println(String.format(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TEXT"), mcSecond.optString("error"), var));
+                                                    System.out.println(getString("ERROR_WITH_MESSAGE", mcSecond.optString("error"), var));
                                                 } else {
-                                                    jsonObject.put("loginMethod", 2);
-                                                    jsonObject.put("accessToken", access_token);
-                                                    jsonObject.put("tokenType", tokenType);
-                                                    jsonObject.put("uuid", mcSecond.optString("id"));
-                                                    jsonObject.put("playerName", mcSecond.optString("name"));
-                                                    Utils.saveConfig(jsonObject);
-                                                    //((JLabel) playerName).setText(selectedProfileJo.optString("name"));
-                                                    //dialog.setVisible(false);
-                                                    //dialog.dispose();
-                                                    System.out.println(getString("DIALOG_OFFICIAL_LOGINED_TITLE"));
+
+
+                                                    String accountID = mcFirst.optString("username");
+
+                                                    JSONArray accounts = config.optJSONArray("accounts");
+                                                    int indexOf = -1;
+                                                    if (accounts != null) {
+                                                        for (int i = 0; i < accounts.length(); i++) {
+                                                            JSONObject jsonObject1 = accounts.optJSONObject(i);
+                                                            if (jsonObject1 != null) {
+                                                                if (jsonObject1.optInt("loginMethod") == 2 && Objects.equals(accountID, jsonObject1.optString("id"))) {
+                                                                    indexOf = i;
+                                                                    break;
+                                                                } else {
+                                                                    if (select) jsonObject1.put("selected", false);
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        accounts = new JSONArray();
+                                                    }
+
+                                                    JSONObject account = new JSONObject();
+                                                    account.put("selected", select);
+                                                    account.put("id", accountID);
+                                                    account.put("loginMethod", 2);
+                                                    account.put("accessToken", access_token);
+                                                    account.put("tokenType", tokenType);
+                                                    account.put("uuid", mcSecond.optString("id"));
+                                                    account.put("playerName", mcSecond.optString("name"));
+
+
+                                                    if (indexOf < 0) {
+                                                        accounts.put(account);
+                                                        config.put("accounts", accounts);
+                                                        Utils.saveConfig(config);
+                                                        System.out.println(getString("MESSAGE_LOGINED_TITLE"));
+                                                    } else {
+                                                        if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
+                                                            accounts.remove(indexOf);
+                                                            accounts.put(account);
+                                                            config.put("accounts", accounts);
+                                                            Utils.saveConfig(config);
+                                                            System.out.println(getString("MESSAGE_LOGINED_TITLE"));
+                                                        }
+                                                    }
 
                                                 }
                                             } else {
-                                                //stem.ut.println(849);
-                                                System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TITLE"));
+                                                System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
                                             }
 
 
                                         } else {
-                                            //stem.ut.println(855);
-                                            System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_MESSAGE"));
+                                            System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_MESSAGE"));
                                         }
                                     } else {
-                                        System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TITLE"));
-                                        //stem.ut.println(859);
+                                        System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
                                     }
 
                                 } else {
-                                    //stem.ut.println(864);
-                                    System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TITLE"));
+                                    System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
                                 }
                             }
                         } else {
-                            //stem.ut.println(869);
-                            System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TITLE"));
+                            System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
                         }
                     }
                 } else {
-                    //stem.ut.println(874);
-                    System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TITLE"));
+                    System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
                 }
             } catch (Exception e) {
-                //stem.ut.println(878);
                 e.printStackTrace();
-                System.out.println(getString("DIALOG_OFFICIAL_LOGIN_FAILED_TITLE"));
+                System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
             }
-            //dialog.setVisible(false);
-            //dialog.dispose();
-            //}
             w.stop();
         };
         try {
@@ -198,13 +224,8 @@ public class MicrosoftAccountLoginner {
             Utils.openLink(url);
             w.startWait();
 
-
-            //dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            //dialog.setAlwaysOnTop(true);
-            //dialog.setModal(false);
-            //dialog.setVisible(true);
         } else {
-            System.out.println(getString("DIALOG_UNABLE_TO_LOGIN_MICROSOFT"));
+            System.out.println(getString("MESSAGE_UNABLE_TO_LOGIN_MICROSOFT"));
         }
         //}).start();
 

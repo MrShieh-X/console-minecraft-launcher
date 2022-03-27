@@ -19,6 +19,7 @@ package com.mrshiehx.cmcl.modules.account.skin;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.authlib.AuthlibInjectorProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,12 +31,12 @@ import java.util.Base64;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 
 public class SkinDownloader {
-    public static void start(File file, JSONObject config) {
+    public static void start(File file, JSONObject account) {
         if (file != null) {
-            String uuid = config.optString("uuid");
+            String uuid = account.optString("uuid");
             if (!isEmpty(uuid)) {
                 try {
-                    URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
+                    URL url = new URL(account.optInt("loginMethod") == 2 ? ("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid) : new AuthlibInjectorProvider(account.optString("url")).getProfilePropertiesURL(uuid));
                     JSONObject result = new JSONObject(Utils.httpURLConnection2String((HttpURLConnection) url.openConnection()));
                     JSONArray properties = result.getJSONArray("properties");
                     for (int i = 0; i < properties.length(); i++) {
@@ -47,7 +48,7 @@ public class SkinDownloader {
                                 if (var.has("SKIN")) {
                                     ConsoleMinecraftLauncher.downloadFile(var.optJSONObject("SKIN").optString("url"), file);
                                 } else {
-                                    System.out.println(getString("DIALOG_DOWNLOAD_SKIN_FILE_NOT_SET_TEXT"));
+                                    System.out.println(getString("MESSAGE_DOWNLOAD_SKIN_FILE_NOT_SET_TEXT"));
                                 }
                                 break;
                             }

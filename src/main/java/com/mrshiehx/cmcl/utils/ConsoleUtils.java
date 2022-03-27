@@ -17,23 +17,28 @@
  */
 package com.mrshiehx.cmcl.utils;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
 
 public class ConsoleUtils {
     public static boolean yesOrNo(String tip) {
         String text = tip + "(Y/N) ";
-        try {
-            return internalYesOrNo(text);
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return internalYesOrNo(text);
     }
 
     private static boolean internalYesOrNo(String text) {
-        System.out.print(text);
+        System.out.print(text);//legal
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        String input;
+        try {
+            input = scanner.nextLine();
+        } catch (NoSuchElementException ignore) {
+            return false;
+        }
         if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
             return true;
         } else if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
@@ -41,4 +46,51 @@ public class ConsoleUtils {
         }
         return internalYesOrNo(text);
     }
+
+    public static int inputInt(String tip, int smallest, int biggest) {
+        return internalInputInt(tip, "", smallest, biggest);
+    }
+
+    private static int internalInputInt(String origin, String text, int smallest, int biggest) {
+        System.out.print(text + origin);//legal
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        try {
+            input = scanner.nextLine();
+        } catch (NoSuchElementException ignore) {
+            return Integer.MAX_VALUE;
+        }
+        int value;
+        try {
+            value = Integer.parseInt(input);
+        } catch (Exception e) {
+            return internalInputInt(origin, Utils.getString("CONSOLE_INPUT_INT_WRONG"), smallest, biggest);
+        }
+        if (value < smallest || value > biggest) {
+            return internalInputInt(origin, Utils.getString("CONSOLE_INPUT_INT_WRONG"), smallest, biggest);
+        }
+        return value;
+    }
+
+    public static String inputString(String tip, Collection<String> collection) {
+        return internalInputString(tip, tip, collection);
+    }
+
+    private static String internalInputString(String text, String origin, Collection<String> collection) {
+        System.out.print(text);//legal
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        try {
+            input = scanner.nextLine();
+        } catch (NoSuchElementException ignore) {
+            return null;
+        }
+        if (collection.contains(input)) return input;
+
+        if (isEmpty(input)) {
+            return internalInputString(text, origin, collection);
+        }
+        return internalInputString(getString("CONSOLE_INPUT_STRING_NOT_FOUND", input) + origin, origin, collection);
+    }
+
 }

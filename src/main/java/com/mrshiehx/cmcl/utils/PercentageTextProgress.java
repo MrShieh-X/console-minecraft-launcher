@@ -22,12 +22,13 @@ package com.mrshiehx.cmcl.utils;
  *
  * @author MrShiehX
  **/
-public class XProgressBar {
+public class PercentageTextProgress {
     private int maximum;
     private int value;
-    private boolean printed;
+    public boolean printed;
+    public boolean done;
 
-    public XProgressBar() {
+    public PercentageTextProgress() {
     }
 
     public int getMaximum() {
@@ -54,6 +55,7 @@ public class XProgressBar {
         System.out.print("(" + ((int) ((((double) value) / ((double) maximum)) * 100)) + "%)");
         if (value == maximum) {
             System.out.println();
+            done = true;
         }
         printed = true;
     }

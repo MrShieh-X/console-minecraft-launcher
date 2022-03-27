@@ -23,6 +23,7 @@ import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
+import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
@@ -52,20 +53,33 @@ public class PrintOption implements Option {
             File versionJarFile = new File(versionFolder, version + ".jar");
             File versionJsonFile = new File(versionFolder, version + ".json");
             try {
-                String at = "0", uu = null;
-                if (jsonObject.optInt("loginMethod") > 0) {
-                    at = jsonObject.optString("accessToken", "0");
-                    uu = jsonObject.optString("uuid", null);
+                JSONObject account;
+                try {
+                    account = Utils.getSelectedAccount();
+                } catch (NotSelectedException e) {
+                    return;
                 }
-                System.out.println(getString("CONSOLE_START_COMMAND"));
+
+
+                if (!Utils.isEmpty(account.optString("offlineSkin")) || !Utils.isEmpty(account.optString("providedSkin"))) {
+                    System.out.println(getString("PRINT_COMMAND_NOT_SUPPORT_OFFLINE_CUSTOM_SKIN"));
+                }
+
+                String at = Utils.randomUUIDNoSymbol(), uu = Utils.getUUIDByName(account.optString("playerName", "XPlayer"));
+                if (account.optInt("loginMethod") > 0) {
+                    at = account.optString("accessToken", at);
+                    uu = account.optString("uuid", uu);
+                }
+
+                //System.out.println(getString("CONSOLE_START_COMMAND"));
                 System.out.println(getMinecraftLaunchCommand(versionJarFile,
                         versionJsonFile,
                         gameDir,
                         assetsDir,
                         respackDir,
-                        jsonObject.optString("playerName", "XPlayer"),
+                        account.optString("playerName", "XPlayer"),
                         jsonObject.optString("javaPath", Utils.getDefaultJavaPath()),
-                        jsonObject.optInt("maxMemory", 1024),
+                        jsonObject.optInt("maxMemory", Utils.getDefaultMemory()),
                         128,
                         jsonObject.optInt("windowSizeWidth", 854),
                         jsonObject.optInt("windowSizeHeight", 480),
@@ -73,7 +87,10 @@ public class PrintOption implements Option {
                         at,
                         uu,
                         false,
-                        !jsonObject.optBoolean("isFullscreen")));
+                        !jsonObject.optBoolean("isFullscreen"),
+                        Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
+                        Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
+                        StartOption.getAuthlibInformation(account, at, uu, false)));
             } catch (EmptyNativesException ex) {
                 System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
             } catch (LibraryDefectException ex) {
@@ -82,7 +99,7 @@ public class PrintOption implements Option {
                 //ex.printStackTrace();
                 System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex.getMessage());
             } catch (Exception ex) {
-                //ex.printStackTrace();
+                ex.printStackTrace();
                 System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex);
             }
         }

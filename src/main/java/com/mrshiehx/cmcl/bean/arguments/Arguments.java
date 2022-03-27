@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.mrshiehx.cmcl.bean.arguments;
 
 import com.mrshiehx.cmcl.utils.Utils;
@@ -29,6 +30,23 @@ public class Arguments {
     public Arguments(String[] args) {
         this.arguments = new LinkedList<>();
         int length = args.length;
+        if ((length >= 3) &&
+                ("-config".equalsIgnoreCase(args[0]) || "--config".equalsIgnoreCase(args[0]) ||
+                        "/config".equalsIgnoreCase(args[0])) &&
+                !args[1].startsWith("--") &&
+                !args[1].startsWith("-") &&
+                !args[1].startsWith("/") &&
+                !args[2].startsWith("--") &&
+                !args[2].startsWith("-") &&
+                !args[2].startsWith("/")) {
+            arguments.add(new SingleArgument("config"));
+            String key = args[1];
+            arguments.add(new TextArgument(key.startsWith("\\-") ? key.substring(1) : key));
+            String value = args[2];
+            arguments.add(new TextArgument(value.startsWith("\\-") ? value.substring(1) : value));
+            this.size = arguments.size();
+            return;
+        }
         for (int i = 0; i < length; i++) {
             String key = args[i];
             int startLength = -1;
@@ -36,14 +54,14 @@ public class Arguments {
                 startLength = 2;
             } else if (key.startsWith("-") || key.startsWith("/")) {
                 startLength = 1;
-            }
+            }//加上\-负数的判断
             if (startLength > 0) {
                 if (i + 1 >= length) {
                     arguments.add(new SingleArgument(key.substring(startLength)));
                 } else {
                     String next = args[i + 1];
                     if (!next.startsWith("--") && !next.startsWith("-") && !next.startsWith("/")) {
-                        arguments.add(new ValueArgument(key.substring(startLength), next));
+                        arguments.add(new ValueArgument(key.substring(startLength), next.startsWith("\\-") ? next.substring(1) : next));
                     } else {
                         arguments.add(new SingleArgument(key.substring(startLength)));
                     }

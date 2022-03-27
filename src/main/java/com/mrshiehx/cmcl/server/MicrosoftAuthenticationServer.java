@@ -1,4 +1,4 @@
-package com.mrshiehx.cmcl.microsoft;
+package com.mrshiehx.cmcl.server;
 
 import com.mrshiehx.cmcl.exceptions.AuthenticationException;
 import com.mrshiehx.cmcl.utils.NetworkUtils;
@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
 
 public class MicrosoftAuthenticationServer extends NanoHTTPD {
     private final int port;
@@ -37,7 +38,11 @@ public class MicrosoftAuthenticationServer extends NanoHTTPD {
         if (session.getMethod() != Method.GET || !"/authentication-response".equals(session.getUri())) {
             return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_HTML, "");
         }
-        Map<String, String> query = Utils.mapOf(NetworkUtils.parseQuery(session.getQueryParameterString()));
+        String s = session.getQueryParameterString();
+        if (isEmpty(s)) {
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_HTML, "");
+        }
+        Map<String, String> query = Utils.mapOf(NetworkUtils.parseQuery(s));
         if (query.containsKey("code")) {
             String c = query.get("code");
             if (onGotCode != null) new Thread(() -> onGotCode.onGotCode(c, getRedirectURI())).start();
@@ -46,8 +51,7 @@ public class MicrosoftAuthenticationServer extends NanoHTTPD {
             future.completeExceptionally(new AuthenticationException("failed to authenticate"));
         }
 
-        String html;
-        html = "<!DOCTYPE html>\n" +
+        String html = "<!DOCTYPE html>\n" +
                 "<html lang=\"en-US\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
@@ -63,16 +67,11 @@ public class MicrosoftAuthenticationServer extends NanoHTTPD {
                 "</body>\n" +
                 "\n" +
                 "</html>";
-        /*} catch (IOException e) {
-            //System.out.println("Failed to load html");
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_HTML, "");
-        }*/
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 stop();
-            } catch (InterruptedException e) {
-                //System.out.println("Failed to sleep for 1 second");
+            } catch (InterruptedException ignored) {
             }
         }).start();
         return newFixedLengthResponse(Response.Status.OK, "text/html; charset=UTF-8", html);

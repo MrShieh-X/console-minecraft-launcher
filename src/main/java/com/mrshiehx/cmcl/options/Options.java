@@ -39,5 +39,15 @@ public class Options {
         MAP.put("account", new AccountOption());
         MAP.put("version", new VersionOption());
         MAP.put("install", new InstallOption());
+        MAP.put("jvmArgs", new JVMArgsOption());
+        MAP.put("gameArgs", new GameArgsOption());
+        MAP.put("mod", new ModOption());
+
+
+        Map<String, Option> ne = new HashMap<>(MAP);
+        MAP.clear();
+        for (Map.Entry<String, Option> entry : ne.entrySet()) {
+            MAP.put(entry.getKey().toLowerCase(), entry.getValue());
+        }
     }
 }

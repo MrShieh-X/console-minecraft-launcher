@@ -17,6 +17,7 @@
  */
 package com.mrshiehx.cmcl.modules;
 
+import com.mrshiehx.cmcl.bean.AuthlibInformation;
 import com.mrshiehx.cmcl.bean.Library;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
@@ -25,6 +26,7 @@ import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.utils.OperatingSystem;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.authlib.AuthlibUtils;
 import com.sun.management.OperatingSystemMXBean;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -34,7 +36,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -63,13 +64,16 @@ public class MinecraftLauncher {
      * @param isDemo                   is Minecraft demo
      * @param customScreenSize         does player custom the size of screen
      * @param startLaunch              after judgment, prepare to start, nullable
+     * @param jvmArgs                  append jvm arguments (nullable)
+     * @param gameArgs                 append game arguments (nullable)
+     * @param authlibInformation       authlib-injector account (nullable)
      * @return Launch Command Arguments
      * @throws LaunchException        launch exception
      * @throws IOException            io or file exception
      * @throws JSONException          exception to parsing json
      * @throws LibraryDefectException exception to if some libraries are not found
      * @author MrShiehX
-     * @updateDate February 22, 2022
+     * @updateDate March 26, 2022
      */
     public static List<String> getMinecraftLaunchCommandArguments(
             File minecraftJarFile,
@@ -88,14 +92,17 @@ public class MinecraftLauncher {
             String uuid,
             boolean isDemo,
             boolean customScreenSize,
-            @Nullable Void startLaunch) throws
+            @Nullable Void startLaunch,
+            @Nullable List<String> jvmArgs,
+            @Nullable Map<String, String> gameArgs,
+            @Nullable AuthlibInformation authlibInformation) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
             IOException,
             JSONException {
         if (!new File(javaPath).exists()) {
-            throw new LaunchException(getString("EXCEPTION_VERSION_JSON_NOT_FOUND"));
+            throw new LaunchException(getString("EXCEPTION_JAVA_NOT_FOUND"));
         }
         if (null == gameDir) {
             gameDir = new File(".minecraft");
@@ -138,6 +145,28 @@ public class MinecraftLauncher {
             throw new LaunchException(getString("EXCEPTION_VERSION_NOT_FOUND"));
         }
 
+
+        File authlibFile = null;
+        if (authlibInformation != null) {
+            if (authlibInformation.isEmpty()) authlibInformation = null;
+        }
+
+        if (authlibInformation != null) {
+            try {
+                authlibFile = AuthlibUtils.getAutolibInjector();
+            } catch (Exception e) {
+                Utils.printflnErr(getString("UNAVAILABLE_AUTHLIB_ACCOUNT_REASON"), e);
+                Utils.printflnErr(authlibInformation.forOfflineSkin ? getString("UNAVAILABLE_CUSTOM_SKIN") : getString("UNAVAILABLE_AUTHLIB_ACCOUNT"));
+
+                authlibInformation = null;
+            }
+        }
+
+        if (authlibInformation != null) {
+            if (!Utils.isEmpty(authlibInformation.uuid)) uuid = authlibInformation.uuid;
+            if (!Utils.isEmpty(authlibInformation.token)) accessToken = authlibInformation.token;
+        }
+
         if (startLaunch != null) startLaunch.execute();
 
         JSONObject headJsonObject = new JSONObject(contentOfJsonFile);
@@ -164,6 +193,8 @@ public class MinecraftLauncher {
             throw new LibraryDefectException(notFound);
         }
 
+
+        //File loggingFile = new File(minecraftVersionJsonFile.getParentFile(), "log4j2.xml");
 
         List<String> arguments = new LinkedList<>();
         List<String> minecraftArguments = new LinkedList<>();
@@ -256,10 +287,8 @@ public class MinecraftLauncher {
                 minecraftArguments.set(i, s.replace(source, headJsonObject.optString("mainClass", "net.minecraft.client.main.Main")));
             } else if (s.contains(source = "${auth_player_name}")) {
                 minecraftArguments.set(i, s.replace(source, playerName));
-            } else if (s.contains(source = "${version_name}")) {
-                minecraftArguments.set(i, s.replace(source, "CMCL " + CMCL_VERSION));
-            } else if (s.contains(source = "${version_type}")) {
-                minecraftArguments.set(i, s.replace(source, "CMCL " + CMCL_VERSION));
+            } else if (s.contains(source = "${version_name}") || s.contains(source = "${version_type}")) {
+                minecraftArguments.set(i, s.replace(source, (authlibInformation != null && !authlibInformation.forOfflineSkin) ? String.format("CMCL %s(%s)", CMCL_VERSION, authlibInformation.serverName) : "CMCL " + CMCL_VERSION));
             } else if (s.contains(source = "${auth_access_token}")) {
                 minecraftArguments.set(i, s.replace(source, accessToken));
             } else if (s.contains(source = "${auth_session}")) {
@@ -271,7 +300,7 @@ public class MinecraftLauncher {
             } else if (s.contains(source = "${assets_index_name}")) {
                 minecraftArguments.set(i, s.replace(source, assetsIndex));
             } else if (s.contains(source = "${auth_uuid}")) {
-                minecraftArguments.set(i, s.replace(source, isEmpty(uuid) ? UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes(StandardCharsets.UTF_8)).toString().replace("-", "") : uuid));
+                minecraftArguments.set(i, s.replace(source, isEmpty(uuid) ? Utils.getUUIDByName(playerName) : uuid));
             } else if (s.contains(source = "${user_type}")) {
                 minecraftArguments.set(i, s.replace(source, "mojang"));
             } else if (s.contains(source = "${game_assets}")) {
@@ -282,6 +311,14 @@ public class MinecraftLauncher {
                 minecraftArguments.set(i, s.replace(source, String.valueOf(width)));
             } else if (s.contains(source = "${resolution_height}")) {
                 minecraftArguments.set(i, s.replace(source, String.valueOf(height)));
+            } else if (s.contains(source = "${primary_jar}")) {
+                minecraftArguments.set(i, s.replace(source, minecraftJarFile.getAbsolutePath()));
+            } else if (s.contains(source = "${classpath_separator}")) {
+                minecraftArguments.set(i, s.replace(source, File.pathSeparator));
+            } else if (s.contains(source = "${primary_jar_name}")) {
+                minecraftArguments.set(i, s.replace(source, minecraftJarFile.getName()));
+            } else if (s.contains(source = "${library_directory}") || s.contains(source = "${libraries_directory}")) {
+                minecraftArguments.set(i, s.replace(source, librariesFile.getAbsolutePath()));
             }
         }
 
@@ -309,7 +346,7 @@ public class MinecraftLauncher {
                 if (s.contains(source = "${natives_directory}")) {
                     jvmArguments.set(i, s.replace(source, nativesFolder.getAbsolutePath()));
                 } else if (s.contains(source = "${launcher_name}")) {
-                    jvmArguments.set(i, s.replace(source, "CMCL"));
+                    jvmArguments.set(i, s.replace(source, (authlibInformation != null && !authlibInformation.forOfflineSkin) ? String.format("CMCL(%s)", authlibInformation.serverName) : "CMCL"));
                 } else if (s.contains(source = "${launcher_version}")) {
                     jvmArguments.set(i, s.replace(source, CMCL_VERSION));
                 } else if (s.contains(source = "${classpath}")) {
@@ -326,14 +363,135 @@ public class MinecraftLauncher {
             jvmArguments.add("-Dminecraft.launcher.version=" + CMCL_VERSION);
             jvmArguments.add("-cp");
             jvmArguments.add(librariesString.toString());
-
-
+        }
+        int jvmArgusIndex = 3;
+        if (authlibInformation != null) {
+            jvmArguments.add(jvmArgusIndex++, "-Dauthlibinjector.side=client");
+            jvmArguments.add(jvmArgusIndex++, "-Dauthlibinjector.noShowServerName");
+            jvmArguments.add(jvmArgusIndex++, "-javaagent:" + authlibFile.getAbsolutePath() + "=" + authlibInformation.serverAddress);
+            if (!Utils.isEmpty(authlibInformation.metadataEncoded))
+                jvmArguments.add(jvmArgusIndex++, "-Dauthlibinjector.yggdrasil.prefetched=" + authlibInformation.metadataEncoded);
         }
 
+
+        /*JSONObject logging = headJsonObject.optJSONObject("logging");
+        if (logging != null) {
+            JSONObject client = logging.optJSONObject("client");
+            if (client != null) {
+                String argument = client.optString("argument");
+                if (!loggingFile.exists() || loggingFile.length() == 0) {
+                    JSONObject file = client.optJSONObject("file");
+                    if (file != null) {
+                        String url = file.optString("url");
+                        if (!Utils.isEmpty(url)) {
+                            try {
+                                System.out.print(String.format(getString("MESSAGE_DOWNLOADING_FILE"), loggingFile.getName()));
+                                ConsoleMinecraftLauncher.downloadFile(url,loggingFile,new XProgressBar());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                if (loggingFile.exists() && loggingFile.length() > 0) {
+                    jvmArguments.add(jvmArgusIndex++, argument.replace("${path}", loggingFile.getAbsolutePath()));
+                }
+            }
+        }*/
+
+        /*自定义JVM参数*/
+        List<String> addableJvmArgs = new LinkedList<>();
+
+        if (jvmArgs != null && jvmArgs.size() > 0) {
+            for (String arg : jvmArgs) {
+                int indexOf = arg.indexOf('=');
+                String a = null;
+                if (indexOf >= 0) {
+                    a = arg.substring(0, indexOf) + "=";
+                }
+
+                boolean contains = false;
+                int replace = -1;
+                if (!isEmpty(a)) {
+                    for (int i = 0; i < jvmArguments.size(); i++) {
+                        String rarg = jvmArguments.get(i);
+                        if (rarg.startsWith(a)) {
+                            contains = true;
+                            if (indexOf + 1 < arg.length()) {
+                                replace = i;
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    for (String rarg : jvmArguments) {
+                        if (rarg.equals(arg)) {
+                            contains = true;
+                            break;
+                        }
+                    }
+                }
+                if (!contains) {
+                    addableJvmArgs.add(arg);
+                } else {
+                    if (replace >= 0) {
+                        jvmArguments.set(replace, arg);
+                    }
+                }
+            }
+        }
+
+
+        /*自定义游戏参数*/
+        List<String> addableGameArgs = new LinkedList<>();
+        if (gameArgs != null && gameArgs.size() > 0) {
+            for (Map.Entry<String, String> entry : gameArgs.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                boolean contains = false;
+                if (isEmpty(value)) {
+                    for (String arg : minecraftArguments) {
+                        if (arg.equals("--" + key) || arg.equals("-" + key)) {
+                            contains = true;
+                            break;
+                        }
+                    }
+                    if (!contains) {
+                        addableGameArgs.add("--" + key);
+                    }
+                } else {
+                    for (int i = 0; i < minecraftArguments.size(); i++) {
+                        String arg = minecraftArguments.get(i);
+                        if (arg.equals("--" + key) || arg.equals("-" + key)) {
+                            contains = true;
+                            if (i + 1 >= minecraftArguments.size()) {
+                                minecraftArguments.add(value);
+                            } else {
+                                String next = minecraftArguments.get(i + 1);
+                                if (!next.startsWith("--") && !next.startsWith("-")) {
+                                    minecraftArguments.set(i + 1, value);
+                                } else {
+                                    minecraftArguments.add(i + 1, value);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if (!contains) {
+                        addableGameArgs.add("--" + key);
+                        addableGameArgs.add(value);
+                    }
+                }
+            }
+        }
+
+
         arguments.add(javaPath);
+        arguments.addAll(addableJvmArgs);
         arguments.addAll(jvmArguments);
         arguments.add(mainClass);
         arguments.addAll(minecraftArguments);
+        arguments.addAll(addableGameArgs);
 
         return arguments;
     }
@@ -360,7 +518,10 @@ public class MinecraftLauncher {
             String accessToken,
             String uuid,
             boolean isDemo,
-            boolean customScreenSize) throws
+            boolean customScreenSize,
+            @Nullable List<String> jvmArgs,
+            @Nullable Map<String, String> gameArgs,
+            @Nullable AuthlibInformation authlibInformation) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -382,7 +543,10 @@ public class MinecraftLauncher {
                 uuid,
                 isDemo,
                 customScreenSize,
-                null);
+                null,
+                jvmArgs,
+                gameArgs,
+                authlibInformation);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < args.size(); i++) {
             String str = args.get(i);
@@ -410,10 +574,7 @@ public class MinecraftLauncher {
      * @param customSize 游戏参数时用
      **/
     public static boolean isMeetConditions(JSONArray rules, boolean isDemo, boolean customSize) {
-        //应将disallow的jsonObject放在前面
-
         if (rules == null || rules.length() <= 0) return false;
-
 
         for (int i = 0; i < rules.length(); i++) {
             JSONObject first = rules.optJSONObject(i);
@@ -530,7 +691,10 @@ public class MinecraftLauncher {
             String accessToken,
             String uuid,
             boolean isDemo,
-            boolean customScreenSize) throws
+            boolean customScreenSize,
+            @Nullable List<String> jvmArgs,
+            @Nullable Map<String, String> gameArgs,
+            @Nullable AuthlibInformation authlibInformation) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -552,7 +716,10 @@ public class MinecraftLauncher {
                 uuid,
                 isDemo,
                 customScreenSize,
-                () -> System.out.println(getString("MESSAGE_STARTING_GAME")));
+                () -> System.out.println(getString("MESSAGE_STARTING_GAME")),
+                jvmArgs,
+                gameArgs,
+                authlibInformation);
 
         ProcessBuilder processBuilder = new ProcessBuilder(args);
         processBuilder.redirectErrorStream(true);
@@ -602,7 +769,14 @@ public class MinecraftLauncher {
         //return arguments.substring(0, arguments.length()-1);
     }
 
-    public static Pair<List<String>, List<Library>> getLibraries(JSONArray libraries, File librariesFile) {
+    /**
+     * 获得依赖库
+     *
+     * @param libraries          依赖库JSONArray
+     * @param librariesDirectory 依赖库目录
+     * @return Key 为存在的依赖库集合，Value 为不存在的依赖库集合
+     **/
+    public static Pair<List<String>, List<Library>> getLibraries(JSONArray libraries, File librariesDirectory) {
         List<String> librariesPaths = new ArrayList<>();
         List<Library> notFound = new LinkedList<>();
         //List<String> names = new ArrayList<>();
@@ -620,15 +794,15 @@ public class MinecraftLauncher {
                 //if (!names.contains(libName)) {
                 String libraryFileName = nameSplit[1] + "-" + nameSplit[2] + ".jar";
                 String libraryFileAndDirectoryName = nameSplit[0].replace(".", "/") + "/" + nameSplit[1] + "/" + nameSplit[2];
-                File libraryFile = new File(new File(librariesFile, libraryFileAndDirectoryName), libraryFileName);
+                File libraryFile = new File(new File(librariesDirectory, libraryFileAndDirectoryName), libraryFileName);
 
-                if (libraryFile.exists()) {
+                if (libraryFile.exists() && libraryFile.length() > 0) {
                     if (!librariesPaths.contains(libraryFile.getAbsolutePath())) {
                         librariesPaths.add(libraryFile.getAbsolutePath());
                     }
                 } else {
                     Library lb = new Library(library);
-                    if (!notFound.contains(lb) && library.has("downloads") && library.optJSONObject("downloads").has("artifact"))
+                    if (!notFound.contains(lb) && !library.optString("name").isEmpty()/*((library.has("downloads") && library.optJSONObject("downloads").has("artifact"))||library.has("url"))*/)
                         notFound.add(lb);
                     //等循环完成之后就抛出错误LibraryDefectException（notFound），返回之后提示要下载库
                 }

@@ -20,6 +20,7 @@ public class NetworkUtils {
     public static List<Pair<String, String>> parseQuery(String queryParameterString) {
         List<Pair<String, String>> result = new ArrayList<>();
 
+        if (Utils.isEmpty(queryParameterString)) return result;
         try (Scanner scanner = new Scanner(queryParameterString)) {
             scanner.useDelimiter("&");
             while (scanner.hasNext()) {

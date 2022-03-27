@@ -26,7 +26,7 @@ import com.mrshiehx.cmcl.options.Option;
 import com.mrshiehx.cmcl.options.Options;
 import com.mrshiehx.cmcl.options.StartOption;
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.XProgressBar;
+import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
@@ -47,6 +47,7 @@ public class ConsoleMinecraftLauncher {
     public static File assetsDir;
     public static File respackDir;
     public static File versionsDir;
+    public static File librariesDir;
     public static Process runningMc;
 
     public static JSONObject configContent;
@@ -54,6 +55,33 @@ public class ConsoleMinecraftLauncher {
 
     private static String language;
 
+    static {
+        initConfig();
+    }
+
+    public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (runningMc != null && configContent.optBoolean("exitWithMinecraft")) {
+                if (runningMc.isAlive()) {
+                    runningMc.destroy();
+                }
+            }
+        }));
+        Arguments arguments = new Arguments(args);
+        Argument arg = arguments.optArgument(0);
+        if (arg != null) {
+            console(arguments);
+        } else {
+            String version;
+            JSONObject jsonObject = Utils.getConfig();
+            version = jsonObject.optString("selectedVersion");
+            if (isEmpty(version)) {
+                System.out.println(getString("CONSOLE_NO_SELECTED_VERSION"));
+                return;
+            }
+            StartOption.start(version, jsonObject);
+        }
+    }
 
     private static void console(Arguments args) {
         Argument argument = args.optArgument(0);
@@ -77,72 +105,14 @@ public class ConsoleMinecraftLauncher {
                     option.execute(args);
                 }
             } else {
-                System.out.println(String.format(getString("CONSOLE_UNKNOWN_OPTION"), key));
+                System.out.println(getString("CONSOLE_UNKNOWN_OPTION", key));
             }
-        }
-    }
-
-    public static void main(String[] args) {
-        initConfig();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (runningMc != null && configContent.optBoolean("exitWithMinecraft")) {
-                if (runningMc.isAlive()) {
-                    runningMc.destroy();
-                    //System.out.println(getString("MESSAGE_FINISHED_GAME"));
-                }
-            }
-        }));
-        Arguments arguments = new Arguments(args);
-        Argument arg = arguments.optArgument(0);
-        if (arg != null) {
-            console(arguments);
-        } else {
-            String version;
-            JSONObject jsonObject = Utils.getConfig();
-            version = jsonObject.optString("selectedVersion");
-            if (isEmpty(version)) {
-                System.out.println(getString("CONSOLE_NO_SELECTED_VERSION"));
-                return;
-            }
-            StartOption.start(version, jsonObject);
-            //System.out.println(getString("CONSOLE_GET_USAGE"));
         }
     }
 
     public static String getUsage(String usageName) {
         if (isEmpty(usageName)) return null;
-        String t = ("zh".equals(getLanguage()) ? Languages.zhCNUsage : Languages.enUSUsage).get(usageName);
-        /*try {
-            InputStream inputStream = ConsoleMinecraftLauncher.class.getResourceAsStream("zh".equals(getLanguage())?"/texts/usage_zh_cn.txt":"/texts/usage_en_us.txt");
-            BufferedReader reader;
-            StringBuilder sbf = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String tempStr;
-            boolean reading=false;
-
-            while ((tempStr = reader.readLine()) != null) {
-                String trim = Utils.clearAllSpaces(tempStr);
-
-                if (trim.endsWith(":{")&&trim.length()>2){
-                    String name=trim.substring(0,trim.lastIndexOf(":{"));
-                    if(name.equals(usageName)){
-                        reading=true;
-                    }
-                }else if(reading&&trim.equals("}")){
-                    //reading=false;
-                    reader.close();
-                    return sbf.substring(0,sbf.length()-1);
-                }else{
-                    if(reading){
-                        sbf.append(tempStr).append('\n');
-                    }
-                }
-            }
-            reader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+        String t = ("zh".equals(getLanguage()) ? Languages.zhUsage : Languages.enUsage).get(usageName);
         return isEmpty(t) ? "" : t;
     }
 
@@ -158,14 +128,12 @@ public class ConsoleMinecraftLauncher {
             gameDir = new File(!isEmpty(configContent.optString("gameDir")) ? configContent.optString("gameDir") : ".minecraft");
             assetsDir = !isEmpty(configContent.optString("assetsDir")) ? new File(configContent.optString("assetsDir")) : new File(gameDir, "assets");
             respackDir = !isEmpty(configContent.optString("resourcesDir")) ? new File(configContent.optString("resourcesDir")) : new File(gameDir, "resourcepacks");
-            versionsDir = new File(gameDir, "versions");
         } else {
             initDefaultDirs();
             configContent = new JSONObject();
             configContent.put("language", Locale.getDefault().getLanguage());
-            configContent.put("playerName", "XPlayer");
             configContent.put("javaPath", javaPath = Utils.getDefaultJavaPath());
-            configContent.put("maxMemory", 1024);
+            configContent.put("maxMemory", Utils.getDefaultMemory());
             configContent.put("windowSizeWidth", 854);
             configContent.put("windowSizeHeight", 480);
             configContent.put("exitWithMinecraft", false);
@@ -178,7 +146,16 @@ public class ConsoleMinecraftLauncher {
                 E.printStackTrace();
             }
         }
+        versionsDir = new File(gameDir, "versions");
+        librariesDir = new File(gameDir, "libraries");
+        initProxy(configContent);
         return configContent;
+    }
+
+    private static void initProxy(JSONObject configContent) {
+        String proxyHost = configContent.optString("proxyHost");
+        if (isEmpty(proxyHost)) return;
+        Utils.setProxy(proxyHost, configContent.optString("proxyPort"), configContent.optString("proxyUsername"), configContent.optString("proxyPassword"));
     }
 
 
@@ -186,7 +163,6 @@ public class ConsoleMinecraftLauncher {
         gameDir = new File(".minecraft");
         assetsDir = new File(gameDir, "assets");
         respackDir = new File(gameDir, "resourcepacks");
-        versionsDir = new File(gameDir, "versions");
     }
 
 
@@ -204,7 +180,7 @@ public class ConsoleMinecraftLauncher {
     }
 
     public static void downloadFile(String url, File to) throws IOException {
-        Utils.createFile(to, true);
+        /*Utils.createFile(to, true);
         BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
         FileOutputStream fileOutputStream = new FileOutputStream(to);
         byte dataBuffer[] = new byte[1024];
@@ -212,41 +188,83 @@ public class ConsoleMinecraftLauncher {
         while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
             fileOutputStream.write(dataBuffer, 0, bytesRead);
         }
-        fileOutputStream.close();
+        fileOutputStream.close();*/
+        downloadFile(url, to, null);
     }
 
-    public static void downloadFile(String urla, File to, @Nullable XProgressBar progressBar) throws IOException {
-        URL url = new URL(urla);
-        HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-        int completeFileSize = httpConnection.getContentLength();
-        if (progressBar != null)
-            progressBar.setMaximum(completeFileSize);
-
-        BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-        FileOutputStream fos = new java.io.FileOutputStream(to);
-        BufferedOutputStream bout = new BufferedOutputStream(
-                fos, 1024);
-        /*if (progressBar != null)
-            progressBar.setMaximum(100);*/
-        byte[] data = new byte[1024];
-        long downloadedFileSize = 0;
-        int x = 0;
-        while ((x = in.read(data, 0, 1024)) >= 0) {
-            downloadedFileSize += x;
-
-            // calculate progress
-            //final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * 100d);
-
-            // update progress bar
+    public static void downloadFile(String urla, File to, @Nullable PercentageTextProgress progressBar) throws IOException {
+        try {
+            Utils.createFile(to, true);
+            URL url = new URL(urla);
+            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+            int completeFileSize = httpConnection.getContentLength();
             if (progressBar != null)
-                progressBar.setValue((int) downloadedFileSize);
-            bout.write(data, 0, x);
+                progressBar.setMaximum(completeFileSize);
+
+            BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
+            FileOutputStream fos = new java.io.FileOutputStream(to);
+            BufferedOutputStream bout = new BufferedOutputStream(
+                    fos, 1024);
+            byte[] data = new byte[1024];
+            long downloadedFileSize = 0;
+            int x = 0;
+            while ((x = in.read(data, 0, 1024)) >= 0) {
+                downloadedFileSize += x;
+                if (progressBar != null)
+                    progressBar.setValue((int) downloadedFileSize);
+                bout.write(data, 0, x);
+            }
+            if (progressBar != null)
+                progressBar.setValue(completeFileSize);
+            bout.close();
+            fos.close();
+            in.close();
+        } catch (IOException e) {
+            if (progressBar != null && !progressBar.done) System.out.println();
+            throw e;
         }
-        if (progressBar != null)
-            progressBar.setValue(completeFileSize);
-        bout.close();
-        fos.close();
-        in.close();
+    }
+
+
+    public static byte[] downloadBytes(String url) throws IOException {
+        BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte dataBuffer[] = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+            byteArrayOutputStream.write(dataBuffer, 0, bytesRead);
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public static byte[] downloadBytes(String urla, @Nullable PercentageTextProgress progressBar) throws IOException {
+        try {
+            URL url = new URL(urla);
+            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+            int completeFileSize = httpConnection.getContentLength();
+            if (progressBar != null)
+                progressBar.setMaximum(completeFileSize);
+
+            BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
+            byte[] data = new byte[1024];
+            long downloadedFileSize = 0;
+            int x = 0;
+            while ((x = in.read(data, 0, 1024)) >= 0) {
+                downloadedFileSize += x;
+                if (progressBar != null)
+                    progressBar.setValue((int) downloadedFileSize);
+                byteArrayOutputStream.write(data, 0, x);
+            }
+            if (progressBar != null)
+                progressBar.setValue(completeFileSize);
+            in.close();
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            if (progressBar != null && !progressBar.done) System.out.println();
+            throw e;
+        }
     }
 
 
@@ -259,7 +277,7 @@ public class ConsoleMinecraftLauncher {
     }
 
 
-    public static void unZip(File srcFile, File to, @Nullable XProgressBar progressBar) throws IOException {
+    public static void unZip(File srcFile, File to, @Nullable PercentageTextProgress progressBar) throws IOException {
         int BUFFER_SIZE = 2048;
         if (srcFile != null && srcFile.exists()) {
             ZipFile zipFile = new ZipFile(srcFile);
@@ -301,12 +319,16 @@ public class ConsoleMinecraftLauncher {
     }
 
 
+    public static String getString(String name, Object... objects) {
+        return String.format(getString(name), objects);
+    }
+
     public static String getString(String name) {
         if (getLanguage().equals("zh")) {
-            String text = Languages.zhCN.get(name);
+            String text = Languages.zh.get(name);
             if (!Utils.isEmpty(text)) return text;
         }
-        String text = Languages.enUS.get(name);
+        String text = Languages.en.get(name);
         if (!Utils.isEmpty(text)) return text;
         else return name;
     }
@@ -322,5 +344,23 @@ public class ConsoleMinecraftLauncher {
             }
         }
         return language;
+    }
+
+
+    public static List<String> listVersions(File versionsDir) {
+        List<String> versionsStrings = new ArrayList<>();
+        if (versionsDir == null) return versionsStrings;
+        File[] files = versionsDir.listFiles(pathname -> {
+            if (!pathname.isDirectory()) return false;
+            File[] files1 = pathname.listFiles();
+            if (files1 == null || files1.length < 2) return false;
+            return new File(pathname, pathname.getName() + ".json").exists() && new File(pathname, pathname.getName() + ".jar").exists();
+        });
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                versionsStrings.add(file.getName());
+            }
+        }
+        return versionsStrings;
     }
 }

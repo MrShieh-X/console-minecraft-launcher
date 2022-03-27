@@ -17,10 +17,11 @@
  */
 package com.mrshiehx.cmcl.modules.version;
 
+import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
 import com.mrshiehx.cmcl.utils.OperatingSystem;
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.XProgressBar;
+import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -50,7 +51,6 @@ public class NativesReDownloader {
                         if (rules != null) {
                             meet = MinecraftLauncher.isMeetConditions(rules, false, false);
                         }
-                        //System.out.println(meet);
 
                         JSONObject downloadsJo1 = jsonObject.optJSONObject("downloads");
                         if (meet && downloadsJo1 != null) {
@@ -60,34 +60,28 @@ public class NativesReDownloader {
                                 JSONObject nativesNamesJO = jsonObject.optJSONObject("natives");
 
                                 if (nativesNamesJO != null) {
-
-                                    //String osName = System.getProperty("os.name");
                                     JSONObject nativesJo = classifiersJo.optJSONObject(nativesNamesJO.optString(OperatingSystem.CURRENT_OS.getCheckedName()));
-                                    ;
-
 
                                     if (nativesJo != null) {
                                         String name12 = Utils.getNativeLibraryName(nativesJo.optString("path"));
-                                        //System.out.println(Arrays.toString(nativesNames.toArray())+","+name );
                                         if (!nativesNames.contains(name12)) {
                                             String url1 = nativesJo.optString("url");
                                             try {
                                                 if (!isEmpty(url1)) {
+                                                    url1 = url1.replace("https://libraries.minecraft.net/", DownloadSource.getProvider().libraries());
                                                     File nativeFile = new File(tempNatives, url1.substring(url1.lastIndexOf("/") + 1));
                                                     //if(!nativeFile.exists()) {
                                                     nativeFile.createNewFile();
-                                                    String textxx = String.format(getString("MESSAGE_DOWNLOADING_FILE"), url1.substring(url1.lastIndexOf("/") + 1));
-                                                    //print(VersionInstaller.class,textxx);
-                                                    System.out.print(textxx);
-                                                    downloadFile(url1, nativeFile, new XProgressBar());
+
+                                                    System.out.print(getString("MESSAGE_DOWNLOADING_FILE", url1.substring(url1.lastIndexOf("/") + 1)));
+                                                    downloadFile(url1, nativeFile, new PercentageTextProgress());
                                                     nativesNames.add(name12);
                                                     //}
                                                 }
                                             } catch (Exception e1) {
                                                 e1.printStackTrace();
-                                                String textxx = String.format(getString("MESSAGE_FAILED_DOWNLOAD_FILE"), url1);
-                                                //print(VersionInstaller.class,textxx);
-                                                System.out.println(textxx);
+
+                                                System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE", url1));
                                             }
                                         }
                                     }
@@ -104,7 +98,7 @@ public class NativesReDownloader {
             }
         } catch (Exception e1) {
             e1.printStackTrace();
-            System.out.println(String.format(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_LIBRARIES"), e1));
+            System.out.println(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_LIBRARIES", e1));
         }
 
 
@@ -115,13 +109,12 @@ public class NativesReDownloader {
                 try {
                     File dir = new File(tempNatives, file.getName().substring(0, file.getName().lastIndexOf(".")));
                     dir.mkdirs();
-                    String textxxx = String.format(getString("MESSAGE_UNZIPPING_FILE"), file.getName());
-                    //print(VersionInstaller.class,text);
-                    System.out.print(textxxx);
-                    unZip(file, dir, new XProgressBar());
+
+                    System.out.print(getString("MESSAGE_UNZIPPING_FILE", file.getName()));
+                    unZip(file, dir, new PercentageTextProgress());
                 } catch (Exception e1) {
                     e1.printStackTrace();
-                    System.out.println(String.format(getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE"), file.getAbsolutePath(), e1));
+                    System.out.println(getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE", file.getAbsolutePath(), e1));
                 }
             }
         }
@@ -164,14 +157,13 @@ public class NativesReDownloader {
         for (File file : libFiles) {
             File to = new File(nativesDir, file.getName());
             try {
-                String textxxxxxx = String.format(getString("MESSAGE_COPYING_FILE"), file.getName(), to.getPath());
-                //print(VersionInstaller.class,text);
-                System.out.println(textxxxxxx);
+
+                System.out.println(getString("MESSAGE_COPYING_FILE", file.getName(), to.getPath()));
                 if (to.exists()) to.delete();
                 Utils.copyFile(file, to);
             } catch (IOException e1) {
                 e1.printStackTrace();
-                System.out.println(String.format(getString("MESSAGE_FAILED_TO_COPY_FILE"), file.getAbsolutePath(), to.getAbsolutePath(), e1));
+                System.out.println(getString("MESSAGE_FAILED_TO_COPY_FILE", file.getAbsolutePath(), to.getAbsolutePath(), e1));
             }
         }
 

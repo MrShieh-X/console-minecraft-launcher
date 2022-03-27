@@ -67,11 +67,6 @@ public class ThreadsDownloader {
                 int shang = size / threadsCount;
                 int yu = size % threadsCount;
 
-                /*if(yu>0){
-                    shang++;
-                }*/
-
-
                 for (int i = 0; i < threadsCount; i++) {
                     List<Pair<String, File>> map = getMap(i);
                     int start = shang * i;
@@ -93,21 +88,6 @@ public class ThreadsDownloader {
                         }
                     }
                 }
-
-                /*for(int i=0;i<shang;i++){
-                    Map<String, File>map=getMap(i);
-                    int start=i*threadsCount;
-                    for(int j=start;j<start+threadsCount;j++){
-                        Map.Entry<String,File>one=list.get(j);
-                        map.put(one.getKey(),one.getValue());
-                    }
-                }*/
-                /*int yuStart=shang*threadsCount+yu;
-                Map<String,File>firstMap=getMap(0);
-                for(int i=yuStart;i<list.size();i++){
-                    Map.Entry<String,File>one=list.get(i);
-                    firstMap.put(one.getKey(),one.getValue());
-                }*/
             }
         }
     }
@@ -121,12 +101,12 @@ public class ThreadsDownloader {
                 for (Pair<String, File> pair : map) {
                     String url = pair.getKey();
                     File file = pair.getValue();
-                    System.out.println(String.format(getString("MESSAGE_DOWNLOADING_FILE"), url.substring(url.lastIndexOf('/') + 1)));
+                    System.out.println(getString("MESSAGE_DOWNLOADING_FILE", url.substring(url.lastIndexOf('/') + 1)));
                     try {
                         downloadFile(url, file);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        System.out.println(String.format(getString("MESSAGE_FAILED_DOWNLOAD_FILE"), file.getName()));
+                        System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE", file.getName()));
                     }
                 }
                 done++;
@@ -136,35 +116,9 @@ public class ThreadsDownloader {
                     }
                 }
             }).start();
-
-            /*new Thread(()->{
-                while (urls.size() != 0) {
-                    System.out.println(27);
-                    synchronized (lock) {
-                        if (urls.size() != 0) {
-                            String url = urls.keySet().iterator().next();
-                            File file = urls.get(url);
-                            urls.remove(url);
-                            System.out.println(String.format(getString("MESSAGE_DOWNLOADING_FILE"), url.substring(url.lastIndexOf('/') + 1)));
-                            try {
-                                downloadFile(url, file);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                System.out.println(String.format(getString("MESSAGE_FAILED_DOWNLOAD_FILE"), file.getName()));
-                            }
-                        }
-                    }
-                }
-            }).start();*/
         }
         started = true;
     }
-
-    /*public void add(String url,File to){
-        synchronized (lock) {
-            urls.put(url,to);
-        }
-    }*/
 
     private List<Pair<String, File>> getMap(int count) {
         if (count >= threadsCount) {

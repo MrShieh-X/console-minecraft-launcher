@@ -24,17 +24,19 @@ import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.utils.Utils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class ListOption implements Option {
     @Override
     public void execute(Arguments arguments) {
         Argument f = arguments.optArgument(0);
-        String[] list = Utils.listVersions(f instanceof ValueArgument ? new File(((ValueArgument) f).value, "versions") : ConsoleMinecraftLauncher.versionsDir);
-        if (list != null) {
-            for (String s : list) {
-                System.out.println(s);
-            }
-        }
+        List<String> list = ConsoleMinecraftLauncher.listVersions(f instanceof ValueArgument ? new File(((ValueArgument) f).value, "versions") : ConsoleMinecraftLauncher.versionsDir);
+        /*for (String s : list) {
+            System.out.println(s);
+        }*/
+        Utils.addDoubleQuotationMark(list);
+        System.out.println(Arrays.toString(list.toArray()));
     }
 
     @Override

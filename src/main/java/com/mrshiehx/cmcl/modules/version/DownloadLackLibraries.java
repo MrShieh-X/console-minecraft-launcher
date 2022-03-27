@@ -18,8 +18,10 @@
 package com.mrshiehx.cmcl.modules.version;
 
 import com.mrshiehx.cmcl.bean.Library;
+import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.utils.XProgressBar;
+import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,52 +33,11 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 public class DownloadLackLibraries {
     public static void downloadLackLibraries(List<Library> list) {
         try {
-            //downloadFile(url, jarFile, progressBar);
-            File librariesDir = new File(gameDir, "libraries");
-            //System.out.println(assetsDir.getAbsolutePath());
-            //System.out.println(assetsDir.getAbsolutePath());
-            librariesDir.mkdirs();
-
             System.out.println(getString("MESSAGE_INSTALL_DOWNLOADING_LIBRARIES"));
             if (list != null) {
                 for (Library library : list) {
                     JSONObject jsonObject = library.libraryJSONObject;
-                    if (jsonObject != null) {
-                        boolean meet = true;
-                        JSONArray rules = jsonObject.optJSONArray("rules");
-                        if (rules != null) {
-                            meet = MinecraftLauncher.isMeetConditions(rules, false, false);
-                        }
-                        //System.out.println(meet);
-
-                        JSONObject downloadsJo = jsonObject.optJSONObject("downloads");
-                        if (meet && downloadsJo != null) {
-                            JSONObject artifactJo = downloadsJo.optJSONObject("artifact");
-                            if (artifactJo != null) {
-                                String path = artifactJo.optString("path");
-                                String url = artifactJo.optString("url");
-                                if (!isEmpty(path) && !isEmpty(url)) {
-                                    try {
-                                        File file = new File(librariesDir, path);
-                                        file.getParentFile().mkdirs();
-                                        if (!file.exists()) {
-                                            file.createNewFile();
-                                        }
-                                        if (file.length() == 0) {
-                                            String text = String.format(getString("MESSAGE_DOWNLOADING_FILE"), url.substring(url.lastIndexOf("/") + 1));
-                                            System.out.print(text);
-                                            downloadFile(url, file, new XProgressBar());
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        System.out.println(String.format(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_LIBRARY"), url, e));
-                                    }
-                                }
-                            }
-
-
-                        }
-                    }
+                    downloadSingleLibrary(jsonObject);
                 }
                 System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_LIBRARIES"));
             } else {
@@ -85,7 +46,33 @@ public class DownloadLackLibraries {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(String.format(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_LIBRARIES"), ex));
+            System.out.println(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_LIBRARIES", ex));
+        }
+    }
+
+    public static void downloadSingleLibrary(JSONObject library) {
+        if (library == null) return;
+        boolean meet = true;
+        JSONArray rules = library.optJSONArray("rules");
+        if (rules != null) {
+            meet = MinecraftLauncher.isMeetConditions(rules, false, false);
+        }
+
+        if (!meet) return;
+        Pair<String, String> pair = Utils.getLibraryDownloadURLAndStoragePath(library);
+
+        if (pair == null) return;
+        String pairValue = pair.getValue();
+        try {
+            File file = new File(librariesDir, pairValue);
+            Utils.createFile(file, false);
+            if (file.length() == 0) {
+                System.out.print(getString("MESSAGE_DOWNLOADING_FILE", pairValue.substring(pairValue.lastIndexOf("/") + 1)));
+                downloadFile(pair.getKey(), file, new PercentageTextProgress());
+            }
+        } catch (Exception e) {
+            System.out.println(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_LIBRARY", pair.getKey(), e));
         }
     }
 }
+
