@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: com.mrshiehx.cmcl.ConsoleMinecraftLauncher
-Created-By: Copyright (C) 2021-2022 MrShiehX
-Program-Version: 1.1
