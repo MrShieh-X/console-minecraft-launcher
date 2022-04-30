@@ -56,7 +56,7 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).</br>
 If you edit configurations by a file editor, only strings need double quotation mark, otherwise, other types do not need it.</br>
 If you edit by the program arguments, note that if there are spaces in the string, double quotation marks must be added, otherwise it can be added or not.</br>
-Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" must be added before the item, otherwise it will be mistaken for a parameter, such as: \-10.
+Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10`.
 
 | Configuration Name|Type|Meaning|
 | -----|:----:|:----:|
