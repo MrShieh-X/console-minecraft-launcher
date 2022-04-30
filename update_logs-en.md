@@ -6,13 +6,13 @@ Currently, the latest version is 1.2, which was updated on April 30, 2022.
   1. Install Forge when installing the version: add "-o" after the installation command, such as: `-install 1.18.2 -o`</br>
   2. Install Forge after installing the version: `-version -o <Target Version Name>`
 - Supports **downloading and installing modpacks** (download source: CurseForge):</br>
-  1. Search for modpacks and install (by name): `-modpack -i <Modpack Name> -k (optional, keep the file after installation)`
-  2. Search for modpacks and install (by ID): `-modpack -i -c <Modpack ID> -k (optional, keep the file after installation)`
-  3. Search for modpacks and display information (by name): `-modpack -s <Modpack Name>`
-  4. Search for modpacks and display information (by ID): `-modpack -s -c <Modpack ID>`
+  1. Search for modpacks and install (by name): `-modpack -i <Modpack Name> -k (optional, keep the file after installation)`</br>
+  2. Search for modpacks and install (by ID): `-modpack -i -c <Modpack ID> -k (optional, keep the file after installation)`</br>
+  3. Search for modpacks and display information (by name): `-modpack -s <Modpack Name>`</br>
+  4. Search for modpacks and display information (by ID): `-modpack -s -c <Modpack ID>`</br>
   5. Install local CurseForge modpack: `-modpack -l <Modpack Path>`
-- **Mod** can be **found by** mod **ID**, usage: 
-  1. Search for mods and install (by ID): `-mod -i -c <Mod ID>`
+- **Mod** can be **found by** mod **ID**, usage: </br>
+  1. Search for mods and install (by ID): `-mod -i -c <Mod ID>`</br>
   2. Search for mods and display information (by ID): `-mod -s -c <Mod ID>`
 - When installing mods, you will be prompted for the **pre-mods**.
 - Fixed some proxy settings issues.
