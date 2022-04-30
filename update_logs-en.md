@@ -2,17 +2,17 @@
 Currently, the latest version is 1.2, which was updated on April 30, 2022.
 
 ## 1.2 (Apr. 30, 2022)
-- Support for **installing Forge**:</br>
-  1. Install Forge when installing the version: add "-o" after the installation command, such as: `-install 1.18.2 -o`</br>
+- Support for **installing Forge**:<br/>
+  1. Install Forge when installing the version: add "-o" after the installation command, such as: `-install 1.18.2 -o`<br/>
   2. Install Forge after installing the version: `-version -o <Target Version Name>`
-- Supports **downloading and installing modpacks** (download source: CurseForge):</br>
-  1. Search for modpacks and install (by name): `-modpack -i <Modpack Name> -k (optional, keep the file after installation)`</br>
-  2. Search for modpacks and install (by ID): `-modpack -i -c <Modpack ID> -k (optional, keep the file after installation)`</br>
-  3. Search for modpacks and display information (by name): `-modpack -s <Modpack Name>`</br>
-  4. Search for modpacks and display information (by ID): `-modpack -s -c <Modpack ID>`</br>
+- Supports **downloading and installing modpacks** (download source: CurseForge):<br/>
+  1. Search for modpacks and install (by name): `-modpack -i <Modpack Name> -k (optional, keep the file after installation)`<br/>
+  2. Search for modpacks and install (by ID): `-modpack -i -c <Modpack ID> -k (optional, keep the file after installation)`<br/>
+  3. Search for modpacks and display information (by name): `-modpack -s <Modpack Name>`<br/>
+  4. Search for modpacks and display information (by ID): `-modpack -s -c <Modpack ID>`<br/>
   5. Install local CurseForge modpack: `-modpack -l <Modpack Path>`
-- **Mod** can be **found by** mod **ID**, usage: </br>
-  1. Search for mods and install (by ID): `-mod -i -c <Mod ID>`</br>
+- **Mod** can be **found by** mod **ID**, usage: <br/>
+  1. Search for mods and install (by ID): `-mod -i -c <Mod ID>`<br/>
   2. Search for mods and display information (by ID): `-mod -s -c <Mod ID>`
 - When installing mods, you will be prompted for the **pre-mods**.
 - Fixed some proxy settings issues.
@@ -25,18 +25,18 @@ Currently, the latest version is 1.2, which was updated on April 30, 2022.
 - Added **immersive mode**, accessible via `-i` or `-immersive`.
 
 ## 1.1 (Mar. 27, 2022)
-- Support for installing Fabric:</br>
-  1. Install Fabric when installing the version: add "-f" after the installation command, such as: `-install 1.18.2 -f`</br>
+- Support for installing Fabric:<br/>
+  1. Install Fabric when installing the version: add "-f" after the installation command, such as: `-install 1.18.2 -f`<br/>
   2. Install Fabric after installing the version: `-version -f <Target Version Name>`
-- Support for installing mods (CurseForge):</br>
-  1. Search for mods and install: `-mod -i <Mod Name></br>`
+- Support for installing mods (CurseForge):<br/>
+  1. Search for mods and install: `-mod -i <Mod Name><br/>`
   2. Search for mods and display information: `-mod -s <Mod Name>`
 - Support authlib-injector account login, use parameters: `-account -l -a -d <Server Address> -s(Optional, select this account after successful login)`
 - Support multi-account login, please refer to the user manual for details. If you are already logged in, be sure to log in again.
-- Supports custom skins and capes for offline accounts:</br>
-  Set skin (Microsoft account not available): `-account -s -u <Skin file path (if it is an offline account, if you do not enter it, you will cancel the skin setting)>`</br>
-  Set the skin to Steve (Microsoft account not available): `-account -s -e`</br>
-  Set the skin to Alex (Microsoft account not available): `-account -s -x`</br>
+- Supports custom skins and capes for offline accounts:<br/>
+  Set skin (Microsoft account not available): `-account -s -u <Skin file path (if it is an offline account, if you do not enter it, you will cancel the skin setting)>`<br/>
+  Set the skin to Steve (Microsoft account not available): `-account -s -e`<br/>
+  Set the skin to Alex (Microsoft account not available): `-account -s -x`<br/>
   Set a cape (only for offline account): `-account -c <Cape file path, if not entered it will unset the cape>`
 - Support setting proxy, proxy information is stored in configuration as storage. Proxy configuration:
 
