@@ -71,15 +71,18 @@ public class PrintOption implements Option {
                     uu = account.optString("uuid", uu);
                 }
 
-                //System.out.println(getString("CONSOLE_START_COMMAND"));
-                System.out.println(getMinecraftLaunchCommand(versionJarFile,
+                String path = versionFolder.getAbsolutePath();
+                System.out.println(getString("CONSOLE_START_COMMAND"));
+                System.out.println("===================================================================================================================");
+                System.out.println("cd " + (Utils.isWindows() ? "/D " : "") + (path.contains(" ") ? ("\"" + path + "\"") : path));
+                System.out.println(getMinecraftLaunchCommand(versionFolder, versionJarFile,
                         versionJsonFile,
                         gameDir,
                         assetsDir,
                         respackDir,
                         account.optString("playerName", "XPlayer"),
                         jsonObject.optString("javaPath", Utils.getDefaultJavaPath()),
-                        jsonObject.optInt("maxMemory", Utils.getDefaultMemory()),
+                        jsonObject.optLong("maxMemory", Utils.getDefaultMemory()),
                         128,
                         jsonObject.optInt("windowSizeWidth", 854),
                         jsonObject.optInt("windowSizeHeight", 480),
@@ -88,9 +91,11 @@ public class PrintOption implements Option {
                         uu,
                         false,
                         !jsonObject.optBoolean("isFullscreen"),
+                        account.optJSONObject("properties"),
                         Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
                         Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
                         StartOption.getAuthlibInformation(account, at, uu, false)));
+                System.out.println("===================================================================================================================");
             } catch (EmptyNativesException ex) {
                 System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
             } catch (LibraryDefectException ex) {

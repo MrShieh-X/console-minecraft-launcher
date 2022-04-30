@@ -28,17 +28,17 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
 public class AuthlibAccountLoginner {
     public static void login(String address, String username, String password, boolean selected, JSONObject config) throws Exception {
         String url = AuthlibUtils.addHttpsIfMissing(address);
-        /**serverName*/String serverName = "AuthlibServer";
-        /**metadata存储时变成base64，启动时直接拿来用*/String metadata;
+        /*serverName*/
+        String serverName = "AuthlibServer";
+        /*metadata存储时变成base64，启动时直接拿来用*/
+        String metadata;
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
 
@@ -88,15 +88,60 @@ public class AuthlibAccountLoginner {
                 return;
             }
             //System.out.println(firstResponse);
-            /**clientToken*/String clientToken = firstResponse.optString("clientToken");
+            /*clientToken*/
+            String clientToken = firstResponse.optString("clientToken");
+
+            /*playerName*/
+            String playerName;
+            /*uuid*/
+            String uuid;
+
+
             JSONObject selectedProfile = firstResponse.optJSONObject("selectedProfile");
-            if (selectedProfile == null) {
-                System.out.println(getString("FAILED_TO_LOGIN_OAA_NO_SELECTED_CHARACTER"));
-                return;
+            if (selectedProfile != null) {
+                playerName = selectedProfile.optString("name");
+                uuid = selectedProfile.optString("id");
+            } else {
+                List<JSONObject> availableProfiles = Utils.jsonArrayToJSONObjectList(firstResponse.optJSONArray("availableProfiles"));
+                if (availableProfiles.size() > 0) {
+                    for (int i = 0; i < availableProfiles.size(); i++) {
+                        JSONObject jsonObject = availableProfiles.get(i);
+                        System.out.println((i + 1) + "." + jsonObject.optString("name"));
+                    }
+                    int number = ConsoleUtils.inputInt(Utils.getString("MESSAGE_AUTHLIB_INJECTOR_LOGIN_SELECT_PROFILE", 1, availableProfiles.size()), 1, availableProfiles.size());
+
+                    if (number != Integer.MAX_VALUE) {
+                        JSONObject profile = availableProfiles.get(number - 1);
+                        playerName = profile.optString("name");
+                        uuid = profile.optString("id");
+                    } else {
+                        return;
+                    }
+                } else {
+                    System.out.println(getString("FAILED_TO_LOGIN_OAA_NO_SELECTED_CHARACTER"));
+                    return;
+                }
             }
-            /**playerName*/String playerName = selectedProfile.optString("name");
-            /**uuid*/String uuid = selectedProfile.optString("id");
-            /**accessToken*/String accessToken = firstResponse.optString("accessToken");
+
+            JSONObject user = firstResponse.optJSONObject("user");
+            boolean did = false;
+            JSONObject propertiesJO = new JSONObject();
+            if (user != null) {
+                JSONObject properties = user.optJSONObject("properties");
+                if (properties != null) {
+                    for (Map.Entry<String, Object> entry : properties.toMap().entrySet()) {
+                        did = true;
+                        propertiesJO.put(entry.getKey(), new JSONArray().put(entry));
+                    }
+                }
+            }
+
+
+
+
+
+            /*accessToken*/
+            String accessToken = firstResponse.optString("accessToken");
 
             JSONArray accounts = config.optJSONArray("accounts");
             int indexOf = -1;
@@ -106,7 +151,7 @@ public class AuthlibAccountLoginner {
                     if (jsonObject1 != null) {
                         if (jsonObject1.optInt("loginMethod") == 1 &&
                                 AuthlibUtils.urlEqualsIgnoreSlash(url, jsonObject1.optString("url")) &&
-                                Objects.equals(uuid, jsonObject1.optString("uuid"))) {
+                                Objects.equals(uuid, jsonObject1.optString("uuid")) && Utils.isValidAccount(jsonObject1)) {
                             indexOf = i;
                             break;
                         } else {
@@ -132,6 +177,11 @@ public class AuthlibAccountLoginner {
             account.put("url", url);
 
 
+            if (did) {
+                account.put("properties", propertiesJO);
+            }
+
+
             if (indexOf < 0) {
                 accounts.put(account);
                 config.put("accounts", accounts);
@@ -139,8 +189,7 @@ public class AuthlibAccountLoginner {
                 System.out.println(getString("MESSAGE_LOGINED_TITLE"));
             } else {
                 if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
-                    accounts.remove(indexOf);
-                    accounts.put(account);
+                    accounts.put(indexOf, account);
                     config.put("accounts", accounts);
                     Utils.saveConfig(config);
                     System.out.println(getString("MESSAGE_LOGINED_TITLE"));

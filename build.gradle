@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.mrshiehx'
-String versionString='1.1'
+String versionString='1.2'
 version versionString
 
 repositories {
@@ -11,12 +11,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'org.jetbrains:annotations:23.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'org.json:json:20211205'
+    implementation 'org.json:json:20220320'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
+    implementation 'org.jenkins-ci:constant-pool-scanner:1.2'
 }
 
 test {

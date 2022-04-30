@@ -38,7 +38,7 @@ public class Languages {
             zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS", "特别鸣谢：");
             zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR", "authlib-injector 相关支持");
             zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI", "提供BMCLAPI下载源");
-            zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS 我的世界中文论坛");
+            zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS 我的世界中文论坛....");
             zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS", "提供MCBBS下载源");
             zh.put("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE", "登录正版账号失败");
             zh.put("MESSAGE_LOGINED_TITLE", "登录账号成功");
@@ -50,12 +50,12 @@ public class Languages {
             zh.put("MESSAGE_STARTING_GAME", "启动游戏中...");
             zh.put("MESSAGE_FINISHED_GAME", "游戏结束");
             zh.put("MESSAGE_FAILED_TO_CONNECT_TO_URL", "连接到 %s 失败，请检查您的网络连接。");
-            zh.put("MESSAGE_VERSIONS_LIST_IS_EMPTY", "版本列表为空。");
+            zh.put("MESSAGE_VERSIONS_LIST_IS_EMPTY", "游戏版本列表为空。");
             zh.put("MESSAGE_INSTALL_INPUT_NAME", "请输入新版本的名称：");
             zh.put("MESSAGE_INSTALL_INPUT_NAME_EXISTS", "“%s”该名称已存在，请更换一个名称。");
             zh.put("MESSAGE_FAILED_TO_CONTROL_VERSION_JSON_FILE", "下载或解析目标版本的 JSON 文件失败：%s");
             zh.put("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO", "在目标版本的JSON文件中找不到客户端文件的下载信息。");
-            zh.put("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY", "客户端文件的下载地址为空。");
+            zh.put("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY", "客户端文件的下载链接为空。");
             zh.put("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION", "安装新版本失败：%s");
             zh.put("MESSAGE_INSTALL_DOWNLOADING_JAR_FILE", "正在下载客户端文件...");
             zh.put("MESSAGE_INSTALL_DOWNLOADED_JAR_FILE", "下载客户端文件完成");
@@ -63,7 +63,7 @@ public class Languages {
             zh.put("MESSAGE_INSTALL_DOWNLOADED_ASSETS", "下载资源文件完成");
             zh.put("MESSAGE_INSTALL_DOWNLOAD_ASSETS_NO_INDEX", "下载资源文件失败，找不到资源文件索引。");
             zh.put("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", "下载资源文件失败：%s");
-            zh.put("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL", "找不到下载地址");
+            zh.put("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL", "找不到下载链接");
             zh.put("MESSAGE_FAILED_DOWNLOAD_FILE", "下载文件“%s”失败");
             zh.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON", "下载文件“%s”失败：%s");
             zh.put("MESSAGE_INSTALL_DOWNLOADING_LIBRARIES", "正在下载依赖库文件...");
@@ -85,11 +85,23 @@ public class Languages {
             zh.put("MESSAGE_GAME_CRASH_CAUSE_TIPS", "游戏崩溃可能的错误：%s");
             zh.put("MESSAGE_GAME_CRASH_CAUSE_URLCLASSLOADER", "旧版本 Minecraft 出现此错误可能是因为 Java 版本过高，可使用 Java 8 及更低版本以修复此问题。");
             zh.put("MESSAGE_GAME_CRASH_CAUSE_LWJGL_FAILED_LOAD", "出现此错误可能是因为原生依赖库缺失或损坏，请通过“-version -n <版本名称>”重新下载依赖库文件以修复此问题。");
-            zh.put("MESSAGE_GAME_CRASH_CAUSE_MEMORY_TOO_SMALL", "内存太小，可尝试前往设置把内存调整为一个更大的数。");
+            zh.put("MESSAGE_GAME_CRASH_CAUSE_MEMORY_TOO_SMALL", "内存不足，可尝试把内存调整为一个更大的数。");
             zh.put("MESSAGE_REDOWNLOADED_NATIVES", "下载原生依赖库文件完成");
+            zh.put("MESSAGE_FAILED_SEARCH", "搜索失败：%s");
+            zh.put("MESSAGE_FAILED_RENAME_VERSION", "重命名版本失败：%s");
+            zh.put("MESSAGE_START_INSTALLING_FORGE", "开始安装 Forge");
+            zh.put("MESSAGE_INSTALLED_FORGE", "安装 Forge 成功");
+            zh.put("MESSAGE_NOT_FOUND_LIBRARY_DOWNLOAD_URL", "找不到依赖库 %s 的下载链接");
+            zh.put("MESSAGE_INSTALL_NATIVES_EMPTY_JAR", "无需要解压的原生依赖库文件");
+            zh.put("MESSAGE_INSTALL_NATIVES_EMPTY_NATIVE_FILE", "无需要复制的原生依赖库文件");
+            zh.put("MESSAGE_INSTALL_FORGE_FAILED_EXECUTE_PROCESSOR", "执行任务失败：%s");
+            zh.put("MESSAGE_AUTHLIB_INJECTOR_LOGIN_SELECT_PROFILE", "请选择一个角色(%d-%d)：");
+            zh.put("MESSAGE_INPUT_VERSION_NAME", "请输入要存储为的版本名称：");
+            zh.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", "下载文件失败：%s，文件链接为：%s，可自行下载并存储到 %s 中");
+            zh.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", "下载文件失败：%s，文件链接为：%s，可自行下载并存储到 %s 中，并把名称修改为“%s”");
             zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
             zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“-install <版本名称>”安装一个新的版本并选择。");
-            zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标版本不存在");
+            zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
             zh.put("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND", "找不到原生依赖库（natives）目录或为空，您需要使用“-version -n <版本名称>”下载原生依赖库文件以启动游戏。");
             zh.put("EXCEPTION_MAX_MEMORY_TOO_BIG", "最大内存大于物理内存总大小");
             zh.put("EXCEPTION_MAX_MEMORY_IS_ZERO", "最大内存为零");
@@ -115,12 +127,18 @@ public class Languages {
             zh.put("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD", "您缺少了以上启动游戏的必要依赖库。是否下载它们？");
             zh.put("CONSOLE_FAILED_LIST_VERSIONS", "获得版本列表失败：%s");
             zh.put("CONSOLE_INSTALL_SHOW_INCORRECT_TIME", "不正确的时间格式或第一个时间大于第二个时间。");
+            zh.put("CONSOLE_REPLACE_LOGGED_ACCOUNT", "您已经登录了此账号（序号为 %d），是否覆盖原来的账号？");
+            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_UUID_AND_URL_AND_TOKEN", "如果是外置账号，必须有UUID、accessToken以及外置登录服务器的地址才能进行此操作。");
+            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_ACCESS_TOKEN_AND_CLIENT_TOKEN_AND_URL", "如果是外置账号，必须有 accessToken、clientToken 以及外置登录服务器的地址才能进行此操作。");
+            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_UUID", "必须是正版账号或外置账号登录且有 UUID 才能进行此操作。如果是外置账号还需要目标服务器地址。");
+            zh.put("CONSOLE_INPUT_INT_WRONG", "请输入一个正确的、在范围内的数字。");
+            zh.put("CONSOLE_INPUT_STRING_NOT_FOUND", "找不到“%s”。");
+            zh.put("CONSOLE_IMMERSIVE_UNKNOWN", "找不到命令：%s。请使用 usage 或 help 获取使用手册。");
             zh.put("DATATYPE_STRING", "字符串");
             zh.put("DATATYPE_INTEGER", "整数");
             zh.put("DATATYPE_BOOLEAN", "布尔值");
             zh.put("DATATYPE_FRACTION", "小数");
             zh.put("TIME_FORMAT", "yyyy年MM月dd日 HH:mm:ss");
-            zh.put("CONSOLE_REPLACE_LOGGED_ACCOUNT", "您已经登录了此账号（序号为 %d），是否覆盖原来的账号？");
             zh.put("ACCOUNT_TYPE_MICROSOFT", "微软账号");
             zh.put("ACCOUNT_TYPE_OFFLINE", "离线账号");
             zh.put("ACCOUNT_SELECTED", "已选择");
@@ -164,22 +182,23 @@ public class Languages {
             zh.put("UNABLE_OFFLINE_CUSTOM_SKIN_FILE_FAILED_LOAD", "无法使用自定义皮肤：皮肤文件“%s”加载失败");
             zh.put("UNABLE_GET_VERSION_INFORMATION", "读取版本信息失败");
             zh.put("UNABLE_SET_SKIN", "设置皮肤失败");
-            zh.put("INSTALL_FABRIC_FAILED_TO_GET_INSTALLABLE_VERSION", "无法安装 Fabric：获得可安装的版本失败。");
-            zh.put("INSTALL_FABRIC_NO_INSTALLABLE_VERSION", "无法安装 Fabric：没有可安装的 Fabric 版本，可能是因为 Fabric 不支持此游戏版本。");
-            zh.put("INSTALL_FABRIC_FAILED_TO_GET_TARGET_JSON", "无法安装 Fabric：获得目标 Fabric JSON 失败。");
-            zh.put("INSTALL_FABRIC_SELECT", "请输入您要安装的 Fabric 版本(无需空格)：");
-            zh.put("INSTALL_FABRIC_SELECT_NOT_FOUND", "版本“%s”找不到，请输入您要安装的 Fabric 版本(无需空格)：");
-            zh.put("INSTALL_FABRIC_UNABLE_DO_YOU_WANT_TO_CONTINUE", "请问是否继续安装原版（无 Fabric）？");
-            zh.put("INSTALL_FABRIC_FAILED_TO_PARSE_TARGET_JSON", "无法安装 Fabric：解析目标 Fabric JSON 失败。");
-            zh.put("INSTALL_FABRIC_RESPONSE_NOT_FOUND", "无法安装 Fabric：找不到目标 Fabric 版本。出现此原因有可能是下载源的错误，可尝试更换下载源。");
-            zh.put("INSTALL_FABRIC_ALREADY_INSTALL", "无法安装 Fabric：目标版本已安装 Fabric。");
-            zh.put("INSTALL_FABRIC_EMPTY_MC_VERSION", "无法安装 Fabric：无法获得目标版本的游戏版本。");
-            zh.put("INSTALL_FABRIC_FAILED_WITH_REASON", "安装 Fabric 失败：%s");
-            zh.put("INSTALLED_FABRIC", "安装 Fabric 成功");
+            zh.put("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", "无法安装 %s：获得可安装的版本失败。");
+            zh.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", "无法安装 %1$s：没有可安装的 %1$s 版本，可能是因为 %1$s 不支持此游戏版本。");
+            zh.put("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", "无法安装 %1$s：获得目标 %1$s JSON 失败。");
+            zh.put("INSTALL_MODLOADER_SELECT", "请输入您要安装的 %s 版本(无需空格)：");
+            zh.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "版本“%1$s”找不到，请输入您要安装的 %2$s 版本(无需空格)：");
+            zh.put("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", "请问是否继续安装原版（无 %s）？");
+            zh.put("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", "无法安装 %1$s：解析目标 %1$s JSON 失败。");
+            zh.put("INSTALL_MODLOADER_RESPONSE_NOT_FOUND", "无法安装 %1$s：找不到目标 %1$s 版本。出现此原因有可能是下载源的错误，可尝试更换下载源。");
+            zh.put("INSTALL_MODLOADER_ALREADY_INSTALL", "无法安装 %1$s：目标版本已安装 %1$s。");
+            zh.put("INSTALL_MODLOADER_EMPTY_MC_VERSION", "无法安装 %s：无法获得目标版本的游戏版本。");
+            zh.put("INSTALL_MODLOADER_FAILED_WITH_REASON", "安装 %s 失败：%s");
+            zh.put("INSTALLED_MODLOADER", "安装 %s 成功");
             zh.put("VERSION_INFORMATION_NOTHING", "无任何关于此版本的信息");
             zh.put("VERSION_INFORMATION_GAME_VERSION", "   游戏版本：     ");
             zh.put("VERSION_INFORMATION_RELEASE_TIME", "   版本发布时间： ");
             zh.put("VERSION_INFORMATION_FABRIC_VERSION", "   Fabric 版本：  ");
+            zh.put("VERSION_INFORMATION_FORGE_VERSION", "   Forge 版本：   ");
             zh.put("VERSION_INFORMATION_JAVA_COMPONENT", "   Java 组件：    ");
             zh.put("VERSION_INFORMATION_JAVA_VERSION", "   Java 版本要求：");
             zh.put("VERSION_INFORMATION_ASSETS_VERSION", "   资源版本：     ");
@@ -188,6 +207,8 @@ public class Languages {
             zh.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "快照版");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_OLD_BETA", "远古 Beta 版");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_OLD_ALPHA", "远古 Alpha 版");
+            zh.put("VERSION_INFORMATION_VERSION_PATH", "   版本位置：     ");
+            zh.put("VERSION_INFORMATION_GAME_VERSION_FAILED_GET", "获取失败");
             zh.put("EXCEPTION_JAVA_NOT_FOUND", "无法启动游戏，找不到 Java 文件。");
             zh.put("EXCEPTION_READ_FILE", "读取文件失败");
             zh.put("EXCEPTION_READ_FILE_WITH_PATH", "读取文件“%s”失败");
@@ -196,49 +217,68 @@ public class Languages {
             zh.put("EXCEPTION_WRITE_FILE", "写入文件失败");
             zh.put("EXCEPTION_WRITE_FILE_WITH_PATH", "写入内容到文件“%s”失败");
             zh.put("EXCEPTION_UNABLE_PARSE", "解析失败");
-            zh.put("MOD_FAILED_SEARCH", "搜索模组失败：%s");
-            zh.put("MOD_FAILED_TO_SHOW_SOMEONE", "显示第%d个模组失败：%s");
-            zh.put("MOD_AUTHOR_MORE", "等%d位作者");
-            zh.put("MOD_SELECT_TARGET", "请选择目标模组(%d-%d)：");
-            zh.put("MOD_SUPPORTED_GAME_VERSION", "%s 支持的游戏版本：");
-            zh.put("MOD_FAILED_TO_GET_ALL_FILES", "获得模组文件列表失败：%s");
-            zh.put("MOD_INPUT_GAME_VERSION", "请输入您要下载的游戏版本：");
-            zh.put("MOD_INPUT_MOD_VERSION", "请选择您要下载的模组版本(%d-%d)：");
-            zh.put("MOD_STORAGE_FILE_EXISTS", "文件“%s”已存在，请输入一个存储该模组文件的目录：");
-            zh.put("MOD_SEARCH_NOTHING", "无任何搜索结果。");
-            zh.put("MOD_NO_VERSION_FOR_GAME_VERSION", "没有适用于此游戏版本的模组版本。");
-            zh.put("MOD_INFORMATION_NOTHING", "无任何关于此模组的信息");
-            zh.put("MOD_INFORMATION_NAME", "   模组名称：          ");
-            zh.put("MOD_INFORMATION_ID", "   模组ID：            ");
-            zh.put("MOD_INFORMATION_AUTHORS", "   作者：              ");
-            zh.put("MOD_INFORMATION_SUMMARY", "   简介：              ");
-            zh.put("MOD_INFORMATION_LATEST_GAME_VERSION", "   最新支持的游戏版本：");
-            zh.put("MOD_INFORMATION_MOD_LOADERS", "   模组加载器：        ");
-            zh.put("MOD_INFORMATION_DATE_MODIFIED", "   修改日期：          ");
-            zh.put("MOD_INFORMATION_DATE_CREATED", "   创建日期：          ");
-            zh.put("MOD_INFORMATION_DATE_RELEASED", "   发布日期：          ");
-            zh.put("MOD_INFORMATION_ISSUE_TRACKER_URL", "   问题反馈：          ");
-            zh.put("MOD_INFORMATION_SOURCE_URL", "   源代码仓库：        ");
-            zh.put("MOD_INFORMATION_WEBSITE_URL", "   网页介绍：          ");
-            zh.put("MOD_INFORMATION_AUTHOR_URL", "         主页：");
-            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_UUID_AND_URL_AND_TOKEN", "如果是外置账号，必须有UUID、accessToken以及外置登录服务器的地址才能进行此操作。");
-            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_ACCESS_TOKEN_AND_CLIENT_TOKEN_AND_URL", "如果是外置账号，必须有 accessToken、clientToken 以及外置登录服务器的地址才能进行此操作。");
-            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_UUID", "必须是正版账号或外置账号登录且有 UUID 才能进行此操作。如果是外置账号还需要目标服务器地址。");
-            zh.put("CONSOLE_INPUT_INT_WRONG", "请输入一个正确的、在范围内的数字。");
-            zh.put("CONSOLE_INPUT_STRING_NOT_FOUND", "找不到“%s”。");
+            zh.put("EXCEPTION_INSTALL_MODPACK", "安装整合包失败：%s");
+            zh.put("CF_FAILED_TO_SHOW_SOMEONE", "显示第%d个${NAME}失败：%s");
+            zh.put("CF_AUTHOR_MORE", "等%d位作者");
+            zh.put("CF_SELECT_TARGET", "请选择目标${NAME}(%d-%d)：");
+            zh.put("CF_SUPPORTED_GAME_VERSION", "%s 支持的游戏版本：");
+            zh.put("CF_INPUT_GAME_VERSION", "请输入您要下载的游戏版本：");
+            zh.put("CF_INPUT_VERSION", "请选择您要下载的${NAME}版本(%d-%d，-1为退出)：");
+            zh.put("CF_STORAGE_FILE_EXISTS", "文件“%s”已存在，请输入一个存储该${NAME}文件的目录：");
+            zh.put("CF_NO_VERSION_FOR_GAME_VERSION", "没有适用于此游戏版本的%s版本。");
+            zh.put("CF_INFORMATION_NOTHING", "无任何关于此%s的信息");
+            zh.put("CF_INFORMATION_MOD_NAME", "   模组名称：          ");
+            zh.put("CF_INFORMATION_MOD_ID", "   模组ID：            ");
+            zh.put("CF_INFORMATION_MODPACK_NAME", "   整合包名称：        ");
+            zh.put("CF_INFORMATION_MODPACK_ID", "   整合包ID：          ");
+            zh.put("CF_INFORMATION_AUTHORS", "   作者：              ");
+            zh.put("CF_INFORMATION_SUMMARY", "   简介：              ");
+            zh.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持的游戏版本：");
+            zh.put("CF_INFORMATION_MOD_LOADERS", "   模组加载器：        ");
+            zh.put("CF_INFORMATION_DATE_MODIFIED", "   修改日期：          ");
+            zh.put("CF_INFORMATION_DATE_CREATED", "   创建日期：          ");
+            zh.put("CF_INFORMATION_DATE_RELEASED", "   发布日期：          ");
+            zh.put("CF_INFORMATION_ISSUE_TRACKER_URL", "   问题反馈：          ");
+            zh.put("CF_INFORMATION_SOURCE_URL", "   源代码仓库：        ");
+            zh.put("CF_INFORMATION_WEBSITE_URL", "   网页介绍：          ");
+            zh.put("CF_INFORMATION_AUTHOR_URL", "         主页：");
+            zh.put("CF_GET_BY_ID_FAILED", "无法获得目标${NAME}：%s\n出现该错误有可能的原因：\n1.目标${NAME}不存在\n2.网络异常\n3.服务器出现问题");
+            zh.put("CF_GET_BY_ID_NOT_OF_MC", "目标对象不是 Minecraft 的${NAME}，该对象的游戏ID为%d。");
+            zh.put("CF_DEPENDENCIES_TIP", "此${NAME}需要以下前置${NAME}才能正常运行，请在安装完此${NAME}之后安装以下前置${NAME}。");
+            zh.put("CF_DEPENDENCY_INFORMATION_ID", "   ID：  %d");
+            zh.put("CF_DEPENDENCY_INFORMATION_NAME", "   名称：%s");
+            zh.put("CF_BESEARCHED_MOD_ALC", "模组");
+            zh.put("CF_BESEARCHED_MOD_FUC", "模组");
+            zh.put("CF_BESEARCHED_MODPACK_ALC", "整合包");
+            zh.put("CF_BESEARCHED_MODPACK_FUC", "整合包");
+            zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标对象不是一个${NAME}，该对象的类别ID为%d。");
+            zh.put("MOD_FAILED_TO_GET_ALL_FILES", "获得${NAME}文件列表失败：%s");
+            zh.put("NO_SEARCH_RESULTS", "无任何搜索结果。");
+            zh.put("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", "无法安装 %1$s：目标版本已安装 %2$s，%2$s 和 %1$s 不能共存。");
+            zh.put("INSTALL_MODLOADER_NO_FILE", "无法安装 %1$s：您输入的 %1$s 版本没有可下载的文件，请换一个 %1$s 版本再试。");
+            zh.put("INSTALL_MODLOADER_FAILED_DOWNLOAD", "无法安装 %s：下载文件失败");
+            zh.put("INSTALL_MODLOADER_DOWNLOADING_FILE", "下载文件中...");
+            zh.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION_2", "无法安装 %1$s：没有可安装的 %1$s 版本。");
+            zh.put("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", "无法安装 %1$s：未知 %1$s 类型。");
+            zh.put("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", "无法安装 %1$s：目标 %1$s 的游戏版本与目标游戏版本不匹配。");
+            zh.put("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", "${NAME} 版本“%s”找不到。");
+            zh.put("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", "下载 projectId 为 %d 的模组失败：%s");
+            zh.put("INSTALL_MODPACK_EACH_MOD_GET_URL", "正在遍历获得各个模组的下载链接，请耐心等待");
+            zh.put("INSTALL_MODPACK_COMPLETE", "安装整合包完成");
+
         }
         /*enUS*/
         {
             en.put("APPLICATION_NAME", "Console Minecraft Launcher");
             en.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher %1$s");
-            en.put("MESSAGE_ABOUT_DESCRIPTION_2", "A Launcher of Minecraft Java Edition");
+            en.put("MESSAGE_ABOUT_DESCRIPTION_2", "A Launcher for Minecraft Java Edition");
             en.put("MESSAGE_ABOUT_DESCRIPTION_4", "Source code repository: ");
-            en.put("MESSAGE_ABOUT_DESCRIPTION_6", "Dependency libraries: ");
+            en.put("MESSAGE_ABOUT_DESCRIPTION_6", "Dependency Libraries: ");
             en.put("MESSAGE_ABOUT_DESCRIPTION_MAIN_DEVELOPERS", "Main Developers:");
-            en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS", "Special thanks：");
+            en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS", "Special Thanks：");
             en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR", "authlib-injector support");
             en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI", "BMCLAPI download source provider");
-            en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS");
+            en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS.....................");
             en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS", "MCBBS download source provider");
             en.put("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE", "Failed to login the official account");
             en.put("MESSAGE_LOGINED_TITLE", "Login into the account successfully");
@@ -250,9 +290,9 @@ public class Languages {
             en.put("MESSAGE_STARTING_GAME", "Starting game...");
             en.put("MESSAGE_FINISHED_GAME", "Game finished");
             en.put("MESSAGE_FAILED_TO_CONNECT_TO_URL", "Failed to connect to %s, please check your network connection.");
-            en.put("MESSAGE_VERSIONS_LIST_IS_EMPTY", "The versions list is empty");
+            en.put("MESSAGE_VERSIONS_LIST_IS_EMPTY", "The game versions list is empty");
             en.put("MESSAGE_INSTALL_INPUT_NAME", "Please enter a name of the new version: ");
-            en.put("MESSAGE_INSTALL_INPUT_NAME_EXISTS", "The name \"%s\" already exists, please change a name: ");
+            en.put("MESSAGE_INSTALL_INPUT_NAME_EXISTS", "The name \"%s\" already exists, please change a name.");
             en.put("MESSAGE_FAILED_TO_CONTROL_VERSION_JSON_FILE", "Failed to download or parse the target version of the JSON file: %s");
             en.put("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO", "The download information of the client file in the JSON file of the target version not found.");
             en.put("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY", "The download url of the client file is empty.");
@@ -285,15 +325,27 @@ public class Languages {
             en.put("MESSAGE_GAME_CRASH_CAUSE_TIPS", "Game crash possible error: %s");
             en.put("MESSAGE_GAME_CRASH_CAUSE_URLCLASSLOADER", "Older versions of Minecraft may have this error because the Java version is too high, Java 8 and below can be used to fix this.");
             en.put("MESSAGE_GAME_CRASH_CAUSE_LWJGL_FAILED_LOAD", "This error may occur because some of the native dependency library are missing or damaged, please re-download native dependency libraries via \"-version -n <version name>\" to fix this problem.");
-            en.put("MESSAGE_GAME_CRASH_CAUSE_MEMORY_TOO_SMALL", "The memory is too small, you can try to go to the settings to adjust the memory to a larger number.");
+            en.put("MESSAGE_GAME_CRASH_CAUSE_MEMORY_TOO_SMALL", "The memory is not enough, you can try to adjust the memory to a larger number.");
             en.put("MESSAGE_REDOWNLOADED_NATIVES", "Download native dependency libraries complete");
+            en.put("MESSAGE_FAILED_SEARCH", "Failed to search: %s");
+            en.put("MESSAGE_FAILED_RENAME_VERSION", "Failed to rename the version: %s");
+            en.put("MESSAGE_START_INSTALLING_FORGE", "Start installing Forge");
+            en.put("MESSAGE_INSTALLED_FORGE", "Forge installed successfully");
+            en.put("MESSAGE_NOT_FOUND_LIBRARY_DOWNLOAD_URL", "Could not find the download URL of the dependency library %s");
+            en.put("MESSAGE_INSTALL_NATIVES_EMPTY_JAR", "No native dependency library files that need to be decompressed");
+            en.put("MESSAGE_INSTALL_NATIVES_EMPTY_NATIVE_FILE", "No native dependency library files that need to be copied");
+            en.put("MESSAGE_INSTALL_FORGE_FAILED_EXECUTE_PROCESSOR", "Failed to execute processor: %s");
+            en.put("MESSAGE_AUTHLIB_INJECTOR_LOGIN_SELECT_PROFILE", "Please choose a character (%d-%d): ");
+            en.put("MESSAGE_INPUT_VERSION_NAME", "Please enter the version name to store as: ");
+            en.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", "Failed to download the file: %s, the file link is: %s, you can download and store it in %s by yourself");
+            en.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", "Failed to download the file: %s, the file link is: %s, you can download and store it in %s by yourself, and change the name to \"%s\"");
             en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
             en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <Version Name>\" to select a launch-able version or \"-install <Version Name>\" to install a new version and select it.");
-            en.put("EXCEPTION_VERSION_NOT_FOUND", "The target startup version does not exist");
+            en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
             en.put("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND", "Cannot find the native libraries directory or it is empty, you can re-download the native library files via \"-version -n <version name>\" to start game.");
             en.put("EXCEPTION_MAX_MEMORY_TOO_BIG", "The maximum memory is larger than the total physical memory size");
             en.put("EXCEPTION_MAX_MEMORY_IS_ZERO", "The maximum memory is 0");
-            en.put("EXCEPTION_JAVA_VERSION_TOO_LOW", "The minimum Java version required for this version of Minecraft is %d, the Java version you have selected is %d, please go to settings to select a Java that meets the requirements and try again.");
+            en.put("EXCEPTION_JAVA_VERSION_TOO_LOW", "The minimum Java version required for this version of Minecraft is %d, the Java version you have selected is %d, please select a Java that meets the requirements and try again.");
             en.put("LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "Please login your Microsoft account in the browser,\nIf the login is successful, back to launcher and wait for the login to complete.\nIt will take some time to login, please be patient.\nPress the button below to cancel login.");
             en.put("ON_AUTHENTICATED_PAGE_TEXT", "Microsoft account authorization has been completed. Please close this page and back to the launcher to complete login.");
             en.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "Login Microsoft Account - Console Minecraft Launcher");
@@ -315,12 +367,18 @@ public class Languages {
             en.put("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD", "You are missing the above necessary dependent libraries to start the game. Do you want to download them?");
             en.put("CONSOLE_FAILED_LIST_VERSIONS", "Failed to get the versions list: %s");
             en.put("CONSOLE_INSTALL_SHOW_INCORRECT_TIME", "Incorrect time format or the first time is bigger than the second time.");
+            en.put("CONSOLE_REPLACE_LOGGED_ACCOUNT", "You have already logged in to this account (order number is %d). Do you want to overwrite the original account?");
+            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_UUID_AND_URL_AND_TOKEN", "If it is an authlib-injector account, you must have the UUID, accessToken and the address of the authlib-injector server to perform this operation.");
+            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_ACCESS_TOKEN_AND_CLIENT_TOKEN_AND_URL", "If it is an authlib-injector account, you must have accessToken, clientToken and the address of the authlib-injector server to perform this operation.");
+            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_UUID", "You must be logged in with an official account or an authlib-injector account and have a UUID to perform this operation. If it is an authlib-injector account, the target server address is also required.");
+            en.put("CONSOLE_INPUT_INT_WRONG", "Please enter a correct number within range. ");
+            en.put("CONSOLE_INPUT_STRING_NOT_FOUND", "Not found \"%s\". ");
+            en.put("CONSOLE_IMMERSIVE_UNKNOWN", "Command not found: %s. Please use command \"usage\" or \"help\" to get the manual.");
             en.put("DATATYPE_STRING", "String");
             en.put("DATATYPE_INTEGER", "Integer");
             en.put("DATATYPE_BOOLEAN", "Boolean");
             en.put("DATATYPE_FRACTION", "Fraction");
             en.put("TIME_FORMAT", "EEE, MMM d, yyyy HH:mm:ss");
-            en.put("CONSOLE_REPLACE_LOGGED_ACCOUNT", "You have already logged in to this account (order number is %d). Do you want to overwrite the original account?");
             en.put("ACCOUNT_TYPE_MICROSOFT", "Microsoft Account");
             en.put("ACCOUNT_TYPE_OFFLINE", "Offline Account");
             en.put("ACCOUNT_SELECTED", "Selected");
@@ -364,22 +422,31 @@ public class Languages {
             en.put("UNABLE_OFFLINE_CUSTOM_SKIN_FILE_FAILED_LOAD", "Can't use custom skin: Failed to load the skin file \"%s\"");
             en.put("UNABLE_GET_VERSION_INFORMATION", "Failed to read version information");
             en.put("UNABLE_SET_SKIN", "Failed to set skin");
-            en.put("INSTALL_FABRIC_FAILED_TO_GET_INSTALLABLE_VERSION", "Unable to install Fabric: Failed to get installable versions.");
-            en.put("INSTALL_FABRIC_NO_INSTALLABLE_VERSION", "Unable to install Fabric: There is no installable version of Fabric, probably because Fabric does not support this version of the game.");
-            en.put("INSTALL_FABRIC_FAILED_TO_GET_TARGET_JSON", "Unable to install Fabric: Failed to get target Fabric JSON.");
-            en.put("INSTALL_FABRIC_SELECT", "Please enter the version of Fabric you want to install (no spaces required): ");
-            en.put("INSTALL_FABRIC_SELECT_NOT_FOUND", "Version \"%s\" not found, please enter the version of Fabric you want to install (no spaces required): ");
-            en.put("INSTALL_FABRIC_UNABLE_DO_YOU_WANT_TO_CONTINUE", "Would you like to continue installing the original version (without Fabric)?");
-            en.put("INSTALL_FABRIC_FAILED_TO_PARSE_TARGET_JSON", "Unable to install Fabric: Failed to parse target Fabric JSON.");
-            en.put("INSTALL_FABRIC_RESPONSE_NOT_FOUND", "Unable to install Fabric: The target Fabric version could not be found. The reason for this may be the download source error, you can try to change the download source.");
-            en.put("INSTALL_FABRIC_ALREADY_INSTALL", "Unable to install Fabric: The target version is installed Fabric.");
-            en.put("INSTALL_FABRIC_EMPTY_MC_VERSION", "Unable to install Fabric: Could not get the target version of the game version.");
-            en.put("INSTALL_FABRIC_FAILED_WITH_REASON", "Failed to install Fabric: %s");
-            en.put("INSTALLED_FABRIC", "Fabric installed successfully");
+            en.put("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", "Unable to install %s: Failed to get installable versions.");
+            en.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", "Unable to install %1$s: There is no installable version of %1$s, probably because %1$s does not support this version of the game.");
+            en.put("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", "Unable to install %1$s: Failed to get target %1$s JSON.");
+            en.put("INSTALL_MODLOADER_SELECT", "Please enter the version of %1$s you want to install (no spaces required): ");
+            en.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "Version \"%1$s\" not found, please enter the version of %2$s you want to install (no spaces required): ");
+            en.put("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", "Would you like to continue installing the original version (without %s)?");
+            en.put("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", "Unable to install %1$s: Failed to parse target %1$s JSON.");
+            en.put("INSTALL_MODLOADER_RESPONSE_NOT_FOUND", "Unable to install %1$s: The target %1$s version could not be found. The reason for this may be the download source error, you can try to change the download source.");
+            en.put("INSTALL_MODLOADER_ALREADY_INSTALL", "Unable to install %1$s: The target version is installed %1$s.");
+            en.put("INSTALL_MODLOADER_EMPTY_MC_VERSION", "Unable to install %1$s: Could not get the target version of the game version.");
+            en.put("INSTALL_MODLOADER_FAILED_WITH_REASON", "Failed to install %s: %s");
+            en.put("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", "Unable to install %1$s: The target version already has %2$s installed, %2$s and %1$s cannot coexist.");
+            en.put("INSTALL_MODLOADER_NO_FILE", "Unable to install %1$s: The version of %1$s you entered has no downloadable files. Please try another version of %1$s.");
+            en.put("INSTALL_MODLOADER_FAILED_DOWNLOAD", "Unable to install %s: download file failed");
+            en.put("INSTALL_MODLOADER_DOWNLOADING_FILE", "Downloading file...");
+            en.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION_2", "Unable to install %1$s: There is no installable version of %1$s.");
+            en.put("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", "Unable to install %1$s: Unknown type of %1$s.");
+            en.put("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", "Unable to install %1$s: The game version of the target %1$s does not match the target game version.");
+            en.put("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", "${NAME} version \"%s\" not found.");
+            en.put("INSTALLED_MODLOADER", "%s installed successfully");
             en.put("VERSION_INFORMATION_NOTHING", "There is no information about this version");
             en.put("VERSION_INFORMATION_GAME_VERSION", "   Game Version:             ");
             en.put("VERSION_INFORMATION_RELEASE_TIME", "   Version Release Time:     ");
             en.put("VERSION_INFORMATION_FABRIC_VERSION", "   Fabric Version:           ");
+            en.put("VERSION_INFORMATION_FORGE_VERSION", "   Forge Version:            ");
             en.put("VERSION_INFORMATION_JAVA_COMPONENT", "   Java Component:           ");
             en.put("VERSION_INFORMATION_JAVA_VERSION", "   Java Version Requirement: ");
             en.put("VERSION_INFORMATION_ASSETS_VERSION", "   Resource version:         ");
@@ -388,6 +455,8 @@ public class Languages {
             en.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "Snapshot");
             en.put("VERSION_INFORMATION_VERSION_TYPE_OLD_BETA", "Old Beta");
             en.put("VERSION_INFORMATION_VERSION_TYPE_OLD_ALPHA", "Old Alpha");
+            en.put("VERSION_INFORMATION_VERSION_PATH", "   File Location：           ");
+            en.put("VERSION_INFORMATION_GAME_VERSION_FAILED_GET", "Failed to get");
             en.put("EXCEPTION_JAVA_NOT_FOUND", "Unable to launch game: the java file not found");
             en.put("EXCEPTION_READ_FILE", "Failed to read file");
             en.put("EXCEPTION_READ_FILE_WITH_PATH", "Failed to read the file \"%s\"");
@@ -396,49 +465,60 @@ public class Languages {
             en.put("EXCEPTION_WRITE_FILE", "Failed to write content to file");
             en.put("EXCEPTION_WRITE_FILE_WITH_PATH", "Failed to write content to the file \"%s\"");
             en.put("EXCEPTION_UNABLE_PARSE", "Failed to parse");
-            en.put("MOD_FAILED_SEARCH", "Failed to search for mods: %s");
-            en.put("MOD_FAILED_TO_SHOW_SOMEONE", "Failed to display mod %d: %s");
-            en.put("MOD_AUTHOR_MORE", "and other %d authors");
-            en.put("MOD_SELECT_TARGET", "Please select the target mod (%d-%d): ");
-            en.put("MOD_SUPPORTED_GAME_VERSION", "%s supported game versions: ");
-            en.put("MOD_FAILED_TO_GET_ALL_FILES", "Failed to get list of mod files: %s");
-            en.put("MOD_INPUT_GAME_VERSION", "Please enter the version of the game you want to download: ");
-            en.put("MOD_INPUT_MOD_VERSION", "Please select the mod version you want to download (%d-%d): ");
-            en.put("MOD_STORAGE_FILE_EXISTS", "The file \"%s\" already exists, please enter a directory to store the mod file: ");
-            en.put("MOD_SEARCH_NOTHING", "No search results.");
-            en.put("MOD_NO_VERSION_FOR_GAME_VERSION", "There is no mod version available for this game version.");
-            en.put("MOD_INFORMATION_NOTHING", "There is no information about this mod");
-            en.put("MOD_INFORMATION_NAME", "   Mod Name:                      ");
-            en.put("MOD_INFORMATION_ID", "   Mod ID:                        ");
-            en.put("MOD_INFORMATION_AUTHORS", "   Authors:                       ");
-            en.put("MOD_INFORMATION_SUMMARY", "   Introduction:                  ");
-            en.put("MOD_INFORMATION_LATEST_GAME_VERSION", "   Latest Supported Game Version: ");
-            en.put("MOD_INFORMATION_MOD_LOADERS", "   Mod Loaders:                   ");
-            en.put("MOD_INFORMATION_DATE_MODIFIED", "   Modified Date:                 ");
-            en.put("MOD_INFORMATION_DATE_CREATED", "   Created Date:                  ");
-            en.put("MOD_INFORMATION_DATE_RELEASED", "   Released Date:                 ");
-            en.put("MOD_INFORMATION_ISSUE_TRACKER_URL", "   Feedback:                      ");
-            en.put("MOD_INFORMATION_SOURCE_URL", "   Source Code Repository:        ");
-            en.put("MOD_INFORMATION_WEBSITE_URL", "   Webpage Introduction:          ");
-            en.put("MOD_INFORMATION_AUTHOR_URL", "         Homepage: ");
-            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_UUID_AND_URL_AND_TOKEN", "If it is an authlib-injector account, you must have the UUID, accessToken and the address of the authlib-injector server to perform this operation.");
-            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_ACCESS_TOKEN_AND_CLIENT_TOKEN_AND_URL", "If it is an authlib-injector account, you must have accessToken, clientToken and the address of the authlib-injector server to perform this operation.");
-            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_UUID", "You must be logged in with an official account or an authlib-injector account and have a UUID to perform this operation. If it is an authlib-injector account, the target server address is also required.");
-            en.put("CONSOLE_INPUT_INT_WRONG", "Please enter a correct number within range. ");
-            en.put("CONSOLE_INPUT_STRING_NOT_FOUND", "Not found \"%s\". ");
+            en.put("EXCEPTION_INSTALL_MODPACK", "Failed to install modpack: %s");
+            en.put("CF_FAILED_TO_SHOW_SOMEONE", "Failed to display ${NAME} %d: %s");
+            en.put("CF_AUTHOR_MORE", "and other %d authors");
+            en.put("CF_SELECT_TARGET", "Please select the target ${NAME} (%d-%d): ");
+            en.put("CF_SUPPORTED_GAME_VERSION", "%s supported game versions: ");
+            en.put("CF_INPUT_GAME_VERSION", "Please enter the version of the game you want to download: ");
+            en.put("CF_INPUT_VERSION", "Please select the ${NAME} version you want to download (%d-%d, exit if the value is -1): ");
+            en.put("CF_STORAGE_FILE_EXISTS", "The file \"%s\" already exists, please enter a directory to store the ${NAME} file: ");
+            en.put("CF_NO_VERSION_FOR_GAME_VERSION", "There is no %s version available for this game version.");
+            en.put("CF_INFORMATION_NOTHING", "There is no information about this %s");
+            en.put("CF_INFORMATION_MOD_NAME", "   Mod Name:                      ");
+            en.put("CF_INFORMATION_MOD_ID", "   Mod ID:                        ");
+            en.put("CF_INFORMATION_MODPACK_NAME", "   Modpack Name:                  ");
+            en.put("CF_INFORMATION_MODPACK_ID", "   Modpack ID:                    ");
+            en.put("CF_INFORMATION_AUTHORS", "   Authors:                       ");
+            en.put("CF_INFORMATION_SUMMARY", "   Introduction:                  ");
+            en.put("CF_INFORMATION_LATEST_GAME_VERSION", "   Latest Supported Game Version: ");
+            en.put("CF_INFORMATION_MOD_LOADERS", "   Mod Loaders:                   ");
+            en.put("CF_INFORMATION_DATE_MODIFIED", "   Modified Date:                 ");
+            en.put("CF_INFORMATION_DATE_CREATED", "   Created Date:                  ");
+            en.put("CF_INFORMATION_DATE_RELEASED", "   Released Date:                 ");
+            en.put("CF_INFORMATION_ISSUE_TRACKER_URL", "   Feedback:                      ");
+            en.put("CF_INFORMATION_SOURCE_URL", "   Source Code Repository:        ");
+            en.put("CF_INFORMATION_WEBSITE_URL", "   Webpage Introduction:          ");
+            en.put("CF_INFORMATION_AUTHOR_URL", "         Homepage: ");
+            en.put("CF_GET_BY_ID_FAILED", "Unable to get target ${NAME}: %s\nPossible reasons for this error:\n1. The target ${NAME} does not exist\n2. Network exception\n3. There is a problem with the server");
+            en.put("CF_GET_BY_ID_NOT_OF_MC", "The target add-on is not a Minecraft ${NAME}, the game ID of the add-on is %d.");
+            en.put("CF_DEPENDENCIES_TIP", "This ${NAME} requires the following pre-${NAME}s to work properly, please install the following pre-${NAME}s after installing this ${NAME}.");
+            en.put("CF_DEPENDENCY_INFORMATION_ID", "   ID:   %d");
+            en.put("CF_DEPENDENCY_INFORMATION_NAME", "   Name: %s");
+            en.put("CF_BESEARCHED_MOD_ALC", "mod");
+            en.put("CF_BESEARCHED_MOD_FUC", "Mod");
+            en.put("CF_BESEARCHED_MODPACK_ALC", "modpack");
+            en.put("CF_BESEARCHED_MODPACK_FUC", "Modpack");
+            en.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "The target game component is not a ${NAME}, the category ID of this component is %d.");
+            en.put("MOD_FAILED_TO_GET_ALL_FILES", "Failed to get list of ${NAME} files: %s");
+            en.put("NO_SEARCH_RESULTS", "No search results.");
+            en.put("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", "Failed to download the mod with projectId %d: %s");
+            en.put("INSTALL_MODPACK_EACH_MOD_GET_URL", "Traversing to get the download links of each mod, please be patient");
+            en.put("INSTALL_MODPACK_COMPLETE", "Install modpack complete");
         }
         /*enUSUsage*/
         {
             enUsage.put("TITLE",
                     "Usage Manual:\n" +
-                            "    Print usage manual:                    -u\n" +
-                            "    Start the selected version:             Direct start game without parameters or -b\n" +
+                            "    Print usage manual:                    -u or -usage\n" +
+                            "    Start the selected version:             Direct start game without parameters or -b or -start\n" +
                             "    Start a specific version:               Unique parameter: <Version Name> or -b <Version Name>\n" +
-                            "    List all versions:                     -l\n" +
+                            "    List all versions:                     -l or -list or -ls\n" +
                             "    List all versions in another game dir: -l <Target Game Directory>\n" +
-                            "    Print the launch command:              -p <Version Name>\n" +
-                            "    Select version:                        -s <Version Name>\n" +
-                            "    Get about description:                 -a");
+                            "    Print the launch command:              -p <Version Name> or -print <Version Name>\n" +
+                            "    Select version:                        -s <Version Name> or -select <Version Name>\n" +
+                            "    Get about description:                 -a or -about\n" +
+                            "    To enter immersive mode:               -i or -immersive");
             enUsage.put("ACCOUNT",
                     "Account Related:\n" +
                             "    Select a account:         -account <Order Number>\n" +
@@ -446,7 +526,7 @@ public class Languages {
                             "    Delete a account:         -account -t <Order Number>\n" +
                             "    Offline Login:            -account -l -o <Offline Playername> -s(Optional, select this account after successful login)\n" +
                             "    Microsoft Account Login:  -account -l -m -s(Optional, select this account after successful login)\n" +
-                            "    authlib-injector Login:   -account -l -a -d <Server Address> -s(Optional, select this account after successful login)\n" +
+                            "    authlib-injector Login:   -account -l -a <Server Address> -s(Optional, select this account after successful login)\n" +
                             "    Refresh account:          -account -r\n" +
                             "    Download skin:            -account -s -d <Skin File Storage Path>\n" +
                             "    Set skin (Microsoft account not available):              -account -s -u <Skin file path (if it is an offline account, if you do not enter it, you will cancel the skin setting)>\n" +
@@ -473,7 +553,8 @@ public class Languages {
                             "    Rename a version:         -version -r <Version Name> -t <New Version Name>\n" +
                             "    Re-download the native dependency library files:    -version -n <Version Name>\n" +
                             "    Find missing dependency library files and download: -version -l <Version Name>\n" +
-                            "    Install Fabric to local version:                    -version -f <Version Name>");
+                            "    Install Fabric to local version:                    -version -f <Version Name>\n" +
+                            "    Install Forge to local version:                     -version -o <Version Name>");
             enUsage.put("JVM_ARGS",
                     "Custom JVM Virtual Machine Parameters Related:\n" +
                             "    Print all parameters: -jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>\n" +
@@ -488,7 +569,8 @@ public class Languages {
 
             enUsage.put("INSTALL",
                     "Installation Version Related:\n" +
-                            "    Direct install version: -install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)> -f (optional, install Fabric)\n" +
+                            "    Direct install version: -install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)> -f (optional, install Fabric) -o (optional, install Forge)\n" +
+                            "                      Note: Fabric and Forge cannot be installed at the same time or coexist\n" +
                             "    Optional parameters:\n" +
                             "                -t <Thread Count> Set the number of threads for downloading asset files (default 64)\n" +
                             "                -na Do not download asset files\n" +
@@ -499,22 +581,37 @@ public class Languages {
                             "      Set time range (optional): -i <from year>-<from month>-<from day>/<to year>-<to month>-<to day>\n" +
                             "                        Example: -i 2020-05-09/2021-10-23");
             enUsage.put("MOD",
-                    "Mod Related (CurseForge):\n" +
-                            "    Search for mods and install:             -mod -i <Mod Name>\n" +
-                            "    Search for mods and display information: -mod -s <Mod Name>");
+                    "Mod Related (Download Source: CurseForge):\n" +
+                            "    Search for mods and install (by name):             -mod -i <Mod Name>\n" +
+                            "    Search for mods and install (by ID):               -mod -i -c <Mod ID>\n" +
+                            "    Search for mods and display information (by name): -mod -s <Mod Name>\n" +
+                            "    Search for mods and display information (by ID):   -mod -s -c <Mod ID>");
+            enUsage.put("MODPACK",
+                    "Modpack Related (Download Source: CurseForge):\n" +
+                            "   Optional parameters for installing the modpack:\n" +
+                            "                  -t <Thread Count> Set the number of threads for downloading asset files (default 64)\n" +
+                            "                  -na Do not download asset files\n" +
+                            "                  -nl Do not download dependency library files\n" +
+                            "                  -nn Do not download native dependency library files\n" +
+                            "    Search for modpacks and install (by name):             -modpack -i <Modpack Name> -k(Optional, keep the file after installation)\n" +
+                            "    Search for modpacks and install (by ID):               -modpack -i -c <Modpack ID> -k(Optional, keep the file after installation)\n" +
+                            "    Search for modpacks and display information (by name): -modpack -s <Modpack Name>\n" +
+                            "    Search for modpacks and display information (by ID):   -modpack -s -c <Modpack ID>\n" +
+                            "    Install the local CurseForge modpack:                  -modpack -l <Modpack Path>");
         }
         /*zhCNUsage*/
         {
             zhUsage.put("TITLE",
                     "使用手册：\n" +
-                            "    获得使用手册：              -u\n" +
-                            "    启动选择的版本：             无参数直接运行 或 -b\n" +
+                            "    获得使用手册：              -u 或 -usage\n" +
+                            "    启动选择的版本：             无参数直接运行 或 -b 或 -start\n" +
                             "    启动特定的版本：             唯一参数：<版本名称> 或 -b <版本名称>\n" +
-                            "    列出所有版本：              -l\n" +
+                            "    列出所有版本：              -l 或 -list 或 -ls\n" +
                             "    列出某个游戏目录的所有版本：-l <目标游戏目录>\n" +
-                            "    打印启动命令：              -p <版本名称>\n" +
-                            "    选择版本：                  -s <版本名称>\n" +
-                            "    获得关于信息：              -a");
+                            "    打印启动命令：              -p <版本名称> 或 -print <版本名称>\n" +
+                            "    选择版本：                  -s <版本名称> 或 -select <版本名称>\n" +
+                            "    获得关于信息：              -a 或 -about\n" +
+                            "    进入沉浸模式：              -i 或 -immersive");
             zhUsage.put("ACCOUNT",
                     "账号相关：\n" +
                             "    选择账号：       -account <序号>\n" +
@@ -522,7 +619,7 @@ public class Languages {
                             "    删除账号：       -account -t <序号>\n" +
                             "    离线登录：       -account -l -o <离线用户名> -s(可选，登录成功后选择此账号)\n" +
                             "    微软账号登录：   -account -l -m -s(可选，登录成功后选择此账号)\n" +
-                            "    外置账号登录：   -account -l -a -d <服务器地址> -s(可选，登录成功后选择此账号)\n" +
+                            "    外置账号登录：   -account -l -a <服务器地址> -s(可选，登录成功后选择此账号)\n" +
                             "    刷新账号：       -account -r\n" +
                             "    下载皮肤：       -account -s -d <皮肤文件存储路径>\n" +
                             "    设置皮肤（微软账户不可用）：         -account -s -u <皮肤文件路径(如果是离线账号，不输入则为取消设置皮肤)>\n" +
@@ -549,7 +646,8 @@ public class Languages {
                             "    重命名版本：                -version -r <版本名称> -t <新版本名称>\n" +
                             "    重新下载原生依赖库文件：    -version -n <版本名称>\n" +
                             "    查找缺少的依赖库文件并下载：-version -l <版本名称>\n" +
-                            "    安装 Fabric 到本地版本：    -version -f <版本名称>");
+                            "    安装 Fabric 到本地版本：    -version -f <版本名称>\n" +
+                            "    安装 Forge 到本地版本：     -version -o <版本名称>");
 
             zhUsage.put("JVM_ARGS",
                     "自定义JVM虚拟机参数相关：\n" +
@@ -566,7 +664,8 @@ public class Languages {
 
             zhUsage.put("INSTALL",
                     "安装版本相关：\n" +
-                            "    直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)> -f(可选，安装Fabric)\n" +
+                            "    直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)> -f(可选，安装Fabric) -o(可选，安装Forge)\n" +
+                            "              注：Fabric 和 Forge 不能同时安装或共存\n" +
                             "      可选的参数：-t <线程数> 设置下载资源文件的线程数（默认为64）\n" +
                             "                  -na 不下载资源文件\n" +
                             "                  -nl 不下载依赖库文件\n" +
@@ -576,9 +675,23 @@ public class Languages {
                             "      设置时间范围（可选）：-i <从年>-<从月>-<从日>/<到年>-<到月>-<到日>\n" +
                             "                        例：-i 2020-05-09/2021-10-23");
             zhUsage.put("MOD",
-                    "模组相关（CurseForge）：\n" +
-                            "    搜索模组并安装：    -mod -i <模组名称>\n" +
-                            "    搜索模组并显示信息：-mod -s <模组名称>");
+                    "模组相关（下载源：CurseForge）：\n" +
+                            "    搜索模组并安装（通过名称）：    -mod -i <模组名称>\n" +
+                            "    搜索模组并安装（通过ID）：      -mod -i -c <模组ID>\n" +
+                            "    搜索模组并显示信息（通过名称）：-mod -s <模组名称>\n" +
+                            "    搜索模组并显示信息（通过ID）：  -mod -s -c <模组ID>");
+            zhUsage.put("MODPACK",
+                    "整合包相关（下载源：CurseForge）：\n" +
+                            "   安装整合包的可选参数：\n" +
+                            "                  -t <线程数> 设置下载资源文件的线程数（默认为64）\n" +
+                            "                  -na 不下载资源文件\n" +
+                            "                  -nl 不下载依赖库文件\n" +
+                            "                  -nn 不下载原生依赖库文件\n" +
+                            "    搜索整合包并安装（通过名称）：    -modpack -i <整合包名称> -k(可选，安装完成后保留文件)\n" +
+                            "    搜索整合包并安装（通过ID）：      -modpack -i -c <整合包ID> -k(可选，安装完成后保留文件)\n" +
+                            "    搜索整合包并显示信息（通过名称）：-modpack -s <整合包名称>\n" +
+                            "    搜索整合包并显示信息（通过ID）：  -modpack -s -c <整合包ID>\n" +
+                            "    安装本地 CurseForge 整合包：      -modpack -l <整合包路径>");
         }
     }
 }

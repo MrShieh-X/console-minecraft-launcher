@@ -33,9 +33,18 @@ public interface DownloadApiProvider {
 
     String versionJSON();//https://launchermeta.mojang.com/
 
-
     String fabricMeta();//https://meta.fabricmc.net/
 
     String fabricMaven();//https://maven.fabricmc.net/
+
+    default String forge() {
+        return "https://bmclapi2.bangbang93.com/forge/";
+    }
+
+    String forgeMaven();//https://files.minecraftforge.net/maven/ or https://maven.minecraftforge.net/
+
+    default String thirdPartyForge() {
+        return "https://bmclapi2.bangbang93.com/forge/download";
+    }//https://bmclapi2.bangbang93.com/forge/download or https://download.mcbbs.net/forge/download
 
 }

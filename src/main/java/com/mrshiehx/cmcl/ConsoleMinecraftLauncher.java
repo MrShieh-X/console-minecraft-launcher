@@ -21,6 +21,7 @@ import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.constants.Languages;
+import com.mrshiehx.cmcl.interfaces.filters.StringFilter;
 import com.mrshiehx.cmcl.options.HelpOption;
 import com.mrshiehx.cmcl.options.Option;
 import com.mrshiehx.cmcl.options.Options;
@@ -48,12 +49,16 @@ public class ConsoleMinecraftLauncher {
     public static File respackDir;
     public static File versionsDir;
     public static File librariesDir;
+    public static File launcherProfiles;
     public static Process runningMc;
 
     public static JSONObject configContent;
     public static String javaPath = "";
 
     private static String language;
+    private static Locale locale;
+
+    public static boolean isImmersiveMode;
 
     static {
         initConfig();
@@ -146,38 +151,30 @@ public class ConsoleMinecraftLauncher {
                 E.printStackTrace();
             }
         }
-        versionsDir = new File(gameDir, "versions");
-        librariesDir = new File(gameDir, "libraries");
+        initChangelessDirs();
         initProxy(configContent);
         return configContent;
     }
 
-    private static void initProxy(JSONObject configContent) {
-        String proxyHost = configContent.optString("proxyHost");
-        if (isEmpty(proxyHost)) return;
-        Utils.setProxy(proxyHost, configContent.optString("proxyPort"), configContent.optString("proxyUsername"), configContent.optString("proxyPassword"));
+    private static void initChangelessDirs() {
+        versionsDir = new File(gameDir, "versions");
+        librariesDir = new File(gameDir, "libraries");
+        launcherProfiles = new File(gameDir, "launcher_profiles.json");
     }
 
-
-    public static void initDefaultDirs() {
+    private static void initDefaultDirs() {
         gameDir = new File(".minecraft");
         assetsDir = new File(gameDir, "assets");
         respackDir = new File(gameDir, "resourcepacks");
     }
 
-
-    public static int numberOfAStringStartInteger(String target) {
-        int r = 0;
-        char[] targetChars = target.toCharArray();
-        for (int i = 0; i < target.length(); i++) {
-            if (targetChars[i] == '0' || targetChars[i] == '1' || targetChars[i] == '2' || targetChars[i] == '3' || targetChars[i] == '4' || targetChars[i] == '5' || targetChars[i] == '6' || targetChars[i] == '7' || targetChars[i] == '8' || targetChars[i] == '9') {
-                r++;
-            } else {
-                break;
-            }
-        }
-        return r;
+    private static void initProxy(JSONObject configContent) {
+        String proxyHost = configContent.optString("proxyHost");
+        String proxyPort = configContent.optString("proxyPort");
+        if (isEmpty(proxyHost) || isEmpty(proxyPort)) return;
+        Utils.setProxy(proxyHost, proxyPort, configContent.optString("proxyUsername"), configContent.optString("proxyPassword"));
     }
+
 
     public static void downloadFile(String url, File to) throws IOException {
         /*Utils.createFile(to, true);
@@ -200,11 +197,12 @@ public class ConsoleMinecraftLauncher {
             int completeFileSize = httpConnection.getContentLength();
             if (progressBar != null)
                 progressBar.setMaximum(completeFileSize);
+            httpConnection.setConnectTimeout(5000);
+            httpConnection.setReadTimeout(5000);
 
             BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
             FileOutputStream fos = new java.io.FileOutputStream(to);
-            BufferedOutputStream bout = new BufferedOutputStream(
-                    fos, 1024);
+            BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
             byte[] data = new byte[1024];
             long downloadedFileSize = 0;
             int x = 0;
@@ -221,6 +219,7 @@ public class ConsoleMinecraftLauncher {
             in.close();
         } catch (IOException e) {
             if (progressBar != null && !progressBar.done) System.out.println();
+            to.delete();
             throw e;
         }
     }
@@ -277,10 +276,14 @@ public class ConsoleMinecraftLauncher {
     }
 
 
-    public static void unZip(File srcFile, File to, @Nullable PercentageTextProgress progressBar) throws IOException {
+    public static void unZip(File zipFileSource, File to, @Nullable PercentageTextProgress progressBar) throws IOException {
+        unZip(zipFileSource, to, progressBar, null);
+    }
+
+    public static void unZip(File zipFileSource, File to, @Nullable PercentageTextProgress progressBar, StringFilter filenameFilter) throws IOException {
         int BUFFER_SIZE = 2048;
-        if (srcFile != null && srcFile.exists()) {
-            ZipFile zipFile = new ZipFile(srcFile);
+        if (zipFileSource != null && zipFileSource.exists()) {
+            ZipFile zipFile = new ZipFile(zipFileSource);
 
             int size = zipFile.size();
             if (progressBar != null)
@@ -289,6 +292,11 @@ public class ConsoleMinecraftLauncher {
             int progress = 0;
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
+                if (filenameFilter != null) {
+                    if (!filenameFilter.accept(entry.getName())) {
+                        continue;
+                    }
+                }
 
                 File targetFile = new File(to, entry.getName());
                 if (entry.isDirectory()) {
@@ -297,6 +305,7 @@ public class ConsoleMinecraftLauncher {
                     if (!targetFile.getParentFile().exists()) {
                         targetFile.getParentFile().mkdirs();
                     }
+                    if (targetFile.exists()) targetFile.delete();
                     targetFile.createNewFile();
                     InputStream is = zipFile.getInputStream(entry);
                     FileOutputStream fos = new FileOutputStream(targetFile);
@@ -324,7 +333,7 @@ public class ConsoleMinecraftLauncher {
     }
 
     public static String getString(String name) {
-        if (getLanguage().equals("zh")) {
+        if ("zh".equals(getLanguage())) {
             String text = Languages.zh.get(name);
             if (!Utils.isEmpty(text)) return text;
         }
@@ -334,7 +343,7 @@ public class ConsoleMinecraftLauncher {
     }
 
     public static String getLanguage() {
-        if (isEmpty(language)) {
+        if (language == null) {
             String lang = Utils.getConfig().optString("language");
             if (isEmpty(lang)) {
                 configContent.put("language", language = Locale.getDefault().getLanguage());
@@ -361,6 +370,34 @@ public class ConsoleMinecraftLauncher {
                 versionsStrings.add(file.getName());
             }
         }
+
         return versionsStrings;
+    }
+
+    public static void createLauncherProfiles() {
+        if (launcherProfiles.exists()) return;
+        try {
+            launcherProfiles.createNewFile();
+            Utils.writeFile(launcherProfiles, "{\"selectedProfile\": \"(Default)\",\"profiles\": {\"(Default)\": {\"name\": \"(Default)\"}},\"clientToken\": \"88888888-8888-8888-8888-888888888888\"}", false);
+        } catch (Exception ignore) {
+        }
+    }
+
+    public static void setLanguage(String language) {
+        ConsoleMinecraftLauncher.language = language;
+    }
+
+    public static Locale getLocale() {
+        if (locale == null) {
+            locale = "zh".equals(getLanguage()) ? Locale.SIMPLIFIED_CHINESE : Locale.ENGLISH;
+        }
+        return locale;
+    }
+
+    public static void setGameDirs() {
+        gameDir = new File(!isEmpty(configContent.optString("gameDir")) ? configContent.optString("gameDir") : ".minecraft");
+        assetsDir = !isEmpty(configContent.optString("assetsDir")) ? new File(configContent.optString("assetsDir")) : new File(gameDir, "assets");
+        respackDir = !isEmpty(configContent.optString("resourcesDir")) ? new File(configContent.optString("resourcesDir")) : new File(gameDir, "resourcepacks");
+        initChangelessDirs();
     }
 }

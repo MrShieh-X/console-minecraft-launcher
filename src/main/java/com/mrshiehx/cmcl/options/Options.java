@@ -34,6 +34,14 @@ public class Options {
         MAP.put("p", new PrintOption());
         MAP.put("b", new StartOption());
         MAP.put("s", new SelectOption());
+        MAP.put("i", new ImmersiveModeOption());
+
+        MAP.put("select", new SelectOption());
+        MAP.put("start", new StartOption());
+        MAP.put("print", new PrintOption());
+        MAP.put("about", new AboutOption());
+        MAP.put("ls", new ListOption());
+        MAP.put("list", new ListOption());
 
         MAP.put("config", new ConfigOption());
         MAP.put("account", new AccountOption());
@@ -42,6 +50,8 @@ public class Options {
         MAP.put("jvmArgs", new JVMArgsOption());
         MAP.put("gameArgs", new GameArgsOption());
         MAP.put("mod", new ModOption());
+        MAP.put("modpack", new ModpackOption());
+        MAP.put("immersive", new ImmersiveModeOption());
 
 
         Map<String, Option> ne = new HashMap<>(MAP);

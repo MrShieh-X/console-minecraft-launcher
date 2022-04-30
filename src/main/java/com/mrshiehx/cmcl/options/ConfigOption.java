@@ -39,8 +39,16 @@ public class ConfigOption implements Option {
         Argument second = arguments.optArgument(2);
         if (subOption instanceof TextArgument && second instanceof TextArgument) {
             TextArgument value = (TextArgument) second;
-            if ("javaPath".equals(key)) javaPath = value.key;
             jsonObject.put(key, value.key);
+            if (isImmersiveMode) {
+                if ("javaPath".equals(key)) javaPath = value.key;
+                if ("language".equals(key)) setLanguage(value.key);
+
+                if ("gameDir".equals(key)) setGameDirs();
+                if ("assetsDir".equals(key)) setGameDirs();
+                if ("resourcesDir".equals(key)) setGameDirs();
+
+            }
             Utils.saveConfig(jsonObject);
             return;
         }
@@ -102,8 +110,13 @@ public class ConfigOption implements Option {
                 }
                 break;
             case "c":
-                javaPath = "";
                 Utils.saveConfig(new JSONObject());
+
+                if (isImmersiveMode) {
+                    javaPath = "";
+                    setLanguage(null);
+                    setGameDirs();
+                }
                 break;
             case "r":
                 if (!(subOption instanceof ValueArgument)) {
@@ -113,9 +126,17 @@ public class ConfigOption implements Option {
 
                 String name2 = ((ValueArgument) subOption).value;
                 jsonObject.remove(name2);
-                if ("javaPath".equals(name2))
-                    javaPath = "";
+
                 Utils.saveConfig(jsonObject);
+                if (isImmersiveMode) {
+                    if ("javaPath".equals(name2))
+                        javaPath = "";
+                    if ("language".equals(name2))
+                        setLanguage(null);
+                    if ("gameDir".equals(key)) setGameDirs();
+                    if ("assetsDir".equals(key)) setGameDirs();
+                    if ("resourcesDir".equals(key)) setGameDirs();
+                }
                 break;
             case "s":
                 Argument type = arguments.optArgument("t");
@@ -129,20 +150,41 @@ public class ConfigOption implements Option {
                     ValueArgument valueA = (ValueArgument) value;
                     switch (typeA.value.toLowerCase()) {
                         case "s":
-                            if ("javaPath".equals(nameA.value)) javaPath = valueA.value;
+
                             jsonObject.put(nameA.value, valueA.value);
                             Utils.saveConfig(jsonObject);
+                            if (isImmersiveMode) {
+                                if ("javaPath".equals(nameA.value)) javaPath = valueA.value;
+                                if ("language".equals(nameA.value)) setLanguage(valueA.value);
+                                if ("gameDir".equals(key)) setGameDirs();
+                                if ("assetsDir".equals(key)) setGameDirs();
+                                if ("resourcesDir".equals(key)) setGameDirs();
+                            }
                             break;
                         case "b":
-                            if ("javaPath".equals(nameA.value)) javaPath = "";
+
                             jsonObject.put(nameA.value, Boolean.parseBoolean(valueA.value));
                             Utils.saveConfig(jsonObject);
+                            if (isImmersiveMode) {
+                                if ("javaPath".equals(nameA.value)) javaPath = "";
+                                if ("language".equals(nameA.value)) setLanguage(null);
+                                if ("gameDir".equals(key)) setGameDirs();
+                                if ("assetsDir".equals(key)) setGameDirs();
+                                if ("resourcesDir".equals(key)) setGameDirs();
+                            }
                             break;
                         case "i":
                             try {
                                 jsonObject.put(nameA.value, Integer.parseInt(valueA.value));
-                                if ("javaPath".equals(nameA.value)) javaPath = "";
+
                                 Utils.saveConfig(jsonObject);
+                                if (isImmersiveMode) {
+                                    if ("javaPath".equals(nameA.value)) javaPath = "";
+                                    if ("language".equals(nameA.value)) setLanguage(null);
+                                    if ("gameDir".equals(key)) setGameDirs();
+                                    if ("assetsDir".equals(key)) setGameDirs();
+                                    if ("resourcesDir".equals(key)) setGameDirs();
+                                }
                             } catch (NumberFormatException e) {
                                 System.out.println(getString("CONSOLE_UNSUPPORTED_VALUE", valueA.value));
                             }
@@ -150,8 +192,16 @@ public class ConfigOption implements Option {
                         case "f":
                             try {
                                 jsonObject.put(nameA.value, Double.parseDouble(valueA.value));
-                                if ("javaPath".equals(nameA.value)) javaPath = "";
+
                                 Utils.saveConfig(jsonObject);
+                                if (isImmersiveMode) {
+                                    if ("javaPath".equals(nameA.value)) javaPath = "";
+                                    if ("language".equals(nameA.value)) setLanguage(null);
+                                    if ("gameDir".equals(key)) setGameDirs();
+                                    if ("assetsDir".equals(key)) setGameDirs();
+                                    if ("resourcesDir".equals(key)) setGameDirs();
+                                }
+
                             } catch (NumberFormatException e) {
                                 System.out.println(getString("CONSOLE_UNSUPPORTED_VALUE", valueA.value));
                             }

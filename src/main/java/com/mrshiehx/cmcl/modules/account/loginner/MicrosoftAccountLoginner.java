@@ -136,7 +136,7 @@ public class MicrosoftAccountLoginner {
                                                         for (int i = 0; i < accounts.length(); i++) {
                                                             JSONObject jsonObject1 = accounts.optJSONObject(i);
                                                             if (jsonObject1 != null) {
-                                                                if (jsonObject1.optInt("loginMethod") == 2 && Objects.equals(accountID, jsonObject1.optString("id"))) {
+                                                                if (jsonObject1.optInt("loginMethod") == 2 && Objects.equals(accountID, jsonObject1.optString("id")) && Utils.isValidAccount(jsonObject1)) {
                                                                     indexOf = i;
                                                                     break;
                                                                 } else {
@@ -165,8 +165,7 @@ public class MicrosoftAccountLoginner {
                                                         System.out.println(getString("MESSAGE_LOGINED_TITLE"));
                                                     } else {
                                                         if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
-                                                            accounts.remove(indexOf);
-                                                            accounts.put(account);
+                                                            accounts.put(indexOf, account);
                                                             config.put("accounts", accounts);
                                                             Utils.saveConfig(config);
                                                             System.out.println(getString("MESSAGE_LOGINED_TITLE"));

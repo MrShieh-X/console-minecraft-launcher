@@ -33,7 +33,7 @@ public class SelectOption implements Option {
             return;
         }
         String select = ((ValueArgument) argument).value;
-        if (Utils.versionContain(select)) {
+        if (Utils.versionExists(select)) {
             Utils.saveConfig(Utils.getConfig().put("selectedVersion", select));
         } else {
             System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));

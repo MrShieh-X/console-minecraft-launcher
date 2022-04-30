@@ -28,11 +28,16 @@ public class Arguments {
     public final int size;
 
     public Arguments(String[] args) {
+        this(args, false);
+    }
+
+    public Arguments(String[] args, boolean forImmersive) {
         this.arguments = new LinkedList<>();
         int length = args.length;
         if ((length >= 3) &&
-                ("-config".equalsIgnoreCase(args[0]) || "--config".equalsIgnoreCase(args[0]) ||
-                        "/config".equalsIgnoreCase(args[0])) &&
+                (forImmersive ? ("config".equalsIgnoreCase(args[0]))
+                        : ("-config".equalsIgnoreCase(args[0]) || "--config".equalsIgnoreCase(args[0]) ||
+                        "/config".equalsIgnoreCase(args[0]))) &&
                 !args[1].startsWith("--") &&
                 !args[1].startsWith("-") &&
                 !args[1].startsWith("/") &&
@@ -49,25 +54,34 @@ public class Arguments {
         }
         for (int i = 0; i < length; i++) {
             String key = args[i];
-            int startLength = -1;
-            if (key.startsWith("--")) {
-                startLength = 2;
-            } else if (key.startsWith("-") || key.startsWith("/")) {
-                startLength = 1;
-            }//加上\-负数的判断
-            if (startLength > 0) {
-                if (i + 1 >= length) {
-                    arguments.add(new SingleArgument(key.substring(startLength)));
+            if (forImmersive && i == 0) {
+                String next = (args.length > (i + 1)) ? args[i + 1] : null;
+                if (!Utils.isEmpty(next) && !next.startsWith("--") && !next.startsWith("-") && !next.startsWith("/")) {
+                    arguments.add(new ValueArgument(key, next.startsWith("\\-") ? next.substring(1) : next));
                 } else {
-                    String next = args[i + 1];
-                    if (!next.startsWith("--") && !next.startsWith("-") && !next.startsWith("/")) {
-                        arguments.add(new ValueArgument(key.substring(startLength), next.startsWith("\\-") ? next.substring(1) : next));
-                    } else {
-                        arguments.add(new SingleArgument(key.substring(startLength)));
-                    }
+                    arguments.add(new SingleArgument(key));
                 }
-            } else if (i == 0 && (!key.startsWith("--") && !key.startsWith("-") && !key.startsWith("/"))) {
-                arguments.add(new ValueArgument("b", key));
+            } else {
+                int startLength = -1;
+                if (key.startsWith("--")) {
+                    startLength = 2;
+                } else if (key.startsWith("-") || key.startsWith("/")) {
+                    startLength = 1;
+                }
+                if (startLength > 0) {
+                    if (i + 1 >= length) {
+                        arguments.add(new SingleArgument(key.substring(startLength)));
+                    } else {
+                        String next = args[i + 1];
+                        if (!next.startsWith("--") && !next.startsWith("-") && !next.startsWith("/")) {
+                            arguments.add(new ValueArgument(key.substring(startLength), next.startsWith("\\-") ? next.substring(1) : next));
+                        } else {
+                            arguments.add(new SingleArgument(key.substring(startLength)));
+                        }
+                    }
+                } else if (!forImmersive && i == 0 && (!key.startsWith("--") && !key.startsWith("-") && !key.startsWith("/"))) {
+                    arguments.add(new ValueArgument("b", key));
+                }
             }
         }
         Utils.removeDuplicate(arguments);

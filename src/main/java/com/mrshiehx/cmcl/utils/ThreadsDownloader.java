@@ -18,6 +18,7 @@
 package com.mrshiehx.cmcl.utils;
 
 import com.mrshiehx.cmcl.bean.Pair;
+import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.interfaces.Void;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class ThreadsDownloader {
     }
 
     public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded) {
-        this(files, onDownloaded, 10);
+        this(files, onDownloaded, Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
     }
 
     public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded, int threadsCount) {
@@ -105,19 +106,34 @@ public class ThreadsDownloader {
                     try {
                         downloadFile(url, file);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE", file.getName()));
+                        Utils.downloadFileFailed(url, file, e);
+                        //System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON", file.getName(),e));
                     }
                 }
-                done++;
-                if (done == threadsCount) {
+                //System.out.println(done+"/"+threadsCount);
+                doneAddOne();
+                /*if (done == threadsCount) {
                     if (onDownloaded != null) {
                         onDownloaded.execute();
                     }
-                }
+                }*/
             }).start();
         }
         started = true;
+        while (true) {
+            //System.out.println(done+"/"+threadsCount);
+            try {
+                Thread.sleep(1);
+            } catch (Exception ignore) {
+
+            }
+            if (done >= threadsCount) {
+                if (onDownloaded != null) {
+                    onDownloaded.execute();
+                }
+                break;
+            }
+        }
     }
 
     private List<Pair<String, File>> getMap(int count) {
@@ -125,5 +141,11 @@ public class ThreadsDownloader {
             throw new RuntimeException("unsupported number");
         }
         return maps.get(count);
+    }
+
+    private void doneAddOne() {
+        synchronized (this) {
+            done++;
+        }
     }
 }

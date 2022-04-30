@@ -63,4 +63,19 @@ public class MCBBSApiProvider implements DownloadApiProvider {
     public String fabricMaven() {
         return "https://download.mcbbs.net/maven/";
     }
+
+    @Override
+    public String forge() {
+        return "https://download.mcbbs.net/forge/";
+    }
+
+    @Override
+    public String forgeMaven() {
+        return "https://download.mcbbs.net/maven/";
+    }
+
+    @Override
+    public String thirdPartyForge() {
+        return "https://download.mcbbs.net/forge/download";
+    }
 }

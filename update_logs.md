@@ -1,39 +1,62 @@
-# Update Logs
-Currently, the latest version is 1.1, which was updated on March 27, 2022.
+# 更新日志
+目前的最新版本为1.2，发布日期是2022年4月30日。
 
-## 1.1 (Mar. 27, 2022)
-- Support for installing Fabric:</br>
-  1. Install Fabric when installing the version: add "-f" after the installation command, such as: `-install 1.18.2 -f`</br>
-  2. Install Fabric after installing the version: `-version -f <Target Version Name>`
-- Support for installing mods (CurseForge):</br>
-  1. Search for mods and install: `-mod -i <Mod Name></br>`
-  2. Search for mods and display information: `-mod -s <Mod Name>`
-- Support authlib-injector account login, use parameters: `-account -l -a -d <Server Address> -s(Optional, select this account after successful login)`
-- Support multi-account login, please refer to the user manual for details. If you are already logged in, be sure to log in again.
-- Supports custom skins and capes for offline accounts:</br>
-  Set skin (Microsoft account not available): `-account -s -u <Skin file path (if it is an offline account, if you do not enter it, you will cancel the skin setting)>`</br>
-  Set the skin to Steve (Microsoft account not available): `-account -s -e`</br>
-  Set the skin to Alex (Microsoft account not available): `-account -s -x`</br>
-  Set a cape (only for offline account): `-account -c <Cape file path, if not entered it will unset the cape>`
-- Support setting proxy, proxy information is stored in configuration as storage. Proxy configuration:
+## 1.2（2022年4月30日）
+- **支持安装 Forge：**</br>
+  1.安装版本时安装 Forge：在安装命令后面加入“-o”，如：`-install 1.18.2 -o`</br>
+  2.安装版本后安装 Forge：`-version -o <目标版本名称>`
+- **支持下载并安装整合包**（下载源：CurseForge）：</br>
+  1.搜索整合包并安装（通过名称）：`-modpack -i <整合包名称> -k(可选，安装完成后保留文件)`<br>
+  2.搜索整合包并安装（通过ID）：`-modpack -i -c <整合包ID> -k(可选，安装完成后保留文件)`<br>
+  3.搜索整合包并显示信息（通过名称）：`-modpack -s <整合包名称>`<br>
+  4.搜索整合包并显示信息（通过ID）：`-modpack -s -c <整合包ID>`<br>
+  5.安装本地 CurseForge 整合包：`-modpack -l <整合包路径>`
+- 可**通过模组ID找到目标模组**，用法：<br>
+  1.搜索模组并安装（通过ID）：`-mod -i -c <模组ID>`<br>
+  2.搜索模组并显示信息（通过ID）：`-mod -s -c <模组ID>`
+- 安装模组时将会提示要安装的**前置 Mod**。
+- 修复了某些代理设置问题。
+- 改变了关于信息的输出格式。
+- 修复了 22w16a 及更新版本**无法下载原生依赖库文件**的问题（由 [Wst-04d12](https://github.com/Wst-04d12) 提出）。
+- 登录**外置账号的“-d”可省略**，即`-account -l -a <服务器地址> -s(可选，登录成功后选择此账号)`
+- 修复了一些问题。
+- 修复了无法登录**多角色外置账号**的问题（由 [Yurzi](https://github.com/Yurzi) 提出），将会询问需要登录哪个角色。
+- 修复了搜索 Mod 时会显示非 Mod 的游戏组件。
+- 添加了**沉浸模式**，可通过`-i`或`-immersive`进入。
 
-| Configuration Name |  Type   |                 Meaning                 |
-|--------------------|:-------:|:---------------------------------------:|
-| proxyHost          | String  |     Host Address(no proxy if empty)     |
-| proxyPort          | Integer |                  Port                   |
-| proxyUsername      | String  | Proxy authentication username(optional) |
-| proxyPassword      | String  | Proxy authentication password(optional) |
+## 1.1（2022年3月27日）
+- 支持安装 Fabric：</br>
+1.安装版本时安装 Fabric：在安装命令后面加入“-f”，如：`-install 1.18.2 -f`</br>
+2.安装版本后安装 Fabric：`-version -f <目标版本名称>`
+- 支持安装模组（CurseForge）：</br>
+1.搜索模组并安装：`-mod -i <模组名称>`</br>
+2.搜索模组并显示信息：`-mod -s <模组名称>`
+- 支持登录外置账号，使用参数：`-account -l -a -d <服务器地址> -s(可选，登录成功后选择此账号)`
+- 支持多账号登录，详情用法请参阅[使用手册账号相关](README.md#账号相关)。如果已经登录了的用户，务必重新登录。
+- 支持离线账号自定义皮肤和披风：</br>
+设置皮肤：`-account -s -u <皮肤文件路径(不输入则为取消设置皮肤)>`</br>
+设置皮肤为 Steve：`-account -s -e`</br>
+设置皮肤为 Alex：`-account -s -x`</br>
+设置披风：`-account -c <披风文件路径，如果不输入则为取消设置披风>`
+- 支持设置代理，代理信息以配置作为存储方式存储。代理配置：
 
-- Support viewing installed version information: `-version -i <Version Name>`
-- Support printing the original content of the configuration file, parameter: `-config -o <The number of spaces to indent, can be empty, defaults to 2>`
-- Support custom JVM virtual machine and game parameters, please refer to [configurations](README.md#configurations) for details.
-- Added more download sources, modify the download source: `-config downloadSource <target download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS>`. Note, if the file cannot be downloaded, please try to change the download source.
-- Added a new way to change the configuration (regardless of type, stored as a string, boolean or integer can be read normally): `-config <Configuration Name> <Configuration Value>`
-- Changed the display of printing all configurations.
-- Changed the default resource download thread count to 64.
-- When installing a version, the stored version name can be empty, and the default is the version name to be installed. For example: `-install 1.18.2`, the default storage is "1.18.2"
-- If max memory is empty, memory will be allocated automatically.
-- Fixed an issue where dependency library files would not be downloaded without downloading resource files.
+| 配置名           | 类型  |        含义        |
+|---------------|:---:|:----------------:|
+| proxyHost     | 字符串 | 主机地址（如果为空则不设置代理） |
+| proxyPort     | 整数  |        端口        |
+| proxyUsername | 字符串 |   代理验证的账户（可选）    |
+| proxyPassword | 字符串 |   代理验证的密码（可选）    |
 
-## 1.0 (Mar. 12, 2022)
-- First version.
+- 支持查看已安装的版本信息：`-version -i <版本名称>`
+- 支持打印配置文件原内容，参数：`-config -o <缩进的空格数，可为空，默认为2>`
+- 支持自定义JVM虚拟机和游戏参数，详情用法请查阅[配置](README.md#%E9%85%8D%E7%BD%AE)。
+- 添加了更多下载源，修改下载源：`-config downloadSource <目标下载源，0为默认，1为BMCLAPI，2为MCBBS>`。注意，如果无法下载文件请尝试更换下载源。
+- 添加了更改配置的新方式（不分类型，按字符串储存，布尔值或整数能正常读取）：`-config <配置名称> <配置值>`
+- 更改了打印全部配置的显示。
+- 更改了默认资源下载线程数为64。
+- 安装版本时，存储的版本名称可为空，默认为要安装的版本名称。如：`-install 1.18.2`，则默认存储为“1.18.2”
+- 如果最大内存为空，将会自动分配内存。
+- 修复了不下载资源文件就不会下载依赖库文件的问题。
+
+## 1.0（2022年3月12日）
+- 第一个版本。

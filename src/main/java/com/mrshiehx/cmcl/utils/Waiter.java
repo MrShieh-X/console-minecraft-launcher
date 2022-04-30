@@ -21,15 +21,15 @@ public class Waiter {
     private boolean stop;
 
     public void startWait() {
-        new Thread(() -> {
-            while (true) {
-                //System.out.println("stop");
-                doNothing();
-                if (stop) {
-                    return;
-                }
+        //new Thread(() -> {
+        while (true) {
+            //System.out.println("stop");
+            doNothing();
+            if (stop) {
+                return;
             }
-        }).start();
+        }
+        //}).start();
     }
 
     private void doNothing() {

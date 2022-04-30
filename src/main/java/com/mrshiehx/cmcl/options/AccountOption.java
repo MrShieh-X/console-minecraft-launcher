@@ -57,7 +57,7 @@ public class AccountOption implements Option {
                 case "p":
                     for (int i = 0; i < accounts.length(); i++) {
                         JSONObject account = accounts.optJSONObject(i);
-                        if (account != null) {
+                        if (Utils.isValidAccount(account)) {
                             Utils.printfln(
                                     "%d.%s (%s) %s",
                                     i,
@@ -116,8 +116,7 @@ public class AccountOption implements Option {
                         account.put("loginMethod", 0);
                         if (indexOf >= 0) {
                             if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
-                                accounts.remove(indexOf);
-                                accounts.put(account);
+                                accounts.put(indexOf, account);
                                 jsonObject.put("accounts", accounts);
                                 Utils.saveConfig(jsonObject);
                             }
@@ -133,43 +132,24 @@ public class AccountOption implements Option {
                         MicrosoftAccountLoginner.loginMicrosoftAccount(jsonObject, arguments.contains("s"));
 
 
-                    } else if ("a".equalsIgnoreCase(loginMethod) && loginMethodArg instanceof SingleArgument) {
-                        Argument sourceAddress = arguments.optArgument("d");
+                    } else if ("a".equalsIgnoreCase(loginMethod)) {
+                        String address;
+                        if (loginMethodArg instanceof SingleArgument) {
+                            Argument sourceAddress = arguments.optArgument("d");
 
-                        if (!(sourceAddress instanceof ValueArgument)) {
+                            if (!(sourceAddress instanceof ValueArgument)) {
+                                System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                                return;
+                            }
+                            address = ((ValueArgument) sourceAddress).value;
+
+                        } else if (loginMethodArg instanceof ValueArgument) {
+                            address = ((ValueArgument) loginMethodArg).value;
+                        } else {
                             System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                             return;
                         }
-                        String address = ((ValueArgument) sourceAddress).value;
-
-                        System.out.print(getString("INPUT_ACCOUNT"));
-                        String username = "";
-                        try {
-                            username = new Scanner(System.in).nextLine();
-                        } catch (NoSuchElementException ignore) {
-                            return;
-                        }
-                        Console console = System.console();
-                        String password = "";
-                        if (console != null) {
-                            System.out.print(getString("INPUT_PASSWORD"));
-                            char[] input = console.readPassword();
-                            password = input != null ? new String(input) : "";
-                        } else {
-                            System.out.println(getString("WARNING_SHOWING_PASSWORD"));
-                            System.out.print(getString("INPUT_PASSWORD"));
-                            try {
-                                password = new Scanner(System.in).nextLine();
-                            } catch (NoSuchElementException ignore) {
-                                return;
-                            }
-                        }
-                        try {
-                            AuthlibAccountLoginner.login(address, username, password, arguments.contains("s"), jsonObject);
-                        } catch (Exception e) {
-                            //e.printStackTrace();
-                            Utils.printfln(getString("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT"), e);
-                        }
+                        authlibInjectorLogin(address, arguments.contains("s"), jsonObject);
                     } else {
                         System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                         return;
@@ -216,7 +196,7 @@ public class AccountOption implements Option {
                             } else {
                                 System.out.println(getString("CONSOLE_ACCOUNT_UN_OPERABLE_ACCESS_TOKEN"));
                             }
-                        } else if (account.optInt("loginMethod") == 1) {
+                        } /*else if (account.optInt("loginMethod") == 1) {
                             String accessToken = account.optString("accessToken");
                             String clientToken = account.optString("clientToken");
                             String url = account.optString("url");
@@ -230,6 +210,7 @@ public class AccountOption implements Option {
                             request.put("clientToken", clientToken);
                             try {
                                 JSONObject response = Utils.parseJSONObject(Utils.post(provider.getRefreshmentURL(), request.toString()));
+                                //System.out.println(response);
                                 if (response == null) {
                                     System.out.println(getString("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE"));
                                     return;
@@ -244,7 +225,6 @@ public class AccountOption implements Option {
                                     account.put("playerName", selectedProfile.optString("name"));
                                     account.put("uuid", selectedProfile.optString("id"));
                                 }
-                                accounts.remove(indexOf);
                                 accounts.put(indexOf, account);
                                 jsonObject.put("accounts", accounts);
                                 Utils.saveConfig(jsonObject);
@@ -253,7 +233,9 @@ public class AccountOption implements Option {
                                 System.out.println(getString("MESSAGE_FAILED_REFRESH_TITLE") + ": " + e.toString());
                             }
 
-                        }
+                        }*/
+                    } else {
+                        System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
                     }
                 }
                 break;
@@ -458,6 +440,37 @@ public class AccountOption implements Option {
             }
             jsonObject.put("accounts", accounts);
             Utils.saveConfig(jsonObject);
+        }
+    }
+
+    private static void authlibInjectorLogin(String address, boolean select, JSONObject config) {
+        System.out.print(getString("INPUT_ACCOUNT"));
+        String username = "";
+        try {
+            username = new Scanner(System.in).nextLine();
+        } catch (NoSuchElementException ignore) {
+            return;
+        }
+        Console console = System.console();
+        String password;
+        if (console != null) {
+            System.out.print(getString("INPUT_PASSWORD"));
+            char[] input = console.readPassword();
+            password = input != null ? new String(input) : "";
+        } else {
+            System.out.println(getString("WARNING_SHOWING_PASSWORD"));
+            System.out.print(getString("INPUT_PASSWORD"));
+            try {
+                password = new Scanner(System.in).nextLine();
+            } catch (NoSuchElementException ignore) {
+                return;
+            }
+        }
+        try {
+            AuthlibAccountLoginner.login(address, username, password, select, config);
+        } catch (Exception e) {
+            //e.printStackTrace();
+            Utils.printfln(getString("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT"), e);
         }
     }
 

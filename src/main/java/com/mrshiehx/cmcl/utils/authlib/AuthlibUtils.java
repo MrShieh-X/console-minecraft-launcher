@@ -30,7 +30,7 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
 public class AuthlibUtils {
 
-    public static File getAutolibInjector() throws Exception {
+    public static File getAuthlibInjector() throws Exception {
         File cmcl = new File("cmcl");
         cmcl.mkdirs();
         File file = new File(cmcl, "authlib-injector.jar");

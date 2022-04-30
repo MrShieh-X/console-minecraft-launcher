@@ -21,6 +21,7 @@ import com.mrshiehx.cmcl.bean.XDate;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
+import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
@@ -55,7 +56,19 @@ public class InstallOption implements Option {
                 File versionsFile = Utils.downloadVersionsFile();
                 JSONArray versions = new JSONObject(Utils.readFileContent(versionsFile)).optJSONArray("versions");
                 int threadCount = arguments.optInt("t");
-                VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), arguments.contains("f"), threadCount > 0 ? threadCount : 10);
+                boolean installFabric = arguments.contains("f");
+                boolean installForge = arguments.contains("o");
+                VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
+                if (installFabric && installForge) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
+                } else if (installFabric) {
+                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
+                } else if (installForge) {
+                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
+
+                }
+                VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
             } catch (Exception exception) {
                 //exception.printStackTrace();
                 Utils.printfln(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION"), exception);

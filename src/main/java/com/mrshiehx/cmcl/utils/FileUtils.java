@@ -85,4 +85,17 @@ public class FileUtils {
         }
         return output.toByteArray();
     }
+
+    public static void inputStream2File(InputStream ins, File file) throws IOException {
+        Utils.createFile(file, true);
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+        BufferedInputStream bis = new BufferedInputStream(ins);
+        int bytesRead = 0;
+        byte[] buffer = new byte[8192];
+        while ((bytesRead = bis.read(buffer, 0, 8192)) != -1) {
+            bos.write(buffer, 0, bytesRead);
+        }
+        bos.close();
+        bis.close();
+    }
 }

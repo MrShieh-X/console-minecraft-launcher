@@ -18,11 +18,19 @@
 package com.mrshiehx.cmcl.utils;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
+import com.mrshiehx.cmcl.api.download.DefaultApiProvider;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
+import com.mrshiehx.cmcl.bean.GameVersion;
 import com.mrshiehx.cmcl.bean.Pair;
+import com.mrshiehx.cmcl.bean.SplitLibraryName;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.exceptions.NotSelectedException;
+import com.mrshiehx.cmcl.interfaces.filters.JSONObjectFilter;
 import com.sun.management.OperatingSystemMXBean;
+import org.jenkinsci.constant_pool_scanner.ConstantPool;
+import org.jenkinsci.constant_pool_scanner.ConstantType;
+import org.jenkinsci.constant_pool_scanner.StringConstant;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,8 +42,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -196,17 +206,6 @@ public class Utils {
         return (Utils.httpURLConnection2String(connection));
     }
 
-    public static String getLibraryName(String path) {
-        if (Utils.isEmpty(path)) return "";
-        String splitter = File.separator;
-        if (!path.contains(splitter)) return path;
-        path = path.replace(File.separatorChar, '/');
-        splitter = "/";
-        String[] strings = path.split(splitter);
-        if (strings.length < 4) return path;
-
-        return strings[strings.length - 3];
-    }
 
     public static String getNativeLibraryName(String path) {
         if (Utils.isEmpty(path)) return "";
@@ -433,10 +432,8 @@ public class Utils {
         return list;
     }
 
-    public static String[] split(String src) {
+    public static List<String> splitCommand(String src) {
         List<String> list = new ArrayList<>();
-        /*List<Boolean> yinyongs=new ArrayList<>();
-        String[]split=src.split(String.valueOf(symbol));*/
         boolean yinyong = false;
         for (int i = 0; i < src.length(); i++) {
             char str = src.charAt(i);
@@ -464,7 +461,7 @@ public class Utils {
                 }
             }
         }
-        return list.toArray(new String[0]);
+        return list;
     }
 
     public static String clearRedundantSpaces(String string) {
@@ -513,8 +510,9 @@ public class Utils {
         System.out.println();
     }
 
-    public static boolean versionContain(String name) {
-        return new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".json").exists() && new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".json").exists();
+    public static boolean versionExists(String name) {
+        return new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".json").exists()
+                && new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".jar").exists();
     }
 
     public static File getNativesDir(File versionFile) {
@@ -544,6 +542,19 @@ public class Utils {
             try (InputStream stderr = con.getErrorStream()) {
                 if (stderr == null) throw e;
                 return inputStream2String(stderr);
+            }
+        }
+    }
+
+    public static byte[] httpURLConnection2Bytes(HttpURLConnection con) throws IOException {
+        try {
+            try (InputStream stdout = con.getInputStream()) {
+                return inputStream2ByteArray(stdout);
+            }
+        } catch (IOException e) {
+            try (InputStream stderr = con.getErrorStream()) {
+                if (stderr == null) throw e;
+                return inputStream2ByteArray(stderr);
             }
         }
     }
@@ -648,20 +659,28 @@ public class Utils {
     }
 
     public static JSONObject getSelectedAccount(JSONObject config) throws NotSelectedException {
+        return getSelectedAccount(config, true);
+    }
+
+    public static JSONObject getSelectedAccount(boolean prompt) throws NotSelectedException {
+        return getSelectedAccount(getConfig(), prompt);
+    }
+
+    public static JSONObject getSelectedAccount(JSONObject config, boolean prompt) throws NotSelectedException {
         JSONArray accounts = config.optJSONArray("accounts");
         if (accounts == null || accounts.length() == 0) {
-            System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
+            if (prompt) System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
             throw new NotSelectedException();
         }
         for (Object o : accounts) {
             if (o instanceof JSONObject) {
                 JSONObject jsonObject1 = (JSONObject) o;
-                if (jsonObject1.optBoolean("selected")) {
+                if (jsonObject1.optBoolean("selected") && Utils.isValidAccount(jsonObject1)) {
                     return jsonObject1;
                 }
             }
         }
-        System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
+        if (prompt) System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
         throw new NotSelectedException();
     }
 
@@ -680,6 +699,11 @@ public class Utils {
 
     public static String addSlashIfMissing(String url) {
         if (!url.endsWith("/")) url = url + "/";
+        return url;
+    }
+
+    public static String addSlashIfMissingAtStart(String url) {
+        if (!(url.charAt(0) == '/')) url = '/' + url;
         return url;
     }
 
@@ -748,8 +772,8 @@ public class Utils {
         return digest.digest();
     }
 
-    public static int getDefaultMemory() {
-        return (int) ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / (4 * 1024 * 1024);
+    public static long getDefaultMemory() {
+        return ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / (4 * 1024 * 1024);
     }
 
     public static byte[] getBytes(File file) throws IOException {
@@ -774,7 +798,7 @@ public class Utils {
     }
 
     public static void setProxy(String host, String port, String userName, String password) {
-        if (Utils.isEmpty(host)) return;
+        if (Utils.isEmpty(host) || Utils.isEmpty(port)) return;
         System.setProperty("java.net.useSystemProxies", "true");
         System.setProperty("https.proxyHost", host);
         System.setProperty("http.proxyHost", host);
@@ -810,41 +834,301 @@ public class Utils {
             if (artifactJo != null) {
                 String path = artifactJo.optString("path");
                 String url = artifactJo.optString("url");
-                if (!isEmpty(path) && !isEmpty(url)) {
-                    url = url.replace("https://libraries.minecraft.net/", DownloadSource.getProvider().libraries());
-                    return new Pair<>(url, path);
+                if (!isEmpty(path) || !isEmpty(url)) {
+                    String url2 = null;
+                    if (!isEmpty(url)) {
+                        url2 = replaceUrl(url);//.replace("https://libraries.minecraft.net/", DownloadSource.getProvider().libraries()).replace("https://maven.minecraftforge.net/", DownloadSource.getProvider().forgeMaven());
+                    }
+                    return new Pair<>(url2, path);
+                } else {
+                    return null;
                 }
+            } else {
+                return null;
             }
         } else {
             String name = library.optString("name");
             String url = library.optString("url", DownloadSource.getProvider().libraries());
-            if (url.equals("https://maven.fabricmc.net/") || url.equals("https://maven.fabricmc.net")) {
-                url = DownloadSource.getProvider().fabricMaven();
-            } else if (url.equals("http://repo.maven.apache.org/maven2/") || url.equals("http://repo.maven.apache.org/maven2")) {
-                url = "https://repo.maven.apache.org/maven2/";
-            }
-            if (isEmpty(name)) return null;
-            String[] nameSplit = name.split(":");
-            if (nameSplit.length < 3) return null;
-            String fileName = nameSplit[1] + "-" + nameSplit[2] + ".jar";
-            String path = nameSplit[0].replace(".", "/") + "/" + nameSplit[1] + "/" + nameSplit[2] + "/" + fileName;
-            return new Pair<>(addSlashIfMissing(url) + path, path);
+            /*switch (url) {
+                case "https://maven.fabricmc.net/":
+                case "https://maven.fabricmc.net":
+                    url = DownloadSource.getProvider().fabricMaven();
+                    break;
+                case "http://repo.maven.apache.org/maven2/":
+                case "http://repo.maven.apache.org/maven2":
+                    url = "https://repo.maven.apache.org/maven2/";
+                    break;
+                case "https://maven.minecraftforge.net/":
+                case "https://maven.minecraftforge.net":
+                case "https://files.minecraftforge.net/maven/":
+                case "https://files.minecraftforge.net/maven":
+                    if (!(DownloadSource.getProvider() instanceof DefaultApiProvider))
+                        url = DownloadSource.getProvider().forgeMaven();
+                    break;
+            }*/
+            url = replaceUrl(url);
+            if (isEmpty(name))
+                return null;
+            SplitLibraryName nameSplit = splitLibraryName(name);
+            if (nameSplit == null)
+                return null;
+            String fileName = nameSplit.getFileName();
+            String path = getPathFromLibraryName(nameSplit) + "/" + fileName;
+            return new Pair<>(addSlashIfMissing(url) + (name.startsWith("net.minecraftforge:forge:") ? path.substring(0, path.length() - 4) + "-universal.jar" : path), path);
         }
-        return null;
+    }
+
+    public static String replaceUrl(String url) {
+        if (isEmpty(url)) return url;
+        String a;
+        if (url.contains(a = "https://libraries.minecraft.net/")) {
+            url = url.replace(a, DownloadSource.getProvider().libraries());
+
+        }
+        if (url.contains(a = "https://maven.fabricmc.net/")) {
+            url = url.replace(a, DownloadSource.getProvider().fabricMaven());
+
+        } else if (url.contains(a = "http://repo.maven.apache.org/maven2/")) {
+            url = url.replace(a, "https://repo.maven.apache.org/maven2/");
+
+        } else if (url.contains(a = "https://maven.minecraftforge.net/")) {
+            if (!(DownloadSource.getProvider() instanceof DefaultApiProvider)) {
+                url = url.replace(a, DownloadSource.getProvider().forgeMaven());
+            }
+
+        } else if (url.contains(a = "https://files.minecraftforge.net/maven/")) {
+            if (!(DownloadSource.getProvider() instanceof DefaultApiProvider)) {
+                url = url.replace(a, DownloadSource.getProvider().forgeMaven());
+            }
+        }
+        return url;
     }
 
     public static List<JSONObject> jsonArrayToJSONObjectList(JSONArray jsonArray) {
+        return jsonArrayToJSONObjectList(jsonArray, null);
+    }
+
+    public static List<JSONObject> jsonArrayToJSONObjectList(JSONArray jsonArray, JSONObjectFilter filter) {
         List<JSONObject> list = new LinkedList<>();
         if (jsonArray == null || jsonArray.length() == 0) return list;
         for (Object object : jsonArray) {
             if (object instanceof JSONObject) {
-                list.add((JSONObject) object);
+                JSONObject jsonObject = (JSONObject) object;
+                if (filter != null) {
+                    if (filter.accept(jsonObject))
+                        list.add(jsonObject);
+                } else
+                    list.add(jsonObject);
             }
         }
         return list;
     }
 
+
     public static String getTimezoneName() {
         return TimeZone.getDefault().getDisplayName();
+    }
+
+    public static GameVersion getVersionByJar(File jarFile) {
+        try (JarFile jar = new JarFile(jarFile)) {
+            ZipEntry versionEntry = jar.getEntry("version.json");
+            if (versionEntry != null) {
+                JSONObject jsonObject = parseJSONObject(Utils.inputStream2String(jar.getInputStream(versionEntry)));
+                if (jsonObject != null) {
+                    String name = jsonObject.optString("name");
+                    String id = jsonObject.optString("id");
+                    if (id.contains(" / ")) {
+                        id = id.split(" / ")[0];
+                    }
+                    return new GameVersion(id, name);
+                }
+            }
+            ZipEntry mainClass = jar.getEntry("net/minecraft/client/Minecraft.class");
+            if (mainClass != null) {
+                ConstantPool pool = org.jenkinsci.constant_pool_scanner.ConstantPoolScanner.parse(jar.getInputStream(mainClass), ConstantType.STRING);
+                for (StringConstant stringConstant : pool.list(StringConstant.class)) {
+                    String v = stringConstant.get();
+                    String prefix = "Minecraft Minecraft ";
+                    if (v.startsWith(prefix) && v.length() > prefix.length()) {
+                        return new GameVersion(v.substring(prefix.length()), null);
+                    }
+                }
+            }
+
+
+            ZipEntry serverClass = jar.getEntry("net/minecraft/server/MinecraftServer.class");
+            if (serverClass != null) {
+                ConstantPool pool = org.jenkinsci.constant_pool_scanner.ConstantPoolScanner.parse(jar.getInputStream(serverClass), ConstantType.STRING);
+                List<String> strings = new LinkedList<>();
+                for (StringConstant stringConstant : pool.list(StringConstant.class)) {
+                    String v = stringConstant.get();
+                    strings.add(v);
+                }
+                int indexOf = -1;
+                for (int i = 0; i < strings.size(); i++) {
+                    if (strings.get(i).startsWith("Can't keep up!")) {
+                        indexOf = i;
+                        break;
+                    }
+                }
+                if (indexOf >= 0) {
+                    for (int i = indexOf - 1; i >= 0; --i) {
+                        String s = strings.get(i);
+                        if (s.matches(".*[0-9].*")) {
+
+                            return new GameVersion(s, null);
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception ignore) {
+        }
+        return null;
+    }
+
+    @NotNull
+    public static GameVersion getGameVersion(JSONObject json, File jar) {
+        String v = json.optString("gameVersion");
+        if (!isEmpty(v))
+            return new GameVersion(v, null);
+
+        GameVersion gameVersion = getVersionByJar(jar);
+        if (gameVersion != null) {
+            String id = gameVersion.id;
+            String name = gameVersion.name;
+            if (!isEmpty(id)) return new GameVersion(id, name);
+        }
+        return new GameVersion(null, null);
+    }
+
+    public static String getFabricVersion(JSONObject head) {
+        if (!head.optString("mainClass").equals("net.fabricmc.loader.impl.launch.knot.KnotClient")) return null;
+        JSONArray libraries = head.optJSONArray("libraries");
+        if (libraries == null || libraries.length() == 0) return null;
+        for (Object o : libraries) {
+            if (o instanceof JSONObject) {
+                JSONObject library = (JSONObject) o;
+                String name = library.optString("name");
+
+                String prefix = "net.fabricmc:fabric-loader:";
+                if (name.startsWith(prefix) && name.length() > prefix.length()) {
+                    return name.substring(prefix.length());
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String getForgeVersion(JSONObject head) {
+        JSONObject forge = head.optJSONObject("forge");
+        if (forge != null) {
+            String version = forge.optString("version");
+            if (!isEmpty(version)) return version;
+        }
+
+        //兼容HMCL
+        JSONArray patches = head.optJSONArray("patches");
+        if (patches != null && patches.length() > 0) {
+            for (Object o : patches) {
+                if (o instanceof JSONObject) {
+                    JSONObject jsonObject = (JSONObject) o;
+                    if ("forge".equals(jsonObject.optString("id"))) {
+                        String version = jsonObject.optString("version");
+                        if (!isEmpty(version)) return version;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static JSONArray mergeLibraries(List<JSONObject> source, List<JSONObject> target) {
+        JSONArray jsonArray = new JSONArray();
+        if ((source == null || source.size() == 0) && (target == null || target.size() == 0))
+            return jsonArray;
+        else if ((source != null && source.size() > 0) && (target == null || target.size() == 0)) {
+            jsonArray.putAll(source);
+            return jsonArray;
+        } else if (source == null || source.size() == 0) {
+            for (JSONObject j : target) {
+                j.remove("clientreq");
+                j.remove("serverreq");
+            }
+            jsonArray.putAll(target);
+            return jsonArray;
+        }
+        jsonArray.putAll(source);
+        for (JSONObject jsonObject : target) {
+            String targetName = jsonObject.optString("name");
+            int indexOf = -1;
+            for (int j = 0; j < source.size(); j++) {
+                JSONObject jsonObject1 = source.get(j);
+                String sourceName = jsonObject1.optString("name");
+                if (sourceName.equals(targetName)) {
+                    indexOf = j;
+                    break;
+                } else {
+                    String[] targetNameSplit = targetName.split(":");
+                    String[] sourceNameSplit = sourceName.split(":");
+                    if (targetNameSplit.length == sourceNameSplit.length && sourceNameSplit.length >= 3) {
+                        if (Objects.equals(targetNameSplit[0], sourceNameSplit[0]) && Objects.equals(targetNameSplit[1], sourceNameSplit[1])) {
+                            indexOf = j;
+                            break;
+                        }
+                    }
+
+                }
+            }
+            //if (withoutTargetServerreqAndClientreq) {
+            jsonObject.remove("clientreq");
+            jsonObject.remove("serverreq");
+            //}
+            if (indexOf < 0) {
+                jsonArray.put(jsonObject);
+            } else {
+                jsonArray.put(indexOf, jsonObject);
+            }
+        }
+
+        return jsonArray;
+    }
+
+    public static String getPathFromLibraryName(SplitLibraryName nameSplit) {
+        return nameSplit.first.replace(".", "/") + "/" + nameSplit.second + "/" + nameSplit.third;
+    }
+
+    public static String getArchInt() {
+        if (System.getProperty("os.arch").contains("64")) return "64";
+        return "32";
+    }
+
+    public static SplitLibraryName splitLibraryName(String name) {
+        return SplitLibraryName.valueOf(name);
+    }
+
+    public static String getExtension(String string) {
+        if (isEmpty(string)) return null;
+        int indexOf = string.lastIndexOf('.');
+        if (indexOf < 0 || indexOf == string.length() - 1) return null;
+        return string.substring(indexOf + 1);
+    }
+
+    public static void close(Closeable t) {
+        try {
+            t.close();
+        } catch (IOException ignore) {
+        }
+    }
+
+    public static boolean isValidAccount(JSONObject jsonObject1) {
+        return jsonObject1 != null && !isEmpty(jsonObject1.optString("playerName")) && jsonObject1.has("loginMethod");
+    }
+
+    public static void downloadFileFailed(String url, File file, Exception e) {
+        System.out.println(
+                url.endsWith("/" + file.getName()) ?
+                        getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", e, url, file.getParentFile().getAbsolutePath()) :
+                        getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", e, url, file.getParentFile().getAbsolutePath(), file.getName()));
     }
 }

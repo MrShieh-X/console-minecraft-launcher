@@ -81,7 +81,7 @@ public class StartOption implements Option {
                     uu = account.optString("uuid", uu);
                 }
 
-                runningMc = launchMinecraft(
+                runningMc = launchMinecraft(versionFolder,
                         versionJarFile,
                         versionJsonFile,
                         gameDir,
@@ -89,7 +89,7 @@ public class StartOption implements Option {
                         respackDir,
                         account.optString("playerName", "XPlayer"),
                         config.optString("javaPath", Utils.getDefaultJavaPath()),
-                        config.optInt("maxMemory", Utils.getDefaultMemory()),
+                        config.optLong("maxMemory", Utils.getDefaultMemory()),
                         128,
                         config.optInt("windowSizeWidth", 854),
                         config.optInt("windowSizeHeight", 480),
@@ -98,6 +98,7 @@ public class StartOption implements Option {
                         uu,
                         false,
                         !config.optBoolean("isFullscreen"),
+                        account.optJSONObject("properties"),
                         Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
                         Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
                         StartOption.getAuthlibInformation(account, at, uu, true));
@@ -115,7 +116,7 @@ public class StartOption implements Option {
                                     crashError[0] = GameCrashError.URLClassLoader;//旧版本Minecraft的Java版本过高问题，报Exception in thread "main" java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader cannot be cast to class java.net.URLClassLoader，因为在Java9对相关代码进行了修改，所以要用Java8及更旧
                                 else if (line.contains("Failed to load a library. Possible solutions:"))
                                     crashError[0] = GameCrashError.LWJGLFailedLoad;
-                                else if (line.contains("java.lang.OutOfMemoryError: Java heap space") || line.contains("Too small maximum heap"))
+                                else if (line.contains("java.lang.OutOfMemoryError:") || line.contains("Too small maximum heap"))
                                     crashError[0] = GameCrashError.MemoryTooSmall;
 
                             }
@@ -124,19 +125,19 @@ public class StartOption implements Option {
                         }
                     }
                 }).start();
-                new Thread(new Runnable() {
+                /*new Thread(new Runnable() {
                     @Override
-                    public void run() {
-                        try {
-                            runningMc.waitFor();
-                            System.out.println(getString("MESSAGE_FINISHED_GAME"));
-                            if (crashError[0] != null)
-                                System.out.println(getString("MESSAGE_GAME_CRASH_CAUSE_TIPS", crashError[0].cause));
-                        } catch (InterruptedException interruptedException) {
-                            interruptedException.printStackTrace();
-                        }
-                    }
-                }).start();
+                    public void run() {*/
+                try {
+                    runningMc.waitFor();
+                    System.out.println(getString("MESSAGE_FINISHED_GAME"));
+                    if (crashError[0] != null)
+                        System.out.println(getString("MESSAGE_GAME_CRASH_CAUSE_TIPS", crashError[0].cause));
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                    /*}
+                }).start();*/
             } catch (EmptyNativesException ex) {
                 System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
             } catch (LibraryDefectException ex) {

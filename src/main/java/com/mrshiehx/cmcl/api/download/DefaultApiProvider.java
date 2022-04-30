@@ -63,4 +63,9 @@ public class DefaultApiProvider implements DownloadApiProvider {
     public String fabricMaven() {
         return "https://maven.fabricmc.net/";
     }
+
+    @Override
+    public String forgeMaven() {
+        return "https://files.minecraftforge.net/maven/";
+    }
 }

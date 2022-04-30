@@ -63,4 +63,9 @@ public class BMCLApiProvider implements DownloadApiProvider {
     public String fabricMaven() {
         return "https://bmclapi2.bangbang93.com/maven/";
     }
+
+    @Override
+    public String forgeMaven() {
+        return "https://bmclapi2.bangbang93.com/maven/";
+    }
 }

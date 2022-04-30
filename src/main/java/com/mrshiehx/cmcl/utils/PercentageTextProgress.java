@@ -23,8 +23,8 @@ package com.mrshiehx.cmcl.utils;
  * @author MrShiehX
  **/
 public class PercentageTextProgress {
-    private int maximum;
-    private int value;
+    protected int maximum;
+    protected int value;
     public boolean printed;
     public boolean done;
 
@@ -45,10 +45,10 @@ public class PercentageTextProgress {
 
     public void setValue(int value) {
         if (value == this.value) return;
-        int source = this.value;
+        int before = this.value;
         this.value = value;
         if (printed) {
-            for (int j = 0; j < String.valueOf(((int) ((((double) source) / ((double) maximum)) * 100))).length() + 3; j++) {
+            for (int j = 0; j < String.valueOf(((int) ((((double) before) / ((double) maximum)) * 100))).length() + 3; j++) {
                 System.out.print("\b");
             }
         }

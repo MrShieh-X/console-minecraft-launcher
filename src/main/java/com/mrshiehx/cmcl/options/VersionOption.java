@@ -17,15 +17,18 @@
  */
 package com.mrshiehx.cmcl.options;
 
+import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
+import com.mrshiehx.cmcl.bean.GameVersion;
 import com.mrshiehx.cmcl.bean.Library;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.modules.fabric.FabricInstaller;
-import com.mrshiehx.cmcl.modules.version.DownloadLackLibraries;
-import com.mrshiehx.cmcl.modules.version.NativesReDownloader;
+import com.mrshiehx.cmcl.modules.modLoaders.fabric.FabricInstaller;
+import com.mrshiehx.cmcl.modules.modLoaders.forge.ForgeInstaller;
+import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
+import com.mrshiehx.cmcl.modules.version.NativesDownloader;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
@@ -76,10 +79,23 @@ public class VersionOption implements Option {
                     JSONObject head = new JSONObject(Utils.readFileContent(jsonFile));
                     Map<String, String> information = new LinkedHashMap<>();
 
-                    //zh.put("VERSION_INFORMATION_RELEASE_TIME",   "  版本发布时间：  ");
 
-                    String id = head.optString("id");
-                    if (!isEmpty(id)) information.put(getString("VERSION_INFORMATION_GAME_VERSION"), id);
+                    GameVersion gameVersion = Utils.getGameVersion(head, new File(dir, value + ".jar"));
+                    if (!Utils.isEmpty(gameVersion.id) && Utils.isEmpty(gameVersion.name)) {
+                        information.put(getString("VERSION_INFORMATION_GAME_VERSION"), gameVersion.id);
+                    } else if (Utils.isEmpty(gameVersion.id) && !Utils.isEmpty(gameVersion.name)) {
+                        information.put(getString("VERSION_INFORMATION_GAME_VERSION"), gameVersion.name);
+                    } else if (!Utils.isEmpty(gameVersion.id) && !Utils.isEmpty(gameVersion.name)) {
+                        if (gameVersion.name.equals(gameVersion.id)) {
+                            information.put(getString("VERSION_INFORMATION_GAME_VERSION"), gameVersion.name);
+                        } else {
+                            information.put(getString("VERSION_INFORMATION_GAME_VERSION"), gameVersion.name + " (" + gameVersion.id + ")");
+                        }
+                    } else {
+                        information.put(getString("VERSION_INFORMATION_GAME_VERSION"), getString("VERSION_INFORMATION_GAME_VERSION_FAILED_GET"));
+                    }
+
+                    information.put(getString("VERSION_INFORMATION_VERSION_PATH"), dir.getAbsolutePath());
 
 
                     String type = head.optString("type");
@@ -120,7 +136,7 @@ public class VersionOption implements Option {
                             }
                         }
                         if (parse != null) {
-                            SimpleDateFormat format = new SimpleDateFormat(getString("TIME_FORMAT"));
+                            SimpleDateFormat format = new SimpleDateFormat(getString("TIME_FORMAT"), ConsoleMinecraftLauncher.getLocale());
                             information.put(getString("VERSION_INFORMATION_RELEASE_TIME"), format.format(parse) + " (" + Utils.getTimezoneName() + ")");
 
                         }
@@ -137,13 +153,21 @@ public class VersionOption implements Option {
                             information.put(getString("VERSION_INFORMATION_JAVA_VERSION"), majorVersion);
                         }
                     }
-                    JSONObject fabric = head.optJSONObject("fabric");
+                    /*JSONObject fabric = head.optJSONObject("fabric");
                     if (fabric != null) {
                         String version = fabric.optString("version");
                         if (!isEmpty(version)) {
                             information.put(getString("VERSION_INFORMATION_FABRIC_VERSION"), version);
                         }
-                    }
+                    }*/
+
+
+                    String fabricVersion = Utils.getFabricVersion(head);
+                    if (!isEmpty(fabricVersion))
+                        information.put(getString("VERSION_INFORMATION_FABRIC_VERSION"), fabricVersion);
+                    String forgeVersion = Utils.getForgeVersion(head);
+                    if (!isEmpty(forgeVersion))
+                        information.put(getString("VERSION_INFORMATION_FORGE_VERSION"), forgeVersion);
 
 
                     if (information.size() == 0) {
@@ -163,17 +187,30 @@ public class VersionOption implements Option {
             case "r":
                 Argument argument = arguments.optArgument("t");
                 if (argument instanceof ValueArgument) {
-                    if (!Utils.versionContain(value)) {
+                    if (!Utils.versionExists(value)) {
                         System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                         return;
                     }
                     String to = ((ValueArgument) argument).value;
+                    if (Utils.versionExists(to)) {
+                        System.out.println(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS", to));
+                        return;
+                    }
+                    try {
+                        JSONObject head = new JSONObject(Utils.readFileContent(jsonFile));
+                        head.put("id", to);
+                        Utils.writeFile(jsonFile, head.toString(2), false);
+                    } catch (Exception e) {
+                        System.out.println(getString("MESSAGE_FAILED_RENAME_VERSION", e));
+                        return;
+                    }
                     File newFile = new File(versionsDir, to);
                     File file2 = new File(newFile, value + ".jar");
                     File file3 = new File(newFile, value + ".json");
                     dir.renameTo(newFile);
                     file2.renameTo(new File(newFile, to + ".jar"));
                     file3.renameTo(new File(newFile, to + ".json"));
+
                 } else {
                     System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                 }
@@ -185,7 +222,10 @@ public class VersionOption implements Option {
                         return;
                     }
                     JSONArray libraries = new JSONObject(Utils.readFileContent(jsonFile)).optJSONArray("libraries");
-                    NativesReDownloader.reDownload(dir, libraries);
+
+                    System.out.println(getString("MESSAGE_INSTALL_DOWNLOADING_LIBRARIES"));
+                    NativesDownloader.download(dir, Utils.jsonArrayToJSONObjectList(libraries));
+                    System.out.println(getString("MESSAGE_REDOWNLOADED_NATIVES"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -215,7 +255,15 @@ public class VersionOption implements Option {
                     System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                     return;
                 }
-                FabricInstaller.install(jsonFile);
+                new FabricInstaller().install(jsonFile, new File(dir, value + ".jar"));
+
+                break;
+            case "o":
+                if (!jsonFile.exists()) {
+                    System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
+                    return;
+                }
+                new ForgeInstaller().install(jsonFile, new File(dir, value + ".jar"));
 
                 break;
             default:
@@ -230,7 +278,7 @@ public class VersionOption implements Option {
             System.out.println(library.libraryJSONObject.optString("name"));
         }
         if (ConsoleUtils.yesOrNo(getString("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD"))) {
-            DownloadLackLibraries.downloadLackLibraries(notFound);
+            LibrariesDownloader.downloadLibraries(notFound);
         }
     }
 
