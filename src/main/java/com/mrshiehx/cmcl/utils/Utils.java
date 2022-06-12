@@ -185,6 +185,23 @@ public class Utils {
         return (Utils.httpURLConnection2String(connection));
     }
 
+    public static String getCF(String url) throws IOException {
+        return getCF(url, "application/json", "application/json");
+    }
+
+    public static String getCF(String url, String contentType, String accept) throws IOException {
+        URL ConnectUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setDoOutput(true);
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", contentType);
+        connection.setRequestProperty("x-api-key", Constants.getCurseForgeApiKey());
+        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+        return (Utils.httpURLConnection2String(connection));
+    }
+
     public static String delete(String url, String tokenType, String token) throws IOException {
         return delete(url, tokenType, token, "application/json", "application/json");
     }
@@ -402,13 +419,15 @@ public class Utils {
     public static String readFileContent(File file) throws IOException {
         BufferedReader reader;
         StringBuilder sbf = new StringBuilder();
-        reader = new BufferedReader(new FileReader(file));
+        FileReader fr = new FileReader(file);
+        reader = new BufferedReader(fr);
         String tempStr;
         while ((tempStr = reader.readLine()) != null) {
-            sbf.append(tempStr);
+            sbf.append(tempStr).append('\n');
         }
+        fr.close();
         reader.close();
-        return sbf.toString();
+        return sbf.substring(0, sbf.length() - 1);
     }
 
     public static String clearAllSpaces(String s) {
@@ -501,18 +520,18 @@ public class Utils {
     }
 
     public static void printfln(String str, Object... object) {
-        System.out.printf(str, object);
+        System.out.printf(str, object);//legal
         System.out.println();
     }
 
     public static void printflnErr(String str, Object... object) {
-        System.out.printf(str, object);
+        System.out.printf(str, object);//legal
         System.out.println();
     }
 
     public static boolean versionExists(String name) {
         return new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".json").exists()
-                && new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".jar").exists();
+                /*&& new File(ConsoleMinecraftLauncher.versionsDir, name + "/" + name + ".jar").exists()*/;
     }
 
     public static File getNativesDir(File versionFile) {
@@ -629,7 +648,7 @@ public class Utils {
 
     public static Map<String, String> parseGameArgs(JSONObject gameArgs) {
         Map<String, Object> map;
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new LinkedHashMap<>();
         if (gameArgs == null) {
             return result;
         } else {
@@ -834,6 +853,17 @@ public class Utils {
             if (artifactJo != null) {
                 String path = artifactJo.optString("path");
                 String url = artifactJo.optString("url");
+                if (isEmpty(path) && !isEmpty(library.optString("name"))) {
+
+                    String name = library.optString("name");
+
+                    SplitLibraryName nameSplit = splitLibraryName(name);
+                    if (nameSplit != null) {
+
+                        String fileName = nameSplit.getFileName();
+                        path = getPathFromLibraryName(nameSplit) + "/" + fileName;
+                    }
+                }
                 if (!isEmpty(path) || !isEmpty(url)) {
                     String url2 = null;
                     if (!isEmpty(url)) {
@@ -888,19 +918,30 @@ public class Utils {
         if (url.contains(a = "https://maven.fabricmc.net/")) {
             url = url.replace(a, DownloadSource.getProvider().fabricMaven());
 
-        } else if (url.contains(a = "http://repo.maven.apache.org/maven2/")) {
+        }
+
+        if (url.contains(a = "http://repo.maven.apache.org/maven2/")) {
             url = url.replace(a, "https://repo.maven.apache.org/maven2/");
 
-        } else if (url.contains(a = "https://maven.minecraftforge.net/")) {
+        }
+
+        if (url.contains(a = "https://maven.minecraftforge.net/")) {
             if (!(DownloadSource.getProvider() instanceof DefaultApiProvider)) {
                 url = url.replace(a, DownloadSource.getProvider().forgeMaven());
             }
 
-        } else if (url.contains(a = "https://files.minecraftforge.net/maven/")) {
+        }
+
+        if (url.contains(a = "https://files.minecraftforge.net/maven/")) {
             if (!(DownloadSource.getProvider() instanceof DefaultApiProvider)) {
                 url = url.replace(a, DownloadSource.getProvider().forgeMaven());
             }
         }
+        if (url.contains(a = "http://repo.liteloader.com/")) {
+            url = url.replace(a, "https://repo.liteloader.com/");
+        }
+
+
         return url;
     }
 
@@ -1017,30 +1058,11 @@ public class Utils {
                 }
             }
         }
-        return null;
+        return getModuleVersion(head, "fabric");
     }
 
     public static String getForgeVersion(JSONObject head) {
-        JSONObject forge = head.optJSONObject("forge");
-        if (forge != null) {
-            String version = forge.optString("version");
-            if (!isEmpty(version)) return version;
-        }
-
-        //兼容HMCL
-        JSONArray patches = head.optJSONArray("patches");
-        if (patches != null && patches.length() > 0) {
-            for (Object o : patches) {
-                if (o instanceof JSONObject) {
-                    JSONObject jsonObject = (JSONObject) o;
-                    if ("forge".equals(jsonObject.optString("id"))) {
-                        String version = jsonObject.optString("version");
-                        if (!isEmpty(version)) return version;
-                    }
-                }
-            }
-        }
-        return null;
+        return getModuleVersion(head, "forge");
     }
 
     public static JSONArray mergeLibraries(List<JSONObject> source, List<JSONObject> target) {
@@ -1095,7 +1117,7 @@ public class Utils {
     }
 
     public static String getPathFromLibraryName(SplitLibraryName nameSplit) {
-        return nameSplit.first.replace(".", "/") + "/" + nameSplit.second + "/" + nameSplit.third;
+        return nameSplit.first.replace(".", "/") + "/" + nameSplit.second + "/" + nameSplit.version;
     }
 
     public static String getArchInt() {
@@ -1130,5 +1152,91 @@ public class Utils {
                 url.endsWith("/" + file.getName()) ?
                         getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", e, url, file.getParentFile().getAbsolutePath()) :
                         getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", e, url, file.getParentFile().getAbsolutePath(), file.getName()));
+    }
+
+    /**
+     * x / x.x / x.x.x / x.x.x.x / x.x.x.x.x / x.x.x.x.x.x / ...
+     *
+     * @return 0 if un-comparable or they are the same, 1 if v1 > v2, -1 if v1 < v2
+     **/
+    public static int tryToCompareVersion(String v1, String v2) {
+        if (isEmpty(v1) || isEmpty(v2)) return 0;
+        if (v1.equals(v2)) return 0;
+        try {
+            String[] split1 = v1.split("\\.");
+            String[] split2 = v2.split("\\.");
+            /*if (split1.length == 0 || split2.length == 0) {
+                return Integer.compare(Integer.parseInt(v1),Integer.parseInt(v2));
+            }*/
+            int s1l = split1.length;
+            int[] s1 = new int[s1l];
+            for (int i = 0; i < s1l; i++) {
+                String split = split1[i];
+                s1[i] = Integer.parseInt(split);
+            }
+            int s2l = split2.length;
+            int[] s2 = new int[s2l];
+            for (int i = 0; i < s2l; i++) {
+                String split = split2[i];
+                s2[i] = Integer.parseInt(split);
+            }
+
+            if (s1l > s2l) {
+                int[] newS2 = new int[s1l];
+                System.arraycopy(s2, 0, newS2, 0, s2l);
+                s2 = newS2;
+                s2l = s1l;
+            } else if (s1l < s2l) {
+                int[] newS1 = new int[s2l];
+                System.arraycopy(s1, 0, newS1, 0, s1l);
+                s1 = newS1;
+                s1l = s2l;
+            }
+
+            for (int i = 0; i < s1l; i++) {
+                int s11 = s1[i];
+                int s22 = s2[i];
+                if (s11 > s22) {
+                    return 1;
+                } else if (s11 < s22) {
+                    return -1;
+                }
+            }
+            return 0;
+
+        } catch (Throwable ignore) {
+            return 0;
+        }
+    }
+
+    public static String getModuleVersion(JSONObject head, String moduleName) {
+        JSONObject module = head.optJSONObject(moduleName);
+        if (module != null) {
+            String version = module.optString("version");
+            if (!isEmpty(version)) return version;
+        }
+
+        //兼容HMCL
+        JSONArray patches = head.optJSONArray("patches");
+        if (patches != null && patches.length() > 0) {
+            for (Object o : patches) {
+                if (o instanceof JSONObject) {
+                    JSONObject jsonObject = (JSONObject) o;
+                    if (jsonObject.optString("id").equals(moduleName)) {
+                        String version = jsonObject.optString("version");
+                        if (!isEmpty(version)) return version;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String getLiteloaderVersion(JSONObject head) {
+        return getModuleVersion(head, "liteloader");
+    }
+
+    public static String getOptifineVersion(JSONObject head) {
+        return getModuleVersion(head, "optifine");
     }
 }

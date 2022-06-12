@@ -48,7 +48,7 @@ public class InstallOption implements Option {
                 String nameString = ((ValueArgument) name).value;
                 storage = Utils.isEmpty(nameString) ? version : nameString;
             }
-            if (new File(versionsDir, storage + "/" + storage + ".jar").exists() || new File(versionsDir, storage + "/" + storage + ".json").exists()) {
+            if (/*new File(versionsDir, storage + "/" + storage + ".jar").exists() || */new File(versionsDir, storage + "/" + storage + ".json").exists()) {
                 Utils.printfln(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), storage);
                 return;
             }
@@ -58,17 +58,29 @@ public class InstallOption implements Option {
                 int threadCount = arguments.optInt("t");
                 boolean installFabric = arguments.contains("f");
                 boolean installForge = arguments.contains("o");
+                boolean installLiteLoader = arguments.contains("e");
+                boolean installOptiFine = arguments.contains("p");
                 VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
                 if (installFabric && installForge) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
+                }
+
+                if (installFabric && installLiteLoader) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
+                }
+                if (installFabric && installOptiFine) {
                     System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                     return;
                 } else if (installFabric) {
                     installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
                 } else if (installForge) {
                     installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
-
                 }
-                VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+
+
+                VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, installLiteLoader, installOptiFine, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
             } catch (Exception exception) {
                 //exception.printStackTrace();
                 Utils.printfln(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION"), exception);

@@ -25,8 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.downloadFile;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 
 /**
  * 多线程下载文件（无控制台百分比进度）
@@ -102,9 +101,13 @@ public class ThreadsDownloader {
                 for (Pair<String, File> pair : map) {
                     String url = pair.getKey();
                     File file = pair.getValue();
+                    if (isEmpty(url)) {
+                        System.out.println(getString("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", file.getName()));
+                        continue;
+                    }
                     System.out.println(getString("MESSAGE_DOWNLOADING_FILE", url.substring(url.lastIndexOf('/') + 1)));
                     try {
-                        downloadFile(url, file);
+                        DownloadUtils.multipleAttemptsDownload(url, file);
                     } catch (IOException e) {
                         Utils.downloadFileFailed(url, file, e);
                         //System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON", file.getName(),e));

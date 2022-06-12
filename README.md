@@ -10,8 +10,9 @@ MrShiehX 拥有该程序的版权。<br/>
 
 ## 版本
 最新版本：<br/>
-<b>1.2 (2022年4月30日)</b><br/>
+<b>1.3 (2022年6月12日)</b><br/>
 历史版本：<br/>
+<b>1.3 (2022年6月12日)</b><br/>
 <b>1.2 (2022年4月30日)</b><br/>
 <b>1.1 (2022年3月27日)</b><br/>
 <b>1.0 (2022年3月12日)（第一个版本）</b><br/>
@@ -51,6 +52,9 @@ MrShiehX 拥有该程序的版权。<br/>
 
 ## 程序截图
 ![程序截图](screenshot.gif "程序截图")<br/>
+
+## 已发现的漏洞
+- 无法启动 OptiFine 和 Forge 共存的低于 1.13（不包括1.13）的游戏版本。
 
 ## 配置
 配置存储在程序运行目录的一个名为cmcl.json的JSON文件，你可以使用文本编辑器（需了解JSON教程）或`-config <配置名称> <配置值>`的程序参数（详见[使用教程](#使用教程)配置相关）以修改配置。<br/>
@@ -133,6 +137,9 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;查找缺少的依赖库文件并下载：-version -l <版本名称><br/>
 &emsp;&emsp;安装 Fabric 到本地版本：&emsp;&emsp;&emsp;-version -f <版本名称><br/>
 &emsp;&emsp;安装 Forge 到本地版本：&emsp;&emsp;&emsp; -version -o <版本名称><br/>
+&emsp;&emsp;安装 LiteLoader 到本地版本：&emsp; -version -e <版本名称><br/>
+&emsp;&emsp;安装 OptiFine 到本地版本：&emsp;&emsp; -version -p <版本名称><br/>
+&emsp;&emsp;把版本补充完整：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;-version -b <版本名称><br/>
 </details>
 <details>
   <summary><b><font size="4">自定义JVM虚拟机参数相关</font></b></summary>
@@ -151,12 +158,16 @@ MrShiehX 拥有该程序的版权。<br/>
 <details>
   <summary><b><font size="4">安装版本相关</font></b></summary>
 
-&emsp;&emsp;直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)> -f(可选，安装Fabric) -o(可选，安装Forge)<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;**注：Fabric 和 Forge 不能同时安装或共存**<br/>
-&emsp;&emsp;  可选的参数：-t <线程数> 设置下载资源文件的线程数（默认为64）<br/>
+&emsp;&emsp;直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)><br/>
+&emsp;&emsp;  可选的参数：-f 安装 Fabric<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -o 安装 Forge <br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -e 安装 LiteLoader <br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -p 安装 OptiFine <br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -t <线程数> 设置下载资源文件的线程数（默认为64）<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  -na 不下载资源文件<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  -nl 不下载依赖库文件<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  -nn 不下载原生依赖库文件<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;**注：Fabric 和 Forge、Fabric 和 LiteLoader、Fabric 和 OptiFine 不能同时安装或共存**<br/>
 &emsp;&emsp;显示可安装的版本（若没有设置范围，默认显示该类型的全部版本）：-install -s <版本类型：a 全部；r 正式版；s 快照版；oa 远古alpha版；ob 远古beta版><br/>
 &emsp;&emsp;  设置时间范围（可选）：-i <从年>-<从月>-<从日>/<到年>-<到月>-<到日><br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 例：-i 2020-05-09/2021-10-23
@@ -181,18 +192,35 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;搜索整合包并安装（通过ID）：&emsp;&emsp;&emsp;-modpack -i -c <整合包ID> -k(可选，安装完成后保留文件)<br/>
 &emsp;&emsp;搜索整合包并显示信息（通过名称）：-modpack -s <整合包名称><br/>
 &emsp;&emsp;搜索整合包并显示信息（通过ID）：&emsp;-modpack -s -c <整合包ID><br/>
-&emsp;&emsp;安装本地 CurseForge 整合包：&emsp;&emsp;&emsp; -modpack -l <整合包路径>
+&emsp;&emsp;安装本地整合包：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-modpack -l <整合包路径>
+</details>
+<details>
+  <summary><b><font size="4">模组相关（下载源：Modrinth）</font></b></summary>
+
+&emsp;&emsp;搜索模组并安装（通过名称）：&emsp;&emsp;-mod2 -i <模组名称> -l <可选，限制结果数量，默认为50><br/>
+&emsp;&emsp;搜索模组并安装（通过ID）：&emsp;&emsp;&emsp;-mod2 -i -c <模组ID><br/>
+&emsp;&emsp;搜索模组并显示信息（通过名称）：-mod2 -s <模组名称> -l <可选，限制结果数量，默认为50><br/>
+&emsp;&emsp;搜索模组并显示信息（通过ID）：&emsp;-mod2 -s -c <模组ID>
+</details>
+<details>
+  <summary><b><font size="4">整合包相关（下载源：Modrinth）</font></b></summary>
+
+&emsp;安装整合包的可选参数：<br/>
+&emsp;&emsp;&emsp;-t <线程数> 设置下载资源文件的线程数（默认为64）<br/>
+&emsp;&emsp;&emsp;-na 不下载资源文件<br/>
+&emsp;&emsp;&emsp;-nl 不下载依赖库文件<br/>
+&emsp;&emsp;&emsp;-nn 不下载原生依赖库文件<br/>
+&emsp;&emsp;搜索整合包并安装（通过名称）：&emsp;&emsp;-modpack2 -i <整合包名称> -k(可选，安装完成后保留文件) -l <可选，限制结果数量，默认为50><br/>
+&emsp;&emsp;搜索整合包并安装（通过ID）：&emsp;&emsp;&emsp;-modpack2 -i -c <整合包ID> -k(可选，安装完成后保留文件)<br/>
+&emsp;&emsp;搜索整合包并显示信息（通过名称）：-modpack2 -s <整合包名称> -l <可选，限制结果数量，默认为50><br/>
+&emsp;&emsp;搜索整合包并显示信息（通过ID）：&emsp;-modpack2 -s -c <整合包ID>
 </details>
 
 ## 关于作者
 MrShiehX<br/>
 - 职业：<br/>
   学生<br/>
-- 邮箱：<br/>
-  3553413882@qq.com<br/>
-- QQ：<br/>
-  3553413882（备注来意）<br/>
 - 哔哩哔哩：<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
 
-## 如果您在本程序发现任何BUG，或者有新的想法，欢迎发送邮件或添加我的QQ（备注来意）。
+## 如果您在本程序发现任何BUG，或者有新的想法，欢迎在哔哩哔哩私信留言或提出 Issue

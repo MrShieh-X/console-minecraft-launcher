@@ -52,6 +52,7 @@ public class PrintOption implements Option {
             File versionFolder = new File(versionsFolder, version);
             File versionJarFile = new File(versionFolder, version + ".jar");
             File versionJsonFile = new File(versionFolder, version + ".json");
+            String command;
             try {
                 JSONObject account;
                 try {
@@ -71,11 +72,7 @@ public class PrintOption implements Option {
                     uu = account.optString("uuid", uu);
                 }
 
-                String path = versionFolder.getAbsolutePath();
-                System.out.println(getString("CONSOLE_START_COMMAND"));
-                System.out.println("===================================================================================================================");
-                System.out.println("cd " + (Utils.isWindows() ? "/D " : "") + (path.contains(" ") ? ("\"" + path + "\"") : path));
-                System.out.println(getMinecraftLaunchCommand(versionFolder, versionJarFile,
+                command = getMinecraftLaunchCommand(versionFolder, versionJarFile,
                         versionJsonFile,
                         gameDir,
                         assetsDir,
@@ -94,19 +91,29 @@ public class PrintOption implements Option {
                         account.optJSONObject("properties"),
                         Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
                         Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
-                        StartOption.getAuthlibInformation(account, at, uu, false)));
-                System.out.println("===================================================================================================================");
+                        StartOption.getAuthlibInformation(account, at, uu, false));
             } catch (EmptyNativesException ex) {
                 System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
+                return;
             } catch (LibraryDefectException ex) {
                 VersionOption.executeNotFound(ex.list);
+                return;
             } catch (LaunchException ex) {
                 //ex.printStackTrace();
                 System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex.getMessage());
+                return;
             } catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex);
+                return;
             }
+            String path = versionFolder.getAbsolutePath();
+            System.out.println(getString("CONSOLE_START_COMMAND"));
+            System.out.println("===================================================================================================================");
+            System.out.println("cd " + (Utils.isWindows() ? "/D " : "") + (path.contains(" ") ? ("\"" + path + "\"") : path));
+            System.out.println(command);//legal
+            System.out.println("===================================================================================================================");
+
         }
     }
 

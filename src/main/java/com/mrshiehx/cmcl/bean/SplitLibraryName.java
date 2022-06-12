@@ -27,19 +27,24 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.librariesDir;
 public class SplitLibraryName {
     public final String first;
     public final String second;
-    public final String third;
+
+    public final String version;
     public final String classifier;
     public final String extension;
 
 
-    public SplitLibraryName(String first, String second, String third) {
-        this(first, second, third, null, ".jar");
+    public SplitLibraryName(String first, String second, String version) {
+        this(first, second, version, null);
     }
 
-    public SplitLibraryName(String first, String second, String third, String classifier, String extension) {
+    public SplitLibraryName(String first, String second, String version, String classifier) {
+        this(first, second, version, classifier, ".jar");
+    }
+
+    public SplitLibraryName(String first, String second, String version, String classifier, String extension) {
         this.first = first;
         this.second = second;
-        this.third = third;
+        this.version = version;
         this.classifier = classifier;
         this.extension = extension;
     }
@@ -58,12 +63,25 @@ public class SplitLibraryName {
     }
 
     public String getFileName() {
-        return second + "-" + third + (!Utils.isEmpty(classifier) ? ("-" + classifier) : "") + extension;
+        return second + "-" + version + (!Utils.isEmpty(classifier) ? ("-" + classifier) : "") + extension;
     }
 
     public File getPhysicalFile() {
         String libraryFileName = getFileName();
         String libraryFileAndDirectoryName = Utils.getPathFromLibraryName(this);
         return new File(new File(librariesDir, libraryFileAndDirectoryName), libraryFileName);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(first).append(':').append(second).append(':').append(version);
+        if (!Utils.isEmpty(classifier)) {
+            sb.append(':').append(classifier);
+        }
+        if (!".jar".equals(extension)) {
+            sb.append('@').append(extension.substring(1));
+        }
+        return sb.toString();
     }
 }

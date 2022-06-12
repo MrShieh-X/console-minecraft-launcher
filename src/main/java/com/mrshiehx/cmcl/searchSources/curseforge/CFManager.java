@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.curseforge;
+package com.mrshiehx.cmcl.searchSources.curseforge;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.enums.CurseForgeSection;
@@ -37,8 +37,8 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
 
 public abstract class CFManager {
-    private static final String SEARCH_ADDONS = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432";
-    private static final String GET_ADDON_INFORMATION = "https://addons-ecs.forgesvc.net/api/v2/addon/";
+    private static final String SEARCH_ADDONS = "https://api.curseforge.com/v1/mods/search?gameId=432";
+    private static final String GET_ADDON_INFORMATION = "https://api.curseforge.com/v1/mods/";
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
     protected abstract CurseForgeSection getSection();
@@ -50,7 +50,10 @@ public abstract class CFManager {
     public String getDownloadLink(int modId, String modName) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
-            modAllVersionsJsonArrayFather = new JSONArray(Utils.get(GET_ADDON_INFORMATION + modId + "/files"));
+            JSONObject jsonObject = new JSONObject(Utils.getCF(GET_ADDON_INFORMATION + modId + "/files"));
+
+            //System.out.println(jsonObject);
+            modAllVersionsJsonArrayFather = jsonObject.optJSONArray("data");
         } catch (Exception e) {
             System.out.println(getString("MOD_FAILED_TO_GET_ALL_FILES", e).replace("${NAME}", getNameAllLowerCase()));
             return null;
@@ -64,7 +67,7 @@ public abstract class CFManager {
         for (int i = 0; i < modAllVersionsJsonArrayFather.length(); i++) {
             JSONObject modVersion = modAllVersionsJsonArrayFather.optJSONObject(i);
             if (modVersion == null) continue;
-            JSONArray gameVersion = modVersion.optJSONArray("gameVersion");
+            JSONArray gameVersion = modVersion.optJSONArray("gameVersions");
             for (int j = 0; j < gameVersion.length(); j++) {
                 String ver = gameVersion.optString(j);
                 ArrayList<JSONObject> oneMcVerOfModSupport;
@@ -146,7 +149,7 @@ public abstract class CFManager {
             String version = modSupportedMcVer.get(i);
             boolean containSpace = version.contains(" ");
             if (containSpace) System.out.print("\"");
-            System.out.print(version);
+            System.out.print(version);//legal
             if (containSpace) System.out.print("\"");
             if (i + 1 != modSupportedMcVer.size()) {
                 System.out.print(", ");
@@ -182,11 +185,11 @@ public abstract class CFManager {
             for (Object object : jsonArray) {
                 if (object instanceof JSONObject) {
                     JSONObject jsonObject = (JSONObject) object;
-                    if (jsonObject.optInt("type") == 3 && jsonObject.has("addonId")) {
-                        int addonId = jsonObject.optInt("addonId");
+                    if (jsonObject.optInt("relationType") == 3 && jsonObject.has("modId")) {
+                        int addonId = jsonObject.optInt("modId");
                         String name = null;
                         try {
-                            JSONObject head = new JSONObject(Utils.get(GET_ADDON_INFORMATION + addonId));
+                            JSONObject head = new JSONObject(Utils.getCF(GET_ADDON_INFORMATION + addonId)).optJSONObject("data");
                             name = head.optString("name");
                         } catch (Exception ignore) {
                         }
@@ -210,7 +213,7 @@ public abstract class CFManager {
                     if (i + 1 < list.size()) {
                         stringBuilder.append('\n');
                     }
-                    System.out.println(stringBuilder);
+                    System.out.println(stringBuilder);//legal
                     i++;
                 }
                 System.out.println();
@@ -222,7 +225,8 @@ public abstract class CFManager {
     public JSONObject search(String searchContent) {
         JSONArray searchResult;
         try {
-            searchResult = new JSONArray(Utils.get(SEARCH_ADDONS + "&sectionId=" + getSection().sectionId + "&searchFilter=" + URLEncoder.encode(searchContent, StandardCharsets.UTF_8.name())));
+            JSONObject jsonObject = new JSONObject(Utils.getCF(SEARCH_ADDONS + "&classId=" + getSection().sectionId + "&searchFilter=" + URLEncoder.encode(searchContent, StandardCharsets.UTF_8.name())));
+            searchResult = jsonObject.optJSONArray("data");
         } catch (Exception e) {
             System.out.println(getString("MESSAGE_FAILED_SEARCH", e));
             return null;
@@ -235,65 +239,26 @@ public abstract class CFManager {
             return null;
         }
 
+        Collections.reverse(list);
+
 
         for (int i = list.size() - 1; i >= 0; i--) {
             try {
-                AnsiConsole.systemInstall();
+                String gameVersion = null;
+                String projectFileName = null;
                 JSONObject result = list.get(i);
                 if (result == null) continue;
-                String author = getAuthor(result.optJSONArray("authors"));
-                if (!isEmpty(author)) {
-                    author = Ansi.ansi().fg(Ansi.Color.WHITE).a("/ ") + "" + author + " ";
-                } else {
-                    author = "";
-                }
-
-                String gameVersionAndFileName = null;
-                JSONArray gameVersionLatestFiles = result.optJSONArray("gameVersionLatestFiles");
+                JSONArray gameVersionLatestFiles = result.optJSONArray("latestFilesIndexes");
                 if (gameVersionLatestFiles != null && gameVersionLatestFiles.length() > 0) {
                     JSONObject first = gameVersionLatestFiles.optJSONObject(0);
                     if (first != null) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String gameVersion = first.optString("gameVersion");
-                        String projectFileName = first.optString("projectFileName");
-                        boolean notEmptyBoth = !isEmpty(gameVersion) && !isEmpty(projectFileName);
-                        if (!isEmpty(gameVersion) || !isEmpty(projectFileName)) {
-                            stringBuilder.append("(");
-                        }
-                        if (!isEmpty(gameVersion)) {
-                            stringBuilder.append(gameVersion);
-                        }
-                        if (notEmptyBoth) {
-                            stringBuilder.append(", ");
-                        }
-                        if (!isEmpty(projectFileName)) {
-                            stringBuilder.append(projectFileName);
-                        }
-
-                        if (!isEmpty(gameVersion) || !isEmpty(projectFileName)) {
-                            stringBuilder.append(")");
-                        }
-
-
-                        gameVersionAndFileName = stringBuilder.toString();
+                        gameVersion = first.optString("gameVersion");
+                        projectFileName = first.optString("filename");
                     }
                 }
 
 
-                System.out.println(
-                        Ansi.ansi().fg(Ansi.Color.CYAN).a(i + 1) + " " +
-                                Ansi.ansi().fg(Ansi.Color.GREEN).a(
-                                        result
-                                                .optString("name")) +
-                                Ansi.ansi().fg(Ansi.Color.WHITE).a(" ") + author +
-                                (!Utils.isEmpty(gameVersionAndFileName) ? Ansi.ansi().fg(Ansi.Color.WHITE).a(gameVersionAndFileName) : "")
-                );
-
-
-                AnsiConsole.systemUninstall();
-
-                String summary = result.optString("summary");
-                if (!Utils.isEmpty(summary)) System.out.println("    " + summary);
+                printOne(i + 1, result.optString("name"), result.optString("summary"), getAuthor(result.optJSONArray("authors")), gameVersion, projectFileName);
             } catch (Exception e) {
                 System.out.println(getString("CF_FAILED_TO_SHOW_SOMEONE", i + 1, e).replace("${NAME}", getNameAllLowerCase()));
             }
@@ -305,6 +270,56 @@ public abstract class CFManager {
         }
         return null;
     }
+
+
+    public static void printOne(int order, String name, String summary, String author, String latestGameVersion, String latestFileName) {
+        AnsiConsole.systemInstall();
+        if (isEmpty(name)) return;
+        if (!isEmpty(author)) {
+            author = Ansi.ansi().fg(Ansi.Color.WHITE).a("/ ") + "" + author + " ";
+        } else {
+            author = "";
+        }
+
+        String gameVersionAndFileName;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean notEmptyBoth = !isEmpty(latestGameVersion) && !isEmpty(latestFileName);
+        if (!isEmpty(latestGameVersion) || !isEmpty(latestFileName)) {
+            stringBuilder.append("(");
+        }
+        if (!isEmpty(latestGameVersion)) {
+            stringBuilder.append(latestGameVersion);
+        }
+        if (notEmptyBoth) {
+            stringBuilder.append(", ");
+        }
+        if (!isEmpty(latestFileName)) {
+            stringBuilder.append(latestFileName);
+        }
+
+        if (!isEmpty(latestGameVersion) || !isEmpty(latestFileName)) {
+            stringBuilder.append(")");
+        }
+
+
+        gameVersionAndFileName = stringBuilder.toString();
+
+
+        System.out.println(
+                Ansi.ansi().fg(Ansi.Color.CYAN).a(order) + " " +
+                        Ansi.ansi().fg(Ansi.Color.GREEN).a(
+                                name) +
+                        Ansi.ansi().fg(Ansi.Color.WHITE).a(" ") + author +
+                        (!Utils.isEmpty(gameVersionAndFileName) ? Ansi.ansi().fg(Ansi.Color.WHITE).a(gameVersionAndFileName) : "")
+        );
+
+
+        AnsiConsole.systemUninstall();
+
+        if (!Utils.isEmpty(summary)) System.out.println("    " + summary);
+    }
+
 
     private static String getAuthor(JSONArray authors) {
         if (authors == null || authors.length() == 0) return null;
@@ -334,17 +349,17 @@ public abstract class CFManager {
 
     public JSONObject getByID(String modId) throws NotMinecraftAddon, IncorrectCategoryAddon, IOException {
         JSONObject mod;
-        mod = new JSONObject(Utils.get(GET_ADDON_INFORMATION + modId));
+        mod = new JSONObject(Utils.getCF(GET_ADDON_INFORMATION + modId)).optJSONObject("data");
         int gameId = mod.optInt("gameId");
         if (gameId != 432) {
             throw new NotMinecraftAddon(gameId);
         }
-        JSONObject categorySection = mod.optJSONObject("categorySection");
+        /*JSONObject categorySection = mod.optJSONObject("categorySection");
         if (categorySection == null) {
             throw new IncorrectCategoryAddon(-1);
-        }
+        }*/
 
-        int a = categorySection.optInt("gameCategoryId");
+        int a = mod.optInt("classId");
         if (a != getSection().sectionId)
             throw new IncorrectCategoryAddon(a);
 
@@ -368,6 +383,7 @@ public abstract class CFManager {
 
     public void printInformation(JSONObject mod, String modName) {
         Map<String, String> information = new LinkedHashMap<>();
+        //System.out.println(mod);
         if (!isEmpty(modName))
             information.put(getSection().informationNameTip, modName);
         String id = mod.optString("id");
@@ -393,7 +409,7 @@ public abstract class CFManager {
             }
             information.put(getString("CF_INFORMATION_AUTHORS"), author.toString());
         }
-        JSONArray gameVersionLatestFiles = mod.optJSONArray("gameVersionLatestFiles");
+        JSONArray gameVersionLatestFiles = mod.optJSONArray("latestFilesIndexes");
         if (gameVersionLatestFiles != null && gameVersionLatestFiles.length() > 0) {
             List<JSONObject> gameVersionLatestFilesList = Utils.jsonArrayToJSONObjectList(gameVersionLatestFiles);
             if (gameVersionLatestFilesList.size() > 0) {
@@ -403,9 +419,13 @@ public abstract class CFManager {
                     information.put(getString("CF_INFORMATION_LATEST_GAME_VERSION"), gameVersion);
             }
         }
-        JSONArray modLoaders = mod.optJSONArray("modLoaders");
+
+
+        /*JSONArray modLoaders = mod.optJSONArray("modLoaders");
         if (modLoaders != null && modLoaders.length() > 0)
             information.put(getString("CF_INFORMATION_MOD_LOADERS"), Arrays.toString(((modLoaders.toList()).toArray())));
+*/
+
 
         String dateModified = mod.optString("dateModified");
         if (!Utils.isEmpty(dateModified) && dateModified.length() >= 19) {
@@ -426,27 +446,37 @@ public abstract class CFManager {
         }
 
 
-        String issueTrackerUrl = mod.optString("issueTrackerUrl");
-        if (!isEmpty(issueTrackerUrl))
-            information.put(getString("CF_INFORMATION_ISSUE_TRACKER_URL"), issueTrackerUrl);
-        String sourceUrl = mod.optString("sourceUrl");
-        if (!isEmpty(sourceUrl)) information.put(getString("CF_INFORMATION_SOURCE_URL"), sourceUrl);
-        String websiteUrl = mod.optString("websiteUrl");
-        if (!isEmpty(websiteUrl)) information.put(getString("CF_INFORMATION_WEBSITE_URL"), websiteUrl);
+        JSONObject links = mod.optJSONObject("links");
+        if (links != null) {
+            String issueTrackerUrl = links.optString("issuesUrl");
+            if (!isEmpty(issueTrackerUrl))
+                information.put(getString("CF_INFORMATION_ISSUE_TRACKER_URL"), issueTrackerUrl);
 
+            String sourceUrl = links.optString("sourceUrl");
+            if (!isEmpty(sourceUrl))
+                information.put(getString("CF_INFORMATION_SOURCE_URL"), sourceUrl);
+
+            String websiteUrl = links.optString("websiteUrl");
+            if (!isEmpty(websiteUrl))
+                information.put(getString("CF_INFORMATION_WEBSITE_URL"), websiteUrl);
+
+            String wikiUrl = links.optString("wikiUrl");
+            if (!isEmpty(wikiUrl))
+                information.put(getString("CF_INFORMATION_WIKI_URL"), wikiUrl);
+        }
 
         if (information.size() == 0) {
             System.out.println(getString("CF_INFORMATION_NOTHING", getNameAllLowerCase()));
         } else {
-            System.out.println(modName + ":");
+            System.out.println(modName + ":");//legal
             for (Map.Entry<String, String> entry : information.entrySet()) {
-                System.out.print(entry.getKey());
-                System.out.println(entry.getValue());
+                System.out.print(entry.getKey());//legal
+                System.out.println(entry.getValue());//legal
             }
         }
     }
 
-    private String parseDate(String sourceDate) {
+    public static String parseDate(String sourceDate) {
         String dateString;
         try {
             Date date = TIME_FORMAT.parse(sourceDate.substring(0, 19) + "+0000");

@@ -19,13 +19,16 @@ package com.mrshiehx.cmcl.bean;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Objects;
 
 public class Library {
     public final JSONObject libraryJSONObject;
+    public final File localFile;
 
-    public Library(JSONObject libraryJSONObject) {
+    public Library(JSONObject libraryJSONObject, File localFile) {
         this.libraryJSONObject = libraryJSONObject;
+        this.localFile = localFile;
     }
 
     @Override

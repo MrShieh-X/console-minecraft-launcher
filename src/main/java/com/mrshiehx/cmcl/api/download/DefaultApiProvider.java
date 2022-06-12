@@ -68,4 +68,9 @@ public class DefaultApiProvider implements DownloadApiProvider {
     public String forgeMaven() {
         return "https://files.minecraftforge.net/maven/";
     }
+
+    @Override
+    public String liteLoaderVersion() {
+        return "http://dl.liteloader.com/versions/versions.json";
+    }
 }

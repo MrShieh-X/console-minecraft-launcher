@@ -17,15 +17,28 @@
  */
 package com.mrshiehx.cmcl.constants;
 
+import com.mrshiehx.cmcl.utils.ManifestUtils;
+import com.mrshiehx.cmcl.utils.Utils;
+
 import java.io.File;
 
 public class Constants {
     public static final File configFile = new File("cmcl.json");
-    public static final String CMCL_VERSION = "1.2";
-    public static final String CLIENT_ID = "288ec5dd-6736-4d4b-9b96-30e083a8cad2";
+    public static final String CMCL_VERSION = "1.3";
+    public static final String CLIENT_ID = getMicrosoftAuthenticationClientID();
     public static final String COPYRIGHT = "Copyright (C) 2021-2022  MrShiehX";
     public static final int INDENT_FACTOR = 2;//JsonObject转String的间隔
     public static final String SOURCE_CODE = "https://www.github.com/MrShieh-X/console-minecraft-launcher";
     public static boolean ECHO_OPEN_FOR_IMMERSIVE = true;
     public static final int DEFAULT_DOWNLOAD_THREAD_COUNT = 64;
+
+    public static String getCurseForgeApiKey() {
+        String s = System.getProperty("cmcl.curseforge.apikey");
+        return !Utils.isEmpty(s) ? s : ManifestUtils.getString("CurseForge-ApiKey");
+    }
+
+    public static String getMicrosoftAuthenticationClientID() {
+        String s = System.getProperty("cmcl.authentication.clientId");
+        return !Utils.isEmpty(s) ? s : ManifestUtils.getString("Microsoft-Authentication-ClientID");
+    }
 }

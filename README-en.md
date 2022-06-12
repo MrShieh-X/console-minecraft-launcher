@@ -10,8 +10,9 @@ Anyone can take advices of this program to us.
 
 ## Version
 The latest version: <br/>
-<b>1.2 (Apr. 30, 2022)</b><br/>
+<b>1.3 (Jun. 12, 2022)</b><br/>
 Historical version: <br/>
+<b>1.3 (Jun. 12, 2022)</b><br/>
 <b>1.2 (Apr. 30, 2022)</b><br/>
 <b>1.1 (Mar. 27, 2022)</b><br/>
 <b>1.0 (Mar. 12, 2022) (First version)</b><br/>
@@ -51,6 +52,9 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 
 ## Program Screenshot
 ![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
+
+## Bugs found
+- Unable to launch game versions lower than 1.13 (without 1.13) where OptiFine and Forge coexist.
 
 ## Configurations
 The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).<br/>
@@ -133,6 +137,9 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;Find missing dependency library files and download: `-version -l <Version Name>`<br/>
 &emsp;&emsp;Install Fabric to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -f <Version Name>`<br/>
 &emsp;&emsp;Install Forge to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -o <Version Name>`<br/>
+&emsp;&emsp;Install LiteLoader to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -e <Version Name>`<br/>
+&emsp;&emsp;Install OptiFine to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -p <Version Name>`<br/>
+&emsp;&emsp;Complete version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -b <Version Name>`<br/>
 </details>
 <details>
   <summary><b><font size="4">Custom JVM Virtual Machine Parameters Related</font></b></summary>
@@ -151,14 +158,18 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 <details>
   <summary><b><font size="4">Installation Version Related</font></b></summary>
 
-&emsp;&emsp;Direct install version: -install `<Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)> -f (optional, install Fabric) -o (optional, install Forge)`<br/>
-&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;&emsp;&emsp;&emsp;**Note: Fabric and Forge cannot be installed at the same time or coexist**<br/>
+&emsp;&emsp;Direct install version: -install `<Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>`<br/>
 &emsp;&emsp;Optional parameters:<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-f` Install Fabric<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-o` Install Forge<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-e` Install LiteLoader<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-p` Install OptiFine<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-t <Thread Count> Set the number of threads for downloading asset files (default 64)`<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-na` Do not download asset files<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-nl` Do not download dependency library files<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-nn` Do not download native dependency library files<br/>
-&emsp;&emsp;Show installable versions (if no range is set, all versions of this type are showed by default)：-`install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>`<br/>
+&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;&emsp;&emsp;**Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist**<br/>
+&emsp;&emsp;Show installable versions (if no range is set, all versions of this type are showed by default): -`install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>`<br/>
 &emsp;&emsp;  Set time range (optional): `-i <from year>-<from month>-<from day>/<to year>-<to month>-<to day>`<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Example: `-i 2020-05-09/2021-10-23`<br/>
 </details>
@@ -182,18 +193,35 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;Search for modpacks and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-modpack -i -c <Modpack ID> -k(Optional, keep the file after installation)`<br/>
 &emsp;&emsp;Search for modpacks and display information (by name): `-modpack -s <Modpack Name>`<br/>
 &emsp;&emsp;Search for modpacks and display information (by ID):&emsp;&emsp;`-modpack -s -c <Modpack ID>`<br/>
-&emsp;&emsp;Install the local CurseForge modpack:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-modpack -l <Modpack Path>`
+&emsp;&emsp;Install local modpack:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-modpack -l <Modpack Path>`
+</details>
+<details>
+  <summary><b><font size="4">Mod Related (Download Source: Modrinth)</font></b></summary>
+
+&emsp;&emsp;Search for mods and install (by name):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-mod2 -i <Mod Name> -l <Optional, limit the number of results, default is 50>`<br/>
+&emsp;&emsp;Search for mods and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; `-mod2 -i -c <Mod ID>`<br/>
+&emsp;&emsp;Search for mods and display information (by name): `-mod2 -s <Mod Name> -l <Optional, limit the number of results, default is 50>`<br/>
+&emsp;&emsp;Search for mods and display information (by ID):&emsp;&emsp;`-mod2 -s -c <Mod ID>`
+</details>
+<details>
+  <summary><b><font size="4">Modpack Related (Download Source: Modrinth)</font></b></summary>
+
+&emsp;Optional parameters for installing the modpack:<br/>
+&emsp;&emsp;&emsp;`-t <Thread Count>` Set the number of threads for downloading asset files (default 64)<br/>
+&emsp;&emsp;&emsp;`-na` Do not download asset files<br/>
+&emsp;&emsp;&emsp;`-nl` Do not download dependency library files<br/>
+&emsp;&emsp;&emsp;`-nn` Do not download native dependency library files<br/>
+&emsp;&emsp;Search for modpacks and install (by name):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-modpack2 -i <Modpack Name> -k(Optional, keep the file after installation) -l <Optional, limit the number of results, default is 50>`<br/>
+&emsp;&emsp;Search for modpacks and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-modpack2 -i -c <Modpack ID> -k(Optional, keep the file after installation)`<br/>
+&emsp;&emsp;Search for modpacks and display information (by name): `-modpack2 -s <Modpack Name> -l <Optional, limit the number of results, default is 50>`<br/>
+&emsp;&emsp;Search for modpacks and display information (by ID):&emsp;&emsp;`-modpack2 -s -c <Modpack ID>`
 </details>
 
 ## About Author
 MrShiehX<br/>
 - Occupation: <br/>
   Student<br/>
-- Email address: <br/>
-  3553413882@qq.com<br/>
-- QQ:<br/>
-  3553413882 (Remember to tell me why you add me)<br/>
 - Bilibili:<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
 
-## If you find any bugs in this program or have new ideas, please send an email or add my QQ (remember to tell me why you add me).
+## If you find any bugs in this program, or have new ideas, please leave a message on Bilibili or raise an issue

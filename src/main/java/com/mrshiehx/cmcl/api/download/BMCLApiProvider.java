@@ -68,4 +68,9 @@ public class BMCLApiProvider implements DownloadApiProvider {
     public String forgeMaven() {
         return "https://bmclapi2.bangbang93.com/maven/";
     }
+
+    @Override
+    public String liteLoaderVersion() {
+        return "https://bmclapi.bangbang93.com/maven/com/mumfrey/liteloader/versions.json";
+    }
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.modLoaders;
+package com.mrshiehx.cmcl.modules.extra;
 
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
@@ -28,11 +28,11 @@ import java.util.List;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 
-public abstract class ModLoaderInstaller {
+public abstract class ExtraInstaller {
 
-    protected abstract String getModLoaderName();
+    protected abstract String getExtraName();
 
-    protected abstract ModLoaderMerger getModLoaderMerger();
+    protected abstract ExtraMerger getExtraMerger();
 
     protected abstract boolean checkInstalled(JSONObject gameJSON);
 
@@ -46,7 +46,7 @@ public abstract class ModLoaderInstaller {
         }
         JSONObject gameJSON;
         try {
-            gameJSON = new JSONObject(fileContent);
+            gameJSON = new com.mrshiehx.cmcl.utils.json.XJSONObject(fileContent);
         } catch (Exception e) {
             System.out.println(Utils.getString("EXCEPTION_PARSE_FILE_WITH_PATH", jsonFile.getAbsoluteFile()));
             return;
@@ -57,11 +57,11 @@ public abstract class ModLoaderInstaller {
 
         String mcVersion = Utils.getGameVersion(gameJSON, jarFile).id;
         if (isEmpty(mcVersion)) {
-            System.out.println(getString("INSTALL_MODLOADER_EMPTY_MC_VERSION", getModLoaderName()));
+            System.out.println(getString("INSTALL_MODLOADER_EMPTY_MC_VERSION", getExtraName()));
             return;
         }
 
-        Pair<Boolean, List<JSONObject>> pair = getModLoaderMerger().merge(mcVersion, gameJSON, jarFile, false);
+        Pair<Boolean, List<JSONObject>> pair = getExtraMerger().merge(mcVersion, gameJSON, jarFile, false);
         if (pair.getKey()) {
             List<JSONObject> list = pair.getValue();
             if (list != null && list.size() > 0) {
@@ -71,9 +71,9 @@ public abstract class ModLoaderInstaller {
             }
             try {
                 Utils.writeFile(jsonFile, gameJSON.toString(2), false);
-                System.out.println(getString("INSTALLED_MODLOADER", getModLoaderName()));
+                System.out.println(getString("INSTALLED_MODLOADER", getExtraName()));
             } catch (Exception e) {
-                System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", getModLoaderName(), getString("EXCEPTION_WRITE_FILE_WITH_PATH", jsonFile.getAbsolutePath())));
+                System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", getExtraName(), getString("EXCEPTION_WRITE_FILE_WITH_PATH", jsonFile.getAbsolutePath())));
             }
         }
     }

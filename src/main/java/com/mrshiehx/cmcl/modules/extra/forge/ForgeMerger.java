@@ -16,13 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.modLoaders.forge;
+package com.mrshiehx.cmcl.modules.extra.forge;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.SplitLibraryName;
-import com.mrshiehx.cmcl.modules.modLoaders.ModLoaderMerger;
+import com.mrshiehx.cmcl.bean.arguments.Arguments;
+import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
 import com.mrshiehx.cmcl.utils.*;
 import org.json.JSONArray;
@@ -47,7 +48,7 @@ import java.util.zip.ZipFile;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 
-public class ForgeMerger implements ModLoaderMerger {
+public class ForgeMerger implements ExtraMerger {
     private static final String MODLOADER_NAME = "Forge";
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     private static boolean clChecked = false;
@@ -557,7 +558,15 @@ public class ForgeMerger implements ModLoaderMerger {
         String minecraftArguments = version.optString("minecraftArguments");
         JSONObject arguments = version.optJSONObject("arguments");
         if (!isEmpty(minecraftArguments)) {
-            headJSONObject.put("minecraftArguments", minecraftArguments);
+            String hmca = headJSONObject.optString("minecraftArguments");
+            if (hmca.isEmpty())
+                headJSONObject.put("minecraftArguments", minecraftArguments);
+            else {
+                Arguments arguments1 = new Arguments(hmca, false, false);
+                Arguments arguments2 = new Arguments(minecraftArguments, false, false);
+                arguments1.merge(arguments2);
+                headJSONObject.put("minecraftArguments", minecraftArguments = arguments1.toString("--"));
+            }
         }
 
         if (arguments != null) {

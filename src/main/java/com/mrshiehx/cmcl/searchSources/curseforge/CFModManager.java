@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.curseforge;
+package com.mrshiehx.cmcl.searchSources.curseforge;
 
 import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.utils.Utils;
 
-public class ModManager extends CFManager {
+public class CFModManager extends CFManager {
     @Override
     protected CurseForgeSection getSection() {
         return CurseForgeSection.MOD;

@@ -78,4 +78,19 @@ public class MCBBSApiProvider implements DownloadApiProvider {
     public String thirdPartyForge() {
         return "https://download.mcbbs.net/forge/download";
     }
+
+    @Override
+    public String liteLoaderVersion() {
+        return "https://download.mcbbs.net/maven/com/mumfrey/liteloader/versions.json";
+    }
+
+    @Override
+    public String thirdPartyLiteLoaderDownload() {
+        return "https://download.mcbbs.net/liteloader/download";
+    }
+
+    @Override
+    public String thirdPartyOptiFine() {
+        return "https://download.mcbbs.net/optifine/";
+    }
 }

@@ -20,21 +20,27 @@ package com.mrshiehx.cmcl.options;
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.bean.GameVersion;
 import com.mrshiehx.cmcl.bean.Library;
-import com.mrshiehx.cmcl.bean.Pair;
+import com.mrshiehx.cmcl.bean.ThreeReturns;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
+import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.modules.modLoaders.fabric.FabricInstaller;
-import com.mrshiehx.cmcl.modules.modLoaders.forge.ForgeInstaller;
+import com.mrshiehx.cmcl.modules.extra.fabric.FabricInstaller;
+import com.mrshiehx.cmcl.modules.extra.forge.ForgeInstaller;
+import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderInstaller;
+import com.mrshiehx.cmcl.modules.extra.optifine.OptiFineInstaller;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
 import com.mrshiehx.cmcl.modules.version.NativesDownloader;
+import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -165,18 +171,27 @@ public class VersionOption implements Option {
                     String fabricVersion = Utils.getFabricVersion(head);
                     if (!isEmpty(fabricVersion))
                         information.put(getString("VERSION_INFORMATION_FABRIC_VERSION"), fabricVersion);
+
                     String forgeVersion = Utils.getForgeVersion(head);
                     if (!isEmpty(forgeVersion))
                         information.put(getString("VERSION_INFORMATION_FORGE_VERSION"), forgeVersion);
+
+                    String liteloaderVersion = Utils.getLiteloaderVersion(head);
+                    if (!isEmpty(liteloaderVersion))
+                        information.put(getString("VERSION_INFORMATION_LITELOADER_VERSION"), liteloaderVersion);
+
+                    String optiFineVersion = Utils.getOptifineVersion(head);
+                    if (!isEmpty(optiFineVersion))
+                        information.put(getString("VERSION_INFORMATION_OPTIFINE_VERSION"), optiFineVersion);
 
 
                     if (information.size() == 0) {
                         System.out.println(getString("VERSION_INFORMATION_NOTHING"));
                     } else {
-                        System.out.println(value + ":");
+                        System.out.println(value + ":");//legal
                         for (Map.Entry<String, String> entry : information.entrySet()) {
-                            System.out.print(entry.getKey());
-                            System.out.println(entry.getValue());
+                            System.out.print(entry.getKey());//legal
+                            System.out.println(entry.getValue());//legal
                         }
                     }
                 } catch (Exception e) {
@@ -197,7 +212,7 @@ public class VersionOption implements Option {
                         return;
                     }
                     try {
-                        JSONObject head = new JSONObject(Utils.readFileContent(jsonFile));
+                        JSONObject head = new com.mrshiehx.cmcl.utils.json.XJSONObject(Utils.readFileContent(jsonFile));
                         head.put("id", to);
                         Utils.writeFile(jsonFile, head.toString(2), false);
                     } catch (Exception e) {
@@ -239,8 +254,8 @@ public class VersionOption implements Option {
                     JSONArray libraries = new JSONObject(Utils.readFileContent(jsonFile)).optJSONArray("libraries");
                     File librariesFile = new File(gameDir, "libraries");
 
-                    Pair<List<String>, List<Library>> pair = MinecraftLauncher.getLibraries(libraries, librariesFile);
-                    List<Library> notFound = pair.getValue();
+                    ThreeReturns<List<Library>, List<Library>, Boolean> pair = MinecraftLauncher.getLibraries(libraries, librariesFile);
+                    List<Library> notFound = pair.second;
                     if (notFound.size() == 0) {
                         System.out.println(getString("CONSOLE_EMPTY_LIST"));
                         return;
@@ -266,6 +281,137 @@ public class VersionOption implements Option {
                 new ForgeInstaller().install(jsonFile, new File(dir, value + ".jar"));
 
                 break;
+            case "e":
+                if (!jsonFile.exists()) {
+                    System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
+                    return;
+                }
+                new LiteloaderInstaller().install(jsonFile, new File(dir, value + ".jar"));
+
+                break;
+            case "p":
+                if (!jsonFile.exists()) {
+                    System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
+                    return;
+                }
+                new OptiFineInstaller().install(jsonFile, new File(dir, value + ".jar"));
+
+                break;
+            case "b":
+                if (!jsonFile.exists()) {
+                    System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
+                    return;
+                }
+                JSONObject headJSONObjectIC;
+                String headJSONObjectICContent;
+                try {
+                    headJSONObjectICContent = Utils.readFileContent(jsonFile);
+                    headJSONObjectIC = new JSONObject(headJSONObjectICContent);
+                } catch (IOException e) {
+                    System.out.println(getString("EXCEPTION_READ_FILE_WITH_PATH", jsonFile.getAbsolutePath()));
+                    return;
+                }
+                String inheritsFrom = headJSONObjectIC.optString("inheritsFrom");
+                if (isEmpty(inheritsFrom)) {
+                    System.out.println(getString("MESSAGE_COMPLETE_VERSION_IS_COMPLETE"));
+                    return;
+                }
+                byte[] jarFileContent = null;
+
+                File jarFile = new File(dir, value + ".jar");
+                if (jarFile.exists()) {
+                    try {
+                        jarFileContent = Utils.getBytes(jarFile);
+                    } catch (Exception ignore) {
+                    }
+                }
+                try {
+                    VersionInstaller.start(
+                            inheritsFrom,
+                            value,
+                            new JSONObject(Utils.readFileContent(Utils.downloadVersionsFile())).optJSONArray("versions"),
+                            true,
+                            true,
+                            true,
+                            null,
+                            Constants.DEFAULT_DOWNLOAD_THREAD_COUNT,
+                            null,
+                            null,
+                            null,
+                            null,
+                            () -> System.out.println(getString("MESSAGE_COMPLETED_VERSION")),
+                            headJSONObject -> {
+                                String mainClass = headJSONObjectIC.optString("mainClass");
+                                if (!isEmpty(mainClass)) {
+                                    headJSONObject.put("mainClass", mainClass);
+                                }
+
+
+                                String minecraftArguments = headJSONObjectIC.optString("minecraftArguments");
+                                JSONObject arguments3 = headJSONObjectIC.optJSONObject("arguments");
+                                if (!isEmpty(minecraftArguments)) {
+                                    String hmca = headJSONObject.optString("minecraftArguments");
+                                    if (hmca.isEmpty())
+                                        headJSONObject.put("minecraftArguments", minecraftArguments);
+                                    else {
+                                        Arguments arguments1 = new Arguments(hmca, false, false);
+                                        Arguments arguments2 = new Arguments(minecraftArguments, false, false);
+                                        arguments1.merge(arguments2);
+                                        headJSONObject.put("minecraftArguments", minecraftArguments = arguments1.toString("--"));
+                                    }
+                                }
+
+                                if (arguments3 != null) {
+                                    JSONObject argumentsMC = headJSONObject.optJSONObject("arguments");
+                                    if (argumentsMC != null) {
+                                        JSONArray gameMC = argumentsMC.optJSONArray("game");
+                                        JSONArray jvmMC = argumentsMC.optJSONArray("jvm");
+                                        JSONArray game = arguments3.optJSONArray("game");
+                                        if (game != null && game.length() > 0) {
+                                            if (gameMC == null) argumentsMC.put("game", gameMC = new JSONArray());
+                                            gameMC.putAll(game);
+                                        }
+                                        JSONArray jvm = arguments3.optJSONArray("jvm");
+                                        if (jvm != null && jvm.length() > 0) {
+                                            if (jvmMC == null) argumentsMC.put("jvm", jvmMC = new JSONArray());
+                                            jvmMC.putAll(jvm);
+                                        }
+                                    } else {
+                                        headJSONObject.put("arguments", arguments3);
+                                    }
+                                }
+
+
+                                JSONArray libraries = headJSONObject.optJSONArray("libraries");
+                                if (libraries == null) headJSONObject.put("libraries", libraries = new JSONArray());
+                                libraries.putAll(headJSONObjectIC.optJSONArray("libraries"));
+
+                                //fabric-loader-0.14.7-1.18.2
+                                //1.12.2-LiteLoader1.12.2
+                                //1.18.2-forge-40.1.51
+                                String[] split = headJSONObjectIC.optString("id").split("-");
+                                if (split.length == 4 && "fabric".equals(split[0]) && "loader".equals(split[1])) {
+                                    headJSONObject.put("fabric", new JSONObject().put("version", split[2]));
+                                } else if (split.length == 3 && "forge".equals(split[1])) {
+                                    headJSONObject.put("forge", new JSONObject().put("version", split[2]));
+                                } else if (split.length == 2 && split[1].startsWith("LiteLoader")) {
+                                    headJSONObject.put("liteloader", new JSONObject().put("version", split[1].substring(10)));
+                                }
+
+                            }, null);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());//legal
+                    try {
+                        Utils.writeFile(jsonFile, headJSONObjectICContent, false);
+                        if (jarFileContent == null) {
+                            jarFile.delete();
+                        } else {
+                            FileUtils.bytes2File(jarFile, jarFileContent, false);
+                        }
+                    } catch (Exception ignore) {
+                    }
+                }
+                break;
             default:
                 System.out.println(getString("CONSOLE_UNKNOWN_OPTION", key));
                 break;
@@ -275,7 +421,7 @@ public class VersionOption implements Option {
     public static void executeNotFound(List<Library> notFound) {
         for (Library library : notFound) {
             System.out.print("    ");
-            System.out.println(library.libraryJSONObject.optString("name"));
+            System.out.println(library.libraryJSONObject.optString("name"));//legal
         }
         if (ConsoleUtils.yesOrNo(getString("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD"))) {
             LibrariesDownloader.downloadLibraries(notFound);

@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.modLoaders.fabric;
+package com.mrshiehx.cmcl.modules.extra.fabric;
 
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
-import com.mrshiehx.cmcl.modules.modLoaders.ModLoaderMerger;
+import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
@@ -35,7 +35,7 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 /**
  * Fabric 与原版的合并器
  **/
-public class FabricMerger implements ModLoaderMerger {
+public class FabricMerger implements ExtraMerger {
     private static final String MODLOADER_NAME = "Fabric";
 
     /**
@@ -92,9 +92,7 @@ public class FabricMerger implements ModLoaderMerger {
     }
 
     public static Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String fabricVersion, JSONObject headJSONObject) throws Exception {
-
-
-        String jsonUrl = DownloadSource.getProvider().fabricMeta() + String.format("v2/versions/loader/%s/%s/profile/json", minecraftVersion, fabricVersion);
+        String jsonUrl = DownloadSource.getProvider().fabricMeta() + String.format("v2/versions/loader/%s/%s", minecraftVersion, fabricVersion);
         String targetJSONString;
         try {
             targetJSONString = Utils.get(jsonUrl);
@@ -102,16 +100,68 @@ public class FabricMerger implements ModLoaderMerger {
             //e.printStackTrace();
             throw new Exception(getString("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", MODLOADER_NAME));
         }
-        JSONObject fabricJSON = Utils.parseJSONObject(targetJSONString);
-        if (fabricJSON == null) {
+        JSONObject fabricJSONOrigin = Utils.parseJSONObject(targetJSONString);
+        if (fabricJSONOrigin == null) {
             throw new Exception(getString("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", MODLOADER_NAME));
         }
 
+        JSONObject fabricJSON = new JSONObject();
 
-        if ("not found".equals(fabricJSON.optString("message"))) {
-            throw new Exception(getString("INSTALL_MODLOADER_RESPONSE_NOT_FOUND", MODLOADER_NAME));
+        JSONObject loader = fabricJSONOrigin.optJSONObject("loader");
+        JSONObject intermediary = fabricJSONOrigin.optJSONObject("intermediary");
+        JSONObject launcherMeta = fabricJSONOrigin.optJSONObject("launcherMeta");
+        if (launcherMeta != null) {
+            Object mainClassObject = launcherMeta.opt("mainClass");
+            if (mainClassObject instanceof String) {
+                fabricJSON.put("mainClass", mainClassObject);
+            } else if (mainClassObject instanceof JSONObject) {
+                fabricJSON.put("mainClass", ((JSONObject) mainClassObject).optString("client"));
+            }
+            JSONObject launchwrapper = launcherMeta.optJSONObject("launchwrapper");
+            if (launchwrapper != null) {
+                JSONObject tweakers = launchwrapper.optJSONObject("tweakers");
+                if (tweakers != null) {
+                    JSONArray client = tweakers.optJSONArray("client");
+                    if (client != null) {
+                        for (Object o : client) {
+                            if (o instanceof String) {
+                                fabricJSON.put("arguments", new JSONObject().put("game", new JSONArray().put("--tweakClass").put(o)));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            JSONObject libraries = launcherMeta.optJSONObject("libraries");
+            if (libraries != null) {
+                JSONArray common = libraries.optJSONArray("common");
+                JSONArray server = libraries.optJSONArray("server");
+                fabricJSON.put("libraries", common.putAll(server));
+            }
+
+
         }
 
+        JSONArray libraries = fabricJSON.optJSONArray("libraries");
+        if (libraries == null) fabricJSON.put("libraries", libraries = new JSONArray());
+        if (intermediary != null) {
+            String maven = intermediary.optString("maven");
+            if (!isEmpty(maven)) {
+                libraries.put(new JSONObject().put("name", maven).put("url", "https://maven.fabricmc.net/"));
+            }
+        }
+        if (loader != null) {
+            String maven = loader.optString("maven");
+            if (!isEmpty(maven)) {
+                libraries.put(new JSONObject().put("name", maven).put("url", "https://maven.fabricmc.net/"));
+            }
+        }
+
+
+        return new Pair<>(true, realMerge(headJSONObject, fabricJSON, fabricVersion, jsonUrl));
+    }
+
+    private static List<JSONObject> realMerge(JSONObject headJSONObject, JSONObject fabricJSON, String fabricVersion, String jsonUrl) {
         String mainClass = fabricJSON.optString("mainClass");
         if (!Utils.isEmpty(mainClass)) headJSONObject.put("mainClass", mainClass);
 
@@ -148,7 +198,7 @@ public class FabricMerger implements ModLoaderMerger {
                 headJSONObject.put("arguments", arguments);
             }
         }
-        return new Pair<>(true, list);
+        return list;
     }
 
     private static String selectFabricVersion(String text, Map<String, JSONObject> fabrics) {

@@ -1,5 +1,23 @@
 # Update Logs
-Currently, the latest version is 1.2, which was updated on April 30, 2022.
+Currently, the latest version is 1.3, which was updated on June 12, 2022.
+
+## 1.3 (Jun. 12, 2022)
+- Support for **installing LiteLoader**:<br/>
+  1. Install LiteLoader when installing the version: add "-e" after the installation command, such as: `-install 1.18.2 -e`<br/>
+  2. Install LiteLoader after installing the version: `-version -e <Version Name>`
+- Support for **installing OptiFine**:<br/>
+  1. Install OptiFine when installing the version: add "-p" after the installation command, such as: `-install 1.18.2 -p`<br/>
+  2. Install OptiFine after installing the version: `-version -p <Version Name>`<br/>
+  **Note: LiteLoader and Fabric, OptiFine and Fabric cannot coexist**
+- Fixed an issue where **1.19 could not be launched**.
+- Supports **searching for mods and modpacks through Modrinth**, please refer to the user manual for specific usage.
+- Support for importing **modpacks from MultiMC and Modrinth**.
+- Adapted to CurseForge's new API, solved the problem of **unable to search, download, install mods and modpacks**.
+- Support to **start the version installed by Forge, Fabric and LiteLoader installers**. Before starting, you need to use `-version -b <Version Name>` to complete the version.
+- When starting the game, the duplicate dependent libraries will not be loaded, and the one with the higher version will be loaded first (for the time being, only the pure digital version separated by "." can be judged), which can **solve some problems that cannot be started**.
+- Added **the exit command** `exit` **of immersive mode**.
+- When downloading files in multiple threads (downloading mods when installing the modpack, downloading resources when installing the version), if the file download fails, it will try to download it again, which **improves the success rate of multi-threaded file downloads**.
+- Fixed an issue where **Fabric could not be downloaded using the download sources BMCLAPI and MCBBS**.
 
 ## 1.2 (Apr. 30, 2022)
 - Support for **installing Forge**:<br/>

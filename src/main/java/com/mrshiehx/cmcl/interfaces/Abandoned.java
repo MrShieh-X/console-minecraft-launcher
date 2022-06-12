@@ -14,26 +14,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-package com.mrshiehx.cmcl.curseforge;
+package com.mrshiehx.cmcl.interfaces;
 
-import com.mrshiehx.cmcl.enums.CurseForgeSection;
-import com.mrshiehx.cmcl.utils.Utils;
-
-public class ModpackManager extends CFManager {
-    @Override
-    protected CurseForgeSection getSection() {
-        return CurseForgeSection.MODPACK;
-    }
-
-    @Override
-    protected String getNameAllLowerCase() {
-        return Utils.getString("CF_BESEARCHED_MODPACK_ALC");
-    }
-
-    @Override
-    protected String getNameFirstUpperCase() {
-        return Utils.getString("CF_BESEARCHED_MODPACK_FUC");
-    }
+/**
+ * 被遗弃的功能
+ **/
+public @interface Abandoned {
 }

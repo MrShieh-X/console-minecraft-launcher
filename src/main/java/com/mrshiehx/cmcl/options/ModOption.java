@@ -22,8 +22,9 @@ import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
-import com.mrshiehx.cmcl.curseforge.CFManager;
-import com.mrshiehx.cmcl.curseforge.ModManager;
+import com.mrshiehx.cmcl.searchSources.curseforge.CFManager;
+import com.mrshiehx.cmcl.searchSources.curseforge.CFModManager;
+import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import org.json.JSONObject;
 
@@ -49,7 +50,7 @@ public class ModOption implements Option {
         }
 
         JSONObject mod;
-        CFManager modManager = new ModManager();
+        CFManager modManager = new CFModManager();
         if ((subOption instanceof ValueArgument) && ("i".equals(subOption.key) || "s".equals(subOption.key))) {
 
             ValueArgument valueArgument = (ValueArgument) subOption;
@@ -70,7 +71,12 @@ public class ModOption implements Option {
                 System.out.println(getString("CF_GET_BY_ID_NOT_OF_MC", e.gameId).replace("${NAME}", getString("CF_BESEARCHED_MOD_ALC")));
                 return;
             } catch (CFManager.IncorrectCategoryAddon e) {
-                System.out.println(getString("CF_GET_BY_ID_INCORRECT_CATEGORY", e.gameCategoryId).replace("${NAME}", getString("CF_BESEARCHED_MOD_ALC")));
+                CurseForgeSection target = CurseForgeSection.valueOf(e.gameCategoryId);
+                if (target == null) {
+                    System.out.println(getString("CF_GET_BY_ID_INCORRECT_CATEGORY", e.gameCategoryId).replace("${NAME}", getString("CF_BESEARCHED_MOD_ALC")));
+                } else {
+                    System.out.println(getString("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL").replace("${NAME}", getString("CF_BESEARCHED_MOD_ALC")).replace("${TARGET}", target.nameAllLowerCase));
+                }
                 return;
             } catch (Exception e) {
                 System.out.println(getString("CF_GET_BY_ID_FAILED", e).replace("${NAME}", getString("CF_BESEARCHED_MOD_ALC")));

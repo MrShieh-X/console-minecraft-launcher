@@ -47,4 +47,13 @@ public interface DownloadApiProvider {
         return "https://bmclapi2.bangbang93.com/forge/download";
     }//https://bmclapi2.bangbang93.com/forge/download or https://download.mcbbs.net/forge/download
 
+    String liteLoaderVersion();//http://dl.liteloader.com/versions/versions.json
+
+    default String thirdPartyLiteLoaderDownload() {
+        return "https://bmclapi2.bangbang93.com/liteloader/download";
+    }//https://bmclapi2.bangbang93.com/liteloader/download or https://download.mcbbs.net/liteloader/download
+
+    default String thirdPartyOptiFine() {
+        return "https://bmclapi2.bangbang93.com/optifine/";
+    }//https://bmclapi2.bangbang93.com/optifine/ or https://download.mcbbs.net/optifine/
 }

@@ -122,3 +122,5 @@ cmcl/
 src/main/java/com/mrshiehx/cmcl/Testt.java
 console-minecraft-launcher.rar
 natives/
+META-INF
+META-INF/*

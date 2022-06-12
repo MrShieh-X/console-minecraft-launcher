@@ -16,35 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.modLoaders.forge;
+package com.mrshiehx.cmcl.modules.extra.forge;
 
-import com.mrshiehx.cmcl.modules.modLoaders.ModLoaderInstaller;
-import com.mrshiehx.cmcl.modules.modLoaders.ModLoaderMerger;
+import com.mrshiehx.cmcl.modules.extra.ExtraInstaller;
+import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
-public class ForgeInstaller extends ModLoaderInstaller {
+public class ForgeInstaller extends ExtraInstaller {
     @Override
-    protected String getModLoaderName() {
+    protected String getExtraName() {
         return "Forge";
     }
 
     @Override
-    protected ModLoaderMerger getModLoaderMerger() {
+    protected ExtraMerger getExtraMerger() {
         return new ForgeMerger();
     }
 
     @Override
     protected boolean checkInstalled(JSONObject gameJSON) {
         if (!Utils.isEmpty(Utils.getForgeVersion(gameJSON))) {
-            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL", getModLoaderName()));
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL", getExtraName()));
             return false;
         }
 
         if (!Utils.isEmpty(Utils.getFabricVersion(gameJSON))) {
-            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getModLoaderName(), "Fabric"));
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Fabric"));
             return false;
         }
         return true;

@@ -99,6 +99,15 @@ public class Languages {
             zh.put("MESSAGE_INPUT_VERSION_NAME", "请输入要存储为的版本名称：");
             zh.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", "下载文件失败：%s，文件链接为：%s，可自行下载并存储到 %s 中");
             zh.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", "下载文件失败：%s，文件链接为：%s，可自行下载并存储到 %s 中，并把名称修改为“%s”");
+            zh.put("MESSAGE_START_INSTALLING_LITELOADER", "开始安装 LiteLoader");
+            zh.put("MESSAGE_INSTALLED_LITELOADER", "安装 LiteLoader 完成");
+            zh.put("MESSAGE_START_INSTALLING_OPTIFINE", "开始安装 OptiFine");
+            zh.put("MESSAGE_INSTALLED_OPTIFINE", "安装 OptiFine 完成");
+            zh.put("MESSAGE_INSTALL_MODPACK_UNKNOWN_TYPE", "安装整合包失败：未知整合包类型。");
+            zh.put("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION", "安装整合包失败：找不到要安装的游戏版本。");
+            zh.put("MESSAGE_INSTALL_MODPACK_COEXIST", "安装整合包失败：%1$s 和 %2$s 不能同时安装。");
+            zh.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "该版本为完整的版本，无需补充。");
+            zh.put("MESSAGE_COMPLETED_VERSION", "补充版本成功");
             zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
             zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“-install <版本名称>”安装一个新的版本并选择。");
             zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
@@ -107,7 +116,7 @@ public class Languages {
             zh.put("EXCEPTION_MAX_MEMORY_IS_ZERO", "最大内存为零");
             zh.put("EXCEPTION_JAVA_VERSION_TOO_LOW", "此 Minecraft 版本的 Java 版本最低要求为 %d，您选择的 Java 版本为 %d，请选择一个达到要求的 Java 后重试。");
             zh.put("LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账号，\n如果登录成功，请返回到启动器，等待完成登录。\n登录需要一定的时间，请耐心等待。\n按以下的按钮，将会取消登录。");
-            zh.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软帐户授权，请关闭此页面并返回到启动器完成登录。");
+            zh.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭此页面并返回到启动器完成登录。");
             zh.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "登录微软账号 - Console Minecraft Launcher");
             zh.put("CONSOLE_GET_USAGE", "使用选项 -usage 或 -help 以获得使用手册。");
             zh.put("CONSOLE_UNKNOWN_OPTION", "未知选项：%s\n使用选项 -usage 或 -help 以获得使用手册。");
@@ -189,25 +198,34 @@ public class Languages {
             zh.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "版本“%1$s”找不到，请输入您要安装的 %2$s 版本(无需空格)：");
             zh.put("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", "请问是否继续安装原版（无 %s）？");
             zh.put("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", "无法安装 %1$s：解析目标 %1$s JSON 失败。");
-            zh.put("INSTALL_MODLOADER_RESPONSE_NOT_FOUND", "无法安装 %1$s：找不到目标 %1$s 版本。出现此原因有可能是下载源的错误，可尝试更换下载源。");
             zh.put("INSTALL_MODLOADER_ALREADY_INSTALL", "无法安装 %1$s：目标版本已安装 %1$s。");
             zh.put("INSTALL_MODLOADER_EMPTY_MC_VERSION", "无法安装 %s：无法获得目标版本的游戏版本。");
             zh.put("INSTALL_MODLOADER_FAILED_WITH_REASON", "安装 %s 失败：%s");
             zh.put("INSTALLED_MODLOADER", "安装 %s 成功");
+            zh.put("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", "无法安装 %1$s：目标版本已安装 %2$s，%2$s 和 %1$s 不能共存。");
+            zh.put("INSTALL_MODLOADER_NO_FILE", "无法安装 %1$s：您输入的 %1$s 版本没有可下载的文件，请换一个 %1$s 版本再试。");
+            zh.put("INSTALL_MODLOADER_FAILED_DOWNLOAD", "无法安装 %s：下载文件失败");
+            zh.put("INSTALL_MODLOADER_DOWNLOADING_FILE", "下载文件中...");
+            zh.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION_2", "无法安装 %1$s：没有可安装的 %1$s 版本。");
+            zh.put("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", "无法安装 %1$s：未知 %1$s 类型。");
+            zh.put("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", "无法安装 %1$s：目标 %1$s 的游戏版本与目标游戏版本不匹配。");
+            zh.put("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", "${NAME} 版本“%s”找不到。");
             zh.put("VERSION_INFORMATION_NOTHING", "无任何关于此版本的信息");
-            zh.put("VERSION_INFORMATION_GAME_VERSION", "   游戏版本：     ");
-            zh.put("VERSION_INFORMATION_RELEASE_TIME", "   版本发布时间： ");
-            zh.put("VERSION_INFORMATION_FABRIC_VERSION", "   Fabric 版本：  ");
-            zh.put("VERSION_INFORMATION_FORGE_VERSION", "   Forge 版本：   ");
-            zh.put("VERSION_INFORMATION_JAVA_COMPONENT", "   Java 组件：    ");
-            zh.put("VERSION_INFORMATION_JAVA_VERSION", "   Java 版本要求：");
-            zh.put("VERSION_INFORMATION_ASSETS_VERSION", "   资源版本：     ");
-            zh.put("VERSION_INFORMATION_VERSION_TYPE", "   版本类型：     ");
+            zh.put("VERSION_INFORMATION_GAME_VERSION", "   游戏版本：       ");
+            zh.put("VERSION_INFORMATION_RELEASE_TIME", "   版本发布时间：   ");
+            zh.put("VERSION_INFORMATION_FABRIC_VERSION", "   Fabric 版本：    ");
+            zh.put("VERSION_INFORMATION_FORGE_VERSION", "   Forge 版本：     ");
+            zh.put("VERSION_INFORMATION_JAVA_COMPONENT", "   Java 组件：      ");
+            zh.put("VERSION_INFORMATION_JAVA_VERSION", "   Java 版本要求：  ");
+            zh.put("VERSION_INFORMATION_ASSETS_VERSION", "   资源版本：       ");
+            zh.put("VERSION_INFORMATION_LITELOADER_VERSION", "   LiteLoader 版本：");
+            zh.put("VERSION_INFORMATION_OPTIFINE_VERSION", "   OptiFine 版本：  ");
+            zh.put("VERSION_INFORMATION_VERSION_TYPE", "   版本类型：       ");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_RELEASE", "正式版");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "快照版");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_OLD_BETA", "远古 Beta 版");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_OLD_ALPHA", "远古 Alpha 版");
-            zh.put("VERSION_INFORMATION_VERSION_PATH", "   版本位置：     ");
+            zh.put("VERSION_INFORMATION_VERSION_PATH", "   版本位置：       ");
             zh.put("VERSION_INFORMATION_GAME_VERSION_FAILED_GET", "获取失败");
             zh.put("EXCEPTION_JAVA_NOT_FOUND", "无法启动游戏，找不到 Java 文件。");
             zh.put("EXCEPTION_READ_FILE", "读取文件失败");
@@ -218,11 +236,15 @@ public class Languages {
             zh.put("EXCEPTION_WRITE_FILE_WITH_PATH", "写入内容到文件“%s”失败");
             zh.put("EXCEPTION_UNABLE_PARSE", "解析失败");
             zh.put("EXCEPTION_INSTALL_MODPACK", "安装整合包失败：%s");
+            zh.put("EXCEPTION_EXECUTE_COMMAND", "执行命令失败");
+            zh.put("EXCEPTION_INCOMPLETE_VERSION", "该版本不完整，请通过“-version -b <版本名称>”把该版本补充完整后再启动。");
+            zh.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK", "找不到文件下载地址");
+            zh.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", "找不到文件“%s”的下载地址");
             zh.put("CF_FAILED_TO_SHOW_SOMEONE", "显示第%d个${NAME}失败：%s");
             zh.put("CF_AUTHOR_MORE", "等%d位作者");
             zh.put("CF_SELECT_TARGET", "请选择目标${NAME}(%d-%d)：");
             zh.put("CF_SUPPORTED_GAME_VERSION", "%s 支持的游戏版本：");
-            zh.put("CF_INPUT_GAME_VERSION", "请输入您要下载的游戏版本：");
+            zh.put("CF_INPUT_GAME_VERSION", "请输入您要下载的版本：");
             zh.put("CF_INPUT_VERSION", "请选择您要下载的${NAME}版本(%d-%d，-1为退出)：");
             zh.put("CF_STORAGE_FILE_EXISTS", "文件“%s”已存在，请输入一个存储该${NAME}文件的目录：");
             zh.put("CF_NO_VERSION_FOR_GAME_VERSION", "没有适用于此游戏版本的%s版本。");
@@ -232,6 +254,7 @@ public class Languages {
             zh.put("CF_INFORMATION_MODPACK_NAME", "   整合包名称：        ");
             zh.put("CF_INFORMATION_MODPACK_ID", "   整合包ID：          ");
             zh.put("CF_INFORMATION_AUTHORS", "   作者：              ");
+            zh.put("CF_INFORMATION_AUTHOR", "   作者：              ");
             zh.put("CF_INFORMATION_SUMMARY", "   简介：              ");
             zh.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持的游戏版本：");
             zh.put("CF_INFORMATION_MOD_LOADERS", "   模组加载器：        ");
@@ -241,31 +264,32 @@ public class Languages {
             zh.put("CF_INFORMATION_ISSUE_TRACKER_URL", "   问题反馈：          ");
             zh.put("CF_INFORMATION_SOURCE_URL", "   源代码仓库：        ");
             zh.put("CF_INFORMATION_WEBSITE_URL", "   网页介绍：          ");
+            zh.put("CF_INFORMATION_WIKI_URL", "   维基网站：          ");
+            zh.put("CF_INFORMATION_DOWNLOADS", "   下载量：            ");
+            zh.put("CF_INFORMATION_CATEGORIES", "   类别：              ");
+            zh.put("CF_INFORMATION_DISCORD_URL", "   Discord 链接：      ");
+            zh.put("CF_INFORMATION_DONATION", "   捐赠：              ");
+            zh.put("CF_INFORMATION_DONATION_URL", "         地址：");
             zh.put("CF_INFORMATION_AUTHOR_URL", "         主页：");
             zh.put("CF_GET_BY_ID_FAILED", "无法获得目标${NAME}：%s\n出现该错误有可能的原因：\n1.目标${NAME}不存在\n2.网络异常\n3.服务器出现问题");
-            zh.put("CF_GET_BY_ID_NOT_OF_MC", "目标对象不是 Minecraft 的${NAME}，该对象的游戏ID为%d。");
+            zh.put("CF_GET_BY_ID_NOT_OF_MC", "目标游戏组件不是 Minecraft 的${NAME}，该组件的游戏ID为%d。");
             zh.put("CF_DEPENDENCIES_TIP", "此${NAME}需要以下前置${NAME}才能正常运行，请在安装完此${NAME}之后安装以下前置${NAME}。");
             zh.put("CF_DEPENDENCY_INFORMATION_ID", "   ID：  %d");
+            zh.put("CF_DEPENDENCY_INFORMATION_ID_STRING", "   ID：  %s");
             zh.put("CF_DEPENDENCY_INFORMATION_NAME", "   名称：%s");
             zh.put("CF_BESEARCHED_MOD_ALC", "模组");
             zh.put("CF_BESEARCHED_MOD_FUC", "模组");
             zh.put("CF_BESEARCHED_MODPACK_ALC", "整合包");
             zh.put("CF_BESEARCHED_MODPACK_FUC", "整合包");
-            zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标对象不是一个${NAME}，该对象的类别ID为%d。");
+            zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标游戏组件不是一个${NAME}，该组件的类别ID为%d。");
+            zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "目标游戏组件不是一个${NAME}，该游戏组件是一个${TARGET}。");
             zh.put("MOD_FAILED_TO_GET_ALL_FILES", "获得${NAME}文件列表失败：%s");
             zh.put("NO_SEARCH_RESULTS", "无任何搜索结果。");
-            zh.put("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", "无法安装 %1$s：目标版本已安装 %2$s，%2$s 和 %1$s 不能共存。");
-            zh.put("INSTALL_MODLOADER_NO_FILE", "无法安装 %1$s：您输入的 %1$s 版本没有可下载的文件，请换一个 %1$s 版本再试。");
-            zh.put("INSTALL_MODLOADER_FAILED_DOWNLOAD", "无法安装 %s：下载文件失败");
-            zh.put("INSTALL_MODLOADER_DOWNLOADING_FILE", "下载文件中...");
-            zh.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION_2", "无法安装 %1$s：没有可安装的 %1$s 版本。");
-            zh.put("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", "无法安装 %1$s：未知 %1$s 类型。");
-            zh.put("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", "无法安装 %1$s：目标 %1$s 的游戏版本与目标游戏版本不匹配。");
-            zh.put("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", "${NAME} 版本“%s”找不到。");
             zh.put("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", "下载 projectId 为 %d 的模组失败：%s");
             zh.put("INSTALL_MODPACK_EACH_MOD_GET_URL", "正在遍历获得各个模组的下载链接，请耐心等待");
             zh.put("INSTALL_MODPACK_COMPLETE", "安装整合包完成");
-
+            zh.put("INSTALL_MODPACK_MODRINTH_UNKNOWN_MODLOADER", "未知模组加载器：%s");
+            zh.put("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17", "无法安装 OptiFine：当前游戏版本的 Forge 与低于 H1 Pre2 版本的 OptiFine 不兼容，请换一个版本更新的 OptiFine 后重试。");
         }
         /*enUS*/
         {
@@ -339,6 +363,15 @@ public class Languages {
             en.put("MESSAGE_INPUT_VERSION_NAME", "Please enter the version name to store as: ");
             en.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", "Failed to download the file: %s, the file link is: %s, you can download and store it in %s by yourself");
             en.put("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", "Failed to download the file: %s, the file link is: %s, you can download and store it in %s by yourself, and change the name to \"%s\"");
+            en.put("MESSAGE_START_INSTALLING_LITELOADER", "Start installing LiteLoader");
+            en.put("MESSAGE_INSTALLED_LITELOADER", "LiteLoader installed successfully");
+            en.put("MESSAGE_START_INSTALLING_OPTIFINE", "Start installing OptiFine");
+            en.put("MESSAGE_INSTALLED_OPTIFINE", "OptiFine installed successfully");
+            en.put("MESSAGE_INSTALL_MODPACK_UNKNOWN_TYPE", "Unable to install the modpack: Unknown modpack type.");
+            en.put("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION", "Failed to install the modpack: Could not find the version of the game to install.");
+            en.put("MESSAGE_INSTALL_MODPACK_COEXIST", "Failed to install the modpack: %1$s and %2$s cannot be installed at the same time.");
+            en.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "This version is complete and does not need to be completed.");
+            en.put("MESSAGE_COMPLETED_VERSION", "Version completed successfully");
             en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
             en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <Version Name>\" to select a launch-able version or \"-install <Version Name>\" to install a new version and select it.");
             en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
@@ -429,7 +462,6 @@ public class Languages {
             en.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "Version \"%1$s\" not found, please enter the version of %2$s you want to install (no spaces required): ");
             en.put("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", "Would you like to continue installing the original version (without %s)?");
             en.put("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", "Unable to install %1$s: Failed to parse target %1$s JSON.");
-            en.put("INSTALL_MODLOADER_RESPONSE_NOT_FOUND", "Unable to install %1$s: The target %1$s version could not be found. The reason for this may be the download source error, you can try to change the download source.");
             en.put("INSTALL_MODLOADER_ALREADY_INSTALL", "Unable to install %1$s: The target version is installed %1$s.");
             en.put("INSTALL_MODLOADER_EMPTY_MC_VERSION", "Unable to install %1$s: Could not get the target version of the game version.");
             en.put("INSTALL_MODLOADER_FAILED_WITH_REASON", "Failed to install %s: %s");
@@ -449,14 +481,16 @@ public class Languages {
             en.put("VERSION_INFORMATION_FORGE_VERSION", "   Forge Version:            ");
             en.put("VERSION_INFORMATION_JAVA_COMPONENT", "   Java Component:           ");
             en.put("VERSION_INFORMATION_JAVA_VERSION", "   Java Version Requirement: ");
-            en.put("VERSION_INFORMATION_ASSETS_VERSION", "   Resource version:         ");
+            en.put("VERSION_INFORMATION_ASSETS_VERSION", "   Resource Version:         ");
+            en.put("VERSION_INFORMATION_LITELOADER_VERSION", "   LiteLoader Version:       ");
+            en.put("VERSION_INFORMATION_OPTIFINE_VERSION", "   OptiFine Version:         ");
             en.put("VERSION_INFORMATION_VERSION_TYPE", "   Version Type:             ");
             en.put("VERSION_INFORMATION_VERSION_TYPE_RELEASE", "Release");
             en.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "Snapshot");
             en.put("VERSION_INFORMATION_VERSION_TYPE_OLD_BETA", "Old Beta");
             en.put("VERSION_INFORMATION_VERSION_TYPE_OLD_ALPHA", "Old Alpha");
-            en.put("VERSION_INFORMATION_VERSION_PATH", "   File Location：           ");
             en.put("VERSION_INFORMATION_GAME_VERSION_FAILED_GET", "Failed to get");
+            en.put("VERSION_INFORMATION_VERSION_PATH", "   File Location:            ");
             en.put("EXCEPTION_JAVA_NOT_FOUND", "Unable to launch game: the java file not found");
             en.put("EXCEPTION_READ_FILE", "Failed to read file");
             en.put("EXCEPTION_READ_FILE_WITH_PATH", "Failed to read the file \"%s\"");
@@ -466,11 +500,15 @@ public class Languages {
             en.put("EXCEPTION_WRITE_FILE_WITH_PATH", "Failed to write content to the file \"%s\"");
             en.put("EXCEPTION_UNABLE_PARSE", "Failed to parse");
             en.put("EXCEPTION_INSTALL_MODPACK", "Failed to install modpack: %s");
+            en.put("EXCEPTION_EXECUTE_COMMAND", "Failed to execute the command");
+            en.put("EXCEPTION_INCOMPLETE_VERSION", "This version is incomplete, please use \"-version -b <Version Name>\" to complete the version before starting.");
+            en.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK", "File download link not found.");
+            en.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", "The download url for the file \"%s\" could not be found.");
             en.put("CF_FAILED_TO_SHOW_SOMEONE", "Failed to display ${NAME} %d: %s");
             en.put("CF_AUTHOR_MORE", "and other %d authors");
             en.put("CF_SELECT_TARGET", "Please select the target ${NAME} (%d-%d): ");
             en.put("CF_SUPPORTED_GAME_VERSION", "%s supported game versions: ");
-            en.put("CF_INPUT_GAME_VERSION", "Please enter the version of the game you want to download: ");
+            en.put("CF_INPUT_GAME_VERSION", "Please enter the version you want to download: ");
             en.put("CF_INPUT_VERSION", "Please select the ${NAME} version you want to download (%d-%d, exit if the value is -1): ");
             en.put("CF_STORAGE_FILE_EXISTS", "The file \"%s\" already exists, please enter a directory to store the ${NAME} file: ");
             en.put("CF_NO_VERSION_FOR_GAME_VERSION", "There is no %s version available for this game version.");
@@ -480,6 +518,7 @@ public class Languages {
             en.put("CF_INFORMATION_MODPACK_NAME", "   Modpack Name:                  ");
             en.put("CF_INFORMATION_MODPACK_ID", "   Modpack ID:                    ");
             en.put("CF_INFORMATION_AUTHORS", "   Authors:                       ");
+            en.put("CF_INFORMATION_AUTHOR", "   Author:                        ");
             en.put("CF_INFORMATION_SUMMARY", "   Introduction:                  ");
             en.put("CF_INFORMATION_LATEST_GAME_VERSION", "   Latest Supported Game Version: ");
             en.put("CF_INFORMATION_MOD_LOADERS", "   Mod Loaders:                   ");
@@ -489,22 +528,32 @@ public class Languages {
             en.put("CF_INFORMATION_ISSUE_TRACKER_URL", "   Feedback:                      ");
             en.put("CF_INFORMATION_SOURCE_URL", "   Source Code Repository:        ");
             en.put("CF_INFORMATION_WEBSITE_URL", "   Webpage Introduction:          ");
+            en.put("CF_INFORMATION_WIKI_URL", "   Wiki Website:                  ");
+            en.put("CF_INFORMATION_DOWNLOADS", "   Downloads:                     ");
+            en.put("CF_INFORMATION_CATEGORIES", "   Categories:       ");
+            en.put("CF_INFORMATION_DISCORD_URL", "   Discord URL:      ");
+            en.put("CF_INFORMATION_DONATION", "   Donation:         ");
+            en.put("CF_INFORMATION_DONATION_URL", "         Url: ");
             en.put("CF_INFORMATION_AUTHOR_URL", "         Homepage: ");
             en.put("CF_GET_BY_ID_FAILED", "Unable to get target ${NAME}: %s\nPossible reasons for this error:\n1. The target ${NAME} does not exist\n2. Network exception\n3. There is a problem with the server");
             en.put("CF_GET_BY_ID_NOT_OF_MC", "The target add-on is not a Minecraft ${NAME}, the game ID of the add-on is %d.");
             en.put("CF_DEPENDENCIES_TIP", "This ${NAME} requires the following pre-${NAME}s to work properly, please install the following pre-${NAME}s after installing this ${NAME}.");
             en.put("CF_DEPENDENCY_INFORMATION_ID", "   ID:   %d");
+            en.put("CF_DEPENDENCY_INFORMATION_ID_STRING", "   ID:   %s");
             en.put("CF_DEPENDENCY_INFORMATION_NAME", "   Name: %s");
             en.put("CF_BESEARCHED_MOD_ALC", "mod");
             en.put("CF_BESEARCHED_MOD_FUC", "Mod");
             en.put("CF_BESEARCHED_MODPACK_ALC", "modpack");
             en.put("CF_BESEARCHED_MODPACK_FUC", "Modpack");
             en.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "The target game component is not a ${NAME}, the category ID of this component is %d.");
+            en.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "The target game component is not a ${NAME}, the component is a ${TARGET}.");
             en.put("MOD_FAILED_TO_GET_ALL_FILES", "Failed to get list of ${NAME} files: %s");
             en.put("NO_SEARCH_RESULTS", "No search results.");
             en.put("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", "Failed to download the mod with projectId %d: %s");
             en.put("INSTALL_MODPACK_EACH_MOD_GET_URL", "Traversing to get the download links of each mod, please be patient");
             en.put("INSTALL_MODPACK_COMPLETE", "Install modpack complete");
+            en.put("INSTALL_MODPACK_MODRINTH_UNKNOWN_MODLOADER", "Unknown modloader: %s");
+            en.put("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17", "Unable to install OptiFine: The current game version of Forge is not compatible with OptiFine versions lower than H1 Pre2, please try a newer version of OptiFine.");
         }
         /*enUSUsage*/
         {
@@ -554,7 +603,10 @@ public class Languages {
                             "    Re-download the native dependency library files:    -version -n <Version Name>\n" +
                             "    Find missing dependency library files and download: -version -l <Version Name>\n" +
                             "    Install Fabric to local version:                    -version -f <Version Name>\n" +
-                            "    Install Forge to local version:                     -version -o <Version Name>");
+                            "    Install Forge to local version:                     -version -o <Version Name>\n" +
+                            "    Install LiteLoader to local version:                -version -e <Version Name>\n" +
+                            "    Install OptiFine to local version:                  -version -p <Version Name>\n" +
+                            "    Complete version:                                   -version -b <Version Name>");
             enUsage.put("JVM_ARGS",
                     "Custom JVM Virtual Machine Parameters Related:\n" +
                             "    Print all parameters: -jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>\n" +
@@ -569,15 +621,20 @@ public class Languages {
 
             enUsage.put("INSTALL",
                     "Installation Version Related:\n" +
-                            "    Direct install version: -install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)> -f (optional, install Fabric) -o (optional, install Forge)\n" +
-                            "                      Note: Fabric and Forge cannot be installed at the same time or coexist\n" +
+                            "    Direct install version: -install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>\n" +
+
                             "    Optional parameters:\n" +
+                            "                -f Install Fabric\n" +
+                            "                -o Install Forge\n" +
+                            "                -e Install LiteLoader\n" +
+                            "                -p Install OptiFine\n" +
                             "                -t <Thread Count> Set the number of threads for downloading asset files (default 64)\n" +
                             "                -na Do not download asset files\n" +
                             "                -nl Do not download dependency library files\n" +
                             "                -nn Do not download native dependency library files\n" +
+                            "            Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist\n" +
                             "\n" +
-                            "    Show installable versions (if no range is set, all versions of this type are showed by default)：-install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>\n" +
+                            "    Show installable versions (if no range is set, all versions of this type are showed by default): -install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>\n" +
                             "      Set time range (optional): -i <from year>-<from month>-<from day>/<to year>-<to month>-<to day>\n" +
                             "                        Example: -i 2020-05-09/2021-10-23");
             enUsage.put("MOD",
@@ -597,7 +654,24 @@ public class Languages {
                             "    Search for modpacks and install (by ID):               -modpack -i -c <Modpack ID> -k(Optional, keep the file after installation)\n" +
                             "    Search for modpacks and display information (by name): -modpack -s <Modpack Name>\n" +
                             "    Search for modpacks and display information (by ID):   -modpack -s -c <Modpack ID>\n" +
-                            "    Install the local CurseForge modpack:                  -modpack -l <Modpack Path>");
+                            "    Install local modpack:                                 -modpack -l <Modpack Path>");
+            enUsage.put("MOD2",
+                    "Mod Related (Download Source: Modrinth):\n" +
+                            "    Search for mods and install (by name):             -mod2 -i <Mod Name> -l <Optional, limit the number of results, default is 50>\n" +
+                            "    Search for mods and install (by ID):               -mod2 -i -c <Mod ID>\n" +
+                            "    Search for mods and display information (by name): -mod2 -s <Mod Name> -l <Optional, limit the number of results, default is 50>\n" +
+                            "    Search for mods and display information (by ID):   -mod2 -s -c <Mod ID>");
+            enUsage.put("MODPACK2",
+                    "Modpack Related (Download Source: Modrinth):\n" +
+                            "   Optional parameters for installing the modpack:\n" +
+                            "                  -t <Thread Count> Set the number of threads for downloading asset files (default 64)\n" +
+                            "                  -na Do not download asset files\n" +
+                            "                  -nl Do not download dependency library files\n" +
+                            "                  -nn Do not download native dependency library files\n" +
+                            "    Search for modpacks and install (by name):             -modpack2 -i <Modpack Name> -k(Optional, keep the file after installation) -l <Optional, limit the number of results, default is 50>\n" +
+                            "    Search for modpacks and install (by ID):               -modpack2 -i -c <Modpack ID> -k(Optional, keep the file after installation)\n" +
+                            "    Search for modpacks and display information (by name): -modpack2 -s <Modpack Name> -l <Optional, limit the number of results, default is 50>\n" +
+                            "    Search for modpacks and display information (by ID):   -modpack2 -s -c <Modpack ID>");
         }
         /*zhCNUsage*/
         {
@@ -647,7 +721,10 @@ public class Languages {
                             "    重新下载原生依赖库文件：    -version -n <版本名称>\n" +
                             "    查找缺少的依赖库文件并下载：-version -l <版本名称>\n" +
                             "    安装 Fabric 到本地版本：    -version -f <版本名称>\n" +
-                            "    安装 Forge 到本地版本：     -version -o <版本名称>");
+                            "    安装 Forge 到本地版本：     -version -o <版本名称>\n" +
+                            "    安装 LiteLoader 到本地版本：-version -e <版本名称>\n" +
+                            "    安装 OptiFine 到本地版本：  -version -p <版本名称>\n" +
+                            "    把版本补充完整：            -version -b <版本名称>");
 
             zhUsage.put("JVM_ARGS",
                     "自定义JVM虚拟机参数相关：\n" +
@@ -664,12 +741,16 @@ public class Languages {
 
             zhUsage.put("INSTALL",
                     "安装版本相关：\n" +
-                            "    直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)> -f(可选，安装Fabric) -o(可选，安装Forge)\n" +
-                            "              注：Fabric 和 Forge 不能同时安装或共存\n" +
-                            "      可选的参数：-t <线程数> 设置下载资源文件的线程数（默认为64）\n" +
+                            "    直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)>\n" +
+                            "      可选的参数：-f 安装 Fabric\n" +
+                            "                  -o 安装 Forge\n" +
+                            "                  -e 安装 LiteLoader\n" +
+                            "                  -p 安装 OptiFine\n" +
+                            "                  -t <线程数> 设置下载资源文件的线程数（默认为64）\n" +
                             "                  -na 不下载资源文件\n" +
                             "                  -nl 不下载依赖库文件\n" +
                             "                  -nn 不下载原生依赖库文件\n" +
+                            "               注：Fabric 和 Forge、Fabric 和 LiteLoader、Fabric 和 OptiFine 不能同时安装或共存\n" +
                             "\n" +
                             "    显示可安装的版本（若没有设置范围，默认显示该类型的全部版本）：-install -s <版本类型：a 全部；r 正式版；s 快照版；oa 远古alpha版；ob 远古beta版>\n" +
                             "      设置时间范围（可选）：-i <从年>-<从月>-<从日>/<到年>-<到月>-<到日>\n" +
@@ -691,7 +772,24 @@ public class Languages {
                             "    搜索整合包并安装（通过ID）：      -modpack -i -c <整合包ID> -k(可选，安装完成后保留文件)\n" +
                             "    搜索整合包并显示信息（通过名称）：-modpack -s <整合包名称>\n" +
                             "    搜索整合包并显示信息（通过ID）：  -modpack -s -c <整合包ID>\n" +
-                            "    安装本地 CurseForge 整合包：      -modpack -l <整合包路径>");
+                            "    安装本地整合包（多种格式）：      -modpack -l <整合包路径>");
+            zhUsage.put("MOD2",
+                    "模组相关（下载源：Modrinth）：\n" +
+                            "    搜索模组并安装（通过名称）：    -mod2 -i <模组名称> -l <可选，限制结果数量，默认为50>\n" +
+                            "    搜索模组并安装（通过ID）：      -mod2 -i -c <模组ID>\n" +
+                            "    搜索模组并显示信息（通过名称）：-mod2 -s <模组名称> -l <可选，限制结果数量，默认为50>\n" +
+                            "    搜索模组并显示信息（通过ID）：  -mod2 -s -c <模组ID>");
+            zhUsage.put("MODPACK2",
+                    "整合包相关（下载源：Modrinth）：\n" +
+                            "   安装整合包的可选参数：\n" +
+                            "                  -t <线程数> 设置下载资源文件的线程数（默认为64）\n" +
+                            "                  -na 不下载资源文件\n" +
+                            "                  -nl 不下载依赖库文件\n" +
+                            "                  -nn 不下载原生依赖库文件\n" +
+                            "    搜索整合包并安装（通过名称）：    -modpack2 -i <整合包名称> -k(可选，安装完成后保留文件) -l <可选，限制结果数量，默认为50>\n" +
+                            "    搜索整合包并安装（通过ID）：      -modpack2 -i -c <整合包ID> -k(可选，安装完成后保留文件)\n" +
+                            "    搜索整合包并显示信息（通过名称）：-modpack2 -s <整合包名称> -l <可选，限制结果数量，默认为50>\n" +
+                            "    搜索整合包并显示信息（通过ID）：  -modpack2 -s -c <整合包ID>");
         }
     }
 }

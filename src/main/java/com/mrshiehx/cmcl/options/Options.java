@@ -52,6 +52,8 @@ public class Options {
         MAP.put("mod", new ModOption());
         MAP.put("modpack", new ModpackOption());
         MAP.put("immersive", new ImmersiveModeOption());
+        MAP.put("mod2", new ModrinthModOption());
+        MAP.put("modpack2", new ModrinthModpackOption());
 
 
         Map<String, Option> ne = new HashMap<>(MAP);

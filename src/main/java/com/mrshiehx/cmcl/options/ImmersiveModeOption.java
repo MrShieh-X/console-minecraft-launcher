@@ -25,7 +25,6 @@ import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -51,99 +50,67 @@ public class ImmersiveModeOption implements Option {
             }
             if (!Utils.isEmpty(s)) {
                 String command = format(s);
-                if (command.equals("echo off")) {
-                    Constants.ECHO_OPEN_FOR_IMMERSIVE = false;
-                } else if (command.equals("echo on")) {
-                    Constants.ECHO_OPEN_FOR_IMMERSIVE = true;
-                } else {
-                    List<String> list = Utils.splitCommand(command);
-                    Arguments args = new Arguments(list.toArray(new String[0]), true);
-                    if (args.size < 1) continue;
-                    Argument argument = args.optArgument(0);
-                    if (argument == null) continue;
-                    String key = argument.key;
-                    Option option = Options.MAP.get(key.toLowerCase());
-                    if (option == null) {
-                        System.out.println(getString("CONSOLE_IMMERSIVE_UNKNOWN", key));
-                        continue;
-                    }
-                    Argument usage = args.optArgument(1);
-                    if (usage != null && !(option instanceof HelpOption)) {
-                        if (usage.equals("usage") || usage.equals("help") || usage.equals("u") || usage.equals("h")) {
-                            String name = option.getUsageName();
-                            if (!Utils.isEmpty(name)) {
-                                System.out.println(getUsage(name));
+                switch (command) {
+                    case "echo off":
+                        Constants.ECHO_OPEN_FOR_IMMERSIVE = false;
+                        break;
+                    case "echo on":
+                        Constants.ECHO_OPEN_FOR_IMMERSIVE = true;
+                        break;
+                    case "exit":
+                        System.exit(0);
+                        return;
+                    default:
+                        List<String> list = Utils.splitCommand(command);
+                        Arguments args = new Arguments(list.toArray(new String[0]), true, true);
+                        if (args.getSize() < 1) continue;
+                        Argument argument = args.optArgument(0);
+                        if (argument == null) continue;
+                        String key = argument.key;
+                        Option option = Options.MAP.get(key.toLowerCase());
+                        if (option == null) {
+                            System.out.println(getString("CONSOLE_IMMERSIVE_UNKNOWN", key));
+                            continue;
+                        }
+                        Argument usage = args.optArgument(1);
+                        if (usage != null && !(option instanceof HelpOption)) {
+                            if (usage.equals("usage") || usage.equals("help") || usage.equals("u") || usage.equals("h")) {
+                                String name = option.getUsageName();
+                                if (!Utils.isEmpty(name)) {
+                                    System.out.println(getUsage(name));
+                                } else {
+                                    System.out.println(getUsage("TITLE"));
+                                }
                             } else {
-                                System.out.println(getUsage("TITLE"));
+                                try {
+                                    option.execute(args);
+                                } catch (Throwable e) {
+                                    e.printStackTrace();
+                                }
                             }
                         } else {
-                            try {
-                                option.execute(args);
-                            } catch (Throwable e) {
-                                e.printStackTrace();
+                            if (!(option instanceof ImmersiveModeOption)) {
+                                try {
+                                    option.execute(args);
+                                } catch (Throwable e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    } else {
-                        if (!(option instanceof ImmersiveModeOption)) {
-                            try {
-                                option.execute(args);
-                            } catch (Throwable e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
 
+                        break;
                 }
-
-
             }
         }
     }
 
-
     private String format(String command) {
-        return !Utils.isEmpty(command) ? clearRedundantSpaces(command.trim()) : "";
+        return !Utils.isEmpty(command) ? Utils.clearRedundantSpaces(command.trim()) : "";
     }
 
     @Override
     public String getUsageName() {
         return null;
-    }
-
-    private String clearRedundantSpaces(String string) {
-        char[] sourceChars = string.toCharArray();
-        Object space = new Object();
-        Object[] objects = new Object[string.length()];
-        boolean yinyong = false;
-        for (int i = 0; i < sourceChars.length; i++) {
-            char cha = sourceChars[i];
-            if (cha == '\"') {
-                yinyong = !yinyong;
-            }
-            objects[i] = !yinyong && cha == ' ' ? space : cha;
-        }
-        List<Character> list = new ArrayList<>();
-        for (int i = 0; i < objects.length; i++) {
-            Object object = objects[i];
-            if (object == space) {
-                list.add(' ');
-                for (int j = i; j < objects.length; j++) {
-                    if (objects[j] != space) {
-                        i = j - 1;
-                        break;
-                    }
-                }
-
-            } else if (object instanceof Character) {
-                list.add((Character) object);
-            }
-        }
-
-        char[] chars = new char[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            chars[i] = list.get(i);
-        }
-        return new String(chars);
     }
 
     private static void printPrompt() {
@@ -170,6 +137,6 @@ public class ImmersiveModeOption implements Option {
 
 
         stringBuilder.append("$ ");
-        System.out.print(stringBuilder);
+        System.out.print(stringBuilder);//legal
     }
 }

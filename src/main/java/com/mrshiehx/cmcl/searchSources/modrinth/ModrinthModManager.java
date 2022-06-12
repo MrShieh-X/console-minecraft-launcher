@@ -16,14 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.modLoaders;
+package com.mrshiehx.cmcl.searchSources.modrinth;
 
-import com.mrshiehx.cmcl.bean.Pair;
-import org.json.JSONObject;
+import com.mrshiehx.cmcl.enums.ModrinthSection;
 
-import java.io.File;
-import java.util.List;
-
-public interface ModLoaderMerger {
-    Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue);
+public class ModrinthModManager extends ModrinthManager {
+    @Override
+    protected ModrinthSection getSection() {
+        return ModrinthSection.MOD;
+    }
 }

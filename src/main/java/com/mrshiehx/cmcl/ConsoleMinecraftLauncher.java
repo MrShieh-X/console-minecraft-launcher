@@ -22,18 +22,14 @@ import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.constants.Languages;
 import com.mrshiehx.cmcl.interfaces.filters.StringFilter;
-import com.mrshiehx.cmcl.options.HelpOption;
-import com.mrshiehx.cmcl.options.Option;
-import com.mrshiehx.cmcl.options.Options;
-import com.mrshiehx.cmcl.options.StartOption;
+import com.mrshiehx.cmcl.options.*;
+import com.mrshiehx.cmcl.utils.DownloadUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -72,7 +68,7 @@ public class ConsoleMinecraftLauncher {
                 }
             }
         }));
-        Arguments arguments = new Arguments(args);
+        Arguments arguments = new Arguments(args, false, true);
         Argument arg = arguments.optArgument(0);
         if (arg != null) {
             console(arguments);
@@ -177,93 +173,19 @@ public class ConsoleMinecraftLauncher {
 
 
     public static void downloadFile(String url, File to) throws IOException {
-        /*Utils.createFile(to, true);
-        BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-        FileOutputStream fileOutputStream = new FileOutputStream(to);
-        byte dataBuffer[] = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-            fileOutputStream.write(dataBuffer, 0, bytesRead);
-        }
-        fileOutputStream.close();*/
-        downloadFile(url, to, null);
+        DownloadUtils.downloadFile(url, to, null);
     }
 
-    public static void downloadFile(String urla, File to, @Nullable PercentageTextProgress progressBar) throws IOException {
-        try {
-            Utils.createFile(to, true);
-            URL url = new URL(urla);
-            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-            int completeFileSize = httpConnection.getContentLength();
-            if (progressBar != null)
-                progressBar.setMaximum(completeFileSize);
-            httpConnection.setConnectTimeout(5000);
-            httpConnection.setReadTimeout(5000);
-
-            BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-            FileOutputStream fos = new java.io.FileOutputStream(to);
-            BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
-            byte[] data = new byte[1024];
-            long downloadedFileSize = 0;
-            int x = 0;
-            while ((x = in.read(data, 0, 1024)) >= 0) {
-                downloadedFileSize += x;
-                if (progressBar != null)
-                    progressBar.setValue((int) downloadedFileSize);
-                bout.write(data, 0, x);
-            }
-            if (progressBar != null)
-                progressBar.setValue(completeFileSize);
-            bout.close();
-            fos.close();
-            in.close();
-        } catch (IOException e) {
-            if (progressBar != null && !progressBar.done) System.out.println();
-            to.delete();
-            throw e;
-        }
+    public static void downloadFile(String url, File to, @Nullable PercentageTextProgress progressBar) throws IOException {
+        DownloadUtils.downloadFile(url, to, progressBar);
     }
-
 
     public static byte[] downloadBytes(String url) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte dataBuffer[] = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-            byteArrayOutputStream.write(dataBuffer, 0, bytesRead);
-        }
-        return byteArrayOutputStream.toByteArray();
+        return DownloadUtils.downloadBytes(url);
     }
 
-    public static byte[] downloadBytes(String urla, @Nullable PercentageTextProgress progressBar) throws IOException {
-        try {
-            URL url = new URL(urla);
-            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-            int completeFileSize = httpConnection.getContentLength();
-            if (progressBar != null)
-                progressBar.setMaximum(completeFileSize);
-
-            BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
-            byte[] data = new byte[1024];
-            long downloadedFileSize = 0;
-            int x = 0;
-            while ((x = in.read(data, 0, 1024)) >= 0) {
-                downloadedFileSize += x;
-                if (progressBar != null)
-                    progressBar.setValue((int) downloadedFileSize);
-                byteArrayOutputStream.write(data, 0, x);
-            }
-            if (progressBar != null)
-                progressBar.setValue(completeFileSize);
-            in.close();
-            return byteArrayOutputStream.toByteArray();
-        } catch (IOException e) {
-            if (progressBar != null && !progressBar.done) System.out.println();
-            throw e;
-        }
+    public static byte[] downloadBytes(String url, @Nullable PercentageTextProgress progressBar) throws IOException {
+        return DownloadUtils.downloadBytes(url, progressBar);
     }
 
 
@@ -362,8 +284,8 @@ public class ConsoleMinecraftLauncher {
         File[] files = versionsDir.listFiles(pathname -> {
             if (!pathname.isDirectory()) return false;
             File[] files1 = pathname.listFiles();
-            if (files1 == null || files1.length < 2) return false;
-            return new File(pathname, pathname.getName() + ".json").exists() && new File(pathname, pathname.getName() + ".jar").exists();
+            if (files1 == null || files1.length < 1) return false;
+            return new File(pathname, pathname.getName() + ".json").exists() /*&& new File(pathname, pathname.getName() + ".jar").exists()*/;
         });
         if (files != null && files.length > 0) {
             for (File file : files) {

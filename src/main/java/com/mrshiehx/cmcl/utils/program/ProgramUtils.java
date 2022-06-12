@@ -14,12 +14,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-package com.mrshiehx.cmcl.utils;
+package com.mrshiehx.cmcl.utils.program;
 
 import com.mrshiehx.cmcl.constants.Languages;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +44,56 @@ public class ProgramUtils {
         }
     }
 
+    public static void printStringsThatChineseNotHave() {
+        List<String> fin = new LinkedList<>();
+
+        for (Map.Entry<String, String> e : Languages.en.entrySet()) {
+            String s = e.getKey();
+            if (isEmpty(Languages.zh.get(s))) {
+                fin.add(s);
+            }
+        }
+
+        for (String s : fin) {
+            System.out.println(s);
+        }
+    }
+
     public static void printMap(Map<?, ?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 
-    public static void main(String[] args) {
-        printStringsThatEnglishNotHave();
+    public static void compareLibrary() {
+        String cmcl = "";
+        String hmcl = "";
+
+        List<String> old = Arrays.asList(cmcl.split(";"));
+        List<String> nee = Arrays.asList(hmcl.split(";"));
+
+        LinkedList<String> oldHaveNeeNo = new LinkedList<>();
+        List<String> neeHaveOldNo = new LinkedList<>();
+
+        for (String oldo : old) {
+            if (!nee.contains(oldo)) oldHaveNeeNo.add(oldo);
+        }
+        for (String neee : nee) {
+            if (!old.contains(neee)) neeHaveOldNo.add(neee);
+        }
+
+        System.out.println("oldHaveNeeNo:");
+        for (String k : oldHaveNeeNo) {
+            System.out.println(k);
+        }
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println("neeHaveOldNo:");
+        for (String k : neeHaveOldNo) {
+            System.out.println(k);
+        }
     }
 }

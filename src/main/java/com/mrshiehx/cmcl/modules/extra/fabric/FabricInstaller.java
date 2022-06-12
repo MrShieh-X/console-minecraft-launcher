@@ -16,35 +16,43 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.modLoaders.fabric;
+package com.mrshiehx.cmcl.modules.extra.fabric;
 
-import com.mrshiehx.cmcl.modules.modLoaders.ModLoaderInstaller;
-import com.mrshiehx.cmcl.modules.modLoaders.ModLoaderMerger;
+import com.mrshiehx.cmcl.modules.extra.ExtraInstaller;
+import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
-public class FabricInstaller extends ModLoaderInstaller {
+public class FabricInstaller extends ExtraInstaller {
     @Override
-    protected String getModLoaderName() {
+    protected String getExtraName() {
         return "Fabric";
     }
 
     @Override
-    protected ModLoaderMerger getModLoaderMerger() {
+    protected ExtraMerger getExtraMerger() {
         return new FabricMerger();
     }
 
     @Override
     protected boolean checkInstalled(JSONObject gameJSON) {
         if (!Utils.isEmpty(Utils.getFabricVersion(gameJSON))) {
-            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL", getModLoaderName()));
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL", getExtraName()));
             return false;
         }
 
         if (!Utils.isEmpty(Utils.getForgeVersion(gameJSON))) {
-            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getModLoaderName(), "Forge"));
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Forge"));
+            return false;
+        }
+        if (!Utils.isEmpty(Utils.getLiteloaderVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "LiteLoader"));
+            return false;
+        }
+        if (!Utils.isEmpty(Utils.getOptifineVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "OptiFine"));
             return false;
         }
         return true;

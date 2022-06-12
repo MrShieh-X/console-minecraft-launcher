@@ -19,27 +19,22 @@
 package com.mrshiehx.cmcl.options;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
-import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.curseforge.CFManager;
-import com.mrshiehx.cmcl.curseforge.ModpackManager;
-import com.mrshiehx.cmcl.exceptions.MissingElementException;
-import com.mrshiehx.cmcl.interfaces.Void;
-import com.mrshiehx.cmcl.interfaces.filters.StringFilter;
-import com.mrshiehx.cmcl.modules.modLoaders.fabric.FabricMerger;
-import com.mrshiehx.cmcl.modules.modLoaders.forge.ForgeMerger;
-import com.mrshiehx.cmcl.modules.version.VersionInstaller;
+import com.mrshiehx.cmcl.modules.modpack.ModrinthModpackInstaller;
+import com.mrshiehx.cmcl.searchSources.curseforge.CFManager;
+import com.mrshiehx.cmcl.searchSources.curseforge.CFModpackManager;
+import com.mrshiehx.cmcl.enums.CurseForgeSection;
+import com.mrshiehx.cmcl.modules.modpack.CurseForgeModpackInstaller;
+import com.mrshiehx.cmcl.modules.modpack.MultiMCModpackInstaller;
 import com.mrshiehx.cmcl.utils.*;
-import org.json.JSONArray;
+import com.mrshiehx.cmcl.utils.json.XJSONObject;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -61,7 +56,7 @@ public class ModpackOption implements Option {
         }
 
         JSONObject modpack;
-        CFManager modManager = new ModpackManager();
+        CFManager modManager = new CFModpackManager();
         if ((subOption instanceof ValueArgument) && ("i".equals(subOption.key) || "s".equals(subOption.key))) {
 
             ValueArgument valueArgument = (ValueArgument) subOption;
@@ -82,7 +77,12 @@ public class ModpackOption implements Option {
                 System.out.println(getString("CF_GET_BY_ID_NOT_OF_MC", e.gameId).replace("${NAME}", getString("CF_BESEARCHED_MODPACK_ALC")));
                 return;
             } catch (CFManager.IncorrectCategoryAddon e) {
-                System.out.println(getString("CF_GET_BY_ID_INCORRECT_CATEGORY", e.gameCategoryId).replace("${NAME}", getString("CF_BESEARCHED_MODPACK_ALC")));
+                CurseForgeSection target = CurseForgeSection.valueOf(e.gameCategoryId);
+                if (target == null) {
+                    System.out.println(getString("CF_GET_BY_ID_INCORRECT_CATEGORY", e.gameCategoryId).replace("${NAME}", getString("CF_BESEARCHED_MODPACK_ALC")));
+                } else {
+                    System.out.println(getString("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL").replace("${NAME}", getString("CF_BESEARCHED_MODPACK_ALC")).replace("${TARGET}", target.nameAllLowerCase));
+                }
                 return;
             } catch (Exception e) {
                 System.out.println(getString("CF_GET_BY_ID_FAILED", e).replace("${NAME}", getString("CF_BESEARCHED_MODPACK_ALC")));
@@ -99,25 +99,16 @@ public class ModpackOption implements Option {
                 System.out.println(getString("FILE_NOT_FOUND_OR_IS_A_DIRECTORY"));
                 return;
             }
-            String versionName = ConsoleUtils.inputStringInFilter(getString("MESSAGE_INPUT_VERSION_NAME"), getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), new StringFilter() {
-                @Override
-                public boolean accept(String string) {
-                    return !isEmpty(string) && !Utils.versionExists(string);
-                }
-            });
+            String versionName = ConsoleUtils.inputStringInFilter(getString("MESSAGE_INPUT_VERSION_NAME"), getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), string -> !isEmpty(string) && !Utils.versionExists(string));
 
             if (isEmpty(versionName)) return;
 
             int threadCount = arguments.optInt("t");
             File versionDir = new File(versionsDir, versionName);
-            try {
-
-                ZipFile zipFile = new ZipFile(file);
-                ZipEntry entry = zipFile.getEntry("manifest.json");
-                //FileUtils.inputStream2File(zipFile.getInputStream(entry),new File(versionDir,"modpack.json"));
-                JSONObject manifest = new JSONObject(Utils.inputStream2String(zipFile.getInputStream(entry)));
-                installCurseForgeModpack(manifest, zipFile, file, versionDir, true, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+            try (ZipFile zipFile = new ZipFile(file)) {
+                installModpack(zipFile, file, versionDir, true, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
             } catch (Exception e) {
+                //e.printStackTrace();
                 System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
                 Utils.deleteDirectory(versionDir);
             }
@@ -152,6 +143,29 @@ public class ModpackOption implements Option {
                 System.out.println(getString("CONSOLE_UNKNOWN_OPTION", key));
                 break;
         }
+    }
+
+    private static int installModpack(ZipFile zipFile, File file, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) {
+        //MCBBS一定要放在 CurseForge 之前，否则 MCBBS 的会被误认为是 CurseForge
+        /*try {
+            return MCBBSModpackInstaller.tryToInstallMCBBSModpack(zipFile, file, versionDir, keepFile, installAssets, installNatives, installLibraries, threadCount);
+        } catch (NotValidModPackFormat ignore) {
+        }*/
+        try {
+            return CurseForgeModpackInstaller.tryToInstallCurseForgeModpack(zipFile, file, versionDir, keepFile, installAssets, installNatives, installLibraries, threadCount);
+        } catch (NotValidModPackFormat ignore) {
+        }
+        try {
+            return MultiMCModpackInstaller.tryToInstallMultiMCModpack(zipFile, file, versionDir, keepFile, installAssets, installNatives, installLibraries, threadCount);
+        } catch (NotValidModPackFormat ignore) {
+        }
+        try {
+            return ModrinthModpackInstaller.tryToInstallModrinthModpack(zipFile, file, versionDir, keepFile, installAssets, installNatives, installLibraries, threadCount);
+        } catch (NotValidModPackFormat ignore) {
+        }
+
+        System.out.println(getString("MESSAGE_INSTALL_MODPACK_UNKNOWN_TYPE"));
+        return -1;
     }
 
     private static File askStorage(File last) {
@@ -196,199 +210,28 @@ public class ModpackOption implements Option {
             return;
         }
 
-        String versionName = ConsoleUtils.inputStringInFilter(getString("MESSAGE_INPUT_VERSION_NAME"), getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), new StringFilter() {
-            @Override
-            public boolean accept(String string) {
-                return !isEmpty(string) && !Utils.versionExists(string);
-            }
-        });
-        ;
+        String versionName = ConsoleUtils.inputStringInFilter(getString("MESSAGE_INPUT_VERSION_NAME"), getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"), string -> !isEmpty(string) && !Utils.versionExists(string));
+
 
         if (isEmpty(versionName)) return;
 
         int threadCount = arguments.optInt("t");
         File versionDir = new File(versionsDir, versionName);
 
-        try {
-            ZipFile zipFile = new ZipFile(modpackFile);
+        try (ZipFile zipFile = new ZipFile(modpackFile)) {
             ZipEntry entry = zipFile.getEntry("manifest.json");
             //FileUtils.inputStream2File(zipFile.getInputStream(entry),new File(versionDir,"modpack.json"));
-            JSONObject manifest = new JSONObject(Utils.inputStream2String(zipFile.getInputStream(entry)));
-            installCurseForgeModpack(manifest, zipFile, modpackFile, versionDir, arguments.contains("k"), !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+            JSONObject manifest = new XJSONObject(Utils.inputStream2String(zipFile.getInputStream(entry)));
+            CurseForgeModpackInstaller.installCurseForgeModpack(manifest, zipFile, modpackFile, versionDir, arguments.contains("k"), !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
         } catch (Exception e) {
             System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
             Utils.deleteDirectory(versionDir);
         }
     }
 
-    private static void installCurseForgeModpack(JSONObject manifest, ZipFile zipFile, File modPackFile, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws Exception {
-        String overrides = Utils.addSlashIfMissing(manifest.optString("overrides"));
-        zipFile.stream().forEach((Consumer<ZipEntry>) zipEntry -> {
-            if (!zipEntry.getName().startsWith(overrides)) return;
-            File to = new File(versionDir, zipEntry.getName().substring(overrides.length()));
-            if (zipEntry.isDirectory()) {
-                to.mkdirs();
-            } else {
-                try {
-                    FileUtils.inputStream2File(zipFile.getInputStream(zipEntry), to);
-                } catch (IOException e) {
-                    System.out.println(getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE", zipEntry.getName(), e));
-                }
-            }
-        });
-        JSONObject minecraft = manifest.optJSONObject("minecraft");
-        if (minecraft == null) {
-            throw new MissingElementException("minecraft", "JSONObject");
+    public static class NotValidModPackFormat extends Exception {
+        public NotValidModPackFormat(String message) {
+            super(message);
         }
-        String minecraftVersion = minecraft.optString("version");
-        if (isEmpty(minecraftVersion)) {
-            throw new MissingElementException("version", "String");
-        }
-        String modLoader = null;
-        JSONArray modLoaders = minecraft.optJSONArray("modLoaders");
-        if (modLoaders != null && modLoaders.length() > 0) {
-            for (Object m : modLoaders) {
-                if (m instanceof JSONObject) {
-                    modLoader = ((JSONObject) m).optString("id");
-                }
-            }
-        }
-        VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
-        String modLoaderVersion = null;
-        VersionInstaller.Merger mergerForFabric = null;
-        VersionInstaller.Merger mergerForForge = null;
-        if (!isEmpty(modLoader)) {
-            if (modLoader.startsWith("forge-") && modLoader.length() > 6) {
-                installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
-                modLoaderVersion = modLoader.substring(6);
-                String finalModLoaderVersion1 = modLoaderVersion;
-                mergerForForge = new VersionInstaller.Merger() {
-                    @Override
-                    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File minecraftJarFile, boolean askContinue) {
-                        Map<String, JSONObject> forges;
-
-                        try {
-                            forges = ForgeMerger.getForges(minecraftVersion);
-                        } catch (Exception e) {
-                            System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                            Utils.deleteDirectory(versionDir);
-                            return new Pair<>(false, null);
-                        }
-                        JSONObject forge = forges.get(finalModLoaderVersion1);
-                        if (forge == null) {
-                            System.out.println(getString("EXCEPTION_INSTALL_MODPACK", getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", finalModLoaderVersion1).replace("${NAME}", "Forge")));
-                            Utils.deleteDirectory(versionDir);
-                            return new Pair<>(false, null);
-                        }
-                        try {
-                            //System.out.println(getString("MESSAGE_START_INSTALLING_FORGE"));
-                            return ForgeMerger.installInternal(forge, headJSONObject, minecraftVersion, minecraftJarFile);
-                        } catch (Exception e) {
-                            System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                            Utils.deleteDirectory(versionDir);
-                            return new Pair<>(false, null);
-                        }
-                    }
-                };
-            } else if (modLoader.startsWith("fabric-") && modLoader.length() > 7) {
-                installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
-                modLoaderVersion = modLoader.substring(7);
-                String finalModLoaderVersion = modLoaderVersion;
-                mergerForFabric = new VersionInstaller.Merger() {
-                    @Override
-                    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File minecraftJarFile, boolean askContinue) {
-                        try {
-                            return FabricMerger.installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
-                        } catch (Exception e) {
-                            System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                            Utils.deleteDirectory(versionDir);
-                            return new Pair<>(false, null);
-                        }
-                    }
-                };
-            }
-        }
-
-        Void onFinished = () -> {
-            JSONArray files = manifest.optJSONArray("files");
-            if (files != null && files.length() > 0) {
-                List<Pair<String, File>> filess = new LinkedList<>();
-                System.out.print(getString("INSTALL_MODPACK_EACH_MOD_GET_URL"));
-                TextProgress textProgress = new TextProgress();
-                textProgress.setMaximum(files.length());
-                for (int i = 0; i < files.length(); i++) {
-                    Object o = files.get(i);
-                    if (o instanceof JSONObject) {
-                        JSONObject file = (JSONObject) o;
-                        int fileID = file.optInt("fileID");
-                        int projectID = file.optInt("projectID");
-                        if (fileID == 0 || projectID == 0) continue;
-                        try {
-                            String url1 = "https://cursemeta.dries007.net/" + projectID + "/" + fileID + ".json";
-                            String fileName;
-                            String fileDownloadUrl;
-                            try {
-                                JSONObject jsonObject = new JSONObject(Utils.get(url1));
-                                fileName = jsonObject.optString("FileNameOnDisk");
-                                fileDownloadUrl = jsonObject.optString("DownloadURL");
-                            } catch (Exception e) {
-                                try {
-                                    String url2 = "https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/file/" + fileID;
-                                    JSONObject jsonObject = new JSONObject(Utils.get(url2));
-                                    fileName = jsonObject.optString("fileName");
-                                    fileDownloadUrl = jsonObject.optString("downloadUrl");
-                                } catch (Exception e2) {
-                                    System.out.println(getString("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", projectID, e2));
-                                    continue;
-                                }
-                            }
-                            file.put("fileName", fileName);
-                            file.put("url", fileDownloadUrl);
-                            //System.out.print(getString("MESSAGE_DOWNLOADING_FILE", fileName));
-                            //ConsoleMinecraftLauncher.downloadFile(fileDownloadUrl,new File(versionDir,"mods/"+fileName),new PercentageTextProgress());
-                            filess.add(new Pair<>(fileDownloadUrl, new File(versionDir, "mods/" + fileName)));
-                            textProgress.setValue(i + 1);
-
-                        } catch (Exception e) {
-                            System.out.println(getString("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", projectID, e));
-                            continue;
-                        }
-
-                    }
-                }
-
-                textProgress.setValue(files.length());
-                if (filess.size() > 0) {
-                    ThreadsDownloader threadsDownloader = new ThreadsDownloader(filess);
-                    threadsDownloader.start();
-                }
-            }
-            try {
-                Utils.writeFile(new File(versionDir, "modpack.json"), manifest.toString(2), false);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!keepFile) {
-                Utils.close(zipFile);
-                modPackFile.delete();
-            }
-            System.out.println(getString("INSTALL_MODPACK_COMPLETE"));
-        };
-        File versionsFile = Utils.downloadVersionsFile();
-        JSONArray versions = new JSONObject(Utils.readFileContent(versionsFile)).optJSONArray("versions");
-        VersionInstaller.start(
-                minecraftVersion,
-                versionDir.getName(),
-                versions,
-                installAssets,
-                installNatives,
-                installLibraries,
-                installForgeOrFabric,
-                threadCount,
-                mergerForFabric,
-                mergerForForge,
-                onFinished);
-
-
     }
 }

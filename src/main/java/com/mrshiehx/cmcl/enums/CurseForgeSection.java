@@ -21,21 +21,32 @@ package com.mrshiehx.cmcl.enums;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
 public enum CurseForgeSection {
-    MOD(6, getString("CF_INFORMATION_MOD_NAME"), getString("CF_INFORMATION_MOD_ID")),
-    MODPACK(4471, getString("CF_INFORMATION_MODPACK_NAME"), getString("CF_INFORMATION_MODPACK_ID"));
+    MOD(6, getString("CF_INFORMATION_MOD_NAME"), getString("CF_INFORMATION_MOD_ID"), getString("CF_BESEARCHED_MOD_ALC"), getString("CF_BESEARCHED_MOD_FUC")),
+    MODPACK(4471, getString("CF_INFORMATION_MODPACK_NAME"), getString("CF_INFORMATION_MODPACK_ID"), getString("CF_BESEARCHED_MODPACK_ALC"), getString("CF_BESEARCHED_MODPACK_FUC"));
 
     public final int sectionId;
     public final String informationNameTip;
     public final String informationIdTip;
+    public final String nameAllLowerCase;
+    public final String nameFirstUpperCase;
 
-    CurseForgeSection(int sectionId, String informationNameTip, String informationIdTip) {
+    CurseForgeSection(int sectionId, String informationNameTip, String informationIdTip, String nameAllLowerCase, String nameFirstUpperCase) {
         this.sectionId = sectionId;
         this.informationNameTip = informationNameTip;
         this.informationIdTip = informationIdTip;
+        this.nameAllLowerCase = nameAllLowerCase;
+        this.nameFirstUpperCase = nameFirstUpperCase;
     }
 
     @Override
     public String toString() {
         return String.valueOf(sectionId);
+    }
+
+    public static CurseForgeSection valueOf(int sectionId) {
+        for (CurseForgeSection curseForgeSection : values()) {
+            if (sectionId == curseForgeSection.sectionId) return curseForgeSection;
+        }
+        return null;
     }
 }

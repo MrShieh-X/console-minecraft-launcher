@@ -36,6 +36,8 @@ public class HelpOption implements Option {
         usageNames.add("INSTALL");
         usageNames.add("MOD");
         usageNames.add("MODPACK");
+        usageNames.add("MOD2");
+        usageNames.add("MODPACK2");
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < usageNames.size(); i++) {
             String usageName = usageNames.get(i);

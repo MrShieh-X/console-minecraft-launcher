@@ -20,21 +20,22 @@ package com.mrshiehx.cmcl.bean.arguments;
 
 import com.mrshiehx.cmcl.utils.Utils;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Arguments {
     private final List<Argument> arguments;
-    public final int size;
+    private int size;
 
-    public Arguments(String[] args) {
-        this(args, false);
+    public Arguments(String args, boolean forImmersive, boolean isForCMCL) {
+        this(Utils.splitCommand(Utils.clearRedundantSpaces(args)).toArray(new String[0]), forImmersive, isForCMCL);
     }
 
-    public Arguments(String[] args, boolean forImmersive) {
+    public Arguments(String[] args, boolean forImmersive, boolean isForCMCL) {
         this.arguments = new LinkedList<>();
         int length = args.length;
-        if ((length >= 3) &&
+        if (isForCMCL && (length >= 3) &&
                 (forImmersive ? ("config".equalsIgnoreCase(args[0]))
                         : ("-config".equalsIgnoreCase(args[0]) || "--config".equalsIgnoreCase(args[0]) ||
                         "/config".equalsIgnoreCase(args[0]))) &&
@@ -63,7 +64,7 @@ public class Arguments {
                 }
             } else {
                 int startLength = -1;
-                if (key.startsWith("--")) {
+                if (key.startsWith("--")) {//必须先判断“--”，否则如果“--”开头的判定为“-”开头，则最终参数名将会“-”开头
                     startLength = 2;
                 } else if (key.startsWith("-") || key.startsWith("/")) {
                     startLength = 1;
@@ -79,13 +80,23 @@ public class Arguments {
                             arguments.add(new SingleArgument(key.substring(startLength)));
                         }
                     }
-                } else if (!forImmersive && i == 0 && (!key.startsWith("--") && !key.startsWith("-") && !key.startsWith("/"))) {
+                } else if (isForCMCL && !forImmersive && i == 0 && (!key.startsWith("--") && !key.startsWith("-") && !key.startsWith("/"))) {
                     arguments.add(new ValueArgument("b", key));
                 }
             }
         }
+        if (isForCMCL) Utils.removeDuplicate(arguments);
+        this.size = arguments.size();
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public Arguments removeDuplicate() {
         Utils.removeDuplicate(arguments);
         this.size = arguments.size();
+        return this;
     }
 
     public boolean equals(int number, String target) {
@@ -110,6 +121,15 @@ public class Arguments {
         return null;
     }
 
+    public List<Argument> optArguments(String name) {
+        List<Argument> list = new LinkedList<>();
+        for (Argument argument : arguments) {
+            if (argument.equals(name))
+                list.add(argument);
+        }
+        return list;
+    }
+
     public String opt(String name) {
         return opt(name, "");
     }
@@ -123,7 +143,7 @@ public class Arguments {
         return optInt(name, 0);
     }
 
-    public int optInt(String name, int defaulT) {
+    public int optInt(String name, int defaultValue) {
         String s = opt(name, null);
         if (s != null) {
             try {
@@ -131,14 +151,14 @@ public class Arguments {
             } catch (Throwable ignore) {
             }
         }
-        return defaulT;
+        return defaultValue;
     }
 
     public boolean optBoolean(String name) {
         return optBoolean(name, false);
     }
 
-    public boolean optBoolean(String name, boolean defaulT) {
+    public boolean optBoolean(String name, boolean defaultValue) {
         String s = opt(name, null);
         if (s != null) {
             try {
@@ -146,14 +166,14 @@ public class Arguments {
             } catch (Throwable ignore) {
             }
         }
-        return defaulT;
+        return defaultValue;
     }
 
     public double optDouble(String name) {
         return optDouble(name, 0d);
     }
 
-    public double optDouble(String name, double defaulT) {
+    public double optDouble(String name, double defaultValue) {
         String s = opt(name, null);
         if (s != null) {
             try {
@@ -161,7 +181,7 @@ public class Arguments {
             } catch (Throwable ignore) {
             }
         }
-        return defaulT;
+        return defaultValue;
     }
 
     public boolean contains(String target) {
@@ -183,5 +203,56 @@ public class Arguments {
             return arguments.get(i);
         }
         return null;
+    }
+
+    public List<Argument> getArguments() {
+        return Collections.unmodifiableList(arguments);
+    }
+
+    @Override
+    public String toString() {
+        return toString("-");
+    }
+
+    public String toString(String argKeyStart) {
+        if (Utils.isEmpty(argKeyStart)) argKeyStart = "-";
+        final StringBuilder sb = new StringBuilder();
+        int size = arguments.size();
+        for (int i = 0; i < size; i++) {
+            Argument argument = arguments.get(i);
+            if (argument instanceof TextArgument) {
+                sb.append(argument.key);
+            } else if (argument instanceof SingleArgument) {
+                sb.append(argKeyStart).append(argument.key);
+            } else if (argument instanceof ValueArgument) {
+                String value = ((ValueArgument) argument).value;
+                if (value.contains(" ")) {
+                    value = "\"" + value + "\"";
+                }
+                sb.append(argKeyStart)
+                        .append(argument.key)
+                        .append(' ')
+                        .append(value);
+            }
+            if (i + 1 < size) {
+                sb.append(' ');
+            }
+        }
+        return sb.toString();
+    }
+
+    public static Arguments valueOf(List<String> strings, boolean forImmersive, boolean isForCMCL) {
+        return new Arguments(strings.toArray(new String[0]), forImmersive, isForCMCL);
+    }
+
+    public Arguments merge(Arguments arguments) {
+        if (arguments == null || arguments.arguments.size() == 0) return this;
+        for (Argument argument : arguments.arguments) {
+            if (!this.arguments.contains(argument)) {
+                this.arguments.add(argument);
+            }
+        }
+        this.size = this.arguments.size();
+        return this;
     }
 }

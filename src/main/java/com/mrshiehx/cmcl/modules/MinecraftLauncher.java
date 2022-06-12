@@ -19,6 +19,9 @@ package com.mrshiehx.cmcl.modules;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.bean.*;
+import com.mrshiehx.cmcl.bean.arguments.Argument;
+import com.mrshiehx.cmcl.bean.arguments.Arguments;
+import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
@@ -72,7 +75,7 @@ public class MinecraftLauncher {
      * @throws JSONException          exception to parsing json
      * @throws LibraryDefectException exception to if some libraries are not found
      * @author MrShiehX
-     * @updateDate April 25, 2022
+     * @update v1.3
      */
     public static List<String> getMinecraftLaunchCommandArguments(
             File versionDir,
@@ -142,10 +145,6 @@ public class MinecraftLauncher {
         } else {
             contentOfJsonFile = Utils.readFileContent(minecraftVersionJsonFile);
         }
-        if (!minecraftJarFile.exists()) {
-            throw new LaunchException(getString("EXCEPTION_VERSION_NOT_FOUND"));
-        }
-
 
         File authlibFile = null;
         if (authlibInformation != null) {
@@ -172,6 +171,14 @@ public class MinecraftLauncher {
 
         JSONObject headJsonObject = new JSONObject(contentOfJsonFile);
 
+        if (!isEmpty(headJsonObject.optString("inheritsFrom"))) {
+            throw new LaunchException(getString("EXCEPTION_INCOMPLETE_VERSION"));
+        } else {
+            if (!minecraftJarFile.exists()) {
+                throw new LaunchException(getString("EXCEPTION_VERSION_NOT_FOUND"));
+            }
+        }
+
         JSONObject javaVersionJO = headJsonObject.optJSONObject("javaVersion");
         int javaVersionInt = Utils.getJavaVersion(javaPath);
         if (javaVersionInt > -1 && javaVersionJO != null) {
@@ -179,19 +186,6 @@ public class MinecraftLauncher {
             if (majorVersion != -1 && javaVersionInt < majorVersion) {
                 throw new LaunchException(String.format(getString("EXCEPTION_JAVA_VERSION_TOO_LOW"), majorVersion, javaVersionInt));
             }
-        }
-
-
-        JSONArray libraries = headJsonObject.optJSONArray("libraries");
-        File librariesFile = new File(gameDir, "libraries");
-
-        Pair<List<String>, List<Library>> pair = getLibraries(libraries, librariesFile);
-        List<String> librariesPaths = pair.getKey();
-        List<Library> notFound = pair.getValue();
-
-
-        if (notFound.size() > 0) {
-            throw new LibraryDefectException(notFound);
         }
 
 
@@ -226,15 +220,100 @@ public class MinecraftLauncher {
 
         String args = headJsonObject.optString("minecraftArguments");
         if (!Utils.isEmpty(args)) {
-            minecraftArguments.addAll(splitCommand(clearRedundantSpaces(args)));
+            List<String> argus = splitCommand(clearRedundantSpaces(args));
+            minecraftArguments.addAll(argus);
+        }
+
+        //v1.3 去除冗余
+        Arguments a = Arguments.valueOf(minecraftArguments, false, false).removeDuplicate();
+        List<Argument> arguments1 = new LinkedList<>(a.getArguments());
+
+        arguments1.sort((o1, o2) -> {
+            if ("tweakClass".equals(o1.key) && !"tweakClass".equals(o2.key)) {
+                return -1;
+            } else if (!"tweakClass".equals(o1.key) && "tweakClass".equals(o2.key)) {
+                return 1;
+            } else if (!"tweakClass".equals(o1.key) /*&& !"tweakClass".equals(o2.key)*/) {
+                return 0;
+            } else {
+                if (o1 instanceof ValueArgument && o2 instanceof ValueArgument) {
+                    String o1s = ((ValueArgument) o1).value;
+                    String o2s = ((ValueArgument) o2).value;
+                    String f1 = "net.minecraftforge.legacy._1_5_2.LibraryFixerTweaker";
+                    String f2 = "cpw.mods.fml.common.launcher.FMLTweaker";
+                    String f3 = "net.minecraftforge.fml.common.launcher.FMLTweaker";
+                    if (o1s.equals(f1) || o1s.equals(f2) || o1s.equals(f3)) {
+                        return -1;
+                    } else if (o2s.equals(f1) || o2s.equals(f2) || o2s.equals(f3)) {
+                        return 1;
+                    } else return 0;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        minecraftArguments.clear();
+        for (Argument argument : arguments1) {
+            minecraftArguments.add("--" + argument.key);
+            if (argument instanceof ValueArgument) {
+                minecraftArguments.add(((ValueArgument) argument).value);
+            }
+        }
+
+        boolean hasThree = false;
+        int hasOFT = -1;
+        boolean hasOFTorOFFT = false;
+        int size = minecraftArguments.size();
+        for (int i = 0; i < size; i++) {
+            String argument = minecraftArguments.get(i);
+            if (("-tweakClass".equals(argument) || "--tweakClass".equals(argument) || "/tweakClass".equals(argument)) && (i + 1 < size)) {
+                String tweakClass = minecraftArguments.get(i + 1);
+
+                boolean aa = "optifine.OptiFineTweaker".equals(tweakClass);
+                if (aa) {
+                    hasOFT = i + 1;
+                }
+                if ((aa || "OptiFineForgeTweaker.OptiFineTweaker".equals(tweakClass)) & !hasOFTorOFFT) {
+                    hasOFTorOFFT = true;
+                }
+                if (("com.mumfrey.liteloader.launch.LiteLoaderTweaker".equals(tweakClass)
+                        || "net.minecraftforge.fml.common.launcher.FMLTweaker".equals(tweakClass)
+                        || "cpw.mods.fml.common.launcher.FMLTweaker".equals(tweakClass)
+                        || "net.minecraftforge.legacy._1_5_2.LibraryFixerTweaker".equals(tweakClass))) {
+                    hasThree = true;
+                }
+
+                if (hasOFT >= 0 && hasThree && hasOFTorOFFT) break;
+            }
+        }
+
+        if (hasOFT >= 0 && hasThree) {
+            minecraftArguments.set(hasOFT, "optifine.OptiFineForgeTweaker");
         }
 
 
         String mainClass = headJsonObject.optString("mainClass", "net.minecraft.client.main.Main");
+
+        boolean var = hasThree && hasOFTorOFFT && ("net.minecraft.launchwrapper.Launch".equals(mainClass) || "cpw.mods.modlauncher.Launcher".equals(mainClass));
+
+        JSONArray libraries = headJsonObject.optJSONArray("libraries");
+        File librariesFile = new File(gameDir, "libraries");
+
+        ThreeReturns<List<Library>, List<Library>, Boolean> pair = getLibraries(libraries, librariesFile, var);
+        List<Library> librariesPaths = pair.first;
+        List<Library> notFound = pair.second;
+
+
+        if (notFound.size() > 0) {
+            throw new LibraryDefectException(notFound);
+        }
+
+
         File nativesFolder = Utils.getNativesDir(minecraftVersionJsonFile.getParentFile());
         StringBuilder librariesString = new StringBuilder();
-        for (String librariesPath : librariesPaths) {
-            librariesString.append(librariesPath).append(File.pathSeparator);
+        for (Library library : librariesPaths) {
+            librariesString.append(library.localFile.getAbsolutePath()).append(File.pathSeparator);
         }
         librariesString.append(minecraftJarFile.getAbsolutePath());
 
@@ -258,7 +337,7 @@ public class MinecraftLauncher {
                 minecraftArguments.set(i, s = s.replace(source, playerName));
             }
             if (s.contains(source = "${version_name}")) {
-                minecraftArguments.set(i, s = s.replace(source, minecraftJarFile.getParentFile().getName()));
+                minecraftArguments.set(i, s = s.replace(source, /*minecraftJarFile.getParentFile().getName()*/headJsonObject.optString("id")));
             }
             String n = (authlibInformation != null && !authlibInformation.forOfflineSkin) ? String.format("CMCL %s(%s)", CMCL_VERSION, authlibInformation.serverName) : "CMCL " + CMCL_VERSION;
             if (s.contains(source = "${version_type}")) {
@@ -320,7 +399,7 @@ public class MinecraftLauncher {
             }
         }
 
-        if (resourcePacksDir != null && resourcePacksDir.exists() && resourcePacksDir.exists() && !resourcePacksDir.equals(new File(gameDir, "resourcepacks"))) {
+        if (resourcePacksDir != null && resourcePacksDir.exists() && !resourcePacksDir.equals(new File(gameDir, "resourcepacks"))) {
             minecraftArguments.add("--resourcePackDir");
             minecraftArguments.add(resourcePacksDir.getAbsolutePath());
         }
@@ -328,8 +407,9 @@ public class MinecraftLauncher {
 
 
         File[] nativesFiles = nativesFolder.listFiles();
-        if (!nativesFolder.exists() || nativesFiles == null || nativesFiles.length == 0)
+        if (pair.third && (!nativesFolder.exists() || nativesFiles == null || nativesFiles.length == 0)) {
             throw new EmptyNativesException(libraries);
+        }
 
         //String javaArgument;
         if (jvmArguments.size() > 0) {
@@ -444,17 +524,17 @@ public class MinecraftLauncher {
         if (jvmArgs != null && jvmArgs.size() > 0) {
             for (String arg : jvmArgs) {
                 int indexOf = arg.indexOf('=');
-                String a = null;
+                String ab = null;
                 if (indexOf >= 0) {
-                    a = arg.substring(0, indexOf) + "=";
+                    ab = arg.substring(0, indexOf) + "=";
                 }
 
                 boolean contains = false;
                 int replace = -1;
-                if (!isEmpty(a)) {
+                if (!isEmpty(ab)) {
                     for (int i = 0; i < jvmArguments.size(); i++) {
                         String rarg = jvmArguments.get(i);
-                        if (rarg.startsWith(a)) {
+                        if (rarg.startsWith(ab)) {
                             contains = true;
                             if (indexOf + 1 < arg.length()) {
                                 replace = i;
@@ -792,12 +872,15 @@ public class MinecraftLauncher {
                 args.add(a);
             } else if (obj instanceof JSONObject) {
                 JSONObject jsonObject = array.optJSONObject(i);
-                if (jsonObject != null && jsonObject.has("value") && jsonObject.has("rules")) {
+                if (jsonObject != null && jsonObject.has("value")) {
                     Object value = jsonObject.opt("value");
-                    JSONArray rules = jsonObject.optJSONArray("rules");
-                    if (value != null && rules != null) {
-                        if (isMeetConditions(rules, isDemo, customScreenSize)) {
-
+                    if (value != null) {
+                        boolean meetConditions = true;
+                        JSONArray rules = jsonObject.optJSONArray("rules");
+                        if (rules != null) {
+                            meetConditions = isMeetConditions(rules, isDemo, customScreenSize);
+                        }
+                        if (meetConditions) {
                             if (value instanceof JSONArray) {
                                 JSONArray value2 = (JSONArray) value;
                                 for (int k = 0; k < value2.length(); k++) {
@@ -816,16 +899,21 @@ public class MinecraftLauncher {
         //return arguments.substring(0, arguments.length()-1);
     }
 
+    public static ThreeReturns<List<Library>, List<Library>, Boolean> getLibraries(JSONArray libraries, File librariesDirectory) {
+        return getLibraries(libraries, librariesDirectory, false);
+    }
+
     /**
      * 获得依赖库
      *
      * @param libraries          依赖库JSONArray
      * @param librariesDirectory 依赖库目录
-     * @return Key 为存在的依赖库集合，Value 为不存在的依赖库集合
+     * @return 1st 为存在的依赖库集合，2nd 为不存在的依赖库集合, 3rd 为是否拥有natives
      **/
-    public static Pair<List<String>, List<Library>> getLibraries(JSONArray libraries, File librariesDirectory) {
-        List<String> librariesPaths = new ArrayList<>();
-        List<Library> notFound = new LinkedList<>();
+    public static ThreeReturns<List<Library>, List<Library>, Boolean> getLibraries(JSONArray libraries, File librariesDirectory, boolean replaceOptiFineToOptiFineInstaller) {
+        Map<String, Library> librariesPaths = new HashMap<>();
+        Map<String, Library> notFound = new HashMap<>();
+        boolean needNatives = false;
         //List<String> names = new ArrayList<>();
         for (int i = 0; i < libraries.length(); i++) {
             JSONObject library = libraries.optJSONObject(i);
@@ -837,39 +925,70 @@ public class MinecraftLauncher {
             if (meet) {
                 JSONObject downloads = library.optJSONObject("downloads");
                 if (downloads != null) {
-                    if (downloads.optJSONObject("artifact") == null && downloads.optJSONObject("classifiers") != null)
-                        continue;
+                    if (downloads.optJSONObject("classifiers") != null) {
+                        needNatives = true;
+                        if (downloads.optJSONObject("artifact") == null) {
+                            continue;
+                        }
+                    }
                 }
+
+
                 String name = library.optString("name");
                 SplitLibraryName nameSplit = Utils.splitLibraryName(name);
                 if (nameSplit == null) continue;
-                //String libName = nameSplit[1];
-                //if (!names.contains(libName)) {
-                String libraryFileName = nameSplit.getFileName();
-                String libraryFileAndDirectoryName = Utils.getPathFromLibraryName(nameSplit);
-                File libraryFile = new File(new File(librariesDirectory, libraryFileAndDirectoryName), libraryFileName);
 
-                if (libraryFile.exists() && libraryFile.length() > 0) {
-                    if (!librariesPaths.contains(libraryFile.getAbsolutePath())) {
-                        librariesPaths.add(libraryFile.getAbsolutePath());
+
+                if (replaceOptiFineToOptiFineInstaller
+                        && "optifine".equals(nameSplit.first)
+                        && "OptiFine".equals(nameSplit.second)) {
+                    nameSplit = new SplitLibraryName(nameSplit.first, nameSplit.second, nameSplit.version, "installer", nameSplit.extension);
+                }
+
+
+                String key = nameSplit.first + ":" + nameSplit.second + (!isEmpty(nameSplit.classifier) ? (":" + nameSplit.classifier) : "");
+                Library exist = librariesPaths.get(key);
+
+                File libraryFile = nameSplit.getPhysicalFile();
+                Library lb = new Library(library, libraryFile);
+
+                if (exist == null) {
+
+                    if (libraryFile.exists() && libraryFile.length() > 0) {
+                        librariesPaths.put(key, lb);
+                    } else {
+                        notFound.put(key, lb);
+                        /*if (!notFound.containsKey(key) *//*&& !library.optString("name").isEmpty()*//**//*&&((library.has("downloads") && library.optJSONObject("downloads").has("artifact"))||library.has("url"))*//*) {
+                            notFound.put(key, lb);
+                        }*/
                     }
                 } else {
-                    Library lb = new Library(library);
-                    if (!notFound.contains(lb) && !library.optString("name").isEmpty()/*&&((library.has("downloads") && library.optJSONObject("downloads").has("artifact"))||library.has("url"))*/)
-                        notFound.add(lb);
-                    //等循环完成之后就抛出错误LibraryDefectException（notFound），返回之后提示要下载库
+                    String existName = exist.libraryJSONObject.optString("name");
+                    SplitLibraryName existNameSplit = Utils.splitLibraryName(existName);
+                    if (existNameSplit == null) continue;
+                    if (Objects.equals(existNameSplit.first, nameSplit.first) && Objects.equals(existNameSplit.second, nameSplit.second)) {
+                        int compare = Utils.tryToCompareVersion(existNameSplit.version, nameSplit.version);
+                        if (compare == -1 || (compare == 0 && lb.libraryJSONObject.length() > exist.libraryJSONObject.length())) {
+                            if (libraryFile.exists() && libraryFile.length() > 0) {
+                                librariesPaths.put(key, lb);
+                                notFound.remove(key);
+                            } else {
+                                notFound.put(key, lb);
+                                librariesPaths.remove(key);
+                            }
+
+                        }
+                    }
                 }
-                //names.add(libName);
-                //}
+
+
             }
         }
-        return new Pair<>(librariesPaths, notFound);
+        return new ThreeReturns<>(new LinkedList<>(librariesPaths.values()), new LinkedList<>((notFound.values())), needNatives);
     }
 
     public static boolean isModpack(File versionDir, JSONObject versionJSON) {
         if (new File(versionDir, "modpack.cfg").exists()) return true;//兼容 HMCL
         return new File(versionDir, "modpack.json").exists();
     }
-
-
 }

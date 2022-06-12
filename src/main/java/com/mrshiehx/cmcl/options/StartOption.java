@@ -111,7 +111,7 @@ public class StartOption implements Option {
                         String line;
                         try {
                             while ((line = dis.readLine()) != null) {
-                                System.out.println(line);
+                                System.out.println(line);//legal
                                 if (line.contains("cannot be cast to class java.net.URLClassLoader"))
                                     crashError[0] = GameCrashError.URLClassLoader;//旧版本Minecraft的Java版本过高问题，报Exception in thread "main" java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader cannot be cast to class java.net.URLClassLoader，因为在Java9对相关代码进行了修改，所以要用Java8及更旧
                                 else if (line.contains("Failed to load a library. Possible solutions:"))

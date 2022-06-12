@@ -240,7 +240,7 @@ public class MicrosoftAccountLoginner {
                 server.start(NanoHTTPD.SOCKET_READ_TIMEOUT, true);
                 return server;
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 exception = e;
             }
         }
