@@ -6,7 +6,7 @@
   1.安装版本时安装 LiteLoader：在安装命令后面加入“-e”，如：`-install 1.18.2 -e`<br/>
   2.安装版本后安装 LiteLoader：`-version -e <目标版本名称>`
 - **支持安装 OptiFine：**<br/>
-  1.安装版本时安装 OptiFine：在安装命令后面加入“-o”，如：`-install 1.18.2 -p`<br/>
+  1.安装版本时安装 OptiFine：在安装命令后面加入“-p”，如：`-install 1.18.2 -p`<br/>
   2.安装版本后安装 OptiFine：`-version -p <目标版本名称>`<br/>
   **注：LiteLoader 和 Fabric、OptiFine 和 Fabric 不能共存**
 - 修复了**无法启动** 1.19 的问题。
