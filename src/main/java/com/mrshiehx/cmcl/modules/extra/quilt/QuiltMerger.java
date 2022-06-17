@@ -17,28 +17,34 @@
  *
  */
 
-package com.mrshiehx.cmcl.modules.extra.fabric;
+package com.mrshiehx.cmcl.modules.extra.quilt;
 
 import com.mrshiehx.cmcl.api.download.DownloadSource;
+import com.mrshiehx.cmcl.modules.extra.fabric.AbstractFabricMerger;
 
-public class FabricMerger extends AbstractFabricMerger {
+public class QuiltMerger extends AbstractFabricMerger {
     @Override
     protected String getModLoaderName() {
-        return "Fabric";
+        return "Quilt";
     }
 
     @Override
     protected String getMavenUrl() {
-        return DownloadSource.getProvider().fabricMaven();
+        return DownloadSource.getProvider().quiltMaven();
     }
 
     @Override
     protected String getMetaUrl() {
-        return DownloadSource.getProvider().fabricMeta() + "v2/";
+        return DownloadSource.getProvider().quiltMeta() + "v3/";
+    }
+
+    @Override
+    protected boolean isQuilt() {
+        return true;
     }
 
     @Override
     protected String getStorageName() {
-        return "fabric";
+        return "quilt";
     }
 }

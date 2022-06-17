@@ -25,6 +25,7 @@ import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.SplitLibraryName;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.utils.*;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,7 +47,7 @@ public class OptiFineMerger implements ExtraMerger {
      * @return key: 如果无法安装 OptiFine，是否继续安装 value:如果成功合并，则为需要安装的依赖库集合，否则为空
      **/
     @Override
-    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue) {
+    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue, @Nullable String extraVersion) {
         JSONArray versions;
         try {
             versions = new JSONArray(Utils.get(Utils.addSlashIfMissing(DownloadSource.getProvider().thirdPartyOptiFine()) + minecraftVersion));
@@ -75,28 +76,52 @@ public class OptiFineMerger implements ExtraMerger {
             return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
         }
 
+        String optifineVersionString;
+        JSONObject optifineVersion;
 
-        System.out.print('[');
+        if (isEmpty(extraVersion)) {
+            System.out.print('[');
 
-        List<String> optifineVersionNames = new ArrayList<>(versionsMap.keySet());
-        for (int i = optifineVersionNames.size() - 1; i >= 0; i--) {
-            String versionName = optifineVersionNames.get(i);
-            if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
-            System.out.print(versionName);//legal
-            if (i > 0) {
-                System.out.print(", ");
+            List<String> optifineVersionNames = new ArrayList<>(versionsMap.keySet());
+            for (int i = optifineVersionNames.size() - 1; i >= 0; i--) {
+                String versionName = optifineVersionNames.get(i);
+                if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
+                System.out.print(versionName);//legal
+                if (i > 0) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.println(']');
+
+
+            String inputOFVersion = selectOptiFineVersion(getString("INSTALL_MODLOADER_SELECT", EXTRA_NAME), versionsMap);
+            if (inputOFVersion == null)
+                return new Pair<>(false, null);
+            optifineVersionString = inputOFVersion;
+
+            optifineVersion = versionsMap.get(inputOFVersion);
+            if (optifineVersion == null)
+                return new Pair<>(false, null);
+        } else {
+            optifineVersionString = extraVersion;
+
+            optifineVersion = versionsMap.get(extraVersion);
+            if (optifineVersion == null) {
+                System.out.println(getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", extraVersion).replace("${NAME}", "OptiFine"));
+                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
             }
         }
-        System.out.println(']');
 
 
-        String inputOFVersion = selectOptiFineVersion(getString("INSTALL_MODLOADER_SELECT", EXTRA_NAME), versionsMap);
-        if (inputOFVersion == null)
-            return new Pair<>(false, null);
+        try {
+            return installInternal(headJSONObject, optifineVersion, jarFile, optifineVersionString);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
+        }
+    }
 
-        JSONObject optifineVersion = versionsMap.get(inputOFVersion);
-        if (optifineVersion == null)
-            return new Pair<>(false, null);
+    private static Pair<Boolean, List<JSONObject>> installInternal(JSONObject headJSONObject, JSONObject optifineVersion, File jarFile, String optiFineVersion) throws Exception {
 
         String patch = optifineVersion.optString("patch");
         String type = optifineVersion.optString("type");
@@ -104,14 +129,13 @@ public class OptiFineMerger implements ExtraMerger {
 
         String url = DownloadSource.getProvider().thirdPartyOptiFine() + mcversion + "/" + type + "/" + patch;
 
-        File installer = new SplitLibraryName("optifine", "OptiFine", mcversion + "_" + type + "_" + patch, "installer").getPhysicalFile()/*new File("cmcl","OptiFine_"+mcversion+"_"+inputOFVersion+".jar")*/;
+        File installer = new SplitLibraryName("optifine", "OptiFine", mcversion + "_" + type + "_" + patch, "installer").getPhysicalFile()/*new File("cmcl","OptiFine_"+mcversion+"_"+optiFineVersion+".jar")*/;
 
         System.out.print(getString("INSTALL_MODLOADER_DOWNLOADING_FILE"));
         try {
             ConsoleMinecraftLauncher.downloadFile(url, installer, new PercentageTextProgress());
         } catch (Exception e) {
-            System.out.println(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", EXTRA_NAME) + ": " + e);
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
+            throw new Exception(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", EXTRA_NAME) + ": " + e);
         }
 
 
@@ -170,12 +194,10 @@ public class OptiFineMerger implements ExtraMerger {
                 try {
                     int waitFor = processBuilder.start().waitFor();
                     if (waitFor != 0) {
-                        System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", EXTRA_NAME, getString("EXCEPTION_EXECUTE_COMMAND")));
-                        return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
+                        throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", EXTRA_NAME, getString("EXCEPTION_EXECUTE_COMMAND")));
                     }
                 } catch (Exception e) {
-                    System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", EXTRA_NAME, e));
-                    return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
+                    throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", EXTRA_NAME, e));
                 }
             } else {
                 Utils.copyFile(installer, optifineFile);
@@ -217,8 +239,7 @@ public class OptiFineMerger implements ExtraMerger {
                         String[] s = buildof.split("-");
                         if (s.length >= 2) {
                             if (Integer.parseInt(s[0]) < 20210924 || (Integer.parseInt(s[0]) == 20210924 && Integer.parseInt(s[1]) < 190833)) {
-                                System.out.println(getString("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17"));
-                                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
+                                throw new Exception(getString("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17"));
                             }
                         }
                     } catch (Throwable ignored) {
@@ -228,8 +249,7 @@ public class OptiFineMerger implements ExtraMerger {
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", EXTRA_NAME, e));
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", EXTRA_NAME)), null);
+            throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", EXTRA_NAME, e));
         }
 
 
@@ -259,11 +279,9 @@ public class OptiFineMerger implements ExtraMerger {
                 && !"cpw.mods.modlauncher.Launcher".equals(mainClass))
             headJSONObject.put("mainClass", "net.minecraft.launchwrapper.Launch");
         JSONObject optifine = new JSONObject();
-        optifine.put("version", inputOFVersion);
+        optifine.put("version", optiFineVersion);
         optifine.put("jarUrl", url);
         headJSONObject.put("optifine", optifine);
-
-
         return new Pair<>(true, returns);
     }
 

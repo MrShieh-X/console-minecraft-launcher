@@ -17,11 +17,17 @@
  */
 package com.mrshiehx.cmcl.options;
 
+import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.XDate;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.constants.Constants;
+import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
+import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
+import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderMerger;
+import com.mrshiehx.cmcl.modules.extra.optifine.OptiFineMerger;
+import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
@@ -58,6 +64,7 @@ public class InstallOption implements Option {
                 int threadCount = arguments.optInt("t");
                 boolean installFabric = arguments.contains("f");
                 boolean installForge = arguments.contains("o");
+                boolean installQuilt = arguments.contains("q");
                 boolean installLiteLoader = arguments.contains("e");
                 boolean installOptiFine = arguments.contains("p");
                 VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
@@ -66,21 +73,94 @@ public class InstallOption implements Option {
                     return;
                 }
 
+                if (installFabric && installQuilt) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
+                }
+
+                if (installQuilt && installForge) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
+                }
+
                 if (installFabric && installLiteLoader) {
                     System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                     return;
                 }
+
+                if (installQuilt && installLiteLoader) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
+                }
+
                 if (installFabric && installOptiFine) {
                     System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                     return;
-                } else if (installFabric) {
-                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
-                } else if (installForge) {
-                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
+                }
+
+                if (installQuilt && installOptiFine) {
+                    System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
+                    return;
                 }
 
 
-                VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, installLiteLoader, installOptiFine, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+                if (installFabric) {
+                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
+                } else if (installForge) {
+                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
+                } else if (installQuilt) {
+                    installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.QUILT;
+                }
+
+
+                try {
+                    VersionInstaller.start(version,
+                            storage,
+                            versions,
+                            !arguments.contains("na"),
+                            !arguments.contains("nn"),
+                            !arguments.contains("nl"),
+                            installForgeOrFabric,
+                            threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT,
+                            (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                                Pair<Boolean, List<JSONObject>> a = new FabricMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("f"));
+                                if (askContinue && a != null && !a.getKey()) {
+                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                                }
+                                return a;
+                            },
+                            (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                                Pair<Boolean, List<JSONObject>> a = new ForgeMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("o"));
+                                if (askContinue && a != null && !a.getKey()) {
+                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                                }
+                                return a;
+                            },
+                            (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                                Pair<Boolean, List<JSONObject>> a = new QuiltMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("q"));
+                                if (askContinue && a != null && !a.getKey()) {
+                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                                }
+                                return a;
+                            }, installLiteLoader ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                                Pair<Boolean, List<JSONObject>> a = new LiteloaderMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("e"));
+                                if (askContinue && a != null && !a.getKey()) {
+                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                                }
+                                return a;
+                            } : null,
+                            installOptiFine ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                                Pair<Boolean, List<JSONObject>> a = new OptiFineMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("p"));
+                                if (askContinue && a != null && !a.getKey()) {
+                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                                }
+                                return a;
+                            } : null,
+                            () -> System.out.println(getString("MESSAGE_INSTALLED_NEW_VERSION")), null, null);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                //VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, installLiteLoader, installOptiFine, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
             } catch (Exception exception) {
                 //exception.printStackTrace();
                 Utils.printfln(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION"), exception);

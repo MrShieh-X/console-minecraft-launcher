@@ -10,8 +10,9 @@ MrShiehX 拥有该程序的版权。<br/>
 
 ## 版本
 最新版本：<br/>
-<b>1.3 (2022年6月12日)</b><br/>
+<b>1.4 (2022年6月17日)</b><br/>
 历史版本：<br/>
+<b>1.4 (2022年6月17日)</b><br/>
 <b>1.3 (2022年6月12日)</b><br/>
 <b>1.2 (2022年4月30日)</b><br/>
 <b>1.1 (2022年3月27日)</b><br/>
@@ -54,7 +55,7 @@ MrShiehX 拥有该程序的版权。<br/>
 ![程序截图](screenshot.gif "程序截图")<br/>
 
 ## 已发现的漏洞
-- 无法启动 OptiFine 和 Forge 共存的低于 1.13（不包括1.13）的游戏版本。
+- （已在v1.4中修复）~~无法启动 OptiFine 和 Forge 共存的低于 1.13（不包括1.13）的游戏版本。~~
 
 ## 配置
 配置存储在程序运行目录的一个名为cmcl.json的JSON文件，你可以使用文本编辑器（需了解JSON教程）或`-config <配置名称> <配置值>`的程序参数（详见[使用教程](#使用教程)配置相关）以修改配置。<br/>
@@ -135,11 +136,13 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;重命名版本：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-version -r <版本名称> -t <新版本名称><br/>
 &emsp;&emsp;重新下载原生依赖库文件：&emsp;&emsp;-version -n <版本名称><br/>
 &emsp;&emsp;查找缺少的依赖库文件并下载：-version -l <版本名称><br/>
+&emsp;&emsp;把版本补充完整：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;-version -b <版本名称><br/>
 &emsp;&emsp;安装 Fabric 到本地版本：&emsp;&emsp;&emsp;-version -f <版本名称><br/>
 &emsp;&emsp;安装 Forge 到本地版本：&emsp;&emsp;&emsp; -version -o <版本名称><br/>
 &emsp;&emsp;安装 LiteLoader 到本地版本：&emsp; -version -e <版本名称><br/>
 &emsp;&emsp;安装 OptiFine 到本地版本：&emsp;&emsp; -version -p <版本名称><br/>
-&emsp;&emsp;把版本补充完整：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;-version -b <版本名称><br/>
+&emsp;&emsp;安装 Quilt 到本地版本：&emsp;&emsp;&emsp;&emsp;-version -q <版本名称><br/>
+&emsp;**注：可在安装 Fabric、Forge、LiteLoader、OptiFine 和 Quilt 的命令后添加上“-v <版本>”以指定版本，以免输入命令后再选择版本。**<br/>
 </details>
 <details>
   <summary><b><font size="4">自定义JVM虚拟机参数相关</font></b></summary>
@@ -163,11 +166,13 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -o 安装 Forge <br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -e 安装 LiteLoader <br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -p 安装 OptiFine <br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -q 安装 Quilt <br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -t <线程数> 设置下载资源文件的线程数（默认为64）<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  -na 不下载资源文件<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  -nl 不下载依赖库文件<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  -nn 不下载原生依赖库文件<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;**注：Fabric 和 Forge、Fabric 和 LiteLoader、Fabric 和 OptiFine 不能同时安装或共存**<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;**注：Fabric 和 Forge、Fabric 和 LiteLoader、Fabric 和 OptiFine 不能同时安装或共存（Quilt 与 Fabric 相同，但它们也不能共存）**<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;**可以在参数-f、-o、-e、-p、-q后指定版本，以免安装时询问版本，例:“-f 0.14.8”则为安装版本为 0.14.8 的 Fabric。**<br/>
 &emsp;&emsp;显示可安装的版本（若没有设置范围，默认显示该类型的全部版本）：-install -s <版本类型：a 全部；r 正式版；s 快照版；oa 远古alpha版；ob 远古beta版><br/>
 &emsp;&emsp;  设置时间范围（可选）：-i <从年>-<从月>-<从日>/<到年>-<到月>-<到日><br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 例：-i 2020-05-09/2021-10-23

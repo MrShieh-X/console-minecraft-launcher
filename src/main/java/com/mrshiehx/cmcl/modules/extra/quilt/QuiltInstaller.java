@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mrshiehx.cmcl.modules.extra.optifine;
+package com.mrshiehx.cmcl.modules.extra.quilt;
 
 import com.mrshiehx.cmcl.modules.extra.ExtraInstaller;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
@@ -25,30 +25,38 @@ import org.json.JSONObject;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
-public class OptiFineInstaller extends ExtraInstaller {
+public class QuiltInstaller extends ExtraInstaller {
     @Override
     protected String getExtraName() {
-        return "OptiFine";
+        return "Quilt";
     }
 
     @Override
     protected ExtraMerger getExtraMerger() {
-        return new OptiFineMerger();
+        return new QuiltMerger();
     }
 
     @Override
     protected boolean checkInstalled(JSONObject gameJSON) {
-        if (!Utils.isEmpty(Utils.getOptifineVersion(gameJSON))) {
+        if (!Utils.isEmpty(Utils.getQuiltVersion(gameJSON))) {
             System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL", getExtraName()));
             return false;
         }
 
-        if (!Utils.isEmpty(Utils.getFabricVersion(gameJSON))) {
-            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Fabric"));
+        if (!Utils.isEmpty(Utils.getForgeVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Forge"));
             return false;
         }
-        if (!Utils.isEmpty(Utils.getQuiltVersion(gameJSON))) {
-            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Quilt"));
+        if (!Utils.isEmpty(Utils.getLiteloaderVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "LiteLoader"));
+            return false;
+        }
+        if (!Utils.isEmpty(Utils.getOptifineVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "OptiFine"));
+            return false;
+        }
+        if (!Utils.isEmpty(Utils.getFabricVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Fabric"));
             return false;
         }
         return true;

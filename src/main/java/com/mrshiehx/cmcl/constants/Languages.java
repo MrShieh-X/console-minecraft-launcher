@@ -210,7 +210,7 @@ public class Languages {
             zh.put("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", "无法安装 %1$s：未知 %1$s 类型。");
             zh.put("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", "无法安装 %1$s：目标 %1$s 的游戏版本与目标游戏版本不匹配。");
             zh.put("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", "${NAME} 版本“%s”找不到。");
-            zh.put("VERSION_INFORMATION_NOTHING", "无任何关于此版本的信息");
+            zh.put("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA", "找不到目标游戏版本或 ${NAME} 版本。");
             zh.put("VERSION_INFORMATION_GAME_VERSION", "   游戏版本：       ");
             zh.put("VERSION_INFORMATION_RELEASE_TIME", "   版本发布时间：   ");
             zh.put("VERSION_INFORMATION_FABRIC_VERSION", "   Fabric 版本：    ");
@@ -220,6 +220,7 @@ public class Languages {
             zh.put("VERSION_INFORMATION_ASSETS_VERSION", "   资源版本：       ");
             zh.put("VERSION_INFORMATION_LITELOADER_VERSION", "   LiteLoader 版本：");
             zh.put("VERSION_INFORMATION_OPTIFINE_VERSION", "   OptiFine 版本：  ");
+            zh.put("VERSION_INFORMATION_QUILT_VERSION", "   Quilt 版本：     ");
             zh.put("VERSION_INFORMATION_VERSION_TYPE", "   版本类型：       ");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_RELEASE", "正式版");
             zh.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "快照版");
@@ -473,8 +474,8 @@ public class Languages {
             en.put("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", "Unable to install %1$s: Unknown type of %1$s.");
             en.put("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", "Unable to install %1$s: The game version of the target %1$s does not match the target game version.");
             en.put("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", "${NAME} version \"%s\" not found.");
+            en.put("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA", "Not found target game version or ${NAME} version.");
             en.put("INSTALLED_MODLOADER", "%s installed successfully");
-            en.put("VERSION_INFORMATION_NOTHING", "There is no information about this version");
             en.put("VERSION_INFORMATION_GAME_VERSION", "   Game Version:             ");
             en.put("VERSION_INFORMATION_RELEASE_TIME", "   Version Release Time:     ");
             en.put("VERSION_INFORMATION_FABRIC_VERSION", "   Fabric Version:           ");
@@ -484,6 +485,7 @@ public class Languages {
             en.put("VERSION_INFORMATION_ASSETS_VERSION", "   Resource Version:         ");
             en.put("VERSION_INFORMATION_LITELOADER_VERSION", "   LiteLoader Version:       ");
             en.put("VERSION_INFORMATION_OPTIFINE_VERSION", "   OptiFine Version:         ");
+            en.put("VERSION_INFORMATION_QUILT_VERSION", "   Quilt Version:            ");
             en.put("VERSION_INFORMATION_VERSION_TYPE", "   Version Type:             ");
             en.put("VERSION_INFORMATION_VERSION_TYPE_RELEASE", "Release");
             en.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "Snapshot");
@@ -602,11 +604,13 @@ public class Languages {
                             "    Rename a version:         -version -r <Version Name> -t <New Version Name>\n" +
                             "    Re-download the native dependency library files:    -version -n <Version Name>\n" +
                             "    Find missing dependency library files and download: -version -l <Version Name>\n" +
+                            "    Complete version:                                   -version -b <Version Name>\n" +
                             "    Install Fabric to local version:                    -version -f <Version Name>\n" +
                             "    Install Forge to local version:                     -version -o <Version Name>\n" +
                             "    Install LiteLoader to local version:                -version -e <Version Name>\n" +
                             "    Install OptiFine to local version:                  -version -p <Version Name>\n" +
-                            "    Complete version:                                   -version -b <Version Name>");
+                            "    Install Quilt to local version:                     -version -q <Version Name>\n" +
+                            "  Note: You can specify the version by adding \"-v <Version>\" after the commands to install Fabric, Forge, LiteLoader, OptiFine and Quilt, so as to avoid entering the command and then selecting the version.");
             enUsage.put("JVM_ARGS",
                     "Custom JVM Virtual Machine Parameters Related:\n" +
                             "    Print all parameters: -jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>\n" +
@@ -628,11 +632,13 @@ public class Languages {
                             "                -o Install Forge\n" +
                             "                -e Install LiteLoader\n" +
                             "                -p Install OptiFine\n" +
+                            "                -q Install Quilt\n" +
                             "                -t <Thread Count> Set the number of threads for downloading asset files (default 64)\n" +
                             "                -na Do not download asset files\n" +
                             "                -nl Do not download dependency library files\n" +
                             "                -nn Do not download native dependency library files\n" +
-                            "            Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist\n" +
+                            "         Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist (Quilt is the same as Fabric, but they also cannot coexist)\n" +
+                            "               You can specify the version after the parameters -f, -o, -e, -p, -q to avoid asking for the version during installation. For example: \"-f 0.14.8\" means to install Fabric with version 0.14.8.\n" +
                             "\n" +
                             "    Show installable versions (if no range is set, all versions of this type are showed by default): -install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>\n" +
                             "      Set time range (optional): -i <from year>-<from month>-<from day>/<to year>-<to month>-<to day>\n" +
@@ -720,11 +726,13 @@ public class Languages {
                             "    重命名版本：                -version -r <版本名称> -t <新版本名称>\n" +
                             "    重新下载原生依赖库文件：    -version -n <版本名称>\n" +
                             "    查找缺少的依赖库文件并下载：-version -l <版本名称>\n" +
+                            "    把版本补充完整：            -version -b <版本名称>\n" +
                             "    安装 Fabric 到本地版本：    -version -f <版本名称>\n" +
                             "    安装 Forge 到本地版本：     -version -o <版本名称>\n" +
                             "    安装 LiteLoader 到本地版本：-version -e <版本名称>\n" +
                             "    安装 OptiFine 到本地版本：  -version -p <版本名称>\n" +
-                            "    把版本补充完整：            -version -b <版本名称>");
+                            "    安装 Quilt 到本地版本：     -version -q <版本名称>\n" +
+                            "  注：可在安装 Fabric、Forge、LiteLoader、OptiFine 和 Quilt 的命令后添加上“-v <版本>”以指定版本，以免输入命令后再选择版本。");
 
             zhUsage.put("JVM_ARGS",
                     "自定义JVM虚拟机参数相关：\n" +
@@ -746,11 +754,13 @@ public class Languages {
                             "                  -o 安装 Forge\n" +
                             "                  -e 安装 LiteLoader\n" +
                             "                  -p 安装 OptiFine\n" +
+                            "                  -q 安装 Quilt\n" +
                             "                  -t <线程数> 设置下载资源文件的线程数（默认为64）\n" +
                             "                  -na 不下载资源文件\n" +
                             "                  -nl 不下载依赖库文件\n" +
                             "                  -nn 不下载原生依赖库文件\n" +
-                            "               注：Fabric 和 Forge、Fabric 和 LiteLoader、Fabric 和 OptiFine 不能同时安装或共存\n" +
+                            "        注：Fabric 和 Forge、Fabric 和 LiteLoader、Fabric 和 OptiFine 不能同时安装或共存（Quilt 与 Fabric 相同，但它们也不能共存）\n" +
+                            "          可以在参数-f、-o、-e、-p、-q后指定版本，以免安装时询问版本，例:“-f 0.14.8”则为安装版本为 0.14.8 的 Fabric。\n" +
                             "\n" +
                             "    显示可安装的版本（若没有设置范围，默认显示该类型的全部版本）：-install -s <版本类型：a 全部；r 正式版；s 快照版；oa 远古alpha版；ob 远古beta版>\n" +
                             "      设置时间范围（可选）：-i <从年>-<从月>-<从日>/<到年>-<到月>-<到日>\n" +

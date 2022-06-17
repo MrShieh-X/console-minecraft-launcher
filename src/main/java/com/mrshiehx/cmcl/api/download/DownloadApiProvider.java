@@ -19,7 +19,7 @@
 package com.mrshiehx.cmcl.api.download;
 
 public interface DownloadApiProvider {
-    String versionManifest();//https://launchermeta.mojang.com/mc/game/version_manifest.json
+    String versionManifest();//https://piston-meta.mojang.com/mc/game/version_manifest.json
 
     String authlibInjector();//https://authlib-injector.yushi.moe/artifact/latest.json
 
@@ -27,11 +27,11 @@ public interface DownloadApiProvider {
 
     String versionClient();//https://launcher.mojang.com/
 
-    String versionAssetsIndex();//https://launchermeta.mojang.com/
+    String versionAssetsIndex();//https://piston-meta.mojang.com/
 
     String libraries();//https://libraries.minecraft.net/
 
-    String versionJSON();//https://launchermeta.mojang.com/
+    String versionJSON();//https://piston-meta.mojang.com/
 
     String fabricMeta();//https://meta.fabricmc.net/
 
@@ -56,4 +56,12 @@ public interface DownloadApiProvider {
     default String thirdPartyOptiFine() {
         return "https://bmclapi2.bangbang93.com/optifine/";
     }//https://bmclapi2.bangbang93.com/optifine/ or https://download.mcbbs.net/optifine/
+
+    default String quiltMeta() {
+        return "https://meta.quiltmc.org/";
+    }
+
+    default String quiltMaven() {
+        return "https://maven.quiltmc.org/repository/release/";
+    }
 }

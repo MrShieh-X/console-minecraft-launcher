@@ -28,6 +28,7 @@ import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import com.mrshiehx.cmcl.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
@@ -60,7 +61,7 @@ public class LiteloaderMerger implements ExtraMerger {
      * @return key: 如果无法安装 LiteLoader，是否继续安装 value:如果成功合并，则为需要安装的依赖库集合，否则为空
      **/
     @Override
-    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue) {
+    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue, @Nullable String extraVersion) {
         Map<String, LiteloaderVersion> versionsOfLiteLoader;
 
         try {
@@ -69,31 +70,42 @@ public class LiteloaderMerger implements ExtraMerger {
             System.out.println(e.getMessage());
             return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
         }
+        LiteloaderVersion liteloaderVersion;
 
-        if (versionsOfLiteLoader.size() == 0) {
-            System.out.println(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
-        }
-        System.out.print('[');
+        if (isEmpty(extraVersion)) {
+            if (versionsOfLiteLoader.size() == 0) {
+                System.out.println(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
+                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
+            }
 
-        List<String> liteloaderVersions = new ArrayList<>(versionsOfLiteLoader.keySet());
-        for (int i = liteloaderVersions.size() - 1; i >= 0; i--) {
-            String versionName = liteloaderVersions.get(i);
-            if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
-            System.out.print(versionName);//legal
-            if (i > 0) {
-                System.out.print(", ");
+            System.out.print('[');
+
+            List<String> liteloaderVersions = new ArrayList<>(versionsOfLiteLoader.keySet());
+            for (int i = liteloaderVersions.size() - 1; i >= 0; i--) {
+                String versionName = liteloaderVersions.get(i);
+                if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
+                System.out.print(versionName);//legal
+                if (i > 0) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.println(']');
+
+            String inputLLVersion = selectLiteloaderVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME), versionsOfLiteLoader);
+            if (inputLLVersion == null)
+                return new Pair<>(false, null);
+
+            liteloaderVersion = versionsOfLiteLoader.get(inputLLVersion);
+            if (liteloaderVersion == null)
+                return new Pair<>(false, null);
+        } else {
+            liteloaderVersion = versionsOfLiteLoader.get(extraVersion);
+            if (liteloaderVersion == null) {
+                System.out.println(getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", extraVersion).replace("${NAME}", "LiteLoader"));
+                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
             }
         }
-        System.out.println(']');
 
-        String inputLLVersion = selectLiteloaderVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME), versionsOfLiteLoader);
-        if (inputLLVersion == null)
-            return new Pair<>(false, null);
-
-        LiteloaderVersion liteloaderVersion = versionsOfLiteLoader.get(inputLLVersion);
-        if (liteloaderVersion == null)
-            return new Pair<>(false, null);
         try {
             return installInternal(liteloaderVersion, headJSONObject);
         } catch (Exception e) {

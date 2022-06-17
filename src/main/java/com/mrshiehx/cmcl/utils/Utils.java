@@ -1043,28 +1043,6 @@ public class Utils {
         return new GameVersion(null, null);
     }
 
-    public static String getFabricVersion(JSONObject head) {
-        if (!head.optString("mainClass").equals("net.fabricmc.loader.impl.launch.knot.KnotClient")) return null;
-        JSONArray libraries = head.optJSONArray("libraries");
-        if (libraries == null || libraries.length() == 0) return null;
-        for (Object o : libraries) {
-            if (o instanceof JSONObject) {
-                JSONObject library = (JSONObject) o;
-                String name = library.optString("name");
-
-                String prefix = "net.fabricmc:fabric-loader:";
-                if (name.startsWith(prefix) && name.length() > prefix.length()) {
-                    return name.substring(prefix.length());
-                }
-            }
-        }
-        return getModuleVersion(head, "fabric");
-    }
-
-    public static String getForgeVersion(JSONObject head) {
-        return getModuleVersion(head, "forge");
-    }
-
     public static JSONArray mergeLibraries(List<JSONObject> source, List<JSONObject> target) {
         JSONArray jsonArray = new JSONArray();
         if ((source == null || source.size() == 0) && (target == null || target.size() == 0))
@@ -1209,6 +1187,23 @@ public class Utils {
         }
     }
 
+    public static String getModuleVersion(JSONObject head, String mainClass, String libraryFirstAndSecond) {
+        if (!isEmpty(mainClass) && !head.optString("mainClass").equals(mainClass)) return null;
+        JSONArray libraries = head.optJSONArray("libraries");
+        if (libraries == null || libraries.length() == 0) return null;
+        for (Object o : libraries) {
+            if (o instanceof JSONObject) {
+                JSONObject library = (JSONObject) o;
+                String name = library.optString("name");
+
+                if (name.startsWith(libraryFirstAndSecond) && name.length() > libraryFirstAndSecond.length()) {
+                    return name.substring(libraryFirstAndSecond.length());
+                }
+            }
+        }
+        return null;
+    }
+
     public static String getModuleVersion(JSONObject head, String moduleName) {
         JSONObject module = head.optJSONObject(moduleName);
         if (module != null) {
@@ -1232,11 +1227,50 @@ public class Utils {
         return null;
     }
 
+    public static String getFabricVersion(JSONObject head) {
+        String first = getModuleVersion(head, "fabric");
+        if (!isEmpty(first)) return first;
+        return getModuleVersion(head, "net.fabricmc.loader.impl.launch.knot.KnotClient", "net.fabricmc:fabric-loader:");
+    }
+
     public static String getLiteloaderVersion(JSONObject head) {
-        return getModuleVersion(head, "liteloader");
+        String first = getModuleVersion(head, "liteloader");
+        if (!isEmpty(first)) return first;
+        return getModuleVersion(head, null, "com.mumfrey:liteloader:");
+    }
+
+    public static String getForgeVersion(JSONObject head) {
+        String first = getModuleVersion(head, "forge");
+        if (!isEmpty(first)) return first;
+        String version = null;
+        String second = getModuleVersion(head, null, "net.minecraftforge:forge:");
+        if (isEmpty(second)) {
+            second = getModuleVersion(head, null, "net.minecraftforge:fmlloader:");
+        }
+        if (!isEmpty(second)) {
+            String[] split = second.split("-");
+            if (split.length >= 2) {
+                version = split[1];
+            }
+        }
+        return version;
     }
 
     public static String getOptifineVersion(JSONObject head) {
-        return getModuleVersion(head, "optifine");
+        String first = getModuleVersion(head, "optifine");
+        if (!isEmpty(first)) return first;
+        String version = null;
+        String origin = getModuleVersion(head, null, "optifine:OptiFine:");
+        if (!isEmpty(origin)) {
+            int indexOf = origin.indexOf('_');
+            version = origin.substring(indexOf + 1);
+        }
+        return version;
+    }
+
+    public static String getQuiltVersion(JSONObject head) {
+        String first = getModuleVersion(head, "quilt");
+        if (!isEmpty(first)) return first;
+        return getModuleVersion(head, "org.quiltmc.loader.impl.launch.knot.KnotClient", "org.quiltmc:quilt-loader:");
     }
 }

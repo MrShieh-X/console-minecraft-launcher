@@ -30,6 +30,7 @@ import com.mrshiehx.cmcl.modules.extra.fabric.FabricInstaller;
 import com.mrshiehx.cmcl.modules.extra.forge.ForgeInstaller;
 import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderInstaller;
 import com.mrshiehx.cmcl.modules.extra.optifine.OptiFineInstaller;
+import com.mrshiehx.cmcl.modules.extra.quilt.QuiltInstaller;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
 import com.mrshiehx.cmcl.modules.version.NativesDownloader;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
@@ -184,15 +185,15 @@ public class VersionOption implements Option {
                     if (!isEmpty(optiFineVersion))
                         information.put(getString("VERSION_INFORMATION_OPTIFINE_VERSION"), optiFineVersion);
 
+                    String quiltVersion = Utils.getQuiltVersion(head);
+                    if (!isEmpty(quiltVersion))
+                        information.put(getString("VERSION_INFORMATION_QUILT_VERSION"), quiltVersion);
 
-                    if (information.size() == 0) {
-                        System.out.println(getString("VERSION_INFORMATION_NOTHING"));
-                    } else {
-                        System.out.println(value + ":");//legal
-                        for (Map.Entry<String, String> entry : information.entrySet()) {
-                            System.out.print(entry.getKey());//legal
-                            System.out.println(entry.getValue());//legal
-                        }
+
+                    System.out.println(value + ":");//legal
+                    for (Map.Entry<String, String> entry : information.entrySet()) {
+                        System.out.print(entry.getKey());//legal
+                        System.out.println(entry.getValue());//legal
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -270,7 +271,7 @@ public class VersionOption implements Option {
                     System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                     return;
                 }
-                new FabricInstaller().install(jsonFile, new File(dir, value + ".jar"));
+                new FabricInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"));
 
                 break;
             case "o":
@@ -278,7 +279,7 @@ public class VersionOption implements Option {
                     System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                     return;
                 }
-                new ForgeInstaller().install(jsonFile, new File(dir, value + ".jar"));
+                new ForgeInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"));
 
                 break;
             case "e":
@@ -286,7 +287,7 @@ public class VersionOption implements Option {
                     System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                     return;
                 }
-                new LiteloaderInstaller().install(jsonFile, new File(dir, value + ".jar"));
+                new LiteloaderInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"));
 
                 break;
             case "p":
@@ -294,7 +295,15 @@ public class VersionOption implements Option {
                     System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                     return;
                 }
-                new OptiFineInstaller().install(jsonFile, new File(dir, value + ".jar"));
+                new OptiFineInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"));
+
+                break;
+            case "q":
+                if (!jsonFile.exists()) {
+                    System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
+                    return;
+                }
+                new QuiltInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"));
 
                 break;
             case "b":
@@ -335,6 +344,7 @@ public class VersionOption implements Option {
                             true,
                             null,
                             Constants.DEFAULT_DOWNLOAD_THREAD_COUNT,
+                            null,
                             null,
                             null,
                             null,
@@ -389,13 +399,36 @@ public class VersionOption implements Option {
                                 //fabric-loader-0.14.7-1.18.2
                                 //1.12.2-LiteLoader1.12.2
                                 //1.18.2-forge-40.1.51
-                                String[] split = headJSONObjectIC.optString("id").split("-");
+                                //quilt-loader-0.17.1-beta.2-1.19 or quilt-loader-0.17.0-1.19
+                                /*String[] split = headJSONObjectIC.optString("id").split("-");
                                 if (split.length == 4 && "fabric".equals(split[0]) && "loader".equals(split[1])) {
                                     headJSONObject.put("fabric", new JSONObject().put("version", split[2]));
+                                } if ((split.length == 4||split.length == 5) && "quilt".equals(split[0]) && "loader".equals(split[1])) {
+                                    headJSONObject.put("quilt", new JSONObject().put("version", split.length==5?(split[2]+"-"+split[3]):split[2]));
                                 } else if (split.length == 3 && "forge".equals(split[1])) {
                                     headJSONObject.put("forge", new JSONObject().put("version", split[2]));
                                 } else if (split.length == 2 && split[1].startsWith("LiteLoader")) {
                                     headJSONObject.put("liteloader", new JSONObject().put("version", split[1].substring(10)));
+                                }*/
+                                String fabricVersion = Utils.getFabricVersion(headJSONObject);
+                                if (!isEmpty(fabricVersion)) {
+                                    headJSONObject.put("fabric", new JSONObject().put("version", fabricVersion));
+                                }
+                                String forgeVersion = Utils.getForgeVersion(headJSONObject);
+                                if (!isEmpty(forgeVersion)) {
+                                    headJSONObject.put("forge", new JSONObject().put("version", forgeVersion));
+                                }
+                                String liteloaderVersion = Utils.getLiteloaderVersion(headJSONObject);
+                                if (!isEmpty(liteloaderVersion)) {
+                                    headJSONObject.put("liteloader", new JSONObject().put("version", liteloaderVersion));
+                                }
+                                String optifineVersion = Utils.getOptifineVersion(headJSONObject);
+                                if (!isEmpty(optifineVersion)) {
+                                    headJSONObject.put("optifine", new JSONObject().put("version", optifineVersion));
+                                }
+                                String quiltVersion = Utils.getQuiltVersion(headJSONObject);
+                                if (!isEmpty(quiltVersion)) {
+                                    headJSONObject.put("quilt", new JSONObject().put("version", quiltVersion));
                                 }
 
                             }, null);

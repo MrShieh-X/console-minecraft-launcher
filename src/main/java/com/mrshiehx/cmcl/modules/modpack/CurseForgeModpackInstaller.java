@@ -126,7 +126,7 @@ public class CurseForgeModpackInstaller {
                     @Override
                     public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File minecraftJarFile, boolean askContinue) {
                         try {
-                            return FabricMerger.installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
+                            return new FabricMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                         } catch (Exception e) {
                             System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
                             Utils.deleteDirectory(versionDir);
@@ -219,6 +219,7 @@ public class CurseForgeModpackInstaller {
                 threadCount,
                 mergerForFabric,
                 mergerForForge,
+                null,
                 null,
                 null,
                 onFinished, null, null);

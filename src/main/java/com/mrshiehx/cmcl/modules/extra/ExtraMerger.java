@@ -19,11 +19,12 @@
 package com.mrshiehx.cmcl.modules.extra;
 
 import com.mrshiehx.cmcl.bean.Pair;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
 
 public interface ExtraMerger {
-    Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue);
+    Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue, @Nullable String extraVersion);
 }

@@ -23,10 +23,6 @@ import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
-import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
-import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderMerger;
-import com.mrshiehx.cmcl.modules.extra.optifine.OptiFineMerger;
 import com.mrshiehx.cmcl.utils.*;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
 import org.jetbrains.annotations.Nullable;
@@ -48,25 +44,25 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.gameDir;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.versionsDir;
 
 public class VersionInstaller {
-    public static void start(String versionName,
-                             String storage,
-                             JSONArray versions,
-                             boolean installAssets,
-                             boolean installNatives,
-                             boolean installLibraries,
-                             InstallForgeOrFabric installForgeOrFabric,
-                             boolean installLiteLoader,
-                             boolean installOptiFine,
-                             int threadCount) {
+    /*public static void start(String versionName2,
+                             String storage2,
+                             JSONArray versions2,
+                             boolean installAssets2,
+                             boolean installNatives2,
+                             boolean installLibraries2,
+                             InstallForgeOrFabric installForgeOrFabric2,
+                             boolean installLiteLoader2,
+                             boolean installOptiFine2,
+                             int threadCount2) {
         try {
-            start(versionName,
-                    storage,
-                    versions,
-                    installAssets,
-                    installNatives,
-                    installLibraries,
-                    installForgeOrFabric,
-                    threadCount,
+            start(versionName2,
+                    storage2,
+                    versions2,
+                    installAssets2,
+                    installNatives2,
+                    installLibraries2,
+                    installForgeOrFabric2,
+                    threadCount2,
                     (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                         Pair<Boolean, List<JSONObject>> a = new FabricMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
                         if (askContinue && a != null && !a.getKey()) {
@@ -80,14 +76,14 @@ public class VersionInstaller {
                             Utils.deleteDirectory(minecraftJarFile.getParentFile());
                         }
                         return a;
-                    }, installLiteLoader ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                    }, installLiteLoader2 ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                         Pair<Boolean, List<JSONObject>> a = new LiteloaderMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
                         if (askContinue && a != null && !a.getKey()) {
                             Utils.deleteDirectory(minecraftJarFile.getParentFile());
                         }
                         return a;
                     } : null,
-                    installOptiFine ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                    installOptiFine2 ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                         Pair<Boolean, List<JSONObject>> a = new OptiFineMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
                         if (askContinue && a != null && !a.getKey()) {
                             Utils.deleteDirectory(minecraftJarFile.getParentFile());
@@ -98,7 +94,7 @@ public class VersionInstaller {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 
     public static void start(String versionName,
                              String storage,
@@ -110,6 +106,7 @@ public class VersionInstaller {
                              int threadCount,
                              Merger fabricMerger,
                              Merger forgeMerger,
+                             Merger quiltMerger,
                              Merger liteLoaderMerger,
                              Merger optiFineMerger,
                              @Nullable Void onFinished,
@@ -138,7 +135,7 @@ public class VersionInstaller {
         if (isEmpty(url)) {
             throw new Exception(getString("EXCEPTION_VERSION_NOT_FOUND", versionName));
         }
-        url = url.replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionJSON());
+        url = url.replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionJSON()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionJSON());
         File versionDir = new File(versionsDir, storage);
         versionDir.mkdirs();
         File jsonFile = new File(versionDir, storage + ".json");
@@ -158,6 +155,10 @@ public class VersionInstaller {
 
         if (installForgeOrFabric == InstallForgeOrFabric.FABRIC) {
             if (!fabricMerger.merge(versionName, headVersionFile, jarFile, true).getKey()) {
+                return;
+            }
+        } else if (installForgeOrFabric == InstallForgeOrFabric.QUILT) {
+            if (!quiltMerger.merge(versionName, headVersionFile, jarFile, true).getKey()) {
                 return;
             }
         }
@@ -261,7 +262,7 @@ public class VersionInstaller {
             }
             File assetsIndexFile = new File(indexesDir, assetsIndex + ".json");
             JSONObject assetIndexObject = headVersionFile.optJSONObject("assetIndex");
-            String assetIndexUrl = assetIndexObject != null ? assetIndexObject.optString("url").replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()) : null;
+            String assetIndexUrl = assetIndexObject != null ? assetIndexObject.optString("url").replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()) : null;
 
             if (isEmpty(assetIndexUrl)) {
                 throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", getString("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL")));
@@ -418,8 +419,8 @@ public class VersionInstaller {
                 co.setConnectTimeout(12000);
                 co.connect();
                 return true;
-            } catch (IOException ignored) {
-                ignored.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -428,7 +429,7 @@ public class VersionInstaller {
     }
 
     public enum InstallForgeOrFabric {
-        FORGE, FABRIC
+        FORGE, FABRIC, QUILT
     }
 
     public interface Merger {

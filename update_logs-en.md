@@ -1,5 +1,14 @@
 # Update Logs
-Currently, the latest version is 1.3, which was updated on June 12, 2022.
+Currently, the latest version is 1.4, which was updated on June 17, 2022.
+
+## 1.4 (Jun. 17, 2022)
+- Support for **installing Quilt**:<br/>
+  1. Install Quilt when installing the version: add "-q" after the installation command, such as: `-install 1.19 -q`<br/>
+  2. Install Quilt after installing the version: `-version -q <Target Version Name>`
+- To install the modloader or OptiFine after installing the version, **you can add `-v <Version>` to the installation command to specify the version to be installed**, so as to avoid entering the command and then selecting the version. For example: `-version -f 1.19 -v 0.14.8`, meaning: install Fabric 0.14.8 for the local version named "1.19";<br/>
+  When installing a version, **you can specify the version to install by entering the version after the arguments (-f, -o, -e, -p, -q)**. For example: `-install 1.19 -f 0.14.8`, which means: Install Fabric 0.14.8 by the way when installing version 1.19 (by [YhnSoft](https://github.com/YhnSoft) on [Issue#15](https://github.com/MrShieh-X/console-minecraft-launcher/issues/15) raised).
+- **Resolved an issue where OptiFine coexisting with Forge was not able to be launched on versions lower than 1.13 (excluding 1.13) and 1.19 with Forge installed.**
+- Adapted to new download API of Mojang, **solved some problems that version cannot be installed**.
 
 ## 1.3 (Jun. 12, 2022)
 - Support for **installing LiteLoader**:<br/>

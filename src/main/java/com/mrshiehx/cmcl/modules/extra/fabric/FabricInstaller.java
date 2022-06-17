@@ -55,6 +55,10 @@ public class FabricInstaller extends ExtraInstaller {
             System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "OptiFine"));
             return false;
         }
+        if (!Utils.isEmpty(Utils.getQuiltVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Quilt"));
+            return false;
+        }
         return true;
     }
 }

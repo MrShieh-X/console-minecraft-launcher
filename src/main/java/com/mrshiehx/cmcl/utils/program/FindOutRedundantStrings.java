@@ -309,7 +309,7 @@ public class FindOutRedundantStrings {
         tj(files, dir);
         List<String> contents = new LinkedList<>();
         for (File file : files) {
-            if (!file.getName().equals("Languages.java") && !file.getName().equals("ClearRedundantStrings.java"))
+            if (!file.getName().equals("Languages.java") && !file.getName().equals(FindOutRedundantStrings.class.getSimpleName() + ".java"))
                 contents.add(readFileContent(file, false));
         }
 

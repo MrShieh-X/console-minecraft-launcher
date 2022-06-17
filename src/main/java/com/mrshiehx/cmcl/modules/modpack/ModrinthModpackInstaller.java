@@ -24,6 +24,7 @@ import com.mrshiehx.cmcl.exceptions.MissingElementException;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
 import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
+import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.options.ModpackOption;
 import com.mrshiehx.cmcl.utils.FileUtils;
@@ -74,6 +75,7 @@ public class ModrinthModpackInstaller {
         String gameVersion = null/*=dependencies.optString("minecraft")*/;
         String forgeVersion = null/*=dependencies.optString("forge")*/;
         String fabricVersion = null/*=dependencies.optString("fabric-loader")*/;
+        String quiltVersion = null;
 
         for (Map.Entry<String, Object> entry : dependencies.toMap().entrySet()) {
             if (entry.getValue() instanceof String) {
@@ -88,6 +90,9 @@ public class ModrinthModpackInstaller {
                         break;
                     case "fabric-loader":
                         fabricVersion = value;
+                        break;
+                    case "quilt-loader":
+                        quiltVersion = value;
                         break;
                     default:
                         System.out.println(getString("INSTALL_MODPACK_MODRINTH_UNKNOWN_MODLOADER", key));
@@ -105,11 +110,22 @@ public class ModrinthModpackInstaller {
             return -1;
         }
 
+        //quilt
+        if (!isEmpty(quiltVersion) && !isEmpty(fabricVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Quilt", "Fabric"));
+            return -1;
+        }
+        if (!isEmpty(forgeVersion) && !isEmpty(quiltVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Forge", "Quilt"));
+            return -1;
+        }
+
 
         VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
         String modLoaderVersion;
         VersionInstaller.Merger mergerForFabric = null;
         VersionInstaller.Merger mergerForForge = null;
+        VersionInstaller.Merger mergerForQuilt = null;
         if (!isEmpty(forgeVersion)) {
             installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
             modLoaderVersion = forgeVersion;
@@ -145,7 +161,20 @@ public class ModrinthModpackInstaller {
             String finalModLoaderVersion = modLoaderVersion;
             mergerForFabric = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                 try {
-                    return FabricMerger.installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
+                    return new FabricMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
+                } catch (Exception e) {
+                    System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
+                    Utils.deleteDirectory(versionDir);
+                    return new Pair<>(false, null);
+                }
+            };
+        } else if (!isEmpty(quiltVersion)) {
+            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.QUILT;
+            modLoaderVersion = quiltVersion;
+            String finalModLoaderVersion = modLoaderVersion;
+            mergerForQuilt = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                try {
+                    return new QuiltMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
                     Utils.deleteDirectory(versionDir);
@@ -208,6 +237,7 @@ public class ModrinthModpackInstaller {
                 threadCount,
                 mergerForFabric,
                 mergerForForge,
+                mergerForQuilt,
                 null,
                 null,
                 onFinished, null, null);

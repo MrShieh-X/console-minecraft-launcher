@@ -911,7 +911,7 @@ public class MinecraftLauncher {
      * @return 1st 为存在的依赖库集合，2nd 为不存在的依赖库集合, 3rd 为是否拥有natives
      **/
     public static ThreeReturns<List<Library>, List<Library>, Boolean> getLibraries(JSONArray libraries, File librariesDirectory, boolean replaceOptiFineToOptiFineInstaller) {
-        Map<String, Library> librariesPaths = new HashMap<>();
+        Map<String, Library> librariesPaths = new LinkedHashMap<>();
         Map<String, Library> notFound = new HashMap<>();
         boolean needNatives = false;
         //List<String> names = new ArrayList<>();

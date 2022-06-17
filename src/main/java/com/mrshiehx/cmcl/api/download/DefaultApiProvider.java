@@ -21,7 +21,7 @@ package com.mrshiehx.cmcl.api.download;
 public class DefaultApiProvider implements DownloadApiProvider {
     @Override
     public String versionManifest() {
-        return "https://launchermeta.mojang.com/mc/game/version_manifest.json";
+        return "https://piston-meta.mojang.com/mc/game/version_manifest.json";
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DefaultApiProvider implements DownloadApiProvider {
 
     @Override
     public String versionAssetsIndex() {
-        return "https://launchermeta.mojang.com/";
+        return "https://piston-meta.mojang.com/";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DefaultApiProvider implements DownloadApiProvider {
 
     @Override
     public String versionJSON() {
-        return "https://launchermeta.mojang.com/";
+        return "https://piston-meta.mojang.com/";
     }
 
     @Override

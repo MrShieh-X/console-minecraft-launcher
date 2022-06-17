@@ -21,6 +21,7 @@ package com.mrshiehx.cmcl.modules.extra;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
 import com.mrshiehx.cmcl.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public abstract class ExtraInstaller {
 
     protected abstract boolean checkInstalled(JSONObject gameJSON);
 
-    public void install(File jsonFile, File jarFile) {
+    public void install(File jsonFile, File jarFile, @Nullable String extraVersion) {
         String fileContent;
         try {
             fileContent = Utils.readFileContent(jsonFile);
@@ -61,7 +62,7 @@ public abstract class ExtraInstaller {
             return;
         }
 
-        Pair<Boolean, List<JSONObject>> pair = getExtraMerger().merge(mcVersion, gameJSON, jarFile, false);
+        Pair<Boolean, List<JSONObject>> pair = getExtraMerger().merge(mcVersion, gameJSON, jarFile, false, extraVersion);
         if (pair.getKey()) {
             List<JSONObject> list = pair.getValue();
             if (list != null && list.size() > 0) {

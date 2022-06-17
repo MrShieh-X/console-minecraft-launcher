@@ -10,8 +10,9 @@ Anyone can take advices of this program to us.
 
 ## Version
 The latest version: <br/>
-<b>1.3 (Jun. 12, 2022)</b><br/>
+<b>1.4 (Jun. 17, 2022)</b><br/>
 Historical version: <br/>
+<b>1.4 (Jun. 17, 2022)</b><br/>
 <b>1.3 (Jun. 12, 2022)</b><br/>
 <b>1.2 (Apr. 30, 2022)</b><br/>
 <b>1.1 (Mar. 27, 2022)</b><br/>
@@ -54,7 +55,7 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 ![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
 
 ## Bugs found
-- Unable to launch game versions lower than 1.13 (without 1.13) where OptiFine and Forge coexist.
+- (Fixed in v1.4)~~Unable to launch game versions lower than 1.13 (without 1.13) where OptiFine and Forge coexist.~~
 
 ## Configurations
 The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).<br/>
@@ -135,11 +136,13 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;Rename a version:&emsp;&emsp;&emsp; `-version -r <Version Name> -t <New Version Name>`<br/>
 &emsp;&emsp;Re-download the native dependency library files:&emsp;&emsp;`-version -n <Version Name>`<br/>
 &emsp;&emsp;Find missing dependency library files and download: `-version -l <Version Name>`<br/>
+&emsp;&emsp;Complete version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -b <Version Name>`<br/>
 &emsp;&emsp;Install Fabric to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -f <Version Name>`<br/>
 &emsp;&emsp;Install Forge to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -o <Version Name>`<br/>
 &emsp;&emsp;Install LiteLoader to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -e <Version Name>`<br/>
 &emsp;&emsp;Install OptiFine to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -p <Version Name>`<br/>
-&emsp;&emsp;Complete version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -b <Version Name>`<br/>
+&emsp;&emsp;Install Quilt to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -q <Version Name>`<br/>
+&emsp;**Note: You can specify the version by adding "-v <Version>" after the commands to install Fabric, Forge, LiteLoader, OptiFine and Quilt, so as to avoid entering the command and then selecting the version.**<br/>
 </details>
 <details>
   <summary><b><font size="4">Custom JVM Virtual Machine Parameters Related</font></b></summary>
@@ -164,11 +167,13 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-o` Install Forge<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-e` Install LiteLoader<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-p` Install OptiFine<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-q` Install Quilt<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-t <Thread Count> Set the number of threads for downloading asset files (default 64)`<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-na` Do not download asset files<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-nl` Do not download dependency library files<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-nn` Do not download native dependency library files<br/>
-&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;&emsp;&emsp;**Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist**<br/>
+&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;**Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist (Quilt is the same as Fabric, but they also cannot coexist)**<br/>
+&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;&emsp;**You can specify the version after the parameters -f, -o, -e, -p, -q to avoid asking for the version during installation. For example: "-f 0.14.8" means to install Fabric with version 0.14.8.**<br/>
 &emsp;&emsp;Show installable versions (if no range is set, all versions of this type are showed by default): -`install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>`<br/>
 &emsp;&emsp;  Set time range (optional): `-i <from year>-<from month>-<from day>/<to year>-<to month>-<to day>`<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Example: `-i 2020-05-09/2021-10-23`<br/>

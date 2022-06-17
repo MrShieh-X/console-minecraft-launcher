@@ -24,6 +24,7 @@ import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
 import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
 import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderMerger;
+import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.options.ModpackOption;
 import com.mrshiehx.cmcl.utils.FileUtils;
@@ -102,6 +103,7 @@ public class MultiMCModpackInstaller {
         String forgeVersion = null;
         String liteloaderVersion = null;
         String fabricVersion = null;
+        String quiltVersion = null;
 
         if (components != null) {
             for (Object o : components) {
@@ -122,6 +124,9 @@ public class MultiMCModpackInstaller {
                             case "net.fabricmc.fabric-loader":
                                 fabricVersion = version;
                                 break;
+                            case "org.quiltmc.quilt-loader":
+                                quiltVersion = version;
+                                break;
                         }
                     }
                 }
@@ -141,6 +146,21 @@ public class MultiMCModpackInstaller {
             System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "LiteLoader", "Fabric"));
             return -1;
         }
+
+        //Quilt
+        if (!isEmpty(forgeVersion) && !isEmpty(quiltVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Forge", "Quilt"));
+            return -1;
+        }
+        if (!isEmpty(liteloaderVersion) && !isEmpty(quiltVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "LiteLoader", "Quilt"));
+            return -1;
+        }
+        if (!isEmpty(fabricVersion) && !isEmpty(quiltVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Fabric", "Quilt"));
+            return -1;
+        }
+
 
         String finalModpackName = modpackName;
         zipFile.stream().forEach((Consumer<ZipEntry>) zipEntry -> {
@@ -168,6 +188,7 @@ public class MultiMCModpackInstaller {
         VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
         VersionInstaller.Merger mergerForFabric = null;
         VersionInstaller.Merger mergerForForge = null;
+        VersionInstaller.Merger mergerForQuilt = null;
         VersionInstaller.Merger mergerForLiteLoader = null;
         if (!isEmpty(forgeVersion)) {
             installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
@@ -202,7 +223,19 @@ public class MultiMCModpackInstaller {
             String finalModLoaderVersion = fabricVersion;
             mergerForFabric = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                 try {
-                    return FabricMerger.installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
+                    return new FabricMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
+                } catch (Exception e) {
+                    System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
+                    Utils.deleteDirectory(versionDir);
+                    return new Pair<>(false, null);
+                }
+            };
+        } else if (!isEmpty(quiltVersion)) {
+            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.QUILT;
+            String finalModLoaderVersion = quiltVersion;
+            mergerForQuilt = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                try {
+                    return new QuiltMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
                     Utils.deleteDirectory(versionDir);
@@ -250,6 +283,7 @@ public class MultiMCModpackInstaller {
                     threadCount,
                     mergerForFabric,
                     mergerForForge,
+                    mergerForQuilt,
                     mergerForLiteLoader,
                     null,
                     onFinished, null, null);

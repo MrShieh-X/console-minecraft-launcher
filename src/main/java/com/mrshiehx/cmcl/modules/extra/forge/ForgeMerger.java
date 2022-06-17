@@ -26,6 +26,7 @@ import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
 import com.mrshiehx.cmcl.utils.*;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class ForgeMerger implements ExtraMerger {
      *
      * @return key: 如果无法安装 Forge，是否继续安装；value:如果成功合并，则为需要安装的依赖库集合，否则为空
      **/
-    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File minecraftJarFile, boolean askContinue) {
+    public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File minecraftJarFile, boolean askContinue, @Nullable String extraVersion) {
         Map<String, JSONObject> forges;
         try {
             forges = getForges(minecraftVersion);
@@ -72,40 +73,50 @@ public class ForgeMerger implements ExtraMerger {
             return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
         }
 
+        JSONObject forge;
+        if (isEmpty(extraVersion)) {
 
-        List<Map.Entry<String, JSONObject>> list = new LinkedList<>(forges.entrySet());
-        list.sort((o1, o2) -> {
-            //2021-06-14T15:14:23.68Z
-            try {
-                Date dt1 = TIME_FORMAT.parse(o1.getValue().optString("modified").substring(0, 19) + "+0000");
-                Date dt2 = TIME_FORMAT.parse(o2.getValue().optString("modified").substring(0, 19) + "+0000");
-                return Long.compare(dt2.getTime(), dt1.getTime());
-            } catch (Exception ignore) {
-                //ignore.printStackTrace();
+            List<Map.Entry<String, JSONObject>> list = new LinkedList<>(forges.entrySet());
+            list.sort((o1, o2) -> {
+                //2021-06-14T15:14:23.68Z
+                try {
+                    Date dt1 = TIME_FORMAT.parse(o1.getValue().optString("modified").substring(0, 19) + "+0000");
+                    Date dt2 = TIME_FORMAT.parse(o2.getValue().optString("modified").substring(0, 19) + "+0000");
+                    return Long.compare(dt2.getTime(), dt1.getTime());
+                } catch (Exception ignore) {
+                    //ignore.printStackTrace();
+                }
+                return 0;
+            });
+
+
+            System.out.print('[');
+            for (int i = list.size() - 1; i >= 0; i--) {
+                String versionName = list.get(i).getKey();
+                if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
+                System.out.print(versionName);//legal
+                if (i > 0) {
+                    System.out.print(", ");
+                }
             }
-            return 0;
-        });
+            System.out.println(']');
 
 
-        System.out.print('[');
-        for (int i = list.size() - 1; i >= 0; i--) {
-            String versionName = list.get(i).getKey();
-            if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
-            System.out.print(versionName);//legal
-            if (i > 0) {
-                System.out.print(", ");
+            String forgeVersionInput = selectForgeVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME), forges);
+            if (forgeVersionInput == null)
+                return new Pair<>(false, null);
+
+            forge = forges.get(forgeVersionInput);
+            if (forge == null)
+                return new Pair<>(false, null);
+        } else {
+            forge = forges.get(extraVersion);
+            if (forge == null) {
+                System.out.println(getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", extraVersion).replace("${NAME}", "Forge"));
+                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
             }
+
         }
-        System.out.println(']');
-
-
-        String forgeVersionInput = selectForgeVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME), forges);
-        if (forgeVersionInput == null)
-            return new Pair<>(false, null);
-        JSONObject forge = forges.get(forgeVersionInput);
-        if (forge == null)
-            return new Pair<>(false, null);
-
 
 
         /*JSONArray files = forge.optJSONArray("files");
