@@ -10,8 +10,9 @@ Anyone can take advices of this program to us.
 
 ## Version
 The latest version: <br/>
-<b>1.4 (Jun. 17, 2022)</b><br/>
+<b>1.4.1 (Jul. 21, 2022)</b><br/>
 Historical version: <br/>
+<b>1.4.1 (Jul. 21, 2022)</b><br/>
 <b>1.4 (Jun. 17, 2022)</b><br/>
 <b>1.3 (Jun. 12, 2022)</b><br/>
 <b>1.2 (Apr. 30, 2022)</b><br/>
@@ -143,6 +144,11 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;Install OptiFine to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -p <Version Name>`<br/>
 &emsp;&emsp;Install Quilt to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -q <Version Name>`<br/>
 &emsp;**Note: You can specify the version by adding "-v <Version>" after the commands to install Fabric, Forge, LiteLoader, OptiFine and Quilt, so as to avoid entering the command and then selecting the version.**<br/>
+</details>
+<details>
+  <summary><b><font size="4">Version Config Related</font></b></summary>
+
+&emsp;&emsp;Set version working directory: `-vcfg <Version Name> -workingDirectory <Target directory, default if not entered>`<br/>
 </details>
 <details>
   <summary><b><font size="4">Custom JVM Virtual Machine Parameters Related</font></b></summary>

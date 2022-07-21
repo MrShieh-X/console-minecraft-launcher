@@ -611,6 +611,12 @@ public class Languages {
                             "    Install OptiFine to local version:                  -version -p <Version Name>\n" +
                             "    Install Quilt to local version:                     -version -q <Version Name>\n" +
                             "  Note: You can specify the version by adding \"-v <Version>\" after the commands to install Fabric, Forge, LiteLoader, OptiFine and Quilt, so as to avoid entering the command and then selecting the version.");
+
+
+            enUsage.put("VERSION_CONFIG",
+                    "Version Config Related:\n" +
+                            "    Set version working directory: -vcfg <Version Name> -workingDirectory <Target directory, default if not entered>");
+
             enUsage.put("JVM_ARGS",
                     "Custom JVM Virtual Machine Parameters Related:\n" +
                             "    Print all parameters: -jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>\n" +
@@ -733,6 +739,10 @@ public class Languages {
                             "    安装 OptiFine 到本地版本：  -version -p <版本名称>\n" +
                             "    安装 Quilt 到本地版本：     -version -q <版本名称>\n" +
                             "  注：可在安装 Fabric、Forge、LiteLoader、OptiFine 和 Quilt 的命令后添加上“-v <版本>”以指定版本，以免输入命令后再选择版本。");
+
+            zhUsage.put("VERSION_CONFIG",
+                    "版本配置相关：\n" +
+                            "    设置版本隔离：-vcfg <版本名称> -workingDirectory <目标目录，不输入则设为默认>");
 
             zhUsage.put("JVM_ARGS",
                     "自定义JVM虚拟机参数相关：\n" +

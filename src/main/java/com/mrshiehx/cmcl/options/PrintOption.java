@@ -91,7 +91,8 @@ public class PrintOption implements Option {
                         account.optJSONObject("properties"),
                         Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
                         Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
-                        StartOption.getAuthlibInformation(account, at, uu, false));
+                        StartOption.getAuthlibInformation(account, at, uu, false),
+                        StartOption.getVersionInfo(versionFolder));
             } catch (EmptyNativesException ex) {
                 System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
                 return;

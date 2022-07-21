@@ -54,6 +54,7 @@ public class Options {
         MAP.put("immersive", new ImmersiveModeOption());
         MAP.put("mod2", new ModrinthModOption());
         MAP.put("modpack2", new ModrinthModpackOption());
+        MAP.put("vcfg", new VersionConfigOption());
 
 
         Map<String, Option> ne = new HashMap<>(MAP);

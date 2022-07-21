@@ -31,6 +31,7 @@ public class HelpOption implements Option {
         usageNames.add("CONFIG");
         usageNames.add("ACCOUNT");
         usageNames.add("VERSION");
+        usageNames.add("VERSION_CONFIG");
         usageNames.add("JVM_ARGS");
         usageNames.add("GAME_ARGS");
         usageNames.add("INSTALL");

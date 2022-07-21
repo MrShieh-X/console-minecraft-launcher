@@ -18,6 +18,7 @@
 package com.mrshiehx.cmcl.options;
 
 import com.mrshiehx.cmcl.bean.AuthlibInformation;
+import com.mrshiehx.cmcl.bean.VersionInfo;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
@@ -38,6 +39,42 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.modules.MinecraftLauncher.launchMinecraft;
 
 public class StartOption implements Option {
+    public static VersionInfo getVersionInfo(File versionFolder) {
+        File versionInfoFile = new File(versionFolder, "cmclversion.json");
+        File versionInfoFileHMCL = new File(versionFolder, "hmclversion.cfg");
+        JSONObject cmclJO = null, hmclJO = null;
+        if (versionInfoFile.exists()) {
+            try {
+                cmclJO = Utils.parseJSONObject(Utils.readFileContent(versionInfoFile));
+            } catch (Throwable ignored) {
+            }
+        }
+        if (versionInfoFileHMCL.exists()) {
+            try {
+                hmclJO = Utils.parseJSONObject(Utils.readFileContent(versionInfoFileHMCL));
+            } catch (Throwable ignored) {
+            }
+        }
+
+        VersionInfo cmcl = null, hmcl = null;
+        if (cmclJO != null) {
+            cmcl = VersionInfo.valueOf(cmclJO);
+        }
+        if (hmclJO != null) {
+            hmcl = VersionInfo.valueOfHMCL(hmclJO);
+        }
+
+        VersionInfo Final = null;
+        if (cmcl != null && hmcl != null) {
+            Final = hmcl.merge(cmcl);
+        } else if (cmcl != null) {
+            Final = cmcl;
+        } else if (hmcl != null) {
+            Final = hmcl;
+        }
+        return Final;
+    }
+
     @Override
     public void execute(Arguments arguments) {
         Argument argument = arguments.optArgument(0);
@@ -101,7 +138,8 @@ public class StartOption implements Option {
                         account.optJSONObject("properties"),
                         Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
                         Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
-                        StartOption.getAuthlibInformation(account, at, uu, true));
+                        StartOption.getAuthlibInformation(account, at, uu, true),
+                        getVersionInfo(versionFolder));
 
                 final GameCrashError[] crashError = {null};
                 new Thread(new Runnable() {

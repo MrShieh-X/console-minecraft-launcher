@@ -75,7 +75,6 @@ public class MinecraftLauncher {
      * @throws JSONException          exception to parsing json
      * @throws LibraryDefectException exception to if some libraries are not found
      * @author MrShiehX
-     * @update v1.3
      */
     public static List<String> getMinecraftLaunchCommandArguments(
             File versionDir,
@@ -99,7 +98,8 @@ public class MinecraftLauncher {
             @Nullable Void startLaunch,
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
-            @Nullable AuthlibInformation authlibInformation) throws
+            @Nullable AuthlibInformation authlibInformation,
+            VersionInfo versionInfo) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -323,6 +323,12 @@ public class MinecraftLauncher {
             assetsPath = new File(assetsDir, "virtual/legacy").getAbsolutePath();
         }
 
+        String lastGameDirPath = gameDir.getAbsolutePath();
+        if (versionInfo != null && !isEmpty(versionInfo.workingDirectory)) {
+            lastGameDirPath = Objects.equals(VersionInfo.SIGN_WORKING_DIRECTORY_IN_VERSION_DIR, versionInfo.workingDirectory) ? versionDir.getAbsolutePath() : versionInfo.workingDirectory;
+        } else if (isModpack(versionDir, headJsonObject)) {
+            lastGameDirPath = versionDir.getAbsolutePath();
+        }
 
         for (int i = 0; i < minecraftArguments.size(); i++) {
                 /*boolean replace = true;
@@ -353,7 +359,7 @@ public class MinecraftLauncher {
                 minecraftArguments.set(i, s = s.replace(source, accessToken));
             }
             if (s.contains(source = "${game_directory}")) {
-                minecraftArguments.set(i, s = s.replace(source, isModpack(versionDir, headJsonObject) ? versionDir.getAbsolutePath() : gameDir.getAbsolutePath()));
+                minecraftArguments.set(i, s = s.replace(source, lastGameDirPath));
             }
             if (s.contains(source = "${assets_root}")) {
                 minecraftArguments.set(i, s = s.replace(source, assetsDir.getAbsolutePath()));
@@ -642,7 +648,8 @@ public class MinecraftLauncher {
             JSONObject properties,
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
-            @Nullable AuthlibInformation authlibInformation) throws
+            @Nullable AuthlibInformation authlibInformation,
+            VersionInfo versionInfo) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -668,7 +675,8 @@ public class MinecraftLauncher {
                 null,
                 jvmArgs,
                 gameArgs,
-                authlibInformation);
+                authlibInformation,
+                versionInfo);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < args.size(); i++) {
             String str = args.get(i);
@@ -818,7 +826,8 @@ public class MinecraftLauncher {
             JSONObject properties,
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
-            @Nullable AuthlibInformation authlibInformation) throws
+            @Nullable AuthlibInformation authlibInformation,
+            VersionInfo versionInfo) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -844,7 +853,8 @@ public class MinecraftLauncher {
                 () -> System.out.println(getString("MESSAGE_STARTING_GAME")),
                 jvmArgs,
                 gameArgs,
-                authlibInformation);
+                authlibInformation,
+                versionInfo);
 
         ProcessBuilder processBuilder = new ProcessBuilder(args);
         processBuilder.directory(versionDir);

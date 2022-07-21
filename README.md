@@ -10,8 +10,9 @@ MrShiehX 拥有该程序的版权。<br/>
 
 ## 版本
 最新版本：<br/>
-<b>1.4 (2022年6月17日)</b><br/>
+<b>1.4.1 (2022年7月21日)</b><br/>
 历史版本：<br/>
+<b>1.4.1 (2022年7月21日)</b><br/>
 <b>1.4 (2022年6月17日)</b><br/>
 <b>1.3 (2022年6月12日)</b><br/>
 <b>1.2 (2022年4月30日)</b><br/>
@@ -143,6 +144,11 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;安装 OptiFine 到本地版本：&emsp;&emsp; -version -p <版本名称><br/>
 &emsp;&emsp;安装 Quilt 到本地版本：&emsp;&emsp;&emsp;&emsp;-version -q <版本名称><br/>
 &emsp;**注：可在安装 Fabric、Forge、LiteLoader、OptiFine 和 Quilt 的命令后添加上“-v <版本>”以指定版本，以免输入命令后再选择版本。**<br/>
+</details>
+<details>
+  <summary><b><font size="4">版本配置相关</font></b></summary>
+
+&emsp;&emsp;设置版本隔离：-vcfg <版本名称> -workingDirectory <目标目录，不输入则设为默认><br/>
 </details>
 <details>
   <summary><b><font size="4">自定义JVM虚拟机参数相关</font></b></summary>
