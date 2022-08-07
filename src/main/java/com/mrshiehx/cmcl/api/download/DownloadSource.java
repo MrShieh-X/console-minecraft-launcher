@@ -18,8 +18,14 @@
 
 package com.mrshiehx.cmcl.api.download;
 
+import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
+import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class DownloadSource {
     private static final DefaultApiProvider defaultApiProvider = new DefaultApiProvider();
@@ -31,6 +37,24 @@ public class DownloadSource {
     }
 
     public static DownloadApiProvider getProvider(JSONObject config) {
+        if (!config.has("downloadSource")) {
+            List<Pair<String, Integer>> sources = new ArrayList<>(3);
+            sources.add(0, new Pair<>(Utils.getString("DOWNLOAD_SOURCE_OFFICIAL"), 0));
+            sources.add(1, new Pair<>(Utils.getString("DOWNLOAD_SOURCE_BMCLAPI"), 1));
+            sources.add(2, new Pair<>(Utils.getString("DOWNLOAD_SOURCE_MCBBS"), 2));
+            for (Pair<String, Integer> pair : sources) {
+                System.out.printf("[%d]%s\n", pair.getValue(), pair.getKey());
+            }
+            int defaultDS = ConsoleMinecraftLauncher.getLanguage().equalsIgnoreCase("zh") ? 2 : 0;
+            int value = defaultDS;
+            System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDS));
+            try {
+                value = Integer.parseInt(new Scanner(System.in).nextLine());
+            } catch (NumberFormatException ignore) {
+            }
+            config.put("downloadSource", value);
+            Utils.saveConfig(config);
+        }
         int s = config.optInt("downloadSource");
         if (s == 1) {
             return bmclApiProvider;

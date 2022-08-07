@@ -17,6 +17,7 @@
  */
 package com.mrshiehx.cmcl.modules.account.loginner;
 
+import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.server.MicrosoftAuthenticationServer;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -33,6 +34,9 @@ import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.utils.Utils.post;
 
 public class MicrosoftAccountLoginner {
+    public static int status = -1;
+    public static JSONObject account;
+
     public static void loginMicrosoftAccount(JSONObject config, boolean select) {
         System.out.println(Utils.getString("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE"));
 
@@ -171,6 +175,10 @@ public class MicrosoftAccountLoginner {
                                                             System.out.println(getString("MESSAGE_LOGINED_TITLE"));
                                                         }
                                                     }
+                                                    status = 1;
+                                                    MicrosoftAccountLoginner.account = account;
+                                                    w.stop();
+                                                    return;
 
                                                 }
                                             } else {
@@ -200,6 +208,7 @@ public class MicrosoftAccountLoginner {
                 e.printStackTrace();
                 System.out.println(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
             }
+            status = 0;
             w.stop();
         };
         try {

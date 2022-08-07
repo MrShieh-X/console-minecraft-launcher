@@ -108,6 +108,9 @@ public class Languages {
             zh.put("MESSAGE_INSTALL_MODPACK_COEXIST", "安装整合包失败：%1$s 和 %2$s 不能同时安装。");
             zh.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "该版本为完整的版本，无需补充。");
             zh.put("MESSAGE_COMPLETED_VERSION", "补充版本成功");
+            zh.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "首次下载请选择下载源(默认为%d)：");
+            zh.put("MESSAGE_SELECT_ACCOUNT", "请输入要选择账号的序号(%d-%d)：");
+            zh.put("MESSAGE_SELECT_ACCOUNT_TYPE", "暂无可用的账号，请选择新账号的账号类型(%d-%d)：");
             zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
             zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“-install <版本名称>”安装一个新的版本并选择。");
             zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
@@ -115,15 +118,15 @@ public class Languages {
             zh.put("EXCEPTION_MAX_MEMORY_TOO_BIG", "最大内存大于物理内存总大小");
             zh.put("EXCEPTION_MAX_MEMORY_IS_ZERO", "最大内存为零");
             zh.put("EXCEPTION_JAVA_VERSION_TOO_LOW", "此 Minecraft 版本的 Java 版本最低要求为 %d，您选择的 Java 版本为 %d，请选择一个达到要求的 Java 后重试。");
-            zh.put("LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账号，\n如果登录成功，请返回到启动器，等待完成登录。\n登录需要一定的时间，请耐心等待。\n按以下的按钮，将会取消登录。");
+            zh.put("LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账户，\n如果登录成功，请返回到启动器，等待完成登录。\n登录需要一定的时间，请耐心等待。\n按以下的按钮，将会取消登录。");
             zh.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭此页面并返回到启动器完成登录。");
-            zh.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "登录微软账号 - Console Minecraft Launcher");
+            zh.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "登录微软账户 - Console Minecraft Launcher");
             zh.put("CONSOLE_GET_USAGE", "使用选项 -usage 或 -help 以获得使用手册。");
             zh.put("CONSOLE_UNKNOWN_OPTION", "未知选项：%s\n使用选项 -usage 或 -help 以获得使用手册。");
             zh.put("CONSOLE_INCORRECT_USAGE", "不正确的用法。\n使用选项 -usage 或 -help 以获得使用手册。");
             zh.put("CONSOLE_UNSUPPORTED_VALUE", "不支持的值：%s");
             zh.put("CONSOLE_REPLACE_ACCOUNT", "是否覆盖原来的账号？");
-            zh.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账号，\n如果登录成功，请返回到此处，等待完成登录。\n登录需要一定的时间，请耐心等待。");
+            zh.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账户，\n如果登录成功，请返回到此处，等待完成登录。\n登录需要一定的时间，请耐心等待。");
             zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_ACCESS_TOKEN", "必须是正版账号登录且有 accessToken 才能进行此操作。");
             zh.put("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE", "服务器无响应");
             zh.put("CONSOLE_FAILED_OPERATE", "操作失败：");
@@ -148,11 +151,15 @@ public class Languages {
             zh.put("DATATYPE_BOOLEAN", "布尔值");
             zh.put("DATATYPE_FRACTION", "小数");
             zh.put("TIME_FORMAT", "yyyy年MM月dd日 HH:mm:ss");
-            zh.put("ACCOUNT_TYPE_MICROSOFT", "微软账号");
+            zh.put("ACCOUNT_TYPE_MICROSOFT", "微软账户");
             zh.put("ACCOUNT_TYPE_OFFLINE", "离线账号");
+            zh.put("ACCOUNT_TYPE_OAS", "外置账号");
             zh.put("ACCOUNT_SELECTED", "已选择");
             zh.put("ACCOUNT_NOT_EXISTS", "账号不存在：%d");
-            zh.put("ACCOUNT_TYPE_OAS", "外置账号：%s %s");
+            zh.put("ACCOUNT_TYPE_OAS_WITH_DETAIL", "外置账号：%s %s");
+            zh.put("ACCOUNT_INVALID", "账号无效：%d");
+            zh.put("ACCOUNT_TIP_LOGIN_OFFLINE_PLAYERNAME", "请输入离线登录玩家名：");
+            zh.put("ACCOUNT_TIP_LOGIN_OAS_ADDRESS", "请输入外置登录服务器地址：");
             zh.put("NOT_SELECTED_AN_ACCOUNT", "未选择账号。请登录了您的账号之后，使用“-account -p”列出账号，记住您要选择的账号的序号，然后使用“-account <序号>”选择账号；或者在登录账号命令后面加上“-s”的参数。");
             zh.put("DATATYPE_JSON_ARRAY", "JSON数组");
             zh.put("DATATYPE_JSON_OBJECT", "JSON对象");
@@ -291,6 +298,9 @@ public class Languages {
             zh.put("INSTALL_MODPACK_COMPLETE", "安装整合包完成");
             zh.put("INSTALL_MODPACK_MODRINTH_UNKNOWN_MODLOADER", "未知模组加载器：%s");
             zh.put("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17", "无法安装 OptiFine：当前游戏版本的 Forge 与低于 H1 Pre2 版本的 OptiFine 不兼容，请换一个版本更新的 OptiFine 后重试。");
+            zh.put("DOWNLOAD_SOURCE_OFFICIAL", "官方");
+            zh.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
+            zh.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS 我的世界中文论坛（中国大陆用户推荐）");
         }
         /*enUS*/
         {
@@ -373,6 +383,9 @@ public class Languages {
             en.put("MESSAGE_INSTALL_MODPACK_COEXIST", "Failed to install the modpack: %1$s and %2$s cannot be installed at the same time.");
             en.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "This version is complete and does not need to be completed.");
             en.put("MESSAGE_COMPLETED_VERSION", "Version completed successfully");
+            en.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "Please select the download source for the first download (default is %d): ");
+            en.put("MESSAGE_SELECT_ACCOUNT", "Please enter the order number of the account you want to select (%d-%d): ");
+            en.put("MESSAGE_SELECT_ACCOUNT_TYPE", "No account is currently available, please select the account type of the new account (%d-%d): ");
             en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
             en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <Version Name>\" to select a launch-able version or \"-install <Version Name>\" to install a new version and select it.");
             en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
@@ -415,9 +428,13 @@ public class Languages {
             en.put("TIME_FORMAT", "EEE, MMM d, yyyy HH:mm:ss");
             en.put("ACCOUNT_TYPE_MICROSOFT", "Microsoft Account");
             en.put("ACCOUNT_TYPE_OFFLINE", "Offline Account");
+            en.put("ACCOUNT_TYPE_OAS", "authlib-injector Account");
             en.put("ACCOUNT_SELECTED", "Selected");
             en.put("ACCOUNT_NOT_EXISTS", "Account does not exist: %d");
-            en.put("ACCOUNT_TYPE_OAS", "authlib-injector Account: %s %s");
+            en.put("ACCOUNT_TYPE_OAS_WITH_DETAIL", "authlib-injector Account: %s %s");
+            en.put("ACCOUNT_INVALID", "Invalid Account: %d");
+            en.put("ACCOUNT_TIP_LOGIN_OFFLINE_PLAYERNAME", "Please enter the offline login player name: ");
+            en.put("ACCOUNT_TIP_LOGIN_OAS_ADDRESS", "Please enter the authlib-injector login server address: ");
             en.put("NOT_SELECTED_AN_ACCOUNT", "No account selected. Please log in to your account, use \"-account -p\" to list the accounts, remember the order number of the account you want to select, and then use \"-account <Order Number>\" to select the account; Or add \"-s\" parameter after login account command.");
             en.put("DATATYPE_JSON_ARRAY", "JSON Array");
             en.put("DATATYPE_JSON_OBJECT", "JSON Object");
@@ -556,6 +573,9 @@ public class Languages {
             en.put("INSTALL_MODPACK_COMPLETE", "Install modpack complete");
             en.put("INSTALL_MODPACK_MODRINTH_UNKNOWN_MODLOADER", "Unknown modloader: %s");
             en.put("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17", "Unable to install OptiFine: The current game version of Forge is not compatible with OptiFine versions lower than H1 Pre2, please try a newer version of OptiFine.");
+            en.put("DOWNLOAD_SOURCE_OFFICIAL", "Official");
+            en.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
+            en.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS");
         }
         /*enUSUsage*/
         {
@@ -704,7 +724,7 @@ public class Languages {
                             "    列出账号：       -account -p\n" +
                             "    删除账号：       -account -t <序号>\n" +
                             "    离线登录：       -account -l -o <离线用户名> -s(可选，登录成功后选择此账号)\n" +
-                            "    微软账号登录：   -account -l -m -s(可选，登录成功后选择此账号)\n" +
+                            "    微软账户登录：   -account -l -m -s(可选，登录成功后选择此账号)\n" +
                             "    外置账号登录：   -account -l -a <服务器地址> -s(可选，登录成功后选择此账号)\n" +
                             "    刷新账号：       -account -r\n" +
                             "    下载皮肤：       -account -s -d <皮肤文件存储路径>\n" +

@@ -113,7 +113,7 @@ public class ConsoleMinecraftLauncher {
 
     public static String getUsage(String usageName) {
         if (isEmpty(usageName)) return null;
-        String t = ("zh".equals(getLanguage()) ? Languages.zhUsage : Languages.enUsage).get(usageName);
+        String t = ("zh".equalsIgnoreCase(getLanguage()) ? Languages.zhUsage : Languages.enUsage).get(usageName);
         return isEmpty(t) ? "" : t;
     }
 
@@ -255,7 +255,7 @@ public class ConsoleMinecraftLauncher {
     }
 
     public static String getString(String name) {
-        if ("zh".equals(getLanguage())) {
+        if ("zh".equalsIgnoreCase(getLanguage())) {
             String text = Languages.zh.get(name);
             if (!Utils.isEmpty(text)) return text;
         }
@@ -311,7 +311,7 @@ public class ConsoleMinecraftLauncher {
 
     public static Locale getLocale() {
         if (locale == null) {
-            locale = "zh".equals(getLanguage()) ? Locale.SIMPLIFIED_CHINESE : Locale.ENGLISH;
+            locale = "zh".equalsIgnoreCase(getLanguage()) ? Locale.SIMPLIFIED_CHINESE : Locale.ENGLISH;
         }
         return locale;
     }

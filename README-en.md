@@ -10,14 +10,25 @@ Anyone can take advices of this program to us.
 
 ## Version
 The latest version: <br/>
-<b>1.4.1 (Jul. 21, 2022)</b><br/>
+<b>1.5 (Aug. 7, 2022)</b><br/>
 Historical version: <br/>
+<b>1.5 (Aug. 7, 2022)</b><br/>
 <b>1.4.1 (Jul. 21, 2022)</b><br/>
 <b>1.4 (Jun. 17, 2022)</b><br/>
 <b>1.3 (Jun. 12, 2022)</b><br/>
 <b>1.2 (Apr. 30, 2022)</b><br/>
 <b>1.1 (Mar. 27, 2022)</b><br/>
 <b>1.0 (Mar. 12, 2022) (First version)</b><br/>
+
+## Program Screenshot
+![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
+
+## Video Tutorial
+### English:
+[\[CMCL\] A Launcher for Minecraft Running On The Console](https://www.youtube.com/watch?v=SczdBQT9vOY) <br/>
+### Chinese:
+[\[CMCL\]纯命令行的Minecraft启动器 | 告别繁琐，全新体验](https://www.bilibili.com/video/BV1ua41187od) <br/>
+[\[CMCL\]今天，它，重出江湖了](https://www.bilibili.com/video/BV1AY411A7XU)
 
 ## Main Developers
 ### [@MrShieh-X](https://github.com/MrShieh-X)
@@ -52,9 +63,6 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 - English
 - Simplified Chinese
 
-## Program Screenshot
-![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
-
 ## Bugs found
 - (Fixed in v1.4)~~Unable to launch game versions lower than 1.13 (without 1.13) where OptiFine and Forge coexist.~~
 
@@ -62,7 +70,7 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).<br/>
 If you edit configurations by a file editor, only strings need double quotation mark, otherwise, other types do not need it.<br/>
 If you edit by the program arguments, note that if there are spaces in the string, double quotation marks must be added, otherwise it can be added or not.<br/>
-Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10`.
+Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" (maybe two) must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10` or `\\-10`.
 
 | Configuration Name|Type|Meaning|
 | -----|:----:|:----:|
@@ -234,5 +242,7 @@ MrShiehX<br/>
   Student<br/>
 - Bilibili:<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
+- Youtube:<br/>
+  [@MrShiehX](https://www.youtube.com/channel/UC03_vrWM8TfaU1k9VYVzW0A) <br/>
 
 ## If you find any bugs in this program, or have new ideas, please leave a message on Bilibili or raise an issue

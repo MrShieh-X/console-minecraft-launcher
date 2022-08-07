@@ -33,7 +33,7 @@ import java.util.*;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
 public class AuthlibAccountLoginner {
-    public static void login(String address, String username, String password, boolean selected, JSONObject config) throws Exception {
+    public static JSONObject login(String address, String username, String password, boolean selected, JSONObject config) throws Exception {
         String url = AuthlibUtils.addHttpsIfMissing(address);
         /*serverName*/
         String serverName = "AuthlibServer";
@@ -76,7 +76,7 @@ public class AuthlibAccountLoginner {
             JSONObject firstResponse = Utils.parseJSONObject(Utils.post(authenticationURL, request.toString()));
             if (firstResponse == null) {
                 System.out.println(getString("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE"));
-                return;
+                return null;
             }
 
             if (firstResponse.has("error")) {
@@ -85,7 +85,7 @@ public class AuthlibAccountLoginner {
                 } else {
                     Utils.printfln(getString("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT"), firstResponse.optString("error"));
                 }
-                return;
+                return null;
             }
             //System.out.println(firstResponse);
             /*clientToken*/
@@ -115,11 +115,11 @@ public class AuthlibAccountLoginner {
                         playerName = profile.optString("name");
                         uuid = profile.optString("id");
                     } else {
-                        return;
+                        return null;
                     }
                 } else {
                     System.out.println(getString("FAILED_TO_LOGIN_OAA_NO_SELECTED_CHARACTER"));
-                    return;
+                    return null;
                 }
             }
 
@@ -195,6 +195,7 @@ public class AuthlibAccountLoginner {
                     System.out.println(getString("MESSAGE_LOGINED_TITLE"));
                 }
             }
+            return account;
 
         } catch (Exception e) {
             throw new Exception(getString("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT_FAILED_AUTHENTICATE"));

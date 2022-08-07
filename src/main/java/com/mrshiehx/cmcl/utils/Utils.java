@@ -26,6 +26,8 @@ import com.mrshiehx.cmcl.bean.SplitLibraryName;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.interfaces.filters.JSONObjectFilter;
+import com.mrshiehx.cmcl.modules.account.loginner.MicrosoftAccountLoginner;
+import com.mrshiehx.cmcl.options.AccountOption;
 import com.sun.management.OperatingSystemMXBean;
 import org.jenkinsci.constant_pool_scanner.ConstantPool;
 import org.jenkinsci.constant_pool_scanner.ConstantType;
@@ -413,7 +415,7 @@ public class Utils {
     }
 
     public static String getNativesDirName() {
-        return "natives-" + OperatingSystem.CURRENT_OS.getCheckedName();
+        return "natives-" + OperatingSystem.CURRENT_OS.getCheckedName() + "-" + getArchCheckedName();
     }
 
     public static String readFileContent(File file) throws IOException {
@@ -673,18 +675,6 @@ public class Utils {
         }
     }
 
-    public static JSONObject getSelectedAccount() throws NotSelectedException {
-        return getSelectedAccount(getConfig());
-    }
-
-    public static JSONObject getSelectedAccount(JSONObject config) throws NotSelectedException {
-        return getSelectedAccount(config, true);
-    }
-
-    public static JSONObject getSelectedAccount(boolean prompt) throws NotSelectedException {
-        return getSelectedAccount(getConfig(), prompt);
-    }
-
     public static JSONObject getSelectedAccount(JSONObject config, boolean prompt) throws NotSelectedException {
         JSONArray accounts = config.optJSONArray("accounts");
         if (accounts == null || accounts.length() == 0) {
@@ -701,6 +691,78 @@ public class Utils {
         }
         if (prompt) System.out.println(getString("NOT_SELECTED_AN_ACCOUNT"));
         throw new NotSelectedException();
+    }
+
+    public static JSONObject getSelectedAccountIfNotLoginNow(JSONObject config) {
+        JSONArray accounts = config.optJSONArray("accounts");
+        int valid = 0;
+        if (accounts != null) {
+            for (Object o : accounts) {
+                if (o instanceof JSONObject) {
+                    JSONObject jsonObject1 = (JSONObject) o;
+                    if (Utils.isValidAccount(jsonObject1)) {
+                        valid++;
+                        if (jsonObject1.optBoolean("selected")) {
+                            return jsonObject1;
+                        }
+                    }
+                }
+            }
+        }
+        if (accounts != null && valid > 0) {
+            AccountOption.printAllAccounts(accounts);
+            int order = ConsoleUtils.inputInt(getString("MESSAGE_SELECT_ACCOUNT", 0, accounts.length() - 1), 0, accounts.length() - 1);
+            JSONObject account = accounts.optJSONObject(order);
+
+            if (!Utils.isValidAccount(account)) {
+                Utils.printfln(getString("ACCOUNT_INVALID"), order);
+                return null;
+            }
+
+            account.put("selected", true);
+            for (int i = 0; i < accounts.length(); i++) {
+                if (i != order) {
+                    JSONObject acc = accounts.optJSONObject(i);
+                    if (acc != null) {
+                        acc.put("selected", false);
+                    }
+                }
+            }
+            config.put("accounts", accounts);
+            Utils.saveConfig(config);
+            return account;
+        } else {
+            System.out.println("[0]" + Utils.getString("ACCOUNT_TYPE_OFFLINE"));
+            System.out.println("[1]" + Utils.getString("ACCOUNT_TYPE_MICROSOFT"));
+            System.out.println("[2]" + Utils.getString("ACCOUNT_TYPE_OAS"));
+            int sel = ConsoleUtils.inputInt(getString("MESSAGE_SELECT_ACCOUNT_TYPE", 0, 2), 0, 2);
+            if (accounts == null) {
+                config.put("accounts", accounts = new JSONArray());
+            }
+            switch (sel) {
+                case 0: {
+                    JSONObject account = new JSONObject().put("playerName", ConsoleUtils.inputString(getString("ACCOUNT_TIP_LOGIN_OFFLINE_PLAYERNAME"))).put("selected", true).put("loginMethod", 0);
+                    accounts.put(account);
+                    Utils.saveConfig(config);
+                    return account;
+                }
+                case 1: {
+                    MicrosoftAccountLoginner.loginMicrosoftAccount(config, true);
+                    while (true) {
+                        if (MicrosoftAccountLoginner.status == 0) {
+                            return null;
+                        } else if (MicrosoftAccountLoginner.status == 1) {
+                            return MicrosoftAccountLoginner.account;
+                        }
+                    }
+                }
+                case 2: {
+                    return AccountOption.authlibInjectorLogin(ConsoleUtils.inputString(getString("ACCOUNT_TIP_LOGIN_OAS_ADDRESS")), true, config);
+                }
+                default:
+                    return null;
+            }
+        }
     }
 
     public static String getWithToken(String url) throws IOException {
@@ -1099,8 +1161,164 @@ public class Utils {
     }
 
     public static String getArchInt() {
-        if (System.getProperty("os.arch").contains("64")) return "64";
-        return "32";
+        String value = System.getProperty("os.arch").trim().toLowerCase(Locale.ROOT);
+
+        switch (value) {
+            case "x8664":
+            case "x86-64":
+            case "x86_64":
+            case "amd64":
+            case "ia32e":
+            case "em64t":
+            case "x64":
+            case "arm64":
+            case "aarch64":
+            case "mips64":
+            case "mips64el":
+            case "riscv":
+            case "risc-v":
+            case "ia64":
+            case "ia64w":
+            case "itanium64":
+            case "sparcv9":
+            case "sparc64":
+            case "ppc64le":
+            case "powerpc64le":
+            case "loongarch64":
+            case "s390x":
+            case "ppc64":
+            case "powerpc64":
+                return "64";
+            case "x8632":
+            case "x86-32":
+            case "x86_32":
+            case "x86":
+            case "i86pc":
+            case "i386":
+            case "i486":
+            case "i586":
+            case "i686":
+            case "ia32":
+            case "x32":
+            case "arm":
+            case "arm32":
+            case "mips":
+            case "mips32":
+            case "mipsel":
+            case "mips32el":
+            case "ia64n":
+            case "sparc":
+            case "sparc32":
+            case "ppc":
+            case "ppc32":
+            case "powerpc":
+            case "powerpc32":
+            case "s390":
+            case "ppcle":
+            case "ppc32le":
+            case "powerpcle":
+            case "powerpc32le":
+            case "loongarch32":
+                return "32";
+            default:
+                if (value.startsWith("armv7")) {
+                    return "32";
+                }
+                if (value.startsWith("armv8") || value.startsWith("armv9")) {
+                    return "64";
+                }
+                return "unknown";
+        }
+    }
+
+    public static String getArchCheckedName() {
+        String value = System.getProperty("os.arch").trim().toLowerCase(Locale.ROOT);
+
+        switch (value) {
+            case "x8664":
+            case "x86-64":
+            case "x86_64":
+            case "amd64":
+            case "ia32e":
+            case "em64t":
+            case "x64":
+                return "x86_64";
+            case "x8632":
+            case "x86-32":
+            case "x86_32":
+            case "x86":
+            case "i86pc":
+            case "i386":
+            case "i486":
+            case "i586":
+            case "i686":
+            case "ia32":
+            case "x32":
+                return "x86";
+            case "arm64":
+            case "aarch64":
+                return "arm64";
+            case "arm":
+            case "arm32":
+                return "arm32";
+            case "mips64":
+                return "mips64";
+            case "mips64el":
+                return "mips64el";
+            case "mips":
+            case "mips32":
+                return "mips";
+            case "mipsel":
+            case "mips32el":
+                return "mipsel";
+            case "riscv":
+            case "risc-v":
+                return "riscv";
+            case "ia64":
+            case "ia64w":
+            case "itanium64":
+                return "ia64";
+            case "ia64n":
+                return "ia32";
+            case "sparcv9":
+            case "sparc64":
+                return "sparcv9";
+            case "sparc":
+            case "sparc32":
+                return "sparc";
+            case "ppc64":
+            case "powerpc64":
+                return "little".equals(System.getProperty("sun.cpu.endian")) ? "ppc64le" : "ppc64";
+            case "ppc64le":
+            case "powerpc64le":
+                return "ppc64le";
+            case "ppc":
+            case "ppc32":
+            case "powerpc":
+            case "powerpc32":
+                return "ppc";
+            case "ppcle":
+            case "ppc32le":
+            case "powerpcle":
+            case "powerpc32le":
+                return "ppcle";
+            case "s390":
+                return "s390";
+            case "s390x":
+                return "s390x";
+            case "loongarch32":
+                return "loongarch32";
+            case "loongarch64":
+                return "loongarch64";
+            default:
+                if (value.startsWith("armv7")) {
+                    return "arm32";
+                }
+                if (value.startsWith("armv8") || value.startsWith("armv9")) {
+                    return "arm64";
+                }
+                return "unknown";
+        }
     }
 
     public static SplitLibraryName splitLibraryName(String name) {

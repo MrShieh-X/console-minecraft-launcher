@@ -26,7 +26,6 @@ import com.mrshiehx.cmcl.enums.GameCrashError;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
-import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
@@ -79,12 +78,12 @@ public class StartOption implements Option {
     public void execute(Arguments arguments) {
         Argument argument = arguments.optArgument(0);
         String version;
-        JSONObject jsonObject = Utils.getConfig();
+        JSONObject config = Utils.getConfig();
         if ((argument instanceof ValueArgument)) {
             ValueArgument valueArgument = (ValueArgument) argument;
             version = valueArgument.value;
         } else {
-            version = jsonObject.optString("selectedVersion");
+            version = config.optString("selectedVersion");
             if (isEmpty(version)) {
                 System.out.println(getString("CONSOLE_NO_SELECTED_VERSION"));
                 return;
@@ -92,7 +91,7 @@ public class StartOption implements Option {
         }
 
 
-        start(version, jsonObject);
+        start(version, config);
     }
 
     public static void start(String version, JSONObject config) {
@@ -105,12 +104,9 @@ public class StartOption implements Option {
             File versionJsonFile = new File(versionFolder, version + ".json");
             try {
 
-                JSONObject account;
-                try {
-                    account = Utils.getSelectedAccount();
-                } catch (NotSelectedException e) {
-                    return;
-                }
+                JSONObject account = Utils.getSelectedAccountIfNotLoginNow(config);
+
+                if (account == null) return;
 
                 String at = Utils.randomUUIDNoSymbol(), uu = Utils.getUUIDByName(account.optString("playerName", "XPlayer"));
                 if (account.optInt("loginMethod") > 0) {

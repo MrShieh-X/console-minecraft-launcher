@@ -23,7 +23,6 @@ import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
-import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
@@ -47,20 +46,16 @@ public class PrintOption implements Option {
         if (!configFile.exists() || isEmpty(configContent) || isEmpty(javaPath) || !new File(javaPath).exists()) {
             System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
         } else {
-            JSONObject jsonObject = Utils.getConfig();
+            JSONObject config = Utils.getConfig();
             File versionsFolder = new File(gameDir, "versions");
             File versionFolder = new File(versionsFolder, version);
             File versionJarFile = new File(versionFolder, version + ".jar");
             File versionJsonFile = new File(versionFolder, version + ".json");
             String command;
             try {
-                JSONObject account;
-                try {
-                    account = Utils.getSelectedAccount();
-                } catch (NotSelectedException e) {
-                    return;
-                }
+                JSONObject account = Utils.getSelectedAccountIfNotLoginNow(config);
 
+                if (account == null) return;
 
                 if (!Utils.isEmpty(account.optString("offlineSkin")) || !Utils.isEmpty(account.optString("providedSkin"))) {
                     System.out.println(getString("PRINT_COMMAND_NOT_SUPPORT_OFFLINE_CUSTOM_SKIN"));
@@ -78,16 +73,16 @@ public class PrintOption implements Option {
                         assetsDir,
                         respackDir,
                         account.optString("playerName", "XPlayer"),
-                        jsonObject.optString("javaPath", Utils.getDefaultJavaPath()),
-                        jsonObject.optLong("maxMemory", Utils.getDefaultMemory()),
+                        config.optString("javaPath", Utils.getDefaultJavaPath()),
+                        config.optLong("maxMemory", Utils.getDefaultMemory()),
                         128,
-                        jsonObject.optInt("windowSizeWidth", 854),
-                        jsonObject.optInt("windowSizeHeight", 480),
-                        jsonObject.optBoolean("isFullscreen"),
+                        config.optInt("windowSizeWidth", 854),
+                        config.optInt("windowSizeHeight", 480),
+                        config.optBoolean("isFullscreen"),
                         at,
                         uu,
                         false,
-                        !jsonObject.optBoolean("isFullscreen"),
+                        !config.optBoolean("isFullscreen"),
                         account.optJSONObject("properties"),
                         Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
                         Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),

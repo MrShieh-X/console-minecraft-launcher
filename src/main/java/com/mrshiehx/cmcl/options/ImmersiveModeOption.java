@@ -116,13 +116,13 @@ public class ImmersiveModeOption implements Option {
     private static void printPrompt() {
         //MrShiehX@1.18.2$
         JSONObject account = null;
+        JSONObject config = Utils.getConfig();
         try {
-            account = Utils.getSelectedAccount(false);
+            account = Utils.getSelectedAccount(config, false);
         } catch (NotSelectedException ignore) {
         }
 
 
-        JSONObject config = Utils.getConfig();
         String selectedVersion = config.optString("selectedVersion");
         StringBuilder stringBuilder = new StringBuilder();
         if (account != null && !Utils.isEmpty(account.optString("playerName"))) {

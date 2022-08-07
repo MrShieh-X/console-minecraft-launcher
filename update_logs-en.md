@@ -1,5 +1,10 @@
 # Update Logs
-Currently, the latest version is 1.4.1, which was updated on July 21, 2022.
+Currently, the latest version is 1.5, which was updated on August 7, 2022.
+
+## 1.5 (Aug. 7, 2022)
+- Downloading a file for the first time will ask for the download source.
+- Launching the game without a logged in account will require the user to log in immediately.
+- Distinguish the native dependency library directory for different architectures.
 
 ## 1.4.1 (Jul. 21, 2022)
 - Version working directory can be set via `-vcfg <Version Name> -workingDirectory <Target directory, default if not entered>`.

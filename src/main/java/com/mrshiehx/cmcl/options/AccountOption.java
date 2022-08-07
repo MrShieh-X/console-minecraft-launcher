@@ -28,6 +28,7 @@ import com.mrshiehx.cmcl.modules.account.skin.SkinDownloader;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.authlib.AuthlibInjectorProvider;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,9 +44,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class AccountOption implements Option {
     @Override
     public void execute(Arguments arguments) {
-        JSONObject jsonObject = Utils.getConfig();
-        JSONArray accounts = jsonObject.optJSONArray("accounts");
-        if (accounts == null) jsonObject.put("accounts", accounts = new JSONArray());
+        JSONObject config = Utils.getConfig();
+        JSONArray accounts = config.optJSONArray("accounts");
+        if (accounts == null) config.put("accounts", accounts = new JSONArray());
         if (arguments.optArgument(0) instanceof SingleArgument) {
             Argument subOption = arguments.opt(1);
             if (subOption == null) {
@@ -55,19 +56,7 @@ public class AccountOption implements Option {
             String key = subOption.key;
             switch (key.toLowerCase()) {
                 case "p":
-                    for (int i = 0; i < accounts.length(); i++) {
-                        JSONObject account = accounts.optJSONObject(i);
-                        if (Utils.isValidAccount(account)) {
-                            Utils.printfln(
-                                    "%d.%s (%s) %s",
-                                    i,
-                                    account.optString("playerName", "XPlayer"),
-                                    getAccountType(account.optInt("loginMethod"), account.optString("serverName"), account.optString("url")),
-
-                                    account.optBoolean("selected") ? getString("ACCOUNT_SELECTED") : ""
-                            );
-                        }
-                    }
+                    printAllAccounts(accounts);
                     break;
                 case "t":
                     if (subOption instanceof ValueArgument) {
@@ -75,8 +64,8 @@ public class AccountOption implements Option {
                         try {
                             int order = Integer.parseInt(value);
                             accounts.remove(order);
-                            jsonObject.put("accounts", accounts);
-                            Utils.saveConfig(jsonObject);
+                            config.put("accounts", accounts);
+                            Utils.saveConfig(config);
                         } catch (NumberFormatException e) {
                             Utils.printfln(getString("CONSOLE_UNSUPPORTED_VALUE"), value);
                             return;
@@ -117,19 +106,19 @@ public class AccountOption implements Option {
                         if (indexOf >= 0) {
                             if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
                                 accounts.put(indexOf, account);
-                                jsonObject.put("accounts", accounts);
-                                Utils.saveConfig(jsonObject);
+                                config.put("accounts", accounts);
+                                Utils.saveConfig(config);
                             }
 
                         } else {
                             accounts.put(account);
-                            Utils.saveConfig(jsonObject);
+                            Utils.saveConfig(config);
                         }
 
 
                     } else if ("m".equalsIgnoreCase(loginMethod) && loginMethodArg instanceof SingleArgument) {
                         //SingleArgument singleArgument=(SingleArgument)loginMethodArg;
-                        MicrosoftAccountLoginner.loginMicrosoftAccount(jsonObject, arguments.contains("s"));
+                        MicrosoftAccountLoginner.loginMicrosoftAccount(config, arguments.contains("s"));
 
 
                     } else if ("a".equalsIgnoreCase(loginMethod)) {
@@ -149,7 +138,7 @@ public class AccountOption implements Option {
                             System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                             return;
                         }
-                        authlibInjectorLogin(address, arguments.contains("s"), jsonObject);
+                        authlibInjectorLogin(address, arguments.contains("s"), config);
                     } else {
                         System.out.println(getString("CONSOLE_INCORRECT_USAGE"));
                         return;
@@ -184,7 +173,7 @@ public class AccountOption implements Option {
                                         } else {
                                             account.put("uuid", mcSecond.optString("id"));
                                             account.put("playerName", mcSecond.optString("name"));
-                                            Utils.saveConfig(jsonObject);
+                                            Utils.saveConfig(config);
                                             return;
                                         }
                                     } else {
@@ -226,8 +215,8 @@ public class AccountOption implements Option {
                                     account.put("uuid", selectedProfile.optString("id"));
                                 }
                                 accounts.put(indexOf, account);
-                                jsonObject.put("accounts", accounts);
-                                Utils.saveConfig(jsonObject);
+                                config.put("accounts", accounts);
+                                Utils.saveConfig(config);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 System.out.println(getString("MESSAGE_FAILED_REFRESH_TITLE") + ": " + e.toString());
@@ -248,7 +237,7 @@ public class AccountOption implements Option {
 
                     JSONObject account;
                     try {
-                        account = Utils.getSelectedAccount(jsonObject);
+                        account = Utils.getSelectedAccount(config, true);
                     } catch (NotSelectedException e) {
                         return;
                     }
@@ -268,7 +257,7 @@ public class AccountOption implements Option {
                         account.remove("providedSkin");
                         account.remove("offlineSkin");
                         account.remove("slim");
-                        Utils.saveConfig(jsonObject);
+                        Utils.saveConfig(config);
                     } else if ("u".equalsIgnoreCase(skinArg.key) && skinArg instanceof ValueArgument) {
                         if (account.optInt("loginMethod") == 1) {
                             File file = new File(((ValueArgument) skinArg).value);
@@ -308,7 +297,7 @@ public class AccountOption implements Option {
                                 account.remove("providedSkin");
                                 account.remove("offlineSkin");
                             }
-                            Utils.saveConfig(jsonObject);
+                            Utils.saveConfig(config);
 
                         } else {
                             System.out.println(getString("UPLOAD_SKIN_ONLY_OAS_OR_OFFLINE"));
@@ -330,7 +319,7 @@ public class AccountOption implements Option {
                             account.remove("offlineSkin");
                             account.remove("slim");
                             account.put("providedSkin", steve ? "steve" : "alex");
-                            Utils.saveConfig(jsonObject);
+                            Utils.saveConfig(config);
                         } else if (account.optInt("loginMethod") == 1) {
                             String name;
                             byte[] skin;
@@ -381,7 +370,7 @@ public class AccountOption implements Option {
 
                     JSONObject account;
                     try {
-                        account = Utils.getSelectedAccount();
+                        account = Utils.getSelectedAccount(config, true);
                     } catch (NotSelectedException e) {
                         return;
                     }
@@ -402,7 +391,7 @@ public class AccountOption implements Option {
                         } else {
                             account.remove("cape");
                         }
-                        Utils.saveConfig(jsonObject);
+                        Utils.saveConfig(config);
                     } else {
                         System.out.println(getString("ONLY_OFFLINE"));
                     }
@@ -429,6 +418,12 @@ public class AccountOption implements Option {
                 Utils.printfln(getString("ACCOUNT_NOT_EXISTS"), order);
                 return;
             }
+
+            if (!Utils.isValidAccount(account)) {
+                Utils.printfln(getString("ACCOUNT_INVALID"), order);
+                return;
+            }
+
             account.put("selected", true);
             for (int i = 0; i < accounts.length(); i++) {
                 if (i != order) {
@@ -438,18 +433,33 @@ public class AccountOption implements Option {
                     }
                 }
             }
-            jsonObject.put("accounts", accounts);
-            Utils.saveConfig(jsonObject);
+            config.put("accounts", accounts);
+            Utils.saveConfig(config);
         }
     }
 
-    private static void authlibInjectorLogin(String address, boolean select, JSONObject config) {
+    public static void printAllAccounts(@NotNull JSONArray accounts) {
+        for (int i = 0; i < accounts.length(); i++) {
+            JSONObject account = accounts.optJSONObject(i);
+            if (Utils.isValidAccount(account)) {
+                Utils.printfln(
+                        "%d.%s (%s) %s",
+                        i,
+                        account.optString("playerName", "XPlayer"),
+                        getAccountType(account.optInt("loginMethod"), account.optString("serverName"), account.optString("url")),
+                        account.optBoolean("selected") ? getString("ACCOUNT_SELECTED") : ""
+                );
+            }
+        }
+    }
+
+    public static JSONObject authlibInjectorLogin(String address, boolean select, JSONObject config) {
         System.out.print(getString("INPUT_ACCOUNT"));
         String username = "";
         try {
             username = new Scanner(System.in).nextLine();
         } catch (NoSuchElementException ignore) {
-            return;
+            return null;
         }
         Console console = System.console();
         String password;
@@ -463,14 +473,15 @@ public class AccountOption implements Option {
             try {
                 password = new Scanner(System.in).nextLine();
             } catch (NoSuchElementException ignore) {
-                return;
+                return null;
             }
         }
         try {
-            AuthlibAccountLoginner.login(address, username, password, select, config);
+            return AuthlibAccountLoginner.login(address, username, password, select, config);
         } catch (Exception e) {
             //e.printStackTrace();
             Utils.printfln(getString("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT"), e);
+            return null;
         }
     }
 
@@ -572,7 +583,7 @@ public class AccountOption implements Option {
         if (loginMethod == 2) {
             return getString("ACCOUNT_TYPE_MICROSOFT");
         } else if (loginMethod == 1) {
-            return String.format(getString("ACCOUNT_TYPE_OAS"), ifOASName, ifOASURL);
+            return String.format(getString("ACCOUNT_TYPE_OAS_WITH_DETAIL"), ifOASName, ifOASURL);
         } else {
             return getString("ACCOUNT_TYPE_OFFLINE");
         }
