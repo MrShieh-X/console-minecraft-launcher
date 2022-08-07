@@ -24,13 +24,17 @@ import java.io.File;
 
 public class Constants {
     public static final File configFile = new File("cmcl.json");
-    public static final String CMCL_VERSION = "1.5";
+    public static final String CMCL_VERSION = "1.5.1";
     public static final String CLIENT_ID = getMicrosoftAuthenticationClientID();
     public static final String COPYRIGHT = "Copyright (C) 2021-2022  MrShiehX";
     public static final int INDENT_FACTOR = 2;//JsonObject转String的间隔
     public static final String SOURCE_CODE = "https://www.github.com/MrShieh-X/console-minecraft-launcher";
     public static boolean ECHO_OPEN_FOR_IMMERSIVE = true;
     public static final int DEFAULT_DOWNLOAD_THREAD_COUNT = 64;
+    public static final String[] CHECK_FOR_UPDATES_INFORMATION_URLS = {
+            "https://github.com/MrShieh-X/console-minecraft-launcher/raw/master/new_version.json",
+            "https://gitee.com/MrShiehX/console-minecraft-launcher/raw/master/new_version.json"
+    };
 
     public static String getCurseForgeApiKey() {
         String s = System.getProperty("cmcl.curseforge.apikey");

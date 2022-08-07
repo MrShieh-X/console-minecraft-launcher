@@ -35,6 +35,7 @@ public class Options {
         MAP.put("b", new StartOption());
         MAP.put("s", new SelectOption());
         MAP.put("i", new ImmersiveModeOption());
+        MAP.put("cfu", new CheckForUpdatesOption());
 
         MAP.put("select", new SelectOption());
         MAP.put("start", new StartOption());

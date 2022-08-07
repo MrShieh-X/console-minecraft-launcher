@@ -1,5 +1,8 @@
 # Update Logs
-Currently, the latest version is 1.5, which was updated on August 7, 2022.
+Currently, the latest version is 1.5.1, which was updated on August 7, 2022.
+
+## 1.5.1 (Aug. 7, 2022)
+- You can check for Updates via `-cfu`.
 
 ## 1.5 (Aug. 7, 2022)
 - Downloading a file for the first time will ask for the download source.

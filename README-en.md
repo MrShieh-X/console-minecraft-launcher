@@ -10,8 +10,9 @@ Anyone can take advices of this program to us.
 
 ## Version
 The latest version: <br/>
-<b>1.5 (Aug. 7, 2022)</b><br/>
+<b>1.5.1 (Aug. 7, 2022)</b><br/>
 Historical version: <br/>
+<b>1.5.1 (Aug. 7, 2022)</b><br/>
 <b>1.5 (Aug. 7, 2022)</b><br/>
 <b>1.4.1 (Jul. 21, 2022)</b><br/>
 <b>1.4 (Jun. 17, 2022)</b><br/>
@@ -106,6 +107,7 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;Select version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp; `-s <Version Name>` or `-select <Version Name>`<br/>
 &emsp;&emsp;Get about description:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;`-a` or `-about`<br/>
 &emsp;&emsp;To enter immersive mode:&emsp;&emsp;&emsp;&emsp;&emsp;`-i` or `-immersive`<br/>
+&emsp;&emsp;Check for Updates:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-cfu`<br/>
 <details>
   <summary><b><font size="4">Configuration Related</font></b></summary>
 

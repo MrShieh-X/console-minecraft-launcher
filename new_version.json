@@ -1,0 +1,14 @@
+{
+	"latestVersionName": "1.5.1",
+	"latestVersionDownloadUrls":[
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.1/CMCL.jar",
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.1/CMCL.exe",
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.1/console-minecraft-launcher",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.1/CMCL.jar",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.1/CMCL.exe",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.1/console-minecraft-launcher"
+	],
+	"updateDate": "2022-08-07",
+	"updateContentEn": "- You can check for Updates via \"-cfu\".",
+	"updateContentZh": "- 可以通过\"-cfu\"检查更新。"
+}

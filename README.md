@@ -10,8 +10,9 @@ MrShiehX 拥有该程序的版权。<br/>
 
 ## 版本
 最新版本：<br/>
-<b>1.5 (2022年8月7日)</b><br/>
+<b>1.5.1 (2022年8月7日)</b><br/>
 历史版本：<br/>
+<b>1.5.1 (2022年8月7日)</b><br/>
 <b>1.5 (2022年8月7日)</b><br/>
 <b>1.4.1 (2022年7月21日)</b><br/>
 <b>1.4 (2022年6月17日)</b><br/>
@@ -106,6 +107,7 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;选择版本：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-s <版本名称> 或 -select <版本名称><br/>
 &emsp;&emsp;获得关于信息：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-a 或 -about<br/>
 &emsp;&emsp;进入沉浸模式：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-i 或 -immersive<br/>
+&emsp;&emsp;检查更新：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-cfu<br/>
 <details>
   <summary><b><font size="4">配置相关</font></b></summary>
 

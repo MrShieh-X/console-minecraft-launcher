@@ -111,6 +111,9 @@ public class Languages {
             zh.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "首次下载请选择下载源(默认为%d)：");
             zh.put("MESSAGE_SELECT_ACCOUNT", "请输入要选择账号的序号(%d-%d)：");
             zh.put("MESSAGE_SELECT_ACCOUNT_TYPE", "暂无可用的账号，请选择新账号的账号类型(%d-%d)：");
+            zh.put("MESSAGE_FAILED_TO_CHECK_FOR_UPDATES", "检查更新失败");
+            zh.put("MESSAGE_NEW_VERSION", "新版本：%s\n更新日期：%s\n下载地址：\n%s更新内容：\n%s");
+            zh.put("MESSAGE_CURRENT_IS_LATEST_VERSION", "当前已是最新版本");
             zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
             zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“-install <版本名称>”安装一个新的版本并选择。");
             zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
@@ -386,6 +389,9 @@ public class Languages {
             en.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "Please select the download source for the first download (default is %d): ");
             en.put("MESSAGE_SELECT_ACCOUNT", "Please enter the order number of the account you want to select (%d-%d): ");
             en.put("MESSAGE_SELECT_ACCOUNT_TYPE", "No account is currently available, please select the account type of the new account (%d-%d): ");
+            en.put("MESSAGE_FAILED_TO_CHECK_FOR_UPDATES", "Failed to check for updates");
+            en.put("MESSAGE_NEW_VERSION", "New Version: %s\nUpdated Date: %s\nDownload urls:\n%sUpdated Content:\n%s");
+            en.put("MESSAGE_CURRENT_IS_LATEST_VERSION", "The current version is the latest version");
             en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
             en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <Version Name>\" to select a launch-able version or \"-install <Version Name>\" to install a new version and select it.");
             en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
@@ -589,7 +595,8 @@ public class Languages {
                             "    Print the launch command:              -p <Version Name> or -print <Version Name>\n" +
                             "    Select version:                        -s <Version Name> or -select <Version Name>\n" +
                             "    Get about description:                 -a or -about\n" +
-                            "    To enter immersive mode:               -i or -immersive");
+                            "    To enter immersive mode:               -i or -immersive\n" +
+                            "    Check for Updates:                     -cfu");
             enUsage.put("ACCOUNT",
                     "Account Related:\n" +
                             "    Select a account:         -account <Order Number>\n" +
@@ -717,7 +724,8 @@ public class Languages {
                             "    打印启动命令：              -p <版本名称> 或 -print <版本名称>\n" +
                             "    选择版本：                  -s <版本名称> 或 -select <版本名称>\n" +
                             "    获得关于信息：              -a 或 -about\n" +
-                            "    进入沉浸模式：              -i 或 -immersive");
+                            "    进入沉浸模式：              -i 或 -immersive\n" +
+                            "    检查更新：                  -cfu");
             zhUsage.put("ACCOUNT",
                     "账号相关：\n" +
                             "    选择账号：       -account <序号>\n" +
