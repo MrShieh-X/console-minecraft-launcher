@@ -23,18 +23,21 @@ import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.modules.modpack.ModrinthModpackInstaller;
-import com.mrshiehx.cmcl.searchSources.curseforge.CFManager;
-import com.mrshiehx.cmcl.searchSources.curseforge.CFModpackManager;
 import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.modules.modpack.CurseForgeModpackInstaller;
+import com.mrshiehx.cmcl.modules.modpack.ModrinthModpackInstaller;
 import com.mrshiehx.cmcl.modules.modpack.MultiMCModpackInstaller;
-import com.mrshiehx.cmcl.utils.*;
+import com.mrshiehx.cmcl.searchSources.curseforge.CFManager;
+import com.mrshiehx.cmcl.searchSources.curseforge.CFModpackManager;
+import com.mrshiehx.cmcl.utils.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.PercentageTextProgress;
+import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 

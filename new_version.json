@@ -1,14 +1,14 @@
 {
-	"latestVersionName": "1.5.1",
+	"latestVersionName": "1.5.2",
 	"latestVersionDownloadUrls":[
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.1/CMCL.jar",
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.1/CMCL.exe",
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.1/console-minecraft-launcher",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.1/CMCL.jar",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.1/CMCL.exe",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.1/console-minecraft-launcher"
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.2/CMCL.jar",
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.2/CMCL.exe",
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.2/console-minecraft-launcher",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.2/CMCL.jar",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.2/CMCL.exe",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.2/console-minecraft-launcher"
 	],
-	"updateDate": "2022-08-07",
-	"updateContentEn": "- You can check for Updates via \"-cfu\".",
-	"updateContentZh": "- 可以通过\"-cfu\"检查更新。"
+	"updateDate": "2022-08-16",
+	"updateContentEn": "- If the version is not selected, double-click to start it, a prompt will be displayed to guide the user to use it.\n- Enhanced Java path recognition compatibility, even if the path is set in the \"bin\" directory or the Java root directory.",
+	"updateContentZh": "- 如果没选择版本直接双击启动，则会显示提示语，指导使用（对小白友好）。\n- 增强了 Java 路径的识别兼容性，即便路径设置在“bin”目录或 Java 根目录也能识别。"
 }

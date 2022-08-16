@@ -28,7 +28,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
 
 public class SkinDownloader {
     public static void start(File file, JSONObject account) {

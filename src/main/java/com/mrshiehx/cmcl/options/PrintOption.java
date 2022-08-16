@@ -42,11 +42,12 @@ public class PrintOption implements Option {
         ValueArgument valueArgument = (ValueArgument) argument;
         String version = valueArgument.value;
 
+        JSONObject config = Utils.getConfig();
+        String javaPath = config.optString("javaPath", Utils.getDefaultJavaPath());
 
-        if (!configFile.exists() || isEmpty(configContent) || isEmpty(javaPath) || !new File(javaPath).exists()) {
+        if (isEmpty(javaPath) || !new File(javaPath).exists()) {
             System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
         } else {
-            JSONObject config = Utils.getConfig();
             File versionsFolder = new File(gameDir, "versions");
             File versionFolder = new File(versionsFolder, version);
             File versionJarFile = new File(versionFolder, version + ".jar");
@@ -73,7 +74,7 @@ public class PrintOption implements Option {
                         assetsDir,
                         respackDir,
                         account.optString("playerName", "XPlayer"),
-                        config.optString("javaPath", Utils.getDefaultJavaPath()),
+                        javaPath,
                         config.optLong("maxMemory", Utils.getDefaultMemory()),
                         128,
                         config.optInt("windowSizeWidth", 854),

@@ -22,14 +22,15 @@ import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
+import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.searchSources.curseforge.CFManager;
 import com.mrshiehx.cmcl.searchSources.curseforge.CFModManager;
-import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;

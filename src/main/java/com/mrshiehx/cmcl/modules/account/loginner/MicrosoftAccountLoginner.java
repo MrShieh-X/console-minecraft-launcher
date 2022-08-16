@@ -17,7 +17,6 @@
  */
 package com.mrshiehx.cmcl.modules.account.loginner;
 
-import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.server.MicrosoftAuthenticationServer;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;

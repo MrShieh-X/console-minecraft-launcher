@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 import static com.mrshiehx.cmcl.modules.MinecraftLauncher.launchMinecraft;
 
 public class StartOption implements Option {
@@ -95,7 +94,8 @@ public class StartOption implements Option {
     }
 
     public static void start(String version, JSONObject config) {
-        if (!configFile.exists() || isEmpty(configContent) || isEmpty(javaPath) || !new File(javaPath).exists()) {
+        String javaPath = config.optString("javaPath", Utils.getDefaultJavaPath());
+        if (isEmpty(javaPath) || !new File(javaPath).exists()) {
             System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
         } else {
             File versionsFolder = new File(gameDir, "versions");
@@ -121,7 +121,7 @@ public class StartOption implements Option {
                         assetsDir,
                         respackDir,
                         account.optString("playerName", "XPlayer"),
-                        config.optString("javaPath", Utils.getDefaultJavaPath()),
+                        javaPath,
                         config.optLong("maxMemory", Utils.getDefaultMemory()),
                         128,
                         config.optInt("windowSizeWidth", 854),

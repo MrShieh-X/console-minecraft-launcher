@@ -27,7 +27,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
 
 public abstract class ExtraInstaller {
 

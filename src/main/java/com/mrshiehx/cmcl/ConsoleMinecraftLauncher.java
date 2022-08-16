@@ -22,10 +22,13 @@ import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.constants.Languages;
 import com.mrshiehx.cmcl.interfaces.filters.StringFilter;
-import com.mrshiehx.cmcl.options.*;
+import com.mrshiehx.cmcl.options.HelpOption;
+import com.mrshiehx.cmcl.options.Option;
+import com.mrshiehx.cmcl.options.Options;
+import com.mrshiehx.cmcl.options.StartOption;
 import com.mrshiehx.cmcl.utils.DownloadUtils;
-import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
+import com.mrshiehx.cmcl.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
@@ -77,7 +80,12 @@ public class ConsoleMinecraftLauncher {
             JSONObject jsonObject = Utils.getConfig();
             version = jsonObject.optString("selectedVersion");
             if (isEmpty(version)) {
-                System.out.println(getString("CONSOLE_NO_SELECTED_VERSION"));
+                System.out.println(getString("MESSAGE_FIRST_USE", Constants.CMCL_VERSION));
+                System.out.print(getString("CONSOLE_ENTER_EXIT"));
+                try {
+                    new Scanner(System.in).nextLine();
+                } catch (Exception ignore) {
+                }
                 return;
             }
             StartOption.start(version, jsonObject);

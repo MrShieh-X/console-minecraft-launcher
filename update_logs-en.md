@@ -1,5 +1,9 @@
 # Update Logs
-Currently, the latest version is 1.5.1, which was updated on August 7, 2022.
+Currently, the latest version is 1.5.2, which was updated on August 16, 2022.
+
+## 1.5.2 (Aug. 16, 2022)
+- If the version is not selected, double-click to start it, a prompt will be displayed to guide the user to use it.
+- Enhanced Java path recognition compatibility, even if the path is set in the `bin` directory or the Java root directory.
 
 ## 1.5.1 (Aug. 7, 2022)
 - You can check for Updates via `-cfu`.

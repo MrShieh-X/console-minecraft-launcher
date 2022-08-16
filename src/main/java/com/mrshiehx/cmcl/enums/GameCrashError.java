@@ -17,7 +17,7 @@
  */
 package com.mrshiehx.cmcl.enums;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
 
 public enum GameCrashError {
     URLClassLoader(getString("MESSAGE_GAME_CRASH_CAUSE_URLCLASSLOADER")),

@@ -114,6 +114,25 @@ public class Languages {
             zh.put("MESSAGE_FAILED_TO_CHECK_FOR_UPDATES", "检查更新失败");
             zh.put("MESSAGE_NEW_VERSION", "新版本：%s\n更新日期：%s\n下载地址：\n%s更新内容：\n%s");
             zh.put("MESSAGE_CURRENT_IS_LATEST_VERSION", "当前已是最新版本");
+            zh.put("MESSAGE_FIRST_USE", "########################################################\n" +
+                    "   欢迎使用 Console Minecraft Launcher %s\n" +
+                    "\n" +
+                    "   如果您的运行方式是双击运行，且没有安装或选择版本，\n" +
+                    "   恳请您通过以下方式启动该程序：\n" +
+                    "   使用终端或命令提示符打开当前目录（即CMCL所在目录），\n" +
+                    "   运行命令“java -jar CMCL.jar”或“CMCL.exe”，\n" +
+                    "   后面可接上运行参数。\n" +
+                    "   如果您通过以上运行方式安装并选择了一个游戏版本，\n" +
+                    "   即可双击直接运行。\n" +
+                    "   \n" +
+                    "   首次使用，\n" +
+                    "   可通过参数“-u”或“-usage”获得使用手册，\n" +
+                    "   即命令“java -jar CMCL.jar -u”或“CMCL.exe -u”，\n" +
+                    "   也可以观看以下的视频教程：\n" +
+                    "     https://www.bilibili.com/video/BV1ua41187od\n" +
+                    "     https://www.bilibili.com/video/BV1AY411A7XU\n" +
+                    "     https://www.youtube.com/watch?v=SczdBQT9vOY（英语）\n" +
+                    "########################################################");
             zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
             zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“-install <版本名称>”安装一个新的版本并选择。");
             zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
@@ -137,7 +156,7 @@ public class Languages {
             zh.put("CONSOLE_INCORRECT_JAVA", "请通过 “-config javaPath <Java路径>” 修改一个正确的 Java 路径");
             zh.put("CONSOLE_FAILED_START", "启动游戏失败");
             zh.put("CONSOLE_START_COMMAND", "启动命令：");
-            zh.put("CONSOLE_NO_SELECTED_VERSION", "请使用“-s <版本名称>”以选择一个版本");
+            zh.put("CONSOLE_NO_SELECTED_VERSION", "请使用“-s <版本名称>”以选择一个版本以启动，或通过“-b <版本名称>”或“-start <版本名称>”带上版本名称以启动。");
             zh.put("CONSOLE_EMPTY_LIST", "列表为空");
             zh.put("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD", "您缺少了以上启动游戏的必要依赖库。是否下载它们？");
             zh.put("CONSOLE_FAILED_LIST_VERSIONS", "获得版本列表失败：%s");
@@ -149,6 +168,7 @@ public class Languages {
             zh.put("CONSOLE_INPUT_INT_WRONG", "请输入一个正确的、在范围内的数字。");
             zh.put("CONSOLE_INPUT_STRING_NOT_FOUND", "找不到“%s”。");
             zh.put("CONSOLE_IMMERSIVE_UNKNOWN", "找不到命令：%s。请使用 usage 或 help 获取使用手册。");
+            zh.put("CONSOLE_ENTER_EXIT", "按回车键以退出...");
             zh.put("DATATYPE_STRING", "字符串");
             zh.put("DATATYPE_INTEGER", "整数");
             zh.put("DATATYPE_BOOLEAN", "布尔值");
@@ -392,6 +412,28 @@ public class Languages {
             en.put("MESSAGE_FAILED_TO_CHECK_FOR_UPDATES", "Failed to check for updates");
             en.put("MESSAGE_NEW_VERSION", "New Version: %s\nUpdated Date: %s\nDownload urls:\n%sUpdated Content:\n%s");
             en.put("MESSAGE_CURRENT_IS_LATEST_VERSION", "The current version is the latest version");
+            en.put("MESSAGE_FIRST_USE", "#########################################################################\n" +
+                    "   Welcome to Console Minecraft Launcher %s\n" +
+                    "\n" +
+                    "   If your running mode is to double-click to run,\n" +
+                    "   and there is no version installed or selected,\n" +
+                    "   please start the program in the following ways:\n" +
+                    "   use a terminal or command prompt to open\n" +
+                    "   the current directory (that is, the directory where CMCL is located),\n" +
+                    "   run the command \"java -jar CMCL.jar\" or \"CMCL.exe\",\n" +
+                    "   followed by running parameters.\n" +
+                    "   If you installed and selected a game version\n" +
+                    "   through the above operation method,\n" +
+                    "   you can double-click to run it directly.\n" +
+                    "   \n" +
+                    "   For the first use,\n" +
+                    "   the user manual can be obtained through the parameter \"-u\" or \"-usage\",\n" +
+                    "   that is, the command \"java -jar CMCL.jar -u\" or \"CMCL.exe -u\",\n" +
+                    "   or you can watch the following video tutorials:\n" +
+                    "     https://www.youtube.com/watch?v=SczdBQT9vOY\n" +
+                    "     https://www.bilibili.com/video/BV1ua41187od (Chinese)\n" +
+                    "     https://www.bilibili.com/video/BV1AY411A7XU (Chinese)\n" +
+                    "#########################################################################");
             en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
             en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <Version Name>\" to select a launch-able version or \"-install <Version Name>\" to install a new version and select it.");
             en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
@@ -415,7 +457,7 @@ public class Languages {
             en.put("CONSOLE_INCORRECT_JAVA", "Please modify a correct Java path by \"-config javaPath <Java Path>\"");
             en.put("CONSOLE_FAILED_START", "Unable to start game");
             en.put("CONSOLE_START_COMMAND", "Launch Command: ");
-            en.put("CONSOLE_NO_SELECTED_VERSION", "Please select a version by \"-s <Version Name>\"");
+            en.put("CONSOLE_NO_SELECTED_VERSION", "Please use \"-s <Version Name>\" to select a version to start, or start via \"-b <Version Name>\" or \"-start <Version Name>\" with the version name.");
             en.put("CONSOLE_EMPTY_LIST", "The list is empty");
             en.put("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD", "You are missing the above necessary dependent libraries to start the game. Do you want to download them?");
             en.put("CONSOLE_FAILED_LIST_VERSIONS", "Failed to get the versions list: %s");
@@ -427,6 +469,7 @@ public class Languages {
             en.put("CONSOLE_INPUT_INT_WRONG", "Please enter a correct number within range. ");
             en.put("CONSOLE_INPUT_STRING_NOT_FOUND", "Not found \"%s\". ");
             en.put("CONSOLE_IMMERSIVE_UNKNOWN", "Command not found: %s. Please use command \"usage\" or \"help\" to get the manual.");
+            en.put("CONSOLE_ENTER_EXIT", "Press enter to exit...");
             en.put("DATATYPE_STRING", "String");
             en.put("DATATYPE_INTEGER", "Integer");
             en.put("DATATYPE_BOOLEAN", "Boolean");

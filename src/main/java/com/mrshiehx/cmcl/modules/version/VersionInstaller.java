@@ -23,7 +23,10 @@ import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.utils.*;
+import com.mrshiehx.cmcl.utils.OperatingSystem;
+import com.mrshiehx.cmcl.utils.PercentageTextProgress;
+import com.mrshiehx.cmcl.utils.ThreadsDownloader;
+import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -35,13 +38,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
-import java.util.List;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.downloadFile;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.gameDir;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.versionsDir;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 
 public class VersionInstaller {
     /*public static void start(String versionName2,

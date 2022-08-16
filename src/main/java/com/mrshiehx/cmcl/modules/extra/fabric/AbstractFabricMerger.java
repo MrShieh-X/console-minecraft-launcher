@@ -30,7 +30,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
 
 /**
  * Fabric 与原版的合并器

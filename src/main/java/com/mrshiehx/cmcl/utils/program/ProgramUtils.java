@@ -29,6 +29,12 @@ import java.util.Map;
 import static com.mrshiehx.cmcl.utils.Utils.isEmpty;
 
 public class ProgramUtils {
+    public static void main2(String[] args) {
+        printStringsThatChineseNotHave();
+        System.out.println();
+        printStringsThatEnglishNotHave();
+    }
+
     public static void printStringsThatEnglishNotHave() {
         List<String> fin = new LinkedList<>();
 

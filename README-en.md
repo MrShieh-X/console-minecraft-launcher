@@ -8,18 +8,7 @@ A Launcher for Minecraft Java Edition Running On The Console
 MrShiehX owns the copyright of this program.<br/>
 Anyone can take advices of this program to us.
 
-## Version
-The latest version: <br/>
-<b>1.5.1 (Aug. 7, 2022)</b><br/>
-Historical version: <br/>
-<b>1.5.1 (Aug. 7, 2022)</b><br/>
-<b>1.5 (Aug. 7, 2022)</b><br/>
-<b>1.4.1 (Jul. 21, 2022)</b><br/>
-<b>1.4 (Jun. 17, 2022)</b><br/>
-<b>1.3 (Jun. 12, 2022)</b><br/>
-<b>1.2 (Apr. 30, 2022)</b><br/>
-<b>1.1 (Mar. 27, 2022)</b><br/>
-<b>1.0 (Mar. 12, 2022) (First version)</b><br/>
+## The latest version: 1.5.2 (Released on Aug. 16, 2022)
 
 ## Program Screenshot
 ![Program Screenshot](screenshot.gif "Program Screenshot")<br/>

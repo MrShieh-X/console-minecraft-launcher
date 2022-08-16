@@ -42,8 +42,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
-import static com.mrshiehx.cmcl.utils.Utils.splitCommand;
 import static com.mrshiehx.cmcl.utils.Utils.clearRedundantSpaces;
+import static com.mrshiehx.cmcl.utils.Utils.splitCommand;
 
 public class MinecraftLauncher {
     /**
@@ -105,8 +105,18 @@ public class MinecraftLauncher {
             LaunchException,
             IOException,
             JSONException {
-        if (!new File(javaPath).exists()) {
+        File javaPathFile = new File(javaPath);
+        if (!javaPathFile.exists()) {
             throw new LaunchException(getString("EXCEPTION_JAVA_NOT_FOUND"));
+        } else {
+            if (javaPathFile.isDirectory()) {
+                javaPathFile = new File(javaPathFile, javaPathFile.getName().equalsIgnoreCase("bin") ? (Utils.isWindows() ? "java.exe" : "java") : (Utils.isWindows() ? "bin\\java.exe" : "bin/java"));
+                if (!javaPathFile.exists()) {
+                    throw new LaunchException(getString("CONSOLE_INCORRECT_JAVA"));
+                } else {
+                    javaPath = javaPathFile.getPath();
+                }
+            }
         }
         if (null == gameDir) {
             gameDir = new File(".minecraft");

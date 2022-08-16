@@ -20,8 +20,8 @@ package com.mrshiehx.cmcl.modules.version;
 import com.mrshiehx.cmcl.bean.Library;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
+import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
