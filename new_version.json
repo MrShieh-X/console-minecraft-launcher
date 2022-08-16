@@ -10,5 +10,5 @@
 	],
 	"updateDate": "2022-08-16",
 	"updateContentEn": "- If the version is not selected, double-click to start it, a prompt will be displayed to guide the user to use it.\n- Enhanced Java path recognition compatibility, even if the path is set in the \"bin\" directory or the Java root directory.",
-	"updateContentZh": "- 如果没选择版本直接双击启动，则会显示提示语，指导使用（对小白友好）。\n- 增强了 Java 路径的识别兼容性，即便路径设置在“bin”目录或 Java 根目录也能识别。"
+	"updateContentZh": "- \u5982\u679c\u6ca1\u9009\u62e9\u7248\u672c\u76f4\u63a5\u53cc\u51fb\u542f\u52a8\uff0c\u5219\u4f1a\u663e\u793a\u63d0\u793a\u8bed\uff0c\u6307\u5bfc\u4f7f\u7528\uff08\u5bf9\u5c0f\u767d\u53cb\u597d\uff09\u3002\n- \u589e\u5f3a\u4e86 Java \u8def\u5f84\u7684\u8bc6\u522b\u517c\u5bb9\u6027\uff0c\u5373\u4fbf\u8def\u5f84\u8bbe\u7f6e\u5728\u201cbin\u201d\u76ee\u5f55\u6216 Java \u6839\u76ee\u5f55\u4e5f\u80fd\u8bc6\u522b\u3002"
 }
