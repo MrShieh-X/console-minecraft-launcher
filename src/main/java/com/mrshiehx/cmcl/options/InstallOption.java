@@ -29,6 +29,7 @@ import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderMerger;
 import com.mrshiehx.cmcl.modules.extra.optifine.OptiFineMerger;
 import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
+import com.mrshiehx.cmcl.searchSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,8 +39,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.versionsDir;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 import static com.mrshiehx.cmcl.utils.Utils.addDoubleQuotationMark;
 
 public class InstallOption implements Option {
@@ -115,59 +115,62 @@ public class InstallOption implements Option {
                 }
 
 
-                try {
-                    VersionInstaller.start(version,
-                            storage,
-                            versions,
-                            !arguments.contains("na"),
-                            !arguments.contains("nn"),
-                            !arguments.contains("nl"),
-                            installForgeOrFabric,
-                            threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT,
-                            (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                                Pair<Boolean, List<JSONObject>> a = new FabricMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("f"));
-                                if (askContinue && a != null && !a.getKey()) {
-                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                VersionInstaller.start(version,
+                        storage,
+                        versions,
+                        !arguments.contains("na"),
+                        !arguments.contains("nn"),
+                        !arguments.contains("nl"),
+                        installForgeOrFabric,
+                        threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT,
+                        (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                            Pair<Boolean, List<JSONObject>> a = new FabricMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("f"));
+                            if (askContinue && a != null && !a.getKey()) {
+                                Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                            }
+                            return a;
+                        },
+                        (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                            Pair<Boolean, List<JSONObject>> a = new ForgeMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("o"));
+                            if (askContinue && a != null && !a.getKey()) {
+                                Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                            }
+                            return a;
+                        },
+                        (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                            Pair<Boolean, List<JSONObject>> a = new QuiltMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("q"));
+                            if (askContinue && a != null && !a.getKey()) {
+                                Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                            }
+                            return a;
+                        }, installLiteLoader ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                            Pair<Boolean, List<JSONObject>> a = new LiteloaderMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("e"));
+                            if (askContinue && a != null && !a.getKey()) {
+                                Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                            }
+                            return a;
+                        } : null,
+                        installOptiFine ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
+                            Pair<Boolean, List<JSONObject>> a = new OptiFineMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("p"));
+                            if (askContinue && a != null && !a.getKey()) {
+                                Utils.deleteDirectory(minecraftJarFile.getParentFile());
+                            }
+                            return a;
+                        } : null,
+                        () -> {
+                            System.out.println(getString("MESSAGE_INSTALLED_NEW_VERSION"));
+                            if (installFabric && arguments.contains("fapi")) {
+                                String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", version.replace(" Pre-Release ", "-pre"));
+                                if (!isEmpty(url)) {
+                                    ModrinthModOption.downloadMod(url);
                                 }
-                                return a;
-                            },
-                            (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                                Pair<Boolean, List<JSONObject>> a = new ForgeMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("o"));
-                                if (askContinue && a != null && !a.getKey()) {
-                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                                }
-                                return a;
-                            },
-                            (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                                Pair<Boolean, List<JSONObject>> a = new QuiltMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("q"));
-                                if (askContinue && a != null && !a.getKey()) {
-                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                                }
-                                return a;
-                            }, installLiteLoader ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                                Pair<Boolean, List<JSONObject>> a = new LiteloaderMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("e"));
-                                if (askContinue && a != null && !a.getKey()) {
-                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                                }
-                                return a;
-                            } : null,
-                            installOptiFine ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                                Pair<Boolean, List<JSONObject>> a = new OptiFineMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue, arguments.opt("p"));
-                                if (askContinue && a != null && !a.getKey()) {
-                                    Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                                }
-                                return a;
-                            } : null,
-                            () -> System.out.println(getString("MESSAGE_INSTALLED_NEW_VERSION")), null, null);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-                //VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, installLiteLoader, installOptiFine, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
-            } catch (Exception exception) {
-                //exception.printStackTrace();
-                Utils.printfln(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION"), exception);
-                return;
+                            }
+                        }, null, null);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
+            //VersionInstaller.start(version, storage, versions, !arguments.contains("na"), !arguments.contains("nn"), !arguments.contains("nl"), installForgeOrFabric, installLiteLoader, installOptiFine, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+
             return;
         }
         Argument subOption = arguments.opt(1);

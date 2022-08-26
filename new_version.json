@@ -1,14 +1,14 @@
 {
-	"latestVersionName": "1.5.2",
+	"latestVersionName": "1.6",
 	"latestVersionDownloadUrls":[
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.2/CMCL.jar",
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.2/CMCL.exe",
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.5.2/console-minecraft-launcher",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.2/CMCL.jar",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.2/CMCL.exe",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.5.2/console-minecraft-launcher"
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.6/CMCL.jar",
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.6/CMCL.exe",
+		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.6/console-minecraft-launcher",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.6/CMCL.jar",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.6/CMCL.exe",
+		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.6/console-minecraft-launcher"
 	],
-	"updateDate": "2022-08-16",
-	"updateContentEn": "- If the version is not selected, double-click to start it, a prompt will be displayed to guide the user to use it.\n- Enhanced Java path recognition compatibility, even if the path is set in the \"bin\" directory or the Java root directory.",
-	"updateContentZh": "- \u5982\u679c\u6ca1\u9009\u62e9\u7248\u672c\u76f4\u63a5\u53cc\u51fb\u542f\u52a8\uff0c\u5219\u4f1a\u663e\u793a\u63d0\u793a\u8bed\uff0c\u6307\u5bfc\u4f7f\u7528\uff08\u5bf9\u5c0f\u767d\u53cb\u597d\uff09\u3002\n- \u589e\u5f3a\u4e86 Java \u8def\u5f84\u7684\u8bc6\u522b\u517c\u5bb9\u6027\uff0c\u5373\u4fbf\u8def\u5f84\u8bbe\u7f6e\u5728\u201cbin\u201d\u76ee\u5f55\u6216 Java \u6839\u76ee\u5f55\u4e5f\u80fd\u8bc6\u522b\u3002"
+	"updateDate": "2022-08-26",
+	"updateContentEn": "- Fabric API can be installed after installing the version or when installing the version, you need to add `-fapi` after the installation command. Example `-version -f 1.19 -fapi` or `-install 1.19 -f -fapi` (by BlockyDeer on Issue#17).\n- Speed up the startup of this program.\n- Resolved an issue where some mods or modpacks could not be installed from Modrinth.",
+	"updateContentZh": "- \u53ef\u5728\u5b89\u88c5\u7248\u672c\u540e\u6216\u5b89\u88c5\u7248\u672c\u65f6\u5b89\u88c5 Fabric API\uff0c\u9700\u5728\u5b89\u88c5\u547d\u4ee4\u540e\u52a0\u4e0a`-fapi`\u3002\u4f8b`-version -f 1.19 -fapi`\u6216`-install 1.19 -f -fapi`\uff08\u7531 BlockyDeer \u4e8e Issue#17 \u63d0\u51fa\uff09\u3002\n- \u52a0\u5feb\u4e86\u672c\u7a0b\u5e8f\u542f\u52a8\u901f\u5ea6\u3002\n- \u89e3\u51b3\u4e86\u65e0\u6cd5\u4ece Modrinth \u5b89\u88c5\u67d0\u4e9b\u6a21\u7ec4\u6216\u6574\u5408\u5305\u7684\u95ee\u9898\u3002"
 }

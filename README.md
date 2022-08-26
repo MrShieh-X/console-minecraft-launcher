@@ -8,7 +8,7 @@
 MrShiehX 拥有该程序的版权。<br/>
 任何人都可以对此程序提出意见和建议。
 
-## 最新版本：1.5.2 (发布于2022年8月16日)
+## 最新版本：1.6 (发布于2022年8月26日)
 
 ## 程序截图
 ![程序截图](screenshot.gif "程序截图")<br/>
@@ -137,7 +137,7 @@ MrShiehX 拥有该程序的版权。<br/>
 &emsp;&emsp;重新下载原生依赖库文件：&emsp;&emsp;-version -n <版本名称><br/>
 &emsp;&emsp;查找缺少的依赖库文件并下载：-version -l <版本名称><br/>
 &emsp;&emsp;把版本补充完整：&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;-version -b <版本名称><br/>
-&emsp;&emsp;安装 Fabric 到本地版本：&emsp;&emsp;&emsp;-version -f <版本名称><br/>
+&emsp;&emsp;安装 Fabric 到本地版本：&emsp;&emsp;&emsp;-version -f <版本名称> -fapi(可选，安装 Fabric Api)<br/>
 &emsp;&emsp;安装 Forge 到本地版本：&emsp;&emsp;&emsp; -version -o <版本名称><br/>
 &emsp;&emsp;安装 LiteLoader 到本地版本：&emsp; -version -e <版本名称><br/>
 &emsp;&emsp;安装 OptiFine 到本地版本：&emsp;&emsp; -version -p <版本名称><br/>
@@ -167,7 +167,7 @@ MrShiehX 拥有该程序的版权。<br/>
   <summary><b><font size="4">安装版本相关</font></b></summary>
 
 &emsp;&emsp;直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)><br/>
-&emsp;&emsp;  可选的参数：-f 安装 Fabric<br/>
+&emsp;&emsp;  可选的参数：-f 安装 Fabric -fapi(可选，安装 Fabric Api)<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -o 安装 Forge <br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -e 安装 LiteLoader <br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; -p 安装 OptiFine <br/>

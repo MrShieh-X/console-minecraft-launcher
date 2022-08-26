@@ -34,12 +34,12 @@ public class AboutOption implements Option {
                 "                       | |____  | |  | | | |____  | |____\n" +
                 "                        \\_____| |_|  |_|  \\_____| |______|\n" +
                 "                                    \n");
-        System.out.println("=====================================================================================");
+        System.out.println("=======================================================================================");
         System.out.println(
                 " - " + String.format(getString("MESSAGE_ABOUT_DESCRIPTION_1"), ConsoleMinecraftLauncher.CMCL_VERSION) + ": " + getString("MESSAGE_ABOUT_DESCRIPTION_2") + "\n" +
                         " - " + Constants.COPYRIGHT + "\n" +
                         " - " + getString("MESSAGE_ABOUT_DESCRIPTION_4") + Constants.SOURCE_CODE + "\n" +
-                        "=====================================================================================\n" +
+                        "=======================================================================================\n" +
                         " - " + getString("MESSAGE_ABOUT_DESCRIPTION_MAIN_DEVELOPERS") + "\n" +
                         " --- MrShiehX\n" +
                         " ----- Github: https://github.com/MrShieh-X\n" +
@@ -47,12 +47,12 @@ public class AboutOption implements Option {
                         " --- Graetpro-X\n" +
                         " ----- Github: https://github.com/Graetpro\n" +
                         " ----- Bilibili: https://space.bilibili.com/122352984\n" +
-                        "=====================================================================================\n" +
+                        "=======================================================================================\n" +
                         " - " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS") + "\n" +
                         " --- yushijinhun...............: " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR") + "\n" +
                         " --- bangbang93................: " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI") + "\n" +
                         " --- " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME") + ": " + getString("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS") + "\n" +
-                        "=====================================================================================\n" +
+                        "=======================================================================================\n" +
                         " - " + getString("MESSAGE_ABOUT_DESCRIPTION_6") + "\n" +
                         " --- json\n" +
                         " ----- Copyright (c) 2002 JSON.org\n" +
@@ -65,7 +65,7 @@ public class AboutOption implements Option {
                         " --- Constant Pool Scanner\n" +
                         " ----- Copyright 1997-2010 Oracle and/or its affiliates.\n" +
                         " ----- Licensed under the GPL 2 or the CDDL.\n" +
-                        "=====================================================================================");
+                        "=======================================================================================");
     }
 
     @Override

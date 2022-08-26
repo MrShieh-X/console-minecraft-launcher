@@ -24,7 +24,7 @@ import java.io.File;
 
 public class Constants {
     public static final File configFile = new File("cmcl.json");
-    public static final String CMCL_VERSION = "1.5.2";
+    public static final String CMCL_VERSION = "1.6";
     public static final String CLIENT_ID = getMicrosoftAuthenticationClientID();
     public static final String COPYRIGHT = "Copyright (C) 2021-2022  MrShiehX";
     public static final int INDENT_FACTOR = 2;//JsonObject转String的间隔

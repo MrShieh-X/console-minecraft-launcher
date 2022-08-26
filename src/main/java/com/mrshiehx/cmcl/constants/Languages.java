@@ -26,9 +26,9 @@ public class Languages {
     public static final Map<String, String> zhUsage = new HashMap<>();
     public static final Map<String, String> enUsage = new HashMap<>();
 
-    static {
-        /*zhCN*/
-        {
+    /*zhCN*/
+    public static Map<String, String> getZh() {
+        if (zh.size() == 0) {
             zh.put("APPLICATION_NAME", "Console Minecraft Launcher");
             zh.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher %1$s");
             zh.put("MESSAGE_ABOUT_DESCRIPTION_2", "一个 Minecraft Java 版的启动器");
@@ -224,8 +224,8 @@ public class Languages {
             zh.put("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", "无法安装 %s：获得可安装的版本失败。");
             zh.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", "无法安装 %1$s：没有可安装的 %1$s 版本，可能是因为 %1$s 不支持此游戏版本。");
             zh.put("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", "无法安装 %1$s：获得目标 %1$s JSON 失败。");
-            zh.put("INSTALL_MODLOADER_SELECT", "请输入您要安装的 %s 版本(无需空格)：");
-            zh.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "版本“%1$s”找不到，请输入您要安装的 %2$s 版本(无需空格)：");
+            zh.put("INSTALL_MODLOADER_SELECT", "请输入您要安装的 %s 版本：");
+            zh.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "版本“%1$s”找不到，请输入您要安装的 %2$s 版本：");
             zh.put("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", "请问是否继续安装原版（无 %s）？");
             zh.put("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", "无法安装 %1$s：解析目标 %1$s JSON 失败。");
             zh.put("INSTALL_MODLOADER_ALREADY_INSTALL", "无法安装 %1$s：目标版本已安装 %1$s。");
@@ -325,8 +325,12 @@ public class Languages {
             zh.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
             zh.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS 我的世界中文论坛（中国大陆用户推荐）");
         }
-        /*enUS*/
-        {
+        return zh;
+    }
+
+    /*enUS*/
+    public static Map<String, String> getEn() {
+        if (en.size() == 0) {
             en.put("APPLICATION_NAME", "Console Minecraft Launcher");
             en.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher %1$s");
             en.put("MESSAGE_ABOUT_DESCRIPTION_2", "A Launcher for Minecraft Java Edition");
@@ -525,8 +529,8 @@ public class Languages {
             en.put("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", "Unable to install %s: Failed to get installable versions.");
             en.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", "Unable to install %1$s: There is no installable version of %1$s, probably because %1$s does not support this version of the game.");
             en.put("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", "Unable to install %1$s: Failed to get target %1$s JSON.");
-            en.put("INSTALL_MODLOADER_SELECT", "Please enter the version of %1$s you want to install (no spaces required): ");
-            en.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "Version \"%1$s\" not found, please enter the version of %2$s you want to install (no spaces required): ");
+            en.put("INSTALL_MODLOADER_SELECT", "Please enter the version of %1$s you want to install: ");
+            en.put("INSTALL_MODLOADER_SELECT_NOT_FOUND", "Version \"%1$s\" not found, please enter the version of %2$s you want to install: ");
             en.put("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", "Would you like to continue installing the original version (without %s)?");
             en.put("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", "Unable to install %1$s: Failed to parse target %1$s JSON.");
             en.put("INSTALL_MODLOADER_ALREADY_INSTALL", "Unable to install %1$s: The target version is installed %1$s.");
@@ -626,8 +630,12 @@ public class Languages {
             en.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
             en.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS");
         }
-        /*enUSUsage*/
-        {
+        return en;
+    }
+
+    /*enUSUsage*/
+    public static Map<String, String> getEnUsage() {
+        if (enUsage.size() == 0) {
             enUsage.put("TITLE",
                     "Usage Manual:\n" +
                             "    Print usage manual:                    -u or -usage\n" +
@@ -675,7 +683,7 @@ public class Languages {
                             "    Re-download the native dependency library files:    -version -n <Version Name>\n" +
                             "    Find missing dependency library files and download: -version -l <Version Name>\n" +
                             "    Complete version:                                   -version -b <Version Name>\n" +
-                            "    Install Fabric to local version:                    -version -f <Version Name>\n" +
+                            "    Install Fabric to local version:                    -version -f <Version Name> -fapi(optional, with Fabric Api)\n" +
                             "    Install Forge to local version:                     -version -o <Version Name>\n" +
                             "    Install LiteLoader to local version:                -version -e <Version Name>\n" +
                             "    Install OptiFine to local version:                  -version -p <Version Name>\n" +
@@ -704,7 +712,7 @@ public class Languages {
                             "    Direct install version: -install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>\n" +
 
                             "    Optional parameters:\n" +
-                            "                -f Install Fabric\n" +
+                            "                -f Install Fabric -fapi(optional, with Fabric Api)\n" +
                             "                -o Install Forge\n" +
                             "                -e Install LiteLoader\n" +
                             "                -p Install OptiFine\n" +
@@ -754,9 +762,14 @@ public class Languages {
                             "    Search for modpacks and install (by ID):               -modpack2 -i -c <Modpack ID> -k(Optional, keep the file after installation)\n" +
                             "    Search for modpacks and display information (by name): -modpack2 -s <Modpack Name> -l <Optional, limit the number of results, default is 50>\n" +
                             "    Search for modpacks and display information (by ID):   -modpack2 -s -c <Modpack ID>");
+
         }
-        /*zhCNUsage*/
-        {
+        return enUsage;
+    }
+
+    /*zhCNUsage*/
+    public static Map<String, String> getZhUsage() {
+        if (zhUsage.size() == 0) {
             zhUsage.put("TITLE",
                     "使用手册：\n" +
                             "    获得使用手册：              -u 或 -usage\n" +
@@ -804,7 +817,7 @@ public class Languages {
                             "    重新下载原生依赖库文件：    -version -n <版本名称>\n" +
                             "    查找缺少的依赖库文件并下载：-version -l <版本名称>\n" +
                             "    把版本补充完整：            -version -b <版本名称>\n" +
-                            "    安装 Fabric 到本地版本：    -version -f <版本名称>\n" +
+                            "    安装 Fabric 到本地版本：    -version -f <版本名称> -fapi(可选，安装 Fabric Api)\n" +
                             "    安装 Forge 到本地版本：     -version -o <版本名称>\n" +
                             "    安装 LiteLoader 到本地版本：-version -e <版本名称>\n" +
                             "    安装 OptiFine 到本地版本：  -version -p <版本名称>\n" +
@@ -831,7 +844,7 @@ public class Languages {
             zhUsage.put("INSTALL",
                     "安装版本相关：\n" +
                             "    直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)>\n" +
-                            "      可选的参数：-f 安装 Fabric\n" +
+                            "      可选的参数：-f 安装 Fabric -fapi(可选，安装 Fabric Api)\n" +
                             "                  -o 安装 Forge\n" +
                             "                  -e 安装 LiteLoader\n" +
                             "                  -p 安装 OptiFine\n" +
@@ -882,5 +895,6 @@ public class Languages {
                             "    搜索整合包并显示信息（通过名称）：-modpack2 -s <整合包名称> -l <可选，限制结果数量，默认为50>\n" +
                             "    搜索整合包并显示信息（通过ID）：  -modpack2 -s -c <整合包ID>");
         }
+        return zhUsage;
     }
 }

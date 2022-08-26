@@ -130,7 +130,7 @@ public class ModpackOption implements Option {
                 int modId = modpack.optInt("id");
 
 
-                String modpackDownloadLink = modManager.getDownloadLink(modId, modpackName);
+                String modpackDownloadLink = modManager.getDownloadLink(modId, modpackName, null);
                 if (isEmpty(modpackDownloadLink)) return;
                 downloadModpack(modpackDownloadLink, arguments);
             }

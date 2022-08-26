@@ -94,7 +94,7 @@ public class ModrinthModOption implements Option {
         switch (lowerCase) {
             case "i":
 
-                String modDownloadLink = modManager.getDownloadLink(modID, modName);
+                String modDownloadLink = modManager.getDownloadLink(modID, modName, null);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
                 break;
@@ -129,7 +129,7 @@ public class ModrinthModOption implements Option {
     }
 
 
-    private static void downloadMod(String modDownloadLink) {
+    public static void downloadMod(String modDownloadLink) {
         File mods = new File(ConsoleMinecraftLauncher.gameDir, "mods");
         mods.mkdirs();
         String fileName = modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1);

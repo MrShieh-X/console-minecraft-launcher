@@ -121,7 +121,7 @@ public class ConsoleMinecraftLauncher {
 
     public static String getUsage(String usageName) {
         if (isEmpty(usageName)) return null;
-        String t = ("zh".equalsIgnoreCase(getLanguage()) ? Languages.zhUsage : Languages.enUsage).get(usageName);
+        String t = ("zh".equalsIgnoreCase(getLanguage()) ? Languages.getZhUsage() : Languages.getEnUsage()).get(usageName);
         return isEmpty(t) ? "" : t;
     }
 
@@ -264,10 +264,10 @@ public class ConsoleMinecraftLauncher {
 
     public static String getString(String name) {
         if ("zh".equalsIgnoreCase(getLanguage())) {
-            String text = Languages.zh.get(name);
+            String text = Languages.getZh().get(name);
             if (!Utils.isEmpty(text)) return text;
         }
-        String text = Languages.en.get(name);
+        String text = Languages.getEn().get(name);
         if (!Utils.isEmpty(text)) return text;
         else return name;
     }

@@ -99,7 +99,7 @@ public class ModOption implements Option {
                 int modId = mod.optInt("id");
 
 
-                String modDownloadLink = modManager.getDownloadLink(modId, modName);
+                String modDownloadLink = modManager.getDownloadLink(modId, modName, null);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
 

@@ -38,29 +38,30 @@ public abstract class ExtraInstaller {
 
     protected abstract boolean checkInstalled(JSONObject gameJSON);
 
-    public void install(File jsonFile, File jarFile, @Nullable String extraVersion) {
+    public boolean install(File jsonFile, File jarFile, @Nullable String extraVersion) {
         String fileContent;
         try {
             fileContent = Utils.readFileContent(jsonFile);
         } catch (Exception e) {
             System.out.println(Utils.getString("EXCEPTION_READ_FILE_WITH_PATH", jsonFile.getAbsoluteFile()));
-            return;
+            return false;
         }
         JSONObject gameJSON;
         try {
             gameJSON = new com.mrshiehx.cmcl.utils.json.XJSONObject(fileContent);
         } catch (Exception e) {
             System.out.println(Utils.getString("EXCEPTION_PARSE_FILE_WITH_PATH", jsonFile.getAbsoluteFile()));
-            return;
+            return false;
         }
 
-        if (!checkInstalled(gameJSON)) return;
+        if (!checkInstalled(gameJSON))
+            return false;
 
 
         String mcVersion = Utils.getGameVersion(gameJSON, jarFile).id;
         if (isEmpty(mcVersion)) {
             System.out.println(getString("INSTALL_MODLOADER_EMPTY_MC_VERSION", getExtraName()));
-            return;
+            return false;
         }
 
         Pair<Boolean, List<JSONObject>> pair = getExtraMerger().merge(mcVersion, gameJSON, jarFile, false, extraVersion);
@@ -74,9 +75,11 @@ public abstract class ExtraInstaller {
             try {
                 Utils.writeFile(jsonFile, gameJSON.toString(2), false);
                 System.out.println(getString("INSTALLED_MODLOADER", getExtraName()));
+                return true;
             } catch (Exception e) {
                 System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", getExtraName(), getString("EXCEPTION_WRITE_FILE_WITH_PATH", jsonFile.getAbsolutePath())));
+                return false;
             }
-        }
+        } else return false;
     }
 }

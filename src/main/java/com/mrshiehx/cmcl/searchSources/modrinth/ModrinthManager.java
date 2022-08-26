@@ -276,7 +276,7 @@ public abstract class ModrinthManager {
         return mod;
     }
 
-    public String getDownloadLink(String modID, String modName) {
+    public String getDownloadLink(String modID, String modName, @Nullable String mcversion) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             modAllVersionsJsonArrayFather = new JSONArray(Utils.get(ROOT + "project/" + modID + "/version"));
@@ -326,67 +326,39 @@ public abstract class ModrinthManager {
         }
 
 
-        //Mod 支持的所有 MC 版本
-        ArrayList<String> modSupportedMcVer = new ArrayList<>(modClassificationMap.keySet());
+        String modSupportMinecraftVersion;
 
-        //排序算法
-        modSupportedMcVer.sort((o1, o2) -> {
-            String[] o1s = o1.split("\\.");
-            String[] o2s = o2.split("\\.");
 
-            if (o1s.length == 0 || o2s.length == 0) return 0;
+        if (!isEmpty(mcversion) && modClassificationMap.get(mcversion) != null) {
+            modSupportMinecraftVersion = mcversion;
+        } else {
+            //Mod 支持的所有 MC 版本
+            ArrayList<String> modSupportedMcVer = new ArrayList<>(modClassificationMap.keySet());
 
-            int[] o1i = new int[o1s.length];
-            int[] o2i = new int[o2s.length];
-            try {
-                for (int i = 0; i < o1s.length; i++) {
-                    String o1String = o1s[i];
-                    o1i[i] = Integer.parseInt(o1String);
-                }
-                for (int i = 0; i < o2s.length; i++) {
-                    String o2String = o2s[i];
-                    o2i[i] = Integer.parseInt(o2String);
-                }
-            } catch (Exception e) {
-                return 0;
-            }
+            //排序算法
+            modSupportedMcVer.sort(Utils.VERSION_COMPARATOR);
 
-            if (o1i[1] > o2i[1]) {
-                return -1;
-            } else if (o1i[1] < o2i[1]) {
-                return 1;
-            } else {
-                if (o1i.length >= 3 && o2i.length >= 3) {
-                    return Integer.compare(o2i[2], o1i[2]);
-                } else if (o1i.length >= 3) {
-                    return Integer.compare(0, o1i[2]);
-                } else if (o2i.length >= 3) {
-                    return Integer.compare(o2i[2], 0);
-                } else {
-                    return 0;
+
+            System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
+
+            System.out.print('[');
+            for (int i = 0; i < modSupportedMcVer.size(); i++) {
+                String version = modSupportedMcVer.get(i);
+                boolean containSpace = version.contains(" ");
+                if (containSpace) System.out.print("\"");
+                System.out.print(version);//legal
+                if (containSpace) System.out.print("\"");
+                if (i + 1 != modSupportedMcVer.size()) {
+                    System.out.print(", ");
                 }
             }
-        });
+
+            System.out.print("]\n");
 
 
-        System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
-
-        System.out.print('[');
-        for (int i = 0; i < modSupportedMcVer.size(); i++) {
-            String version = modSupportedMcVer.get(i);
-            boolean containSpace = version.contains(" ");
-            if (containSpace) System.out.print("\"");
-            System.out.print(version);//legal
-            if (containSpace) System.out.print("\"");
-            if (i + 1 != modSupportedMcVer.size()) {
-                System.out.print(", ");
-            }
+            modSupportMinecraftVersion = ConsoleUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
         }
 
-        System.out.print("]\n");
-
-
-        String modSupportMinecraftVersion = ConsoleUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
         List<Pair<JSONObject, JSONObject>> versions = modClassificationMap.get(modSupportMinecraftVersion);
         if (versions == null)
             return null;

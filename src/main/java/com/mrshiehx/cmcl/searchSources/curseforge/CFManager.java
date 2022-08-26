@@ -24,6 +24,7 @@ import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,12 +48,21 @@ public abstract class CFManager {
 
     protected abstract String getNameFirstUpperCase();
 
-    public String getDownloadLink(int modId, String modName) {
+    public String getDownloadLink(int modId, String modName, @Nullable String mcversion) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
-            JSONObject jsonObject = new JSONObject(Utils.getCF(GET_ADDON_INFORMATION + modId + "/files"));
+            JSONObject jsonObject = new JSONObject(Utils.getCF(GET_ADDON_INFORMATION + modId + "/files?pageSize=10000"));
+            /*JSONObject pagination=jsonObject.optJSONObject("pagination");
+            if(pagination!=null){
+                int resultCount=pagination.optInt("resultCount");
+                int index=pagination.optInt("index");
+                int pageSize=pagination.optInt("pageSize");
+                int totalCount=pagination.optInt("totalCount");
+                if(totalCount>resultCount){
 
-            //System.out.println(jsonObject);
+                }
+            }
+            System.out.println(jsonObject);*/
             modAllVersionsJsonArrayFather = jsonObject.optJSONArray("data");
         } catch (Exception e) {
             System.out.println(getString("MOD_FAILED_TO_GET_ALL_FILES", e).replace("${NAME}", getNameAllLowerCase()));
@@ -84,81 +94,87 @@ public abstract class CFManager {
         modClassificationMap.remove("Forge");
         modClassificationMap.remove("Rift");
 
-        //Mod 支持的所有 MC 版本
-        ArrayList<String> modSupportedMcVer = new ArrayList<>();
 
-        //循环遍历 Map ，并将该 Mod 所有支持的 MC 版本提取出来并装载到 modSupportedMcVer 进行排序，因为这玩意儿在 Json 里面是乱序的
-        //比如：1.15.2  1.18.1  1.16.5  1.16.4  1.12  1.14.4
-        for (Map.Entry<String, ArrayList<JSONObject>> entry : modClassificationMap.entrySet()) {
-            String version = entry.getKey().replace("-Snapshot", ".-1");
-            if (!modSupportedMcVer.contains(version)) {
-                modSupportedMcVer.add(version);
-            }
-        }
+        String modSupportMinecraftVersion;
 
-        //排序算法
-        modSupportedMcVer.sort((o1, o2) -> {
-            String[] o1s = o1.split("\\.");
-            String[] o2s = o2.split("\\.");
+        if (!isEmpty(mcversion) && modClassificationMap.get(mcversion) != null) {
+            modSupportMinecraftVersion = mcversion;
+        } else {
+            //Mod 支持的所有 MC 版本
+            ArrayList<String> modSupportedMcVer = new ArrayList<>();
 
-            if (o1s.length == 0 || o2s.length == 0) return 0;
-
-            int[] o1i = new int[o1s.length];
-            int[] o2i = new int[o2s.length];
-            try {
-                for (int i = 0; i < o1s.length; i++) {
-                    String o1String = o1s[i];
-                    o1i[i] = Integer.parseInt(o1String);
+            //循环遍历 Map ，并将该 Mod 所有支持的 MC 版本提取出来并装载到 modSupportedMcVer 进行排序，因为这玩意儿在 Json 里面是乱序的
+            //比如：1.15.2  1.18.1  1.16.5  1.16.4  1.12  1.14.4
+            for (Map.Entry<String, ArrayList<JSONObject>> entry : modClassificationMap.entrySet()) {
+                String version = entry.getKey().replace("-Snapshot", ".-1");
+                if (!modSupportedMcVer.contains(version)) {
+                    modSupportedMcVer.add(version);
                 }
-                for (int i = 0; i < o2s.length; i++) {
-                    String o2String = o2s[i];
-                    o2i[i] = Integer.parseInt(o2String);
-                }
-            } catch (Exception e) {
-                return 0;
             }
 
-            if (o1i[1] > o2i[1]) {
-                return -1;
-            } else if (o1i[1] < o2i[1]) {
-                return 1;
-            } else {
-                if (o1i.length >= 3 && o2i.length >= 3) {
-                    return Integer.compare(o2i[2], o1i[2]);
-                } else if (o1i.length >= 3) {
-                    return Integer.compare(0, o1i[2]);
-                } else if (o2i.length >= 3) {
-                    return Integer.compare(o2i[2], 0);
-                } else {
+            //排序算法
+            modSupportedMcVer.sort((o1, o2) -> {
+                String[] o1s = o1.split("\\.");
+                String[] o2s = o2.split("\\.");
+
+                if (o1s.length == 0 || o2s.length == 0) return 0;
+
+                int[] o1i = new int[o1s.length];
+                int[] o2i = new int[o2s.length];
+                try {
+                    for (int i = 0; i < o1s.length; i++) {
+                        String o1String = o1s[i];
+                        o1i[i] = Integer.parseInt(o1String);
+                    }
+                    for (int i = 0; i < o2s.length; i++) {
+                        String o2String = o2s[i];
+                        o2i[i] = Integer.parseInt(o2String);
+                    }
+                } catch (Exception e) {
                     return 0;
                 }
-            }
-        });
 
-        System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
+                if (o1i[1] > o2i[1]) {
+                    return -1;
+                } else if (o1i[1] < o2i[1]) {
+                    return 1;
+                } else {
+                    if (o1i.length >= 3 && o2i.length >= 3) {
+                        return Integer.compare(o2i[2], o1i[2]);
+                    } else if (o1i.length >= 3) {
+                        return Integer.compare(0, o1i[2]);
+                    } else if (o2i.length >= 3) {
+                        return Integer.compare(o2i[2], 0);
+                    } else {
+                        return 0;
+                    }
+                }
+            });
 
-        for (int i = 0; i < modSupportedMcVer.size(); i++) {
-            String version = modSupportedMcVer.get(i);
-            if (version.endsWith(".-1")) {
-                modSupportedMcVer.set(i, version.replace(".-1", "-Snapshot"));
+            System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
+
+            for (int i = 0; i < modSupportedMcVer.size(); i++) {
+                String version = modSupportedMcVer.get(i);
+                if (version.endsWith(".-1")) {
+                    modSupportedMcVer.set(i, version.replace(".-1", "-Snapshot"));
+                }
             }
+
+            System.out.print('[');
+            for (int i = 0; i < modSupportedMcVer.size(); i++) {
+                String version = modSupportedMcVer.get(i);
+                boolean containSpace = version.contains(" ");
+                if (containSpace) System.out.print("\"");
+                System.out.print(version);//legal
+                if (containSpace) System.out.print("\"");
+                if (i + 1 != modSupportedMcVer.size()) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.print("]\n");
+            modSupportMinecraftVersion = ConsoleUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
         }
 
-        System.out.print('[');
-        for (int i = 0; i < modSupportedMcVer.size(); i++) {
-            String version = modSupportedMcVer.get(i);
-            boolean containSpace = version.contains(" ");
-            if (containSpace) System.out.print("\"");
-            System.out.print(version);//legal
-            if (containSpace) System.out.print("\"");
-            if (i + 1 != modSupportedMcVer.size()) {
-                System.out.print(", ");
-            }
-        }
-
-        System.out.print("]\n");
-
-        String modSupportMinecraftVersion = ConsoleUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
         List<JSONObject> versions = modClassificationMap.get(modSupportMinecraftVersion);
         if (versions == null)
             return null;

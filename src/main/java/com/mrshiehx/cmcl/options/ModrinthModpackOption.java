@@ -100,7 +100,7 @@ public class ModrinthModpackOption implements Option {
         switch (lowerCase) {
             case "i":
 
-                String modDownloadLink = modManager.getDownloadLink(modID, modName);
+                String modDownloadLink = modManager.getDownloadLink(modID, modName, null);
                 if (isEmpty(modDownloadLink)) return;
                 downloadModpack(modDownloadLink, arguments);
                 break;

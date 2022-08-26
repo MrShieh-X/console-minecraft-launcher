@@ -1,5 +1,10 @@
 # 更新日志
-目前的最新版本为1.5.2，发布日期是2022年8月16日。
+目前的最新版本为1.6，发布日期是2022年8月26日。
+
+## 1.6（2022年8月26日）
+- 可在安装版本后或安装版本时**安装 Fabric API**，需在**安装命令后加上**`-fapi`。例`-version -f 1.19 -fapi`或`-install 1.19 -f -fapi`（由 [BlockyDeer](https://github.com/BlockyDeer) 于 [Issue#17](https://github.com/MrShieh-X/console-minecraft-launcher/issues/17) 提出）。
+- 加快了本程序启动速度。
+- 解决了无法从 Modrinth 安装某些模组或整合包的问题。
 
 ## 1.5.2（2022年8月16日）
 - 如果没选择版本直接双击启动，则会显示提示语，指导使用（对小白友好）。

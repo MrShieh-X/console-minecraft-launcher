@@ -61,6 +61,129 @@ public class Utils {
             "konqueror",
             "mozilla"
     };
+    public static final Comparator<String> VERSION_COMPARATOR = (o1, o2) -> {
+        o1 = o1.replace("3D-Shareware-v1.34", "3D-Shareware-v1-34")
+                .replace("3D Shareware v1.34", "3D-Shareware-v1-34")
+                .replace(" Pre-Release ", "-pre");
+        o2 = o2.replace("3D-Shareware-v1.34", "3D-Shareware-v1-34")
+                .replace("3D Shareware v1.34", "3D-Shareware-v1-34")
+                .replace(" Pre-Release ", "-pre");
+
+        String[] o1s = Utils.xsplit(o1, "\\.");
+        String[] o2s = Utils.xsplit(o2, "\\.");
+
+        int ONE = -1;
+        int NONE = 1;
+        if (o1s.length == 0 || o2s.length == 0) {
+            if (o1s.length == 0 && o2s.length == 0) {
+                if ("20w14infinite".equals(o1)) {
+                    o1 = "20w13c";
+                }
+                if ("20w14infinite".equals(o2)) {
+                    o2 = "20w13c";
+                }
+                if ("22w13oneblockatatime".equals(o1)) {
+                    o1 = "22w13b";
+                }
+                if ("22w13oneblockatatime".equals(o2)) {
+                    o2 = "22w13b";
+                }
+                if ("3D-Shareware-v1-34".equals(o1)) {
+                    o1 = "19w13c";
+                }
+                if ("3D-Shareware-v1-34".equals(o2)) {
+                    o2 = "19w13c";
+                }
+                if ("1.RV-Pre1".equals(o1)) {
+                    o1 = "16w13a";
+                }
+                if ("1.RV-Pre1".equals(o2)) {
+                    o2 = "16w13a";
+                }
+                int[] o1i = new int[]{Integer.parseInt(o1.substring(0, 2)), Integer.parseInt(o1.substring(3, 5)), (int) o1.charAt(5)};
+                int[] o2i = new int[]{Integer.parseInt(o2.substring(0, 2)), Integer.parseInt(o2.substring(3, 5)), (int) o2.charAt(5)};
+
+
+                for (int i = 0; i < 3; i++) {
+                    int o1ii = o1i[i];
+                    int o2ii = o2i[i];
+                    if (o1ii > o2ii) {
+                        return NONE;
+                    } else if (o1ii < o2ii) {
+                        return ONE;
+                    }
+                }
+                return 0;
+            } else if (o1s.length == 0) {
+                return ONE;
+            } else {
+                return NONE;
+            }
+        }
+
+        int bigger = Math.max(o1s.length, o2s.length);
+
+        int[] o1i = new int[bigger + 2];
+        int[] o2i = new int[bigger + 2];
+
+        for (int i = 0; i < bigger; i++) {
+            if (i < o1s.length) {
+                String o1String = o1s[i];
+                if (o1String.contains("-pre")) {
+                    o1i[i + 2] = Integer.parseInt(o1String.substring(0, o1String.indexOf("-pre")));
+                    o1i[1] = Integer.parseInt(o1String.substring(o1String.indexOf("-pre") + 4));
+                } else if (o1String.contains("-rc")) {
+                    o1i[i + 2] = Integer.parseInt(o1String.substring(0, o1String.indexOf("-rc")));
+                    o1i[0] = Integer.parseInt(o1String.substring(o1String.indexOf("-rc") + 3));
+                } else {
+                    o1i[i + 2] = Integer.parseInt(o1String);
+                    o1i[0] = -1;
+                    o1i[1] = -1;
+                }
+            }
+        }
+        for (int i = 0; i < bigger; i++) {
+            if (i < o2s.length) {
+                String o2String = o2s[i];
+                if (o2String.contains("-pre")) {
+                    o2i[i + 2] = Integer.parseInt(o2String.substring(0, o2String.indexOf("-pre")));
+                    o2i[1] = Integer.parseInt(o2String.substring(o2String.indexOf("-pre") + 4));
+                } else if (o2String.contains("-rc")) {
+                    o2i[i + 2] = Integer.parseInt(o2String.substring(0, o2String.indexOf("-rc")));
+                    o2i[0] = Integer.parseInt(o2String.substring(o2String.indexOf("-rc") + 3));
+                } else {
+                    o2i[i + 2] = Integer.parseInt(o2String);
+                    o2i[0] = -1;
+                    o2i[1] = -1;
+                }
+            }
+        }
+
+
+        for (int i = 2; i < bigger + 2; i++) {
+            int o1ii = o1i[i];
+            int o2ii = o2i[i];
+            if (o1ii > o2ii) {
+                return NONE;
+            } else if (o1ii < o2ii) {
+                return ONE;
+            } else {
+                if (i + 1 == bigger + 2) {
+                    for (int j = 0; j < 2; j++) {
+                        int o1rp = o1i[j];
+                        int o2rp = o2i[j];
+                        if (o1rp > o2rp) {
+                            return NONE;
+                        } else if (o1rp < o2rp) {
+                            return ONE;
+                        }
+                    }
+                }
+            }
+        }
+
+        return 0;
+    };
 
     public static void openLink(String link) {
         if (link == null)
@@ -1490,5 +1613,13 @@ public class Utils {
         String first = getModuleVersion(head, "quilt");
         if (!isEmpty(first)) return first;
         return getModuleVersion(head, "org.quiltmc.loader.impl.launch.knot.KnotClient", "org.quiltmc:quilt-loader:");
+    }
+
+    public static String[] xsplit(String s, String regex) {
+        String[] ss = s.split(regex);
+        if (ss[0].equals(s)) {
+            return new String[0];
+        }
+        return ss;
     }
 }

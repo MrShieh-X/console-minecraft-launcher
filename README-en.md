@@ -8,7 +8,7 @@ A Launcher for Minecraft Java Edition Running On The Console
 MrShiehX owns the copyright of this program.<br/>
 Anyone can take advices of this program to us.
 
-## The latest version: 1.5.2 (Released on Aug. 16, 2022)
+## The latest version: 1.6 (Released on Aug. 26, 2022)
 
 ## Program Screenshot
 ![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
@@ -137,7 +137,7 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 &emsp;&emsp;Re-download the native dependency library files:&emsp;&emsp;`-version -n <Version Name>`<br/>
 &emsp;&emsp;Find missing dependency library files and download: `-version -l <Version Name>`<br/>
 &emsp;&emsp;Complete version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -b <Version Name>`<br/>
-&emsp;&emsp;Install Fabric to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -f <Version Name>`<br/>
+&emsp;&emsp;Install Fabric to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -f <Version Name> -fapi(optional, with Fabric Api)`<br/>
 &emsp;&emsp;Install Forge to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -o <Version Name>`<br/>
 &emsp;&emsp;Install LiteLoader to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -e <Version Name>`<br/>
 &emsp;&emsp;Install OptiFine to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -p <Version Name>`<br/>
@@ -168,7 +168,7 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 
 &emsp;&emsp;Direct install version: -install `<Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>`<br/>
 &emsp;&emsp;Optional parameters:<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-f` Install Fabric<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-f` Install Fabric `-fapi(optional, with Fabric Api)`<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-o` Install Forge<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-e` Install LiteLoader<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-p` Install OptiFine<br/>

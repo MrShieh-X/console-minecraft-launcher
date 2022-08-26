@@ -1,5 +1,10 @@
 # Update Logs
-Currently, the latest version is 1.5.2, which was updated on August 16, 2022.
+Currently, the latest version is 1.6, which was updated on August 26, 2022.
+
+## 1.6 (Aug. 26, 2022)
+- **Fabric API can be installed** after installing the version or when installing the version, you need to **add** `-fapi` **after the installation command**. Example `-version -f 1.19 -fapi` or `-install 1.19 -f -fapi` (by [BlockyDeer](https://github.com/BlockyDeer) on [Issue#17](https://github.com/MrShieh-X/console-minecraft-launcher/issues/17) ).
+- Speed up the startup of this program.
+- Resolved an issue where some mods or modpacks could not be installed from Modrinth.
 
 ## 1.5.2 (Aug. 16, 2022)
 - If the version is not selected, double-click to start it, a prompt will be displayed to guide the user to use it.

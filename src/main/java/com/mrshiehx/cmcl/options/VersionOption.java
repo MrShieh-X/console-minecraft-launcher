@@ -34,6 +34,7 @@ import com.mrshiehx.cmcl.modules.extra.quilt.QuiltInstaller;
 import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
 import com.mrshiehx.cmcl.modules.version.NativesDownloader;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
+import com.mrshiehx.cmcl.searchSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -271,8 +272,20 @@ public class VersionOption implements Option {
                     System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND"));
                     return;
                 }
-                new FabricInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"));
-
+                if (new FabricInstaller().install(jsonFile, new File(dir, value + ".jar"), arguments.opt("v"))) {
+                    if (arguments.contains("fapi")) {
+                        String ver = null;
+                        try {
+                            ver = Utils.getGameVersion(new JSONObject(Utils.readFileContent(jsonFile)), new File(dir, value + ".jar")).id.replace(" Pre-Release ", "-pre");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver);
+                        if (!isEmpty(url)) {
+                            ModrinthModOption.downloadMod(url);
+                        }
+                    }
+                }
                 break;
             case "o":
                 if (!jsonFile.exists()) {
