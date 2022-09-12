@@ -18,7 +18,10 @@
 package com.mrshiehx.cmcl.modules;
 
 import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
-import com.mrshiehx.cmcl.bean.*;
+import com.mrshiehx.cmcl.bean.AuthlibInformation;
+import com.mrshiehx.cmcl.bean.Library;
+import com.mrshiehx.cmcl.bean.SplitLibraryName;
+import com.mrshiehx.cmcl.bean.ThreeReturns;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
@@ -65,6 +68,7 @@ public class MinecraftLauncher {
      * @param uuid                     uuid of official account
      * @param isDemo                   is Minecraft demo
      * @param customScreenSize         does player custom the size of screen
+     * @param properties               user properties
      * @param startLaunch              after judgment, prepare to start, nullable
      * @param jvmArgs                  append jvm arguments (nullable)
      * @param gameArgs                 append game arguments (nullable)
@@ -77,7 +81,6 @@ public class MinecraftLauncher {
      * @author MrShiehX
      */
     public static List<String> getMinecraftLaunchCommandArguments(
-            File versionDir,
             File minecraftJarFile,
             File minecraftVersionJsonFile,
             File gameDir,
@@ -98,14 +101,13 @@ public class MinecraftLauncher {
             @Nullable Void startLaunch,
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
-            @Nullable AuthlibInformation authlibInformation,
-            VersionInfo versionInfo) throws
+            @Nullable AuthlibInformation authlibInformation) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
             IOException,
             JSONException {
-        File javaPathFile = new File(javaPath);
+        File javaPathFile = new File(/*!isEmpty(versionInfo.javaPath) ? (javaPath = versionInfo.javaPath) : */javaPath);
         if (!javaPathFile.exists()) {
             throw new LaunchException(getString("EXCEPTION_JAVA_NOT_FOUND"));
         } else {
@@ -129,7 +131,8 @@ public class MinecraftLauncher {
         }
 
         if (!gameDir.exists()) {
-            throw new LaunchException(getString("MESSAGE_NOT_FOUND_GAME_DIR"));
+            gameDir.mkdirs();
+            //throw new LaunchException(getString("MESSAGE_NOT_FOUND_GAME_DIR"));
         }
         if (maxMemory == 0) {
             throw new LaunchException(getString("EXCEPTION_MAX_MEMORY_IS_ZERO"));
@@ -334,11 +337,11 @@ public class MinecraftLauncher {
         }
 
         String lastGameDirPath = gameDir.getAbsolutePath();
-        if (versionInfo != null && !isEmpty(versionInfo.workingDirectory)) {
+        /*if (versionInfo != null && !isEmpty(versionInfo.workingDirectory)) {
             lastGameDirPath = Objects.equals(VersionInfo.SIGN_WORKING_DIRECTORY_IN_VERSION_DIR, versionInfo.workingDirectory) ? versionDir.getAbsolutePath() : versionInfo.workingDirectory;
         } else if (isModpack(versionDir, headJsonObject)) {
             lastGameDirPath = versionDir.getAbsolutePath();
-        }
+        }*/
 
         for (int i = 0; i < minecraftArguments.size(); i++) {
                 /*boolean replace = true;
@@ -638,7 +641,6 @@ public class MinecraftLauncher {
      * @author MrShiehX
      */
     public static String getMinecraftLaunchCommand(
-            File versionDir,
             File minecraftJarFile,
             File minecraftVersionJsonFile,
             File gameDir,
@@ -658,14 +660,13 @@ public class MinecraftLauncher {
             JSONObject properties,
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
-            @Nullable AuthlibInformation authlibInformation,
-            VersionInfo versionInfo) throws
+            @Nullable AuthlibInformation authlibInformation) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
             IOException,
             JSONException {
-        List<String> args = getMinecraftLaunchCommandArguments(versionDir, minecraftJarFile,
+        List<String> args = getMinecraftLaunchCommandArguments(minecraftJarFile,
                 minecraftVersionJsonFile,
                 gameDir,
                 assetsDir,
@@ -685,8 +686,7 @@ public class MinecraftLauncher {
                 null,
                 jvmArgs,
                 gameArgs,
-                authlibInformation,
-                versionInfo);
+                authlibInformation);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < args.size(); i++) {
             String str = args.get(i);
@@ -836,14 +836,13 @@ public class MinecraftLauncher {
             JSONObject properties,
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
-            @Nullable AuthlibInformation authlibInformation,
-            VersionInfo versionInfo) throws
+            @Nullable AuthlibInformation authlibInformation) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
             IOException,
             JSONException {
-        List<String> args = getMinecraftLaunchCommandArguments(versionDir, minecraftJarFile,
+        List<String> args = getMinecraftLaunchCommandArguments(minecraftJarFile,
                 minecraftVersionJsonFile,
                 gameDir,
                 assetsDir,
@@ -863,8 +862,7 @@ public class MinecraftLauncher {
                 () -> System.out.println(getString("MESSAGE_STARTING_GAME")),
                 jvmArgs,
                 gameArgs,
-                authlibInformation,
-                versionInfo);
+                authlibInformation);
 
         ProcessBuilder processBuilder = new ProcessBuilder(args);
         processBuilder.directory(versionDir);
@@ -1007,7 +1005,7 @@ public class MinecraftLauncher {
         return new ThreeReturns<>(new LinkedList<>(librariesPaths.values()), new LinkedList<>((notFound.values())), needNatives);
     }
 
-    public static boolean isModpack(File versionDir, JSONObject versionJSON) {
+    public static boolean isModpack(File versionDir/*, JSONObject versionJSON*/) {
         if (new File(versionDir, "modpack.cfg").exists()) return true;//兼容 HMCL
         return new File(versionDir, "modpack.json").exists();
     }

@@ -29,12 +29,12 @@ import java.util.Map;
 public class FindOutRedundantStrings {
     public static void main2(String[] args) throws Exception {
         System.out.println("en:");
-        main(Languages.en);
+        main(Languages.getEn());
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println("zh:");
-        main(Languages.zh);
+        main(Languages.getZh());
 
 
         //clear();

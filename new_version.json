@@ -1,14 +1,14 @@
 {
-	"latestVersionName": "1.6",
-	"latestVersionDownloadUrls":[
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.6/CMCL.jar",
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.6/CMCL.exe",
-		"https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.6/console-minecraft-launcher",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.6/CMCL.jar",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.6/CMCL.exe",
-		"https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.6/console-minecraft-launcher"
-	],
-	"updateDate": "2022-08-26",
-	"updateContentEn": "- Fabric API can be installed after installing the version or when installing the version, you need to add `-fapi` after the installation command. Example `-version -f 1.19 -fapi` or `-install 1.19 -f -fapi` (by BlockyDeer on Issue#17).\n- Speed up the startup of this program.\n- Resolved an issue where some mods or modpacks could not be installed from Modrinth.",
-	"updateContentZh": "- \u53ef\u5728\u5b89\u88c5\u7248\u672c\u540e\u6216\u5b89\u88c5\u7248\u672c\u65f6\u5b89\u88c5 Fabric API\uff0c\u9700\u5728\u5b89\u88c5\u547d\u4ee4\u540e\u52a0\u4e0a`-fapi`\u3002\u4f8b`-version -f 1.19 -fapi`\u6216`-install 1.19 -f -fapi`\uff08\u7531 BlockyDeer \u4e8e Issue#17 \u63d0\u51fa\uff09\u3002\n- \u52a0\u5feb\u4e86\u672c\u7a0b\u5e8f\u542f\u52a8\u901f\u5ea6\u3002\n- \u89e3\u51b3\u4e86\u65e0\u6cd5\u4ece Modrinth \u5b89\u88c5\u67d0\u4e9b\u6a21\u7ec4\u6216\u6574\u5408\u5305\u7684\u95ee\u9898\u3002"
+  "latestVersionName": "1.7",
+  "latestVersionDownloadUrls": [
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.7/CMCL.jar",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.7/CMCL.exe",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/1.7/console-minecraft-launcher",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.7/CMCL.jar",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.7/CMCL.exe",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/1.7/console-minecraft-launcher"
+  ],
+  "updateDate": "2022-09-12",
+  "updateContentEn": "- All modifiable configurations can be viewed through \"-config -view\".\n- You can use \"-vcfg <Version Name> <Configuration name, use '-config -view' to view the content with '[Game related]'> <Content, add double quotes if there is a space, use global configuration if not entered>\" This generic command sets the version configuration (configurations with \"[Game related]\" are HMCL compatible).\n- \"-version <Version Name>\" can be appended to the custom game arguments or JVM arguments command to specify the version to set.",
+  "updateContentZh": "- \u53ef\u901a\u8fc7\u201c-config -view\u201d\u67e5\u770b\u6240\u6709\u53ef\u4fee\u6539\u7684\u914d\u7f6e\u3002\n- \u53ef\u901a\u8fc7\u201c-vcfg <\u7248\u672c\u540d\u79f0> <\u914d\u7f6e\u540d\u79f0\uff0c\u4f7f\u7528\u2018-config -view\u2019\u67e5\u770b\u7684\u5185\u5bb9\u4e2d\u5e26\u6709\u2018[\u6e38\u620f\u76f8\u5173]\u2019\u7684> <\u5185\u5bb9\uff0c\u6709\u7a7a\u683c\u5219\u52a0\u4e0a\u53cc\u5f15\u53f7\uff0c\u4e0d\u8f93\u5165\u5219\u4f7f\u7528\u5168\u5c40\u914d\u7f6e>\u201d\u6b64\u901a\u7528\u547d\u4ee4\u8bbe\u7f6e\u7248\u672c\u914d\u7f6e\uff08\u5e26\u6709\u201c[\u6e38\u620f\u76f8\u5173]\u201d\u7684\u914d\u7f6e\u517c\u5bb9HMCL\uff09\u3002\n- \u53ef\u5728\u81ea\u5b9a\u4e49\u6e38\u620f\u53c2\u6570\u6216JVM\u53c2\u6570\u547d\u4ee4\u540e\u9762\u6dfb\u4e0a\u201c-version <\u7248\u672c\u540d\u79f0>\u201d\u4ee5\u6307\u5b9a\u8981\u8bbe\u7f6e\u7684\u7248\u672c\u3002"
 }

@@ -53,6 +53,34 @@ public class Arguments {
             this.size = arguments.size();
             return;
         }
+
+        if (isForCMCL && (length >= 3) &&
+                (forImmersive ? ("vcfg".equalsIgnoreCase(args[0]))
+                        : ("-vcfg".equalsIgnoreCase(args[0]) || "--vcfg".equalsIgnoreCase(args[0]) ||
+                        "/vcfg".equalsIgnoreCase(args[0]))) &&
+                !args[1].startsWith("--") &&
+                !args[1].startsWith("-") &&
+                !args[1].startsWith("/") &&
+                !args[2].startsWith("--") &&
+                !args[2].startsWith("-") &&
+                !args[2].startsWith("/") /*&&
+                (args.length < 4 || (
+                        !args[3].startsWith("--") &&
+                                !args[3].startsWith("-") &&
+                                !args[3].startsWith("/")))*/) {
+            String key = args[1];
+            arguments.add(new ValueArgument("vcfg", key.startsWith("\\-") ? key.substring(1) : key));
+            String value = args[2];
+            arguments.add(new TextArgument(value.startsWith("\\-") ? value.substring(1) : value));
+            if (args.length >= 4) {
+                String value2 = args[3];
+                if (!value2.startsWith("--") && !value2.startsWith("-") && !value2.startsWith("/")) {
+                    arguments.add(new TextArgument(value2.startsWith("\\-") ? value2.substring(1) : value2));
+                }
+            }
+            this.size = arguments.size();
+            return;
+        }
         for (int i = 0; i < length; i++) {
             String key = args[i];
             if (forImmersive && i == 0) {
@@ -64,7 +92,7 @@ public class Arguments {
                 }
             } else {
                 int startLength = -1;
-                if (key.startsWith("--")) {//必须先判断“--”，否则如果“--”开头的判定为“-”开头，则最终参数名将会“-”开头
+                if (key.startsWith("--")) {//必须先判断“--”，否则如果“--”开头的判定为“-”开头，则最终参数名将会以“-”开头
                     startLength = 2;
                 } else if (key.startsWith("-") || key.startsWith("/")) {
                     startLength = 1;

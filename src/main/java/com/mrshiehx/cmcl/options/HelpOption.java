@@ -49,12 +49,13 @@ public class HelpOption implements Option {
             if (i != 0) {
                 if (i + 1 < usageNames.size()) {
                     stringBuilder.append('\n');
+                    stringBuilder.append("------------------------------------------------------------------------------------------------------");
                     stringBuilder.append('\n');
                 }
             } else {
                 stringBuilder.append('\n');
+                stringBuilder.append("------------------------------------------------------------------------------------------------------");
                 stringBuilder.append('\n');
-
             }
         }
         System.out.println(stringBuilder);

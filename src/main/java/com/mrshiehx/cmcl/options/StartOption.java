@@ -17,6 +17,7 @@
  */
 package com.mrshiehx.cmcl.options;
 
+import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.bean.AuthlibInformation;
 import com.mrshiehx.cmcl.bean.VersionInfo;
 import com.mrshiehx.cmcl.bean.arguments.Argument;
@@ -26,12 +27,16 @@ import com.mrshiehx.cmcl.enums.GameCrashError;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
+import com.mrshiehx.cmcl.modules.MinecraftLauncher;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
 import static com.mrshiehx.cmcl.modules.MinecraftLauncher.launchMinecraft;
@@ -62,7 +67,7 @@ public class StartOption implements Option {
             hmcl = VersionInfo.valueOfHMCL(hmclJO);
         }
 
-        VersionInfo Final = null;
+        VersionInfo Final = VersionInfo.EMPTY;
         if (cmcl != null && hmcl != null) {
             Final = hmcl.merge(cmcl);
         } else if (cmcl != null) {
@@ -94,96 +99,122 @@ public class StartOption implements Option {
     }
 
     public static void start(String version, JSONObject config) {
-        String javaPath = config.optString("javaPath", Utils.getDefaultJavaPath());
+        /*String javaPath = config.optString("javaPath", Utils.getDefaultJavaPath());
         if (isEmpty(javaPath) || !new File(javaPath).exists()) {
             System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
-        } else {
-            File versionsFolder = new File(gameDir, "versions");
-            File versionFolder = new File(versionsFolder, version);
-            File versionJarFile = new File(versionFolder, version + ".jar");
-            File versionJsonFile = new File(versionFolder, version + ".json");
-            try {
+        } else {*/
+        File versionsFolder = new File(gameDir, "versions");
+        File versionFolder = new File(versionsFolder, version);
+        File versionJarFile = new File(versionFolder, version + ".jar");
+        File versionJsonFile = new File(versionFolder, version + ".json");
+        try {
 
-                JSONObject account = Utils.getSelectedAccountIfNotLoginNow(config);
+            JSONObject account = Utils.getSelectedAccountIfNotLoginNow(config);
 
-                if (account == null) return;
+            if (account == null) return;
 
-                String at = Utils.randomUUIDNoSymbol(), uu = Utils.getUUIDByName(account.optString("playerName", "XPlayer"));
-                if (account.optInt("loginMethod") > 0) {
-                    at = account.optString("accessToken", at);
-                    uu = account.optString("uuid", uu);
-                }
+            String at = Utils.randomUUIDNoSymbol(), uu = Utils.getUUIDByName(account.optString("playerName", "XPlayer"));
+            if (account.optInt("loginMethod") > 0) {
+                at = account.optString("accessToken", at);
+                uu = account.optString("uuid", uu);
+            }
 
-                runningMc = launchMinecraft(versionFolder,
-                        versionJarFile,
-                        versionJsonFile,
-                        gameDir,
-                        assetsDir,
-                        respackDir,
-                        account.optString("playerName", "XPlayer"),
-                        javaPath,
-                        config.optLong("maxMemory", Utils.getDefaultMemory()),
-                        128,
-                        config.optInt("windowSizeWidth", 854),
-                        config.optInt("windowSizeHeight", 480),
-                        config.optBoolean("isFullscreen"),
-                        at,
-                        uu,
-                        false,
-                        !config.optBoolean("isFullscreen"),
-                        account.optJSONObject("properties"),
-                        Utils.parseJVMArgs(configContent.optJSONArray("jvmArgs")),
-                        Utils.parseGameArgs(configContent.optJSONObject("gameArgs")),
-                        StartOption.getAuthlibInformation(account, at, uu, true),
-                        getVersionInfo(versionFolder));
+            VersionInfo versionInfo = getVersionInfo(versionFolder);
+            File workingDirectory = !Utils.isEmpty(versionInfo.workingDirectory) ?
+                    ((Objects.equals(versionInfo.workingDirectory, VersionInfo.SIGN_WORKING_DIRECTORY_IN_VERSION_DIR))
+                            ? versionFolder
+                            : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : new File(versionInfo.workingDirectory)))
+                    : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : gameDir);
+            String javaPath = !Utils.isEmpty(versionInfo.javaPath) ? versionInfo.javaPath : ConsoleMinecraftLauncher.javaPath;
+            int maxMemory = versionInfo.maxMemory > 0 ? versionInfo.maxMemory : config.optInt("maxMemory", (int) Utils.getDefaultMemory());
+            int windowSizeWidth = versionInfo.windowSizeWidth > 0 ? versionInfo.windowSizeWidth : config.optInt("windowSizeWidth", 854);
+            int windowSizeHeight = versionInfo.windowSizeHeight > 0 ? versionInfo.windowSizeHeight : config.optInt("windowSizeHeight", 480);
+            boolean isFullscreen = !Utils.isEmpty(versionInfo.isFullscreen) ? Boolean.parseBoolean(versionInfo.isFullscreen) : config.optBoolean("isFullscreen");
+            List<String> jvmArgs = Utils.parseJVMArgs(config.optJSONArray("jvmArgs"));
+            jvmArgs.addAll(versionInfo.jvmArgs);
+            Map<String, String> gameArgs = Utils.parseGameArgs(config.optJSONObject("gameArgs"));
+            gameArgs.putAll(versionInfo.gameArgs);
+            File assetsDir = !Utils.isEmpty(versionInfo.assetsDir) ? new File(versionInfo.assetsDir) : ConsoleMinecraftLauncher.assetsDir;
+            File resourcesDir = !Utils.isEmpty(versionInfo.resourcesDir) ? new File(versionInfo.resourcesDir) : respackDir;
+            boolean exitWithMinecraft = !Utils.isEmpty(versionInfo.exitWithMinecraft) ? Boolean.parseBoolean(versionInfo.exitWithMinecraft) : config.optBoolean("exitWithMinecraft");
+            if (isEmpty(javaPath) || !new File(javaPath).exists()) {
+                System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
+                return;
+            }
+            boolean oldExitWithMinecraft = ConsoleMinecraftLauncher.exitWithMinecraft;//因为沉浸模式
+            ConsoleMinecraftLauncher.exitWithMinecraft = exitWithMinecraft;
 
-                final GameCrashError[] crashError = {null};
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        BufferedReader dis = new BufferedReader(new InputStreamReader(runningMc.getInputStream()));
-                        String line;
-                        try {
-                            while ((line = dis.readLine()) != null) {
-                                System.out.println(line);//legal
-                                if (line.contains("cannot be cast to class java.net.URLClassLoader"))
-                                    crashError[0] = GameCrashError.URLClassLoader;//旧版本Minecraft的Java版本过高问题，报Exception in thread "main" java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader cannot be cast to class java.net.URLClassLoader，因为在Java9对相关代码进行了修改，所以要用Java8及更旧
-                                else if (line.contains("Failed to load a library. Possible solutions:"))
-                                    crashError[0] = GameCrashError.LWJGLFailedLoad;
-                                else if (line.contains("java.lang.OutOfMemoryError:") || line.contains("Too small maximum heap"))
-                                    crashError[0] = GameCrashError.MemoryTooSmall;
 
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            runningMc = launchMinecraft(versionFolder,
+                    versionJarFile,
+                    versionJsonFile,
+                    workingDirectory,
+                    assetsDir,
+                    resourcesDir,
+                    account.optString("playerName", "XPlayer"),
+                    javaPath,
+                    maxMemory,
+                    128,
+                    windowSizeWidth,
+                    windowSizeHeight,
+                    isFullscreen,
+                    at,
+                    uu,
+                    false,
+                    !isFullscreen,
+                    account.optJSONObject("properties"),
+                    jvmArgs,
+                    gameArgs,
+                    StartOption.getAuthlibInformation(account, at, uu, true));
+
+            final GameCrashError[] crashError = {null};
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    BufferedReader dis = new BufferedReader(new InputStreamReader(runningMc.getInputStream()));
+                    String line;
+                    try {
+                        while ((line = dis.readLine()) != null) {
+                            System.out.println(line);//legal
+                            if (line.contains("cannot be cast to class java.net.URLClassLoader"))
+                                crashError[0] = GameCrashError.URLClassLoader;//旧版本Minecraft的Java版本过高问题，报Exception in thread "main" java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader cannot be cast to class java.net.URLClassLoader，因为在Java9对相关代码进行了修改，所以要用Java8及更旧
+                            else if (line.contains("Failed to load a library. Possible solutions:"))
+                                crashError[0] = GameCrashError.LWJGLFailedLoad;
+                            else if (line.contains("java.lang.OutOfMemoryError:") || line.contains("Too small maximum heap"))
+                                crashError[0] = GameCrashError.MemoryTooSmall;
+
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }).start();
+                }
+            }).start();
                 /*new Thread(new Runnable() {
                     @Override
                     public void run() {*/
-                try {
-                    runningMc.waitFor();
-                    System.out.println(getString("MESSAGE_FINISHED_GAME"));
-                    if (crashError[0] != null)
-                        System.out.println(getString("MESSAGE_GAME_CRASH_CAUSE_TIPS", crashError[0].cause));
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                }
+            try {
+                runningMc.waitFor();
+                System.out.println(getString("MESSAGE_FINISHED_GAME"));
+                ConsoleMinecraftLauncher.exitWithMinecraft = oldExitWithMinecraft;
+                if (crashError[0] != null)
+                    System.out.println(getString("MESSAGE_GAME_CRASH_CAUSE_TIPS", crashError[0].cause));
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
                     /*}
                 }).start();*/
-            } catch (EmptyNativesException ex) {
-                System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
-            } catch (LibraryDefectException ex) {
-                VersionOption.executeNotFound(ex.list);
-            } catch (LaunchException ex) {
-                //ex.printStackTrace();
-                System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex);
-            }
+        } catch (EmptyNativesException ex) {
+            System.out.println(getString("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND"));
+        } catch (LibraryDefectException ex) {
+            VersionOption.executeNotFound(ex.list);
+        } catch (LaunchException ex) {
+            //ex.printStackTrace();
+            System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(getString("CONSOLE_FAILED_START") + ": " + ex);
         }
+        //}
     }
 
     @Override

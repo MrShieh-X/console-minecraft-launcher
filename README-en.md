@@ -8,7 +8,7 @@ A Launcher for Minecraft Java Edition Running On The Console
 MrShiehX owns the copyright of this program.<br/>
 Anyone can take advices of this program to us.
 
-## The latest version: 1.6 (Released on Aug. 26, 2022)
+## The latest version: 1.7 (Released on Sept. 12, 2022)
 
 ## Program Screenshot
 ![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
@@ -60,25 +60,26 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).<br/>
 If you edit configurations by a file editor, only strings need double quotation mark, otherwise, other types do not need it.<br/>
 If you edit by the program arguments, note that if there are spaces in the string, double quotation marks must be added, otherwise it can be added or not.<br/>
-Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" (maybe two) must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10` or `\\-10`.
+Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" (maybe two) must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10` or `\\-10`.<br/>
+This content can be viewed through the parameter `-config -view`.
 
 | Configuration Name|Type|Meaning|
 | -----|:----:|:----:|
-| accounts|JSON Array|Accounts|
+| accounts|JSON Array|Accounts, please use "-account -u" to get the relevant tutorial for modification|
 | downloadSource|Integer|Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS|
 | language|String|Language, zh is Simplified Chinese and en is English|
-| maxMemory|Integer|Maximum (Unit: MB)|
-| gameDir|String|Custom the path of the game directory, default is .minecraft|
-| assetsDir|String|Custom assets resource directory path, if empty, it is the assets directory in the game directory|
-| resourcesDir|String|Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory|
-| javaPath|String|Java Path (It will get automatically if it is empty)|
 | selectedVersion|String|Selected start version|
-| windowSizeWidth|Integer|The width of the game window|
-| windowSizeHeight|Integer|The height of the game window|
-| isFullscreen|Boolean|Whether it is full screen, true if yes, false otherwise|
-| exitWithMinecraft|Boolean|When running the game, if you need to exit the program and exit the game by the way, it is true, otherwise it is false|
-| jvmArgs|JSON Array|Customize JVM virtual machine parameters (append or override),<br/> example: "jvmArgs":<br/>\["-Dfile.encoding=UTF-8", "-Djava.library.path=natives", "-XX:+PrintGC"\]<br/>(Set the parameters of "-Dfile.encoding=UTF-8", <br/>"-Djava.library.path=natives"<br/> and "-XX:+PrintGC")|
-| gameArgs|JSON Object|Customize game parameters (append or override), example: "gameArgs":<br/>{"fullscreen": "",<br/>  "arg1": "value1",<br/>  "arg2": "value2",<br/>  "arg3": "space value2"}<br/>(will add "--fullscreen --arg1 value1 --arg2 value2 --arg3 "space value2" " after the game parameters)|
+| maxMemory|Integer|(**Game related**)Maximum (Unit: MB)|
+| gameDir|String|(**Game related**)Custom the path of the game directory (or set working directory), default is .minecraft|
+| assetsDir|String|(**Game related**)Custom assets resource directory path, if empty, it is the assets directory in the game directory|
+| resourcesDir|String|(**Game related**)Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory|
+| javaPath|String|(**Game related**)Java Path (It will get automatically if it is empty)|
+| windowSizeWidth|Integer|(**Game related**)The width of the game window|
+| windowSizeHeight|Integer|(**Game related**)The height of the game window|
+| isFullscreen|Boolean|(**Game related**)Whether it is full screen, true if yes, false otherwise|
+| exitWithMinecraft|Boolean|(**Game related**)When running the game, if you need to exit the program and exit the game by the way, it is true, otherwise it is false|
+| jvmArgs|JSON Array|(**Game related**)Customize JVM parameters (append or override),<br/> example: "jvmArgs":<br/>\["-Dfile.encoding=UTF-8", "-Djava.library.path=natives", "-XX:+PrintGC"\]<br/>(Set the parameters of "-Dfile.encoding=UTF-8", <br/>"-Djava.library.path=natives"<br/> and "-XX:+PrintGC") or use "-jvmArgs -u" to get the relevant tutorial for modification|
+| gameArgs|JSON Object|(**Game related**)Customize game parameters (append or override), example: "gameArgs":<br/>{"fullscreen": "",<br/>  "arg1": "value1",<br/>  "arg2": "value2",<br/>  "arg3": "space value2"}<br/>(will add "--fullscreen --arg1 value1 --arg2 value2 --arg3 "space value2" " after the game parameters) or use "-gameArgs -u" to get the relevant tutorial for modification|
 | proxyHost|String|Proxy Host Address|
 | proxyPort|Integer|Proxy Port|
 | proxyUsername|String|Proxy authentication username(optional for proxy)|
@@ -100,6 +101,7 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 <details>
   <summary><b><font size="4">Configuration Related</font></b></summary>
 
+&emsp;&emsp;View all settable configurations:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -view`<br/>
 &emsp;&emsp;Print a configuration:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -p <Configuration Name>`<br/>
 &emsp;&emsp;Print all configurations:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -a`<br/>
 &emsp;&emsp;Print the original content of the configuration: `-config -o <The number of spaces to indent, can be empty, defaults to 2>`<br/>
@@ -147,11 +149,13 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 <details>
   <summary><b><font size="4">Version Config Related</font></b></summary>
 
-&emsp;&emsp;Set version working directory: `-vcfg <Version Name> -workingDirectory <Target directory, default if not entered>`<br/>
+&emsp;&emsp;General: `-vcfg <Version Name> <Configuration name, use "-config -view" to view the content with "[Game related]"> <Content, add double quotes if there is a space, use global configuration if not entered>`<br/>
+&emsp;&emsp;Set version working directory(same as gameDir): `-vcfg <Version Name> -workingDirectory <Target directory, default if not entered>`<br/>
 </details>
 <details>
-  <summary><b><font size="4">Custom JVM Virtual Machine Parameters Related</font></b></summary>
+  <summary><b><font size="4">Custom JVM Parameters Related</font></b></summary>
 
+Note: You can append `-version <Version Name>` to the command to specify the version to set<br/>
 &emsp;&emsp;Print all parameters: `-jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>`<br/>
 &emsp;&emsp;Add a parameter:&emsp; `-jvmArgs -a <Parameter Content>`<br/>
 &emsp;&emsp;Delete a parameter:   `-jvmArgs -d <Order number, starting from 0>`<br/>
@@ -159,6 +163,7 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 <details>
   <summary><b><font size="4">Custom Game Parameters Related</font></b></summary>
 
+Note: You can append `-version <Version Name>` to the command to specify the version to set<br/>
 &emsp;&emsp;Print all parameters: `-gameArgs -p <The number of spaces to indent, can be empty, defaults to 2>`<br/>
 &emsp;&emsp;Add a parameter:&emsp; `-gameArgs -a -n <Parameter Name> -v <Parameter Value(optional, do not enter -v if this is empty)>`<br/>
 &emsp;&emsp;Delete a parameter:   `-gameArgs -d <Parameter Name>`<br/>
@@ -166,9 +171,8 @@ Note: If the type is an integer and the value is negative (or the parameter valu
 <details>
   <summary><b><font size="4">Installation Version Related</font></b></summary>
 
-&emsp;&emsp;Direct install version: -install `<Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>`<br/>
-&emsp;&emsp;Optional parameters:<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-f` Install Fabric `-fapi(optional, with Fabric Api)`<br/>
+&emsp;&emsp;Direct install version: `-install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>`<br/>
+&emsp;&emsp;Optional parameters: `-f` Install Fabric `-fapi(optional, with Fabric Api)`<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-o` Install Forge<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-e` Install LiteLoader<br/>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-p` Install OptiFine<br/>

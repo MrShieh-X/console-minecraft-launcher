@@ -54,6 +54,9 @@ public class ConfigOption implements Option {
         }
 
         switch (key.toLowerCase()) {
+            case "view":
+                System.out.println(getString("MESSAGE_CONFIGURATIONS"));
+                break;
             case "p":
                 if (subOption instanceof SingleArgument) {
                     System.out.println(getString("CONSOLE_INCORRECT_USAGE"));

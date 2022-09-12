@@ -38,9 +38,9 @@ public class ProgramUtils {
     public static void printStringsThatEnglishNotHave() {
         List<String> fin = new LinkedList<>();
 
-        for (Map.Entry<String, String> e : Languages.zh.entrySet()) {
+        for (Map.Entry<String, String> e : Languages.getZh().entrySet()) {
             String s = e.getKey();
-            if (isEmpty(Languages.en.get(s))) {
+            if (isEmpty(Languages.getEn().get(s))) {
                 fin.add(s);
             }
         }
@@ -53,9 +53,9 @@ public class ProgramUtils {
     public static void printStringsThatChineseNotHave() {
         List<String> fin = new LinkedList<>();
 
-        for (Map.Entry<String, String> e : Languages.en.entrySet()) {
+        for (Map.Entry<String, String> e : Languages.getEn().entrySet()) {
             String s = e.getKey();
-            if (isEmpty(Languages.zh.get(s))) {
+            if (isEmpty(Languages.getZh().get(s))) {
                 fin.add(s);
             }
         }

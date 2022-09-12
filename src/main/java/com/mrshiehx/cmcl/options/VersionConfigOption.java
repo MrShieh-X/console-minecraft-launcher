@@ -21,6 +21,7 @@ package com.mrshiehx.cmcl.options;
 
 import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
+import com.mrshiehx.cmcl.bean.arguments.TextArgument;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
@@ -67,10 +68,28 @@ public class VersionConfigOption implements Option {
             }
         }
 
+        Argument configKey = arguments.opt(1);
+        if (configKey instanceof TextArgument) {
+            String configValueText = "";
+            Argument configValue = arguments.opt(2);
+            if (configValue instanceof TextArgument) {
+                configValueText = configValue.key;
+            }
+            if (!Utils.isEmpty(configValueText))
+                versionCfg.put(configKey.key, configValueText);
+            else versionCfg.remove(configKey.key);
+            try {
+                Utils.writeFile(cfgFile, versionCfg.toString(), false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
         String key = subOption.key;
         switch (key.toLowerCase()) {
             case "workingdirectory": {
-                versionCfg.put("workingDirectory", (subOption instanceof ValueArgument) ? ((ValueArgument) subOption).value : "");
+                versionCfg.put("gameDir", (subOption instanceof ValueArgument) ? ((ValueArgument) subOption).value : "");
                 try {
                     Utils.writeFile(cfgFile, versionCfg.toString(), false);
                 } catch (IOException e) {
@@ -78,6 +97,15 @@ public class VersionConfigOption implements Option {
                 }
             }
             break;
+            /*case "javapath": {
+                versionCfg.put("javaPath", (subOption instanceof ValueArgument) ? ((ValueArgument) subOption).value : "");
+                try {
+                    Utils.writeFile(cfgFile, versionCfg.toString(), false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;*/
             default:
                 Utils.printfln(getString("CONSOLE_UNKNOWN_OPTION"), key);
                 break;

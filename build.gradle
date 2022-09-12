@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.mrshiehx'
-String versionString='1.6'
+String versionString='1.7'
 version versionString
 
 repositories {

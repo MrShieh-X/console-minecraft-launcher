@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Languages {
-    public static final Map<String, String> zh = new HashMap<>();
-    public static final Map<String, String> en = new HashMap<>();
-    public static final Map<String, String> zhUsage = new HashMap<>();
-    public static final Map<String, String> enUsage = new HashMap<>();
+    private static final Map<String, String> zh = new HashMap<>();
+    private static final Map<String, String> en = new HashMap<>();
+    private static final Map<String, String> zhUsage = new HashMap<>();
+    private static final Map<String, String> enUsage = new HashMap<>();
 
     /*zhCN*/
     public static Map<String, String> getZh() {
@@ -133,6 +133,44 @@ public class Languages {
                     "     https://www.bilibili.com/video/BV1AY411A7XU\n" +
                     "     https://www.youtube.com/watch?v=SczdBQT9vOY（英语）\n" +
                     "########################################################");
+            zh.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
+                    "    账号（非直接修改，请通过“-account -u”获得相关使用教程以进行修改）\n" +
+                    "  downloadSource | 整数\n" +
+                    "    下载源，0为默认，1为BMCLAPI，2为MCBBS\n" +
+                    "  language | 字符串\n" +
+                    "    语言，zh为简体中文，en为英文\n" +
+                    "  selectedVersion | 字符串\n" +
+                    "    已选择的版本\n" +
+                    "  maxMemory | 整数\n" +
+                    "    [游戏相关]最大内存（单位：MB）\n" +
+                    "  gameDir | 字符串\n" +
+                    "    [游戏相关]自定义游戏目录路径（或设置版本隔离），默认为.minecraft\n" +
+                    "  assetsDir | 字符串\n" +
+                    "    [游戏相关]自定义assets资源目录路径，若为空则为游戏目录内的assets目录\n" +
+                    "  resourcesDir | 字符串\n" +
+                    "    [游戏相关]自定义资源包目录路径，若为空则为游戏目录内的resourcepacks目录\n" +
+                    "  javaPath | 字符串\n" +
+                    "    [游戏相关]Java 路径（如果为空会自动获得）\n" +
+                    "  windowSizeWidth | 整数\n" +
+                    "    [游戏相关]游戏窗口的宽\n" +
+                    "  windowSizeHeight | 整数\n" +
+                    "    [游戏相关]游戏窗口的高\n" +
+                    "  isFullscreen | 布尔值\n" +
+                    "    [游戏相关]是否为全屏，是则为true，否则为false\n" +
+                    "  exitWithMinecraft | 布尔值\n" +
+                    "    [游戏相关]运行游戏时，若需要退出该程序时顺便退出游戏，则为true，否则为false\n" +
+                    "  jvmArgs | JSON数组\n" +
+                    "    [游戏相关]自定义JVM参数（非直接修改，请通过“-jvmArgs -u”获得相关使用教程以进行修改）\n" +
+                    "  gameArgs | JSON对象\n" +
+                    "    [游戏相关]自定义游戏参数（非直接修改，请通过“-gameArgs -u”获得相关使用教程以进行修改）\n" +
+                    "  proxyHost | 字符串\n" +
+                    "    代理主机地址\n" +
+                    "  proxyPort | 整数\n" +
+                    "    代理端口\n" +
+                    "  proxyUsername | 字符串\n" +
+                    "    代理验证的账户（代理可选）\n" +
+                    "  proxyPassword | 字符串\n" +
+                    "    代理验证的密码（代理可选）");
             zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
             zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“-install <版本名称>”安装一个新的版本并选择。");
             zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
@@ -153,7 +191,7 @@ public class Languages {
             zh.put("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE", "服务器无响应");
             zh.put("CONSOLE_FAILED_OPERATE", "操作失败：");
             zh.put("CONSOLE_FILE_EXISTS", "文件“%s”已存在");
-            zh.put("CONSOLE_INCORRECT_JAVA", "请通过 “-config javaPath <Java路径>” 修改一个正确的 Java 路径");
+            zh.put("CONSOLE_INCORRECT_JAVA", "请通过 “-config javaPath <Java路径>”或“-vcfg <你的版本名称> javaPath <Java 路径>” 修改一个正确的 Java 路径");
             zh.put("CONSOLE_FAILED_START", "启动游戏失败");
             zh.put("CONSOLE_START_COMMAND", "启动命令：");
             zh.put("CONSOLE_NO_SELECTED_VERSION", "请使用“-s <版本名称>”以选择一个版本以启动，或通过“-b <版本名称>”或“-start <版本名称>”带上版本名称以启动。");
@@ -438,6 +476,44 @@ public class Languages {
                     "     https://www.bilibili.com/video/BV1ua41187od (Chinese)\n" +
                     "     https://www.bilibili.com/video/BV1AY411A7XU (Chinese)\n" +
                     "#########################################################################");
+            en.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON Array\n" +
+                    "    Accounts (Non-direct modification, please use \"-account -u\" to get the relevant tutorial for modification)\n" +
+                    "  downloadSource | Integer\n" +
+                    "    Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS\n" +
+                    "  language | String\n" +
+                    "    Language, zh is Simplified Chinese and en is English\n" +
+                    "  selectedVersion | String\n" +
+                    "    Selected start version\n" +
+                    "  maxMemory | Integer\n" +
+                    "    [Game related]Maximum (Unit: MB)|\n" +
+                    "  gameDir | String\n" +
+                    "    [Game related]Custom the path of the game directory (or set working directory), default is .minecraft\n" +
+                    "  assetsDir | String\n" +
+                    "    [Game related]Custom assets resource directory path, if empty, it is the assets directory in the game directory\n" +
+                    "  resourcesDir | String\n" +
+                    "    [Game related]Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory\n" +
+                    "  javaPath | String\n" +
+                    "    [Game related]Java Path (It will get automatically if it is empty)\n" +
+                    "  windowSizeWidth | Integer\n" +
+                    "    [Game related]The width of the game window\n" +
+                    "  windowSizeHeight | Integer\n" +
+                    "    [Game related]The height of the game window\n" +
+                    "  isFullscreen | Boolean\n" +
+                    "    [Game related]Whether it is full screen, true if yes, false otherwise\n" +
+                    "  exitWithMinecraft | Boolean\n" +
+                    "    [Game related]When running the game, if you need to exit the program and exit the game by the way, it is true, otherwise it is false\n" +
+                    "  jvmArgs | JSON Array\n" +
+                    "    [Game related]Customize JVM parameters (Non-direct modification, please use \"-jvmArgs -u\" to get the relevant tutorial for modification)\n" +
+                    "  gameArgs | JSON Object\n" +
+                    "    [Game related]Customize game parameters (Non-direct modification, please use \"-gameArgs -u\" to get the relevant tutorial for modification)\n" +
+                    "  proxyHost | String\n" +
+                    "    Proxy Host Address\n" +
+                    "  proxyPort | Integer\n" +
+                    "    Proxy Port\n" +
+                    "  proxyUsername | String\n" +
+                    "    Proxy authentication username(optional for proxy)\n" +
+                    "  proxyPassword | String\n" +
+                    "    Proxy authentication password(optional for proxy)");
             en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
             en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <Version Name>\" to select a launch-able version or \"-install <Version Name>\" to install a new version and select it.");
             en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
@@ -458,7 +534,7 @@ public class Languages {
             en.put("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE", "Server not responding");
             en.put("CONSOLE_FAILED_OPERATE", "Failed to operate: ");
             en.put("CONSOLE_FILE_EXISTS", "The file \"%s\" already exists");
-            en.put("CONSOLE_INCORRECT_JAVA", "Please modify a correct Java path by \"-config javaPath <Java Path>\"");
+            en.put("CONSOLE_INCORRECT_JAVA", "Please modify a correct Java path by \"-config javaPath <Java Path>\" or \"-vcfg <Your Version Name> javaPath <Java Path>\"");
             en.put("CONSOLE_FAILED_START", "Unable to start game");
             en.put("CONSOLE_START_COMMAND", "Launch Command: ");
             en.put("CONSOLE_NO_SELECTED_VERSION", "Please use \"-s <Version Name>\" to select a version to start, or start via \"-b <Version Name>\" or \"-start <Version Name>\" with the version name.");
@@ -664,6 +740,7 @@ public class Languages {
                             "    Set a cape (only for offline account):                   -account -c <Cape file path, if not entered it will unset the cape>");
             enUsage.put("CONFIG",
                     "Configuration Related:\n" +
+                            "    View all settable configurations:                -config -view\n" +
                             "    Print a configuration:                           -config -p <Configuration Name>\n" +
                             "    Print all configurations:                        -config -a\n" +
                             "    Print the original content of the configuration: -config -o <The number of spaces to indent, can be empty, defaults to 2>\n" +
@@ -689,30 +766,24 @@ public class Languages {
                             "    Install OptiFine to local version:                  -version -p <Version Name>\n" +
                             "    Install Quilt to local version:                     -version -q <Version Name>\n" +
                             "  Note: You can specify the version by adding \"-v <Version>\" after the commands to install Fabric, Forge, LiteLoader, OptiFine and Quilt, so as to avoid entering the command and then selecting the version.");
-
-
             enUsage.put("VERSION_CONFIG",
                     "Version Config Related:\n" +
-                            "    Set version working directory: -vcfg <Version Name> -workingDirectory <Target directory, default if not entered>");
-
+                            "    General: -vcfg <Version Name> <Configuration name, use \"-config -view\" to view the content with \"[Game related]\"> <Content, add double quotes if there is a space, use global configuration if not entered>\n" +
+                            "    Set version working directory(same as gameDir): -vcfg <Version Name> -workingDirectory <Target directory, default if not entered>");
             enUsage.put("JVM_ARGS",
-                    "Custom JVM Virtual Machine Parameters Related:\n" +
+                    "Custom JVM Parameters Related (you can append \"-version <Version Name>\" to the command to specify the version to set):\n" +
                             "    Print all parameters: -jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>\n" +
                             "    Add a parameter:      -jvmArgs -a <Parameter Content>\n" +
                             "    Delete a parameter:   -jvmArgs -d <Order number, starting from 0>");
-
             enUsage.put("GAME_ARGS",
-                    "Custom Game Parameters Related:\n" +
+                    "Custom Game Parameters Related (you can append \"-version <Version Name>\" to the command to specify the version to set):\n" +
                             "    Print all parameters: -gameArgs -p <The number of spaces to indent, can be empty, defaults to 2>\n" +
                             "    Add a parameter:      -gameArgs -a -n <Parameter Name> -v <Parameter Value(optional, do not enter -v if this is empty)>\n" +
                             "    Delete a parameter:   -gameArgs -d <Parameter Name>");
-
             enUsage.put("INSTALL",
                     "Installation Version Related:\n" +
                             "    Direct install version: -install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>\n" +
-
-                            "    Optional parameters:\n" +
-                            "                -f Install Fabric -fapi(optional, with Fabric Api)\n" +
+                            "    Optional parameters: -f Install Fabric -fapi(optional, with Fabric Api)\n" +
                             "                -o Install Forge\n" +
                             "                -e Install LiteLoader\n" +
                             "                -p Install OptiFine\n" +
@@ -798,6 +869,7 @@ public class Languages {
                             "    设置披风（仅离线账号）：             -account -c <披风文件路径，如果不输入则为取消设置披风>");
             zhUsage.put("CONFIG",
                     "配置相关：\n" +
+                            "    查看所有可设置的配置：-config -view\n" +
                             "    打印某项配置：        -config -p <配置名>\n" +
                             "    打印全部配置：        -config -a\n" +
                             "    打印配置原内容：      -config -o <缩进的空格数，可为空，默认为2>\n" +
@@ -823,24 +895,20 @@ public class Languages {
                             "    安装 OptiFine 到本地版本：  -version -p <版本名称>\n" +
                             "    安装 Quilt 到本地版本：     -version -q <版本名称>\n" +
                             "  注：可在安装 Fabric、Forge、LiteLoader、OptiFine 和 Quilt 的命令后添加上“-v <版本>”以指定版本，以免输入命令后再选择版本。");
-
             zhUsage.put("VERSION_CONFIG",
                     "版本配置相关：\n" +
-                            "    设置版本隔离：-vcfg <版本名称> -workingDirectory <目标目录，不输入则设为默认>");
-
+                            "    通用：-vcfg <版本名称> <配置名称，使用“-config -view”查看的内容中带有“[游戏相关]”的> <内容，有空格则加上双引号，不输入则使用全局配置>\n" +
+                            "    设置版本隔离(同gameDir)：-vcfg <版本名称> -workingDirectory <目标目录，不输入则设为默认>");
             zhUsage.put("JVM_ARGS",
-                    "自定义JVM虚拟机参数相关：\n" +
+                    "自定义JVM参数相关（可在命令后面添上“-version <版本名称>”以指定要设置的版本）：\n" +
                             "    输出所有参数：-jvmArgs -p <缩进的空格数，可为空，默认为2>\n" +
                             "    添加参数：    -jvmArgs -a <参数内容>\n" +
                             "    删除参数：    -jvmArgs -d <序号，从0开始>");
-
             zhUsage.put("GAME_ARGS",
-                    "自定义游戏参数相关：\n" +
+                    "自定义游戏参数相关（可在命令后面添上“-version <版本名称>”以指定要设置的版本）：\n" +
                             "    输出所有参数：-gameArgs -p <缩进的空格数，可为空，默认为2>\n" +
                             "    添加参数：    -gameArgs -a -n <参数名称> -v <参数值(可选，如果此项为空则不要输入-v)>\n" +
                             "    删除参数：    -gameArgs -d <参数名称>");
-
-
             zhUsage.put("INSTALL",
                     "安装版本相关：\n" +
                             "    直接安装版本：-install <版本名称（如果有空格要加双引号）> -n <存储的版本名称(可选)>\n" +

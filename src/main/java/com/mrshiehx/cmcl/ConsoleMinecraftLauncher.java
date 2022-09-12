@@ -50,6 +50,7 @@ public class ConsoleMinecraftLauncher {
     public static File librariesDir;
     public static File launcherProfiles;
     public static Process runningMc;
+    public static boolean exitWithMinecraft;
 
     public static JSONObject configContent;
     public static String javaPath = "";
@@ -65,7 +66,7 @@ public class ConsoleMinecraftLauncher {
 
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (runningMc != null && configContent.optBoolean("exitWithMinecraft")) {
+            if (runningMc != null && exitWithMinecraft/*configContent.optBoolean("exitWithMinecraft")*/) {
                 if (runningMc.isAlive()) {
                     runningMc.destroy();
                 }

@@ -24,7 +24,11 @@ import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+
 import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.versionsDir;
 
 public class JVMArgsOption implements Option {
     @Override
@@ -35,7 +39,25 @@ public class JVMArgsOption implements Option {
             return;
         }
         String key = subOption.key;
-        JSONObject jsonObject = Utils.getConfig();
+
+        String version = arguments.opt("version");
+        File versionConfig = null;
+        JSONObject versionConfigJO = null;
+        if (!Utils.isEmpty(version) && Utils.versionExists(version)) {
+            versionConfig = new File(versionsDir, version + "/cmclversion.json");
+            try {
+                if (!versionConfig.exists()) {
+                    Utils.createFile(versionConfig, false);
+                } else {
+                    versionConfigJO = Utils.parseJSONObject(Utils.readFileContent(versionConfig));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (versionConfigJO == null) versionConfigJO = new JSONObject();
+        }
+
+        JSONObject jsonObject = versionConfig != null ? versionConfigJO : Utils.getConfig();
         JSONArray jvmArgs = jsonObject.optJSONArray("jvmArgs");
         if (jvmArgs == null) jsonObject.put("jvmArgs", jvmArgs = new JSONArray());
         switch (key.toLowerCase()) {
@@ -61,7 +83,15 @@ public class JVMArgsOption implements Option {
                 }
                 String value = ((ValueArgument) subOption).value;
                 jvmArgs.put(value);
-                Utils.saveConfig(jsonObject);
+                if (versionConfig != null) {
+                    try {
+                        Utils.writeFile(versionConfig, jsonObject.toString(), false);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Utils.saveConfig(jsonObject);
+                }
             }
             break;
             case "d":
@@ -74,7 +104,15 @@ public class JVMArgsOption implements Option {
                 try {
                     int order = Utils.parse(value);
                     jvmArgs.remove(order);
-                    Utils.saveConfig(jsonObject);
+                    if (versionConfig != null) {
+                        try {
+                            Utils.writeFile(versionConfig, jsonObject.toString(), false);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Utils.saveConfig(jsonObject);
+                    }
                 } catch (Exception e) {
                     return;
                 }

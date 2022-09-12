@@ -1,5 +1,10 @@
 # Update Logs
-Currently, the latest version is 1.6, which was updated on August 26, 2022.
+Currently, the latest version is 1.7, which was updated on September 12, 2022.
+
+## 1.7 (Sept. 12, 2022)
+- All modifiable configurations can be viewed through `-config -view`.
+- You can use `-vcfg <Version Name> <Configuration name, use "-config -view" to view the content with "[Game related]"> <Content, add double quotes if there is a space, use global configuration if not entered>` This generic command sets the version configuration (configurations with "[Game related]" are HMCL compatible).
+- `-version <Version Name>` can be appended to the custom game arguments or JVM arguments command to specify the version to set.
 
 ## 1.6 (Aug. 26, 2022)
 - **Fabric API can be installed** after installing the version or when installing the version, you need to **add** `-fapi` **after the installation command**. Example `-version -f 1.19 -fapi` or `-install 1.19 -f -fapi` (by [BlockyDeer](https://github.com/BlockyDeer) on [Issue#17](https://github.com/MrShieh-X/console-minecraft-launcher/issues/17) ).

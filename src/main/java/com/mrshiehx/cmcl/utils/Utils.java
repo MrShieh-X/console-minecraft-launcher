@@ -771,6 +771,20 @@ public class Utils {
         return result;
     }
 
+    public static List<String> parseJVMArgs(String[] jvmArgs) {
+        List<String> result = new LinkedList<>();
+        if (jvmArgs == null || jvmArgs.length == 0)
+            return result;
+        for (String v : jvmArgs) {
+            if (!isEmpty(v)) {
+                if (!v.contains("-Dminecraft.launcher.brand") && !v.contains("-Dminecraft.launcher.version") && !result.contains(v)) {
+                    result.add(v);
+                }
+            }
+        }
+        return result;
+    }
+
     public static Map<String, String> parseGameArgs(JSONObject gameArgs) {
         Map<String, Object> map;
         Map<String, String> result = new LinkedHashMap<>();

@@ -1,5 +1,10 @@
 # 更新日志
-目前的最新版本为1.6，发布日期是2022年8月26日。
+目前的最新版本为1.7，发布日期是2022年9月12日。
+
+## 1.7（2022年9月12日）
+- 可通过`-config -view`查看所有可修改的配置。
+- 可通过`-vcfg <版本名称> <配置名称，使用“-config -view”查看的内容中带有“[游戏相关]”的> <内容，有空格则加上双引号，不输入则使用全局配置>`此通用命令设置版本配置（带有“[游戏相关]”的配置兼容HMCL）。
+- 可在自定义游戏参数或JVM参数命令后面添上`-version <版本名称>`以指定要设置的版本。
 
 ## 1.6（2022年8月26日）
 - 可在安装版本后或安装版本时**安装 Fabric API**，需在**安装命令后加上**`-fapi`。例`-version -f 1.19 -fapi`或`-install 1.19 -f -fapi`（由 [BlockyDeer](https://github.com/BlockyDeer) 于 [Issue#17](https://github.com/MrShieh-X/console-minecraft-launcher/issues/17) 提出）。
