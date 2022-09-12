@@ -375,7 +375,7 @@ public class Languages {
             en.put("MESSAGE_ABOUT_DESCRIPTION_4", "Source code repository: ");
             en.put("MESSAGE_ABOUT_DESCRIPTION_6", "Dependency Libraries: ");
             en.put("MESSAGE_ABOUT_DESCRIPTION_MAIN_DEVELOPERS", "Main Developers:");
-            en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS", "Special Thanks：");
+            en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS", "Special Thanks: ");
             en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR", "authlib-injector support");
             en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI", "BMCLAPI download source provider");
             en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS.....................");
