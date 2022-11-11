@@ -149,7 +149,7 @@ public class ConsoleMinecraftLauncher {
             configContent.put("windowSizeHeight", 480);
             configContent.put("exitWithMinecraft", false);
             try {
-                configFile.createNewFile();
+                Utils.createFile(configFile, false);
                 FileWriter writer = new FileWriter(configFile, false);
                 writer.write(configContent.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
                 writer.close();

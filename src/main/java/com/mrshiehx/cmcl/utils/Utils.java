@@ -456,7 +456,7 @@ public class Utils {
         File configFile = ConsoleMinecraftLauncher.getConfigFile();
         try {
             if (!configFile.exists())
-                configFile.createNewFile();
+                Utils.createFile(configFile, false);
             FileWriter writer = new FileWriter(configFile, false);
             writer.write(jsonObject.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
             writer.close();
