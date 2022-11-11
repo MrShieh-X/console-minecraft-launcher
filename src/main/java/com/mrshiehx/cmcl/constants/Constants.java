@@ -23,8 +23,8 @@ import com.mrshiehx.cmcl.utils.Utils;
 import java.io.File;
 
 public class Constants {
-    public static final File configFile = new File("cmcl.json");
-    public static final String CMCL_VERSION = "1.7";
+    public static final File DEFAULT_CONFIG_FILE = new File("cmcl.json");
+    public static final String CMCL_VERSION = "1.8";
     public static final String CLIENT_ID = getMicrosoftAuthenticationClientID();
     public static final String COPYRIGHT = "Copyright (C) 2021-2022  MrShiehX";
     public static final int INDENT_FACTOR = 2;//JsonObject转String的间隔

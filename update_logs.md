@@ -1,5 +1,10 @@
 # 更新日志
-目前的最新版本为1.7，发布日期是2022年9月12日。
+目前的最新版本为1.8，发布日期是2022年11月11日。
+
+## 1.8（2022年11月11日）
+- 若独立版本配置的 Java 路径、最大内存以及窗口宽高设置得不符合规范，将会自动使用全局配置值并且提示。
+- 将下载资源文件的步骤调整至最后，避免下载时卡住而无法继续安装版本。
+- 在 Linux 中，将默认读取`~/.config/cmcl/cmcl.json`作为配置文件（由 [Just-A-Pony](https://github.com/Just-A-Pony) 于 [Issue#18](https://github.com/MrShieh-X/console-minecraft-launcher/issues/18) 提出）。
 
 ## 1.7（2022年9月12日）
 - 可通过`-config -view`查看所有可修改的配置。

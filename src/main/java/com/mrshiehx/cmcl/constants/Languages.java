@@ -46,7 +46,6 @@ public class Languages {
             zh.put("MESSAGE_FAILED_REFRESH_TITLE", "刷新账号失败");
             zh.put("MESSAGE_UNABLE_TO_LOGIN_MICROSOFT", "无法登录，请稍后再试。");
             zh.put("MESSAGE_OFFICIAL_LOGIN_FAILED_MESSAGE", "登录账号失败，可能是因为您的账号尚未拥有 Minecraft。");
-            zh.put("MESSAGE_NOT_FOUND_GAME_DIR", "找不到游戏目录");
             zh.put("MESSAGE_STARTING_GAME", "启动游戏中...");
             zh.put("MESSAGE_FINISHED_GAME", "游戏结束");
             zh.put("MESSAGE_FAILED_TO_CONNECT_TO_URL", "连接到 %s 失败，请检查您的网络连接。");
@@ -81,7 +80,6 @@ public class Languages {
             zh.put("MESSAGE_DOWNLOADING_FILE_TO", "正在下载 %s 到 %s");
             zh.put("MESSAGE_COPYING_FILE", "正在复制 %s 到 %s");
             zh.put("MESSAGE_UNZIPPING_FILE", "正在解压 %s");
-            zh.put("MESSAGE_INSTALL_COPIED_NATIVE_LIBRARIES", "复制原生依赖库文件完成");
             zh.put("MESSAGE_GAME_CRASH_CAUSE_TIPS", "游戏崩溃可能的错误：%s");
             zh.put("MESSAGE_GAME_CRASH_CAUSE_URLCLASSLOADER", "旧版本 Minecraft 出现此错误可能是因为 Java 版本过高，可使用 Java 8 及更低版本以修复此问题。");
             zh.put("MESSAGE_GAME_CRASH_CAUSE_LWJGL_FAILED_LOAD", "出现此错误可能是因为原生依赖库缺失或损坏，请通过“-version -n <版本名称>”重新下载依赖库文件以修复此问题。");
@@ -93,7 +91,6 @@ public class Languages {
             zh.put("MESSAGE_INSTALLED_FORGE", "安装 Forge 成功");
             zh.put("MESSAGE_NOT_FOUND_LIBRARY_DOWNLOAD_URL", "找不到依赖库 %s 的下载链接");
             zh.put("MESSAGE_INSTALL_NATIVES_EMPTY_JAR", "无需要解压的原生依赖库文件");
-            zh.put("MESSAGE_INSTALL_NATIVES_EMPTY_NATIVE_FILE", "无需要复制的原生依赖库文件");
             zh.put("MESSAGE_INSTALL_FORGE_FAILED_EXECUTE_PROCESSOR", "执行任务失败：%s");
             zh.put("MESSAGE_AUTHLIB_INJECTOR_LOGIN_SELECT_PROFILE", "请选择一个角色(%d-%d)：");
             zh.put("MESSAGE_INPUT_VERSION_NAME", "请输入要存储为的版本名称：");
@@ -176,8 +173,9 @@ public class Languages {
             zh.put("EXCEPTION_VERSION_NOT_FOUND", "目标游戏版本不存在");
             zh.put("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND", "找不到原生依赖库（natives）目录或为空，您需要使用“-version -n <版本名称>”下载原生依赖库文件以启动游戏。");
             zh.put("EXCEPTION_MAX_MEMORY_TOO_BIG", "最大内存大于物理内存总大小");
-            zh.put("EXCEPTION_MAX_MEMORY_IS_ZERO", "最大内存为零");
+            zh.put("EXCEPTION_MAX_MEMORY_MUST_BE_GREATER_THAN_ZERO", "最大内存必须大于零");
             zh.put("EXCEPTION_JAVA_VERSION_TOO_LOW", "此 Minecraft 版本的 Java 版本最低要求为 %d，您选择的 Java 版本为 %d，请选择一个达到要求的 Java 后重试。");
+            zh.put("EXCEPTION_WINDOW_SIZE_MUST_BE_GREATER_THAN_ZERO", "游戏窗口的宽和高必须大于零");
             zh.put("LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账户，\n如果登录成功，请返回到启动器，等待完成登录。\n登录需要一定的时间，请耐心等待。\n按以下的按钮，将会取消登录。");
             zh.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭此页面并返回到启动器完成登录。");
             zh.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "登录微软账户 - Console Minecraft Launcher");
@@ -201,7 +199,6 @@ public class Languages {
             zh.put("CONSOLE_INSTALL_SHOW_INCORRECT_TIME", "不正确的时间格式或第一个时间大于第二个时间。");
             zh.put("CONSOLE_REPLACE_LOGGED_ACCOUNT", "您已经登录了此账号（序号为 %d），是否覆盖原来的账号？");
             zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_UUID_AND_URL_AND_TOKEN", "如果是外置账号，必须有UUID、accessToken以及外置登录服务器的地址才能进行此操作。");
-            zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_ACCESS_TOKEN_AND_CLIENT_TOKEN_AND_URL", "如果是外置账号，必须有 accessToken、clientToken 以及外置登录服务器的地址才能进行此操作。");
             zh.put("CONSOLE_ACCOUNT_UN_OPERABLE_UUID", "必须是正版账号或外置账号登录且有 UUID 才能进行此操作。如果是外置账号还需要目标服务器地址。");
             zh.put("CONSOLE_INPUT_INT_WRONG", "请输入一个正确的、在范围内的数字。");
             zh.put("CONSOLE_INPUT_STRING_NOT_FOUND", "找不到“%s”。");
@@ -231,7 +228,10 @@ public class Languages {
             zh.put("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT_FAILED_AUTHENTICATE", "认证失败");
             zh.put("FAILED_TO_LOGIN_OAA_NO_SELECTED_CHARACTER", "登录失败，请选择一个可用的角色后重试。");
             zh.put("WARNING_SHOWING_PASSWORD", "警告：在非控制台执行该操作，您的密码将不会被隐藏！");
-            zh.put("WARNING_REFRESH_NOT_SELECTED", "警告：当前账号未选择角色，本地此账号已无法使用，请前往外置登录服务器选择一个可用的角色后刷新！");
+            zh.put("WARNING_VCFG_JAVA_INCORRECT", "警告：独立版本配置的 Java 路径不存在或无效，已使用全局配置值！");
+            zh.put("WARNING_VCFG_MAX_MEMORY_INCORRECT", "警告：独立版本配置的最大内存小于或等于零，已使用全局配置值！");
+            zh.put("WARNING_VCFG_WINDOW_SIZE_WIDTH_INCORRECT", "警告：独立版本配置的窗口宽小于或等于零，已使用全局配置值！");
+            zh.put("WARNING_VCFG_WINDOW_SIZE_HEIGHT_INCORRECT", "警告：独立版本配置的窗口高小于或等于零，已使用全局配置值！");
             zh.put("FILE_NOT_FOUND_OR_IS_A_DIRECTORY", "找不到目标文件或目标文件是个目录");
             zh.put("SUCCESSFULLY_SET_SKIN", "设置皮肤成功");
             zh.put("UNAVAILABLE_AUTHLIB_ACCOUNT_REASON", "authlib-injector 配置错误：%s");
@@ -240,7 +240,6 @@ public class Languages {
             zh.put("PRINT_COMMAND_NOT_SUPPORT_OFFLINE_CUSTOM_SKIN", "注意：如果你是离线账号，使用命令启动游戏，自定义皮肤将不可用。");
             zh.put("EMPTY_UUID", "UUID为空");
             zh.put("EMPTY_PLAYERNAME", "玩家名称为空");
-            zh.put("EMPTY_SKIN", "皮肤为空");
             zh.put("ONLY_OFFLINE", "该功能仅支持离线账号");
             zh.put("UPLOAD_SKIN_ONLY_OAS_OR_OFFLINE", "非外置账号或离线账号不支持设置皮肤。");
             zh.put("SKIN_TYPE_DEFAULT_OR_SLIM", "是否将皮肤模型设置为苗条（Alex）？");
@@ -271,7 +270,6 @@ public class Languages {
             zh.put("INSTALL_MODLOADER_FAILED_WITH_REASON", "安装 %s 失败：%s");
             zh.put("INSTALLED_MODLOADER", "安装 %s 成功");
             zh.put("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", "无法安装 %1$s：目标版本已安装 %2$s，%2$s 和 %1$s 不能共存。");
-            zh.put("INSTALL_MODLOADER_NO_FILE", "无法安装 %1$s：您输入的 %1$s 版本没有可下载的文件，请换一个 %1$s 版本再试。");
             zh.put("INSTALL_MODLOADER_FAILED_DOWNLOAD", "无法安装 %s：下载文件失败");
             zh.put("INSTALL_MODLOADER_DOWNLOADING_FILE", "下载文件中...");
             zh.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION_2", "无法安装 %1$s：没有可安装的 %1$s 版本。");
@@ -326,7 +324,6 @@ public class Languages {
             zh.put("CF_INFORMATION_AUTHOR", "   作者：              ");
             zh.put("CF_INFORMATION_SUMMARY", "   简介：              ");
             zh.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持的游戏版本：");
-            zh.put("CF_INFORMATION_MOD_LOADERS", "   模组加载器：        ");
             zh.put("CF_INFORMATION_DATE_MODIFIED", "   修改日期：          ");
             zh.put("CF_INFORMATION_DATE_CREATED", "   创建日期：          ");
             zh.put("CF_INFORMATION_DATE_RELEASED", "   发布日期：          ");
@@ -386,7 +383,6 @@ public class Languages {
             en.put("MESSAGE_UNABLE_TO_LOGIN_MICROSOFT", "Unable to login, please try again later.");
             en.put("MESSAGE_OFFICIAL_LOGIN_FAILED_MESSAGE", "Login to your account failed, probably because your account does not have Minecraft.");
             en.put("MESSAGE_FAILED_REFRESH_TITLE", "Failed to refresh account");
-            en.put("MESSAGE_NOT_FOUND_GAME_DIR", "Game directory not found");
             en.put("MESSAGE_STARTING_GAME", "Starting game...");
             en.put("MESSAGE_FINISHED_GAME", "Game finished");
             en.put("MESSAGE_FAILED_TO_CONNECT_TO_URL", "Failed to connect to %s, please check your network connection.");
@@ -421,7 +417,6 @@ public class Languages {
             en.put("MESSAGE_DOWNLOADING_FILE_TO", "Downloading %s to %s");
             en.put("MESSAGE_COPYING_FILE", "Copying %s to %s");
             en.put("MESSAGE_UNZIPPING_FILE", "Decompressing %s");
-            en.put("MESSAGE_INSTALL_COPIED_NATIVE_LIBRARIES", "Copy the native dependency libraries complete");
             en.put("MESSAGE_GAME_CRASH_CAUSE_TIPS", "Game crash possible error: %s");
             en.put("MESSAGE_GAME_CRASH_CAUSE_URLCLASSLOADER", "Older versions of Minecraft may have this error because the Java version is too high, Java 8 and below can be used to fix this.");
             en.put("MESSAGE_GAME_CRASH_CAUSE_LWJGL_FAILED_LOAD", "This error may occur because some of the native dependency library are missing or damaged, please re-download native dependency libraries via \"-version -n <version name>\" to fix this problem.");
@@ -433,7 +428,6 @@ public class Languages {
             en.put("MESSAGE_INSTALLED_FORGE", "Forge installed successfully");
             en.put("MESSAGE_NOT_FOUND_LIBRARY_DOWNLOAD_URL", "Could not find the download URL of the dependency library %s");
             en.put("MESSAGE_INSTALL_NATIVES_EMPTY_JAR", "No native dependency library files that need to be decompressed");
-            en.put("MESSAGE_INSTALL_NATIVES_EMPTY_NATIVE_FILE", "No native dependency library files that need to be copied");
             en.put("MESSAGE_INSTALL_FORGE_FAILED_EXECUTE_PROCESSOR", "Failed to execute processor: %s");
             en.put("MESSAGE_AUTHLIB_INJECTOR_LOGIN_SELECT_PROFILE", "Please choose a character (%d-%d): ");
             en.put("MESSAGE_INPUT_VERSION_NAME", "Please enter the version name to store as: ");
@@ -519,8 +513,9 @@ public class Languages {
             en.put("EXCEPTION_VERSION_NOT_FOUND", "The target game version does not exist");
             en.put("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND", "Cannot find the native libraries directory or it is empty, you can re-download the native library files via \"-version -n <version name>\" to start game.");
             en.put("EXCEPTION_MAX_MEMORY_TOO_BIG", "The maximum memory is larger than the total physical memory size");
-            en.put("EXCEPTION_MAX_MEMORY_IS_ZERO", "The maximum memory is 0");
+            en.put("EXCEPTION_MAX_MEMORY_MUST_BE_GREATER_THAN_ZERO", "Maximum memory must be greater than zero");
             en.put("EXCEPTION_JAVA_VERSION_TOO_LOW", "The minimum Java version required for this version of Minecraft is %d, the Java version you have selected is %d, please select a Java that meets the requirements and try again.");
+            en.put("EXCEPTION_WINDOW_SIZE_MUST_BE_GREATER_THAN_ZERO", "The width and height of the game window must be greater than zero");
             en.put("LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "Please login your Microsoft account in the browser,\nIf the login is successful, back to launcher and wait for the login to complete.\nIt will take some time to login, please be patient.\nPress the button below to cancel login.");
             en.put("ON_AUTHENTICATED_PAGE_TEXT", "Microsoft account authorization has been completed. Please close this page and back to the launcher to complete login.");
             en.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "Login Microsoft Account - Console Minecraft Launcher");
@@ -544,7 +539,6 @@ public class Languages {
             en.put("CONSOLE_INSTALL_SHOW_INCORRECT_TIME", "Incorrect time format or the first time is bigger than the second time.");
             en.put("CONSOLE_REPLACE_LOGGED_ACCOUNT", "You have already logged in to this account (order number is %d). Do you want to overwrite the original account?");
             en.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_UUID_AND_URL_AND_TOKEN", "If it is an authlib-injector account, you must have the UUID, accessToken and the address of the authlib-injector server to perform this operation.");
-            en.put("CONSOLE_ACCOUNT_UN_OPERABLE_NEED_ACCESS_TOKEN_AND_CLIENT_TOKEN_AND_URL", "If it is an authlib-injector account, you must have accessToken, clientToken and the address of the authlib-injector server to perform this operation.");
             en.put("CONSOLE_ACCOUNT_UN_OPERABLE_UUID", "You must be logged in with an official account or an authlib-injector account and have a UUID to perform this operation. If it is an authlib-injector account, the target server address is also required.");
             en.put("CONSOLE_INPUT_INT_WRONG", "Please enter a correct number within range. ");
             en.put("CONSOLE_INPUT_STRING_NOT_FOUND", "Not found \"%s\". ");
@@ -574,7 +568,10 @@ public class Languages {
             en.put("FAILED_TO_LOGIN_OTHER_AUTHENTICATION_ACCOUNT_FAILED_AUTHENTICATE", "Failed to authenticate");
             en.put("FAILED_TO_LOGIN_OAA_NO_SELECTED_CHARACTER", "Login failed, please select an available character and try again.");
             en.put("WARNING_SHOWING_PASSWORD", "Warning: Do this from a non-console and your password will not be hidden!");
-            en.put("WARNING_REFRESH_NOT_SELECTED", "Warning: The current account has not selected a character, and this local account cannot be used. Please go to the authlib-injector server to select an available character and refresh it!");
+            en.put("WARNING_VCFG_JAVA_INCORRECT", "Warning: The Java path of the standalone version configuration does not exist or is invalid, the global configuration value will be used by default!");
+            en.put("WARNING_VCFG_MAX_MEMORY_INCORRECT", "Warning: The maximum memory of the standalone version configuration is less than or equal to zero, the global configuration value will be used by default!");
+            en.put("WARNING_VCFG_WINDOW_SIZE_WIDTH_INCORRECT", "Warning: The game window width of the standalone version configuration is less than or equal to zero, the global configuration value will be used by default!");
+            en.put("WARNING_VCFG_WINDOW_SIZE_HEIGHT_INCORRECT", "Warning: The game window height of the standalone version configuration is less than or equal to zero, the global configuration value will be used by default!");
             en.put("FILE_NOT_FOUND_OR_IS_A_DIRECTORY", "Target file not found or target file is a directory");
             en.put("SUCCESSFULLY_SET_SKIN", "Set skin successfully");
             en.put("UNAVAILABLE_AUTHLIB_ACCOUNT_REASON", "authlib-injector is misconfigured: %s");
@@ -583,7 +580,6 @@ public class Languages {
             en.put("PRINT_COMMAND_NOT_SUPPORT_OFFLINE_CUSTOM_SKIN", "Note: If you are using an offline account and use the command to start the game, custom skin will not be available.");
             en.put("EMPTY_UUID", "UUID is empty");
             en.put("EMPTY_PLAYERNAME", "Player name is empty");
-            en.put("EMPTY_SKIN", "Skin is empty");
             en.put("ONLY_OFFLINE", "This feature only supports offline accounts");
             en.put("UPLOAD_SKIN_ONLY_OAS_OR_OFFLINE", "Non authlib-injector accounts or offline accounts do not support setting skins.");
             en.put("SKIN_TYPE_DEFAULT_OR_SLIM", "Do you want to set the skin model to slim (Alex)?");
@@ -613,7 +609,6 @@ public class Languages {
             en.put("INSTALL_MODLOADER_EMPTY_MC_VERSION", "Unable to install %1$s: Could not get the target version of the game version.");
             en.put("INSTALL_MODLOADER_FAILED_WITH_REASON", "Failed to install %s: %s");
             en.put("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", "Unable to install %1$s: The target version already has %2$s installed, %2$s and %1$s cannot coexist.");
-            en.put("INSTALL_MODLOADER_NO_FILE", "Unable to install %1$s: The version of %1$s you entered has no downloadable files. Please try another version of %1$s.");
             en.put("INSTALL_MODLOADER_FAILED_DOWNLOAD", "Unable to install %s: download file failed");
             en.put("INSTALL_MODLOADER_DOWNLOADING_FILE", "Downloading file...");
             en.put("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION_2", "Unable to install %1$s: There is no installable version of %1$s.");
@@ -669,7 +664,6 @@ public class Languages {
             en.put("CF_INFORMATION_AUTHOR", "   Author:                        ");
             en.put("CF_INFORMATION_SUMMARY", "   Introduction:                  ");
             en.put("CF_INFORMATION_LATEST_GAME_VERSION", "   Latest Supported Game Version: ");
-            en.put("CF_INFORMATION_MOD_LOADERS", "   Mod Loaders:                   ");
             en.put("CF_INFORMATION_DATE_MODIFIED", "   Modified Date:                 ");
             en.put("CF_INFORMATION_DATE_CREATED", "   Created Date:                  ");
             en.put("CF_INFORMATION_DATE_RELEASED", "   Released Date:                 ");

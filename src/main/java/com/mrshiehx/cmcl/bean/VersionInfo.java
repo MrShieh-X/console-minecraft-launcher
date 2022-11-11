@@ -30,12 +30,12 @@ import java.util.*;
 
 public class VersionInfo {
     public static final String SIGN_WORKING_DIRECTORY_IN_VERSION_DIR = "&*/\\$%";
-    public static final VersionInfo EMPTY = new VersionInfo(null, null, 0, 0, 0, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "");
+    public static final VersionInfo EMPTY = new VersionInfo(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "");
     public final String workingDirectory;
     public final String javaPath;
-    public final int maxMemory;
-    public final int windowSizeWidth;
-    public final int windowSizeHeight;
+    public final String maxMemory;//同下
+    public final String windowSizeWidth;//同下
+    public final String windowSizeHeight;//同下
     public final String isFullscreen;//不用boolean是因为要表示一种“未设置”的状态
     @NotNull
     public final List<String> jvmArgs;
@@ -47,9 +47,9 @@ public class VersionInfo {
 
     public VersionInfo(String workingDirectory,
                        String javaPath,
-                       int maxMemory,
-                       int windowSizeWidth,
-                       int windowSizeHeight,
+                       String maxMemory,
+                       String windowSizeWidth,
+                       String windowSizeHeight,
                        String isFullscreen,
                        @NotNull List<String> jvmArgs,
                        @NotNull Map<String, String> gameArgs,
@@ -72,9 +72,9 @@ public class VersionInfo {
     public static VersionInfo valueOf(JSONObject origin) {
         return new VersionInfo(origin.optString("gameDir"),
                 origin.optString("javaPath"),
-                origin.optInt("maxMemory"),
-                origin.optInt("windowSizeWidth"),
-                origin.optInt("windowSizeHeight"),
+                origin.optString("maxMemory"),
+                origin.optString("windowSizeWidth"),
+                origin.optString("windowSizeHeight"),
                 origin.optString("isFullscreen"),
                 Utils.parseJVMArgs(origin.optJSONArray("jvmArgs")),
                 Utils.parseGameArgs(origin.optJSONObject("gameArgs")),
@@ -110,9 +110,9 @@ public class VersionInfo {
         }
         return new VersionInfo(workingDirectory,
                 origin.optString("defaultJavaPath"),
-                origin.optInt("maxMemory"),
-                origin.optInt("width"),
-                origin.optInt("height"),
+                origin.optString("maxMemory"),
+                origin.optString("width"),
+                origin.optString("height"),
                 origin.optString("fullscreen"),
                 Utils.parseJVMArgs(Utils.splitCommand(Utils.clearRedundantSpaces(origin.optString("javaArgs"))).toArray(new String[0])),
                 gameArgs,
@@ -131,9 +131,9 @@ public class VersionInfo {
         return new VersionInfo(
                 !Utils.isEmpty(versionInfo.workingDirectory) ? versionInfo.workingDirectory : workingDirectory,
                 !Utils.isEmpty(versionInfo.javaPath) ? versionInfo.javaPath : javaPath,
-                versionInfo.maxMemory > 0 ? versionInfo.maxMemory : maxMemory,
-                versionInfo.windowSizeWidth > 0 ? versionInfo.windowSizeWidth : windowSizeWidth,
-                versionInfo.windowSizeHeight > 0 ? versionInfo.windowSizeHeight : windowSizeHeight,
+                !Utils.isEmpty(versionInfo.maxMemory) ? versionInfo.maxMemory : maxMemory,
+                !Utils.isEmpty(versionInfo.windowSizeWidth) ? versionInfo.windowSizeWidth : windowSizeWidth,
+                !Utils.isEmpty(versionInfo.windowSizeHeight) ? versionInfo.windowSizeHeight : windowSizeHeight,
                 !Utils.isEmpty(versionInfo.isFullscreen) ? versionInfo.isFullscreen : isFullscreen,
                 newJvmArgs,
                 newGameArgs,

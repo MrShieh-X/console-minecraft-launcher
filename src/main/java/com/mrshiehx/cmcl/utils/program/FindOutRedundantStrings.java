@@ -29,19 +29,19 @@ import java.util.Map;
 public class FindOutRedundantStrings {
     public static void main2(String[] args) throws Exception {
         System.out.println("en:");
-        main(Languages.getEn());
+        main22(Languages.getEn());
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println("zh:");
-        main(Languages.getZh());
+        main22(Languages.getZh());
 
 
         //clear();
     }
 
-    public static void main(Map<String, String> map) throws Exception {
-        File dir = new File("src/main/java");
+    public static void main22(Map<String, String> map) throws Exception {
+        File dir = new File("src/main/java"/*"D:\Programs\JetBrains\IDEA\plugins\java-decompiler\lib\test"*/);
         List<File> files = new LinkedList<>();
         tj(files, dir);
         List<String> contents = new LinkedList<>();

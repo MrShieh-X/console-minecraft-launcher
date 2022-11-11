@@ -25,6 +25,7 @@ import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.enums.GameCrashError;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
+import com.mrshiehx.cmcl.exceptions.InvalidJavaException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
@@ -125,10 +126,65 @@ public class StartOption implements Option {
                             ? versionFolder
                             : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : new File(versionInfo.workingDirectory)))
                     : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : gameDir);
-            String javaPath = !Utils.isEmpty(versionInfo.javaPath) ? versionInfo.javaPath : ConsoleMinecraftLauncher.javaPath;
-            int maxMemory = versionInfo.maxMemory > 0 ? versionInfo.maxMemory : config.optInt("maxMemory", (int) Utils.getDefaultMemory());
-            int windowSizeWidth = versionInfo.windowSizeWidth > 0 ? versionInfo.windowSizeWidth : config.optInt("windowSizeWidth", 854);
-            int windowSizeHeight = versionInfo.windowSizeHeight > 0 ? versionInfo.windowSizeHeight : config.optInt("windowSizeHeight", 480);
+
+
+            String javaPath;
+            int maxMemory;
+            int windowSizeWidth;
+            int windowSizeHeight;
+
+            String viJavaPath = versionInfo.javaPath;
+            String viMaxMemory = versionInfo.maxMemory;
+            String viWindowSizeWidth = versionInfo.windowSizeWidth;
+            String viWindowSizeHeight = versionInfo.windowSizeHeight;
+            if (isEmpty(viJavaPath)) javaPath = ConsoleMinecraftLauncher.javaPath;
+            else {
+                try {
+                    javaPath = MinecraftLauncher.getRealJavaPath(viJavaPath);
+                } catch (InvalidJavaException e) {
+                    javaPath = ConsoleMinecraftLauncher.javaPath;
+                    System.out.println(getString("WARNING_VCFG_JAVA_INCORRECT"));
+                }
+            }
+            if (isEmpty(viMaxMemory)) maxMemory = config.optInt("maxMemory", (int) Utils.getDefaultMemory());
+            else {
+                try {
+                    maxMemory = Integer.parseInt(viMaxMemory);
+                    if (maxMemory <= 0) {
+                        maxMemory = config.optInt("maxMemory", (int) Utils.getDefaultMemory());
+                        System.out.println(getString("WARNING_VCFG_MAX_MEMORY_INCORRECT"));
+                    }
+                } catch (NumberFormatException n) {
+                    maxMemory = config.optInt("maxMemory", (int) Utils.getDefaultMemory());
+                }
+            }
+
+            if (isEmpty(viWindowSizeWidth)) windowSizeWidth = config.optInt("windowSizeWidth", 854);
+            else {
+                try {
+                    windowSizeWidth = Integer.parseInt(viWindowSizeWidth);
+                    if (windowSizeWidth <= 0) {
+                        windowSizeWidth = config.optInt("windowSizeWidth", 854);
+                        System.out.println(getString("WARNING_VCFG_WINDOW_SIZE_WIDTH_INCORRECT"));
+                    }
+                } catch (NumberFormatException n) {
+                    windowSizeWidth = config.optInt("windowSizeWidth", 854);
+                }
+            }
+            if (isEmpty(viWindowSizeHeight)) windowSizeHeight = config.optInt("windowSizeHeight", 480);
+            else {
+                try {
+                    windowSizeHeight = Integer.parseInt(viWindowSizeHeight);
+                    if (windowSizeHeight <= 0) {
+                        windowSizeHeight = config.optInt("windowSizeHeight", 480);
+                        System.out.println(getString("WARNING_VCFG_WINDOW_SIZE_HEIGHT_INCORRECT"));
+                    }
+                } catch (NumberFormatException n) {
+                    windowSizeHeight = config.optInt("windowSizeHeight", 480);
+                }
+            }
+
+
             boolean isFullscreen = !Utils.isEmpty(versionInfo.isFullscreen) ? Boolean.parseBoolean(versionInfo.isFullscreen) : config.optBoolean("isFullscreen");
             List<String> jvmArgs = Utils.parseJVMArgs(config.optJSONArray("jvmArgs"));
             jvmArgs.addAll(versionInfo.jvmArgs);

@@ -26,6 +26,7 @@ import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
+import com.mrshiehx.cmcl.exceptions.InvalidJavaException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
 import com.mrshiehx.cmcl.exceptions.LibraryDefectException;
 import com.mrshiehx.cmcl.interfaces.Void;
@@ -107,19 +108,12 @@ public class MinecraftLauncher {
             LaunchException,
             IOException,
             JSONException {
-        File javaPathFile = new File(/*!isEmpty(versionInfo.javaPath) ? (javaPath = versionInfo.javaPath) : */javaPath);
-        if (!javaPathFile.exists()) {
-            throw new LaunchException(getString("EXCEPTION_JAVA_NOT_FOUND"));
-        } else {
-            if (javaPathFile.isDirectory()) {
-                javaPathFile = new File(javaPathFile, javaPathFile.getName().equalsIgnoreCase("bin") ? (Utils.isWindows() ? "java.exe" : "java") : (Utils.isWindows() ? "bin\\java.exe" : "bin/java"));
-                if (!javaPathFile.exists()) {
-                    throw new LaunchException(getString("CONSOLE_INCORRECT_JAVA"));
-                } else {
-                    javaPath = javaPathFile.getPath();
-                }
-            }
+        try {
+            javaPath = getRealJavaPath(javaPath);
+        } catch (InvalidJavaException e) {
+            throw new LaunchException(e.getMessage());
         }
+
         if (null == gameDir) {
             gameDir = new File(".minecraft");
         }
@@ -134,8 +128,11 @@ public class MinecraftLauncher {
             gameDir.mkdirs();
             //throw new LaunchException(getString("MESSAGE_NOT_FOUND_GAME_DIR"));
         }
-        if (maxMemory == 0) {
-            throw new LaunchException(getString("EXCEPTION_MAX_MEMORY_IS_ZERO"));
+        if (maxMemory <= 0) {
+            throw new LaunchException(getString("EXCEPTION_MAX_MEMORY_MUST_BE_GREATER_THAN_ZERO"));
+        }
+        if (width <= 0 || height <= 0) {
+            throw new LaunchException(getString("EXCEPTION_WINDOW_SIZE_MUST_BE_GREATER_THAN_ZERO"));
         }
 
         if (!assetsDir.exists()) {
@@ -1008,5 +1005,22 @@ public class MinecraftLauncher {
     public static boolean isModpack(File versionDir/*, JSONObject versionJSON*/) {
         if (new File(versionDir, "modpack.cfg").exists()) return true;//兼容 HMCL
         return new File(versionDir, "modpack.json").exists();
+    }
+
+    public static String getRealJavaPath(String javaPath) throws InvalidJavaException {
+        File javaPathFile = new File(/*!isEmpty(versionInfo.javaPath) ? (javaPath = versionInfo.javaPath) : */javaPath);
+        if (!javaPathFile.exists()) {
+            throw new InvalidJavaException(getString("EXCEPTION_JAVA_NOT_FOUND"));
+        } else {
+            if (javaPathFile.isDirectory()) {
+                javaPathFile = new File(javaPathFile, javaPathFile.getName().equalsIgnoreCase("bin") ? (Utils.isWindows() ? "java.exe" : "java") : (Utils.isWindows() ? "bin\\java.exe" : "bin/java"));
+                if (!javaPathFile.exists()) {
+                    throw new InvalidJavaException(getString("CONSOLE_INCORRECT_JAVA"));
+                } else {
+                    javaPath = javaPathFile.getPath();
+                }
+            }
+        }
+        return javaPath;
     }
 }

@@ -237,85 +237,89 @@ public class VersionInstaller {
             //librariesDir.mkdirs();
             //nativesDir.mkdirs();
 
-            if (!installAssets) {
-                if (installLibraries || installNatives) {
-                    downloadLibrariesAndNatives(installNatives, installLibraries, tempNatives, librariesDir, nativesDir, headVersionFile);
+            ConsoleMinecraftLauncher.createLauncherProfiles();
+            if (installLibraries || installNatives) {
+                downloadLibrariesAndNatives(installNatives, installLibraries, tempNatives, librariesDir, nativesDir, headVersionFile);
+            }
+
+            if (installAssets) {
+                System.out.println(getString("MESSAGE_INSTALL_DOWNLOADING_ASSETS"));
+                //downloadFile(url, jarFile, progressBar);
+
+                File assetsDir = Utils.getAssets(Utils.getConfig().optString("assetsPath"), gameDir);
+                File indexesDir = new File(assetsDir, "indexes");
+                File objectsDir = new File(assetsDir, "objects");
+                assetsDir.mkdirs();
+                indexesDir.mkdirs();
+                objectsDir.mkdirs();
+                String assetsIndex = headVersionFile.optString("assets");
+                if (isEmpty(assetsIndex)) {
+                    throw new Exception(getString("MESSAGE_INSTALL_DOWNLOAD_ASSETS_NO_INDEX"));
                 }
-                ConsoleMinecraftLauncher.createLauncherProfiles();
-                if (onFinished != null) onFinished.execute();
-                return;
-            }
-            System.out.println(getString("MESSAGE_INSTALL_DOWNLOADING_ASSETS"));
-            //downloadFile(url, jarFile, progressBar);
+                File assetsIndexFile = new File(indexesDir, assetsIndex + ".json");
+                JSONObject assetIndexObject = headVersionFile.optJSONObject("assetIndex");
+                String assetIndexUrl = assetIndexObject != null ? assetIndexObject.optString("url").replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()) : null;
 
-            File assetsDir = Utils.getAssets(Utils.getConfig().optString("assetsPath"), gameDir);
-            File indexesDir = new File(assetsDir, "indexes");
-            File objectsDir = new File(assetsDir, "objects");
-            assetsDir.mkdirs();
-            indexesDir.mkdirs();
-            objectsDir.mkdirs();
-            String assetsIndex = headVersionFile.optString("assets");
-            if (isEmpty(assetsIndex)) {
-                throw new Exception(getString("MESSAGE_INSTALL_DOWNLOAD_ASSETS_NO_INDEX"));
-            }
-            File assetsIndexFile = new File(indexesDir, assetsIndex + ".json");
-            JSONObject assetIndexObject = headVersionFile.optJSONObject("assetIndex");
-            String assetIndexUrl = assetIndexObject != null ? assetIndexObject.optString("url").replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()) : null;
+                if (isEmpty(assetIndexUrl)) {
+                    throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", getString("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL")));
+                }
+                try {
+                    downloadFile(assetIndexUrl, assetsIndexFile);
+                    JSONObject assetsJo = new JSONObject(Utils.readFileContent(assetsIndexFile));
+                    JSONObject objectsJo = assetsJo.optJSONObject("objects");
 
-            if (isEmpty(assetIndexUrl)) {
-                throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", getString("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL")));
-            }
-            try {
-                downloadFile(assetIndexUrl, assetsIndexFile);
-                JSONObject assetsJo = new JSONObject(Utils.readFileContent(assetsIndexFile));
-                JSONObject objectsJo = assetsJo.optJSONObject("objects");
+                    Map<String, Object> map = objectsJo.toMap();
+                    List<String> nameList = new ArrayList<>(map.keySet());
+                    JSONArray names = new JSONArray(nameList);
+                    JSONArray objectsJa = objectsJo.toJSONArray(names);
+                    List<Pair<String, File>> list = new LinkedList<>();
+                    for (int i = 0; i < objectsJa.length(); i++) {
+                        JSONObject object = objectsJa.optJSONObject(i);
+                        if (object == null) {
+                            continue;
+                        }
+                        String hash = object.optString("hash");
+                        try {
+                            if (isEmpty(hash)) continue;
+                            File file;
+                            if (!assetsIndex.equals("legacy")) {
+                                File dir = new File(objectsDir, hash.substring(0, 2));
+                                dir.mkdirs();
+                                file = new File(dir, hash);
+                            } else {
+                                file = new File(assetsDir, "virtual/legacy/" + nameList.get(i));
+                                file.getParentFile().mkdirs();
+                            }
 
-                Map<String, Object> map = objectsJo.toMap();
-                List<String> nameList = new ArrayList<>(map.keySet());
-                JSONArray names = new JSONArray(nameList);
-                JSONArray objectsJa = objectsJo.toJSONArray(names);
-                List<Pair<String, File>> list = new LinkedList<>();
-                for (int i = 0; i < objectsJa.length(); i++) {
-                    JSONObject object = objectsJa.optJSONObject(i);
-                    if (object == null) {
-                        continue;
-                    }
-                    String hash = object.optString("hash");
-                    try {
-                        if (isEmpty(hash)) continue;
-                        File file;
-                        if (!assetsIndex.equals("legacy")) {
-                            File dir = new File(objectsDir, hash.substring(0, 2));
-                            dir.mkdirs();
-                            file = new File(dir, hash);
-                        } else {
-                            file = new File(assetsDir, "virtual/legacy/" + nameList.get(i));
-                            file.getParentFile().mkdirs();
+
+                            if (!file.exists()) {
+                                file.createNewFile();
+                            }
+                            if (file.length() == 0)
+                                list.add(new Pair<>(DownloadSource.getProvider().assets() + hash.substring(0, 2) + "/" + hash, file));
+
+                        } catch (Exception e1) {
+                            throw new Exception(getString("MESSAGE_FAILED_DOWNLOAD_FILE", hash));
                         }
 
-
-                        if (!file.exists()) {
-                            file.createNewFile();
-                        }
-                        if (file.length() == 0)
-                            list.add(new Pair<>(DownloadSource.getProvider().assets() + hash.substring(0, 2) + "/" + hash, file));
-
-                    } catch (Exception e1) {
-                        throw new Exception(getString("MESSAGE_FAILED_DOWNLOAD_FILE", hash));
                     }
-
-                }
-                ThreadsDownloader threadsDownloader = new ThreadsDownloader(list, () -> {
-                    System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_ASSETS"));
-                    if (installLibraries || installNatives) {
+                    ThreadsDownloader threadsDownloader = new ThreadsDownloader(list, () -> {
+                        System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_ASSETS"));
+                    /*if (installLibraries || installNatives) {
                         downloadLibrariesAndNatives(installNatives, installLibraries, tempNatives, librariesDir, nativesDir, headVersionFile);
                     }
-                    ConsoleMinecraftLauncher.createLauncherProfiles();
-                    if (onFinished != null) onFinished.execute();
-                }, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
-                threadsDownloader.start();
-            } catch (Exception e1) {
-                throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", e1));
+                    ConsoleMinecraftLauncher.createLauncherProfiles();*/
+                        if (onFinished != null)
+                            onFinished.execute();
+                    }, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+                    threadsDownloader.start();
+                } catch (Exception e1) {
+                    throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", e1));
+                }
+
+            } else {
+                if (onFinished != null)
+                    onFinished.execute();
             }
 
         } catch (Exception ex) {

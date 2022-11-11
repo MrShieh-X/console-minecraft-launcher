@@ -27,6 +27,7 @@ import com.mrshiehx.cmcl.options.Option;
 import com.mrshiehx.cmcl.options.Options;
 import com.mrshiehx.cmcl.options.StartOption;
 import com.mrshiehx.cmcl.utils.DownloadUtils;
+import com.mrshiehx.cmcl.utils.OperatingSystem;
 import com.mrshiehx.cmcl.utils.PercentageTextProgress;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +42,6 @@ public class ConsoleMinecraftLauncher {
     public static final String CLIENT_ID = Constants.CLIENT_ID;
     public static final String CMCL_COPYRIGHT = Constants.COPYRIGHT;
     public static final String CMCL_VERSION = Constants.CMCL_VERSION;
-    public static final File configFile = Constants.configFile;
 
     public static File gameDir;
     public static File assetsDir;
@@ -127,6 +127,7 @@ public class ConsoleMinecraftLauncher {
     }
 
     public static JSONObject initConfig() {
+        File configFile = getConfigFile();
         if (configFile.exists()) {
             try {
                 configContent = new JSONObject(Utils.readFileContent(configFile));
@@ -330,5 +331,19 @@ public class ConsoleMinecraftLauncher {
         assetsDir = !isEmpty(configContent.optString("assetsDir")) ? new File(configContent.optString("assetsDir")) : new File(gameDir, "assets");
         respackDir = !isEmpty(configContent.optString("resourcesDir")) ? new File(configContent.optString("resourcesDir")) : new File(gameDir, "resourcepacks");
         initChangelessDirs();
+    }
+
+    public static File getConfigFile() {
+        if (OperatingSystem.CURRENT_OS == OperatingSystem.LINUX) {
+            File inConfigDir = new File(System.getProperty("user.home"), ".config/cmcl/cmcl.json");
+            if (inConfigDir.exists()) {
+                return inConfigDir;
+            }
+            if (Constants.DEFAULT_CONFIG_FILE.exists()) {
+                return Constants.DEFAULT_CONFIG_FILE;
+            }
+            return inConfigDir;
+        }
+        return Constants.DEFAULT_CONFIG_FILE;
     }
 }

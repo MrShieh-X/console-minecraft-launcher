@@ -1,5 +1,10 @@
 # Update Logs
-Currently, the latest version is 1.7, which was updated on September 12, 2022.
+Currently, the latest version is 1.8, which was updated on November 11, 2022.
+
+## 1.8 (Nov. 11, 2022)
+- If the Java path, maximum memory, and window width and height of the standalone version configuration are not set in compliance with the specification, the global configuration value will be automatically used and the user will be prompted.
+- Adjusted the step of downloading resource files to the end to avoid the download being stuck and unable to continue installing the version.
+- In Linux, `~/.config/cmcl/cmcl.json` will be read as configuration file by default (by [Just-A-Pony](https://github.com/Just-A-Pony) on [Issue#18](https://github.com/MrShieh-X/console-minecraft-launcher/issues/18) raised).
 
 ## 1.7 (Sept. 12, 2022)
 - All modifiable configurations can be viewed through `-config -view`.

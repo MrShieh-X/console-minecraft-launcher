@@ -453,9 +453,11 @@ public class Utils {
 
     public static void saveConfig(JSONObject jsonObject) {
         ConsoleMinecraftLauncher.configContent = jsonObject;
+        File configFile = ConsoleMinecraftLauncher.getConfigFile();
         try {
-            if (!Constants.configFile.exists()) Constants.configFile.createNewFile();
-            FileWriter writer = new FileWriter(Constants.configFile, false);
+            if (!configFile.exists())
+                configFile.createNewFile();
+            FileWriter writer = new FileWriter(configFile, false);
             writer.write(jsonObject.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
             writer.close();
         } catch (IOException ex) {

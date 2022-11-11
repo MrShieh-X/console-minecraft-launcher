@@ -8,7 +8,7 @@ A Launcher for Minecraft Java Edition Running On The Console
 MrShiehX owns the copyright of this program.<br/>
 Anyone can take advices of this program to us.
 
-## The latest version: 1.7 (Released on Sept. 12, 2022)
+## The latest version: 1.8 (Released on Nov. 11, 2022)
 
 ## Program Screenshot
 ![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
@@ -49,17 +49,17 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 ## Software Configuration Required for This Program
 * Java 8 or higher
 
-## Supported Languages
+## Supported Interface Languages
 - English
 - Simplified Chinese
 
-## Bugs found
+## Existing or Fixed BUGs
 - (Fixed in v1.4)~~Unable to launch game versions lower than 1.13 (without 1.13) where OptiFine and Forge coexist.~~
 
 ## Configurations
 The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).<br/>
-If you edit configurations by a file editor, only strings need double quotation mark, otherwise, other types do not need it.<br/>
-If you edit by the program arguments, note that if there are spaces in the string, double quotation marks must be added, otherwise it can be added or not.<br/>
+If you edit configurations by a file editor, the configuration name and text configuration value need to be enclosed in double quotes ("").<br/>
+If you edit by the program arguments, if the configuration value contains spaces, it needs to be enclosed in double quotes ("").<br/>
 Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" (maybe two) must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10` or `\\-10`.<br/>
 This content can be viewed through the parameter `-config -view`.
 
