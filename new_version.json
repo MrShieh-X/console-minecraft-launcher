@@ -4,10 +4,10 @@
   "latestVersionDownloadUrls": [
     "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/CMCL.jar",
     "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/CMCL.exe",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/console-minecraft-launcher",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/cmcl",
     "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/CMCL.jar",
     "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/CMCL.exe",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/console-minecraft-launcher"
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/cmcl"
   ],
   "updateDate": "2023-01-18",
   "updateContentEn": "- In order to make the commands conform to the specifications, this version has made major changes to the operation commands of each function. For details, please refer to Help Documentation, or Video Tutorial(https://www.youtube.com/watch?v=Sqeu_Pahm-0).\n- Support nide8auth login, use \"account -h\" to get related information.\n- Added new interface language: Cantonese (Simplified). It can be switched by \"config language cantonese\".\n- Support printing startup information (such as Java path, maximum memory, logged-in account, etc.) when starting the game, which can be turned on or off through \"config printStartupInfo true/false\".\n- Fixed an issue where certain files of the CurseForge modpack could not be downloaded.\n- When installing Forge, Fabric, etc., press Enter without entering the version to select the latest version.\n- You can add \"-s\" or \"--select\" after the version installation command to select the version after installation.\n- Data file directory changed to \".cmcl\"",
