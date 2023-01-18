@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package com.mrshiehx.cmcl.exceptions;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.CMCL.getString;
 
 public class EmptyNativesException extends LaunchException {
     public final JSONArray libraries;

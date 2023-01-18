@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
 package com.mrshiehx.cmcl.modules.modpack;
 
 import com.mrshiehx.cmcl.bean.Pair;
+import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
 import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
 import com.mrshiehx.cmcl.modules.extra.liteloader.LiteloaderMerger;
 import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
-import com.mrshiehx.cmcl.options.ModpackOption;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
@@ -44,11 +44,11 @@ import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class MultiMCModpackInstaller {
-    public static int tryToInstallMultiMCModpack(ZipFile zipFile, File file, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackOption.NotValidModPackFormat {
+    public static int tryToInstallMultiMCModpack(ZipFile zipFile, File file, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackFunction.NotValidModPackFormat {
         String instanceFileName = "instance.cfg";
 
         ZipEntry instanceCFGEntry;
@@ -73,11 +73,11 @@ public class MultiMCModpackInstaller {
             }
         }
         if (modpackName == null)
-            throw new ModpackOption.NotValidModPackFormat("not a MultiMC modpack");
+            throw new ModpackFunction.NotValidModPackFormat("not a MultiMC modpack");
 
         ZipEntry mmcPack = zipFile.getEntry(modpackName + "mmc-pack.json");
         if (mmcPack == null)
-            throw new ModpackOption.NotValidModPackFormat("not a MultiMC modpack");
+            throw new ModpackFunction.NotValidModPackFormat("not a MultiMC modpack");
 
         JSONObject mmcPackJSON;
         try {
@@ -86,7 +86,7 @@ public class MultiMCModpackInstaller {
             /*System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
             Utils.deleteDirectory(versionDir);
             return -1;*/
-            throw new ModpackOption.NotValidModPackFormat(e.getMessage());
+            throw new ModpackFunction.NotValidModPackFormat(e.getMessage());
         }
         Properties instanceCFG = new Properties();
         try {
@@ -136,7 +136,7 @@ public class MultiMCModpackInstaller {
         if (isEmpty(gameVersion)) {
             /*System.out.println(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
             return -1;*/
-            throw new ModpackOption.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
+            throw new ModpackFunction.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
         }
         if (!isEmpty(forgeVersion) && !isEmpty(fabricVersion)) {
             System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Forge", "Fabric"));
@@ -185,13 +185,13 @@ public class MultiMCModpackInstaller {
         });
 
 
-        VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
+        VersionInstaller.InstallForgeOrFabricOrQuilt installForgeOrFabricOrQuilt = null;
         VersionInstaller.Merger mergerForFabric = null;
         VersionInstaller.Merger mergerForForge = null;
         VersionInstaller.Merger mergerForQuilt = null;
         VersionInstaller.Merger mergerForLiteLoader = null;
         if (!isEmpty(forgeVersion)) {
-            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
+            installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.FORGE;
             String finalForgeVersion = forgeVersion;
             mergerForForge = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                 Map<String, JSONObject> forges;
@@ -200,13 +200,13 @@ public class MultiMCModpackInstaller {
                     forges = ForgeMerger.getForges(minecraftVersion);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
                 JSONObject forge = forges.get(finalForgeVersion);
                 if (forge == null) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", finalForgeVersion).replace("${NAME}", "Forge")));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
                 try {
@@ -214,31 +214,31 @@ public class MultiMCModpackInstaller {
                     return ForgeMerger.installInternal(forge, headJSONObject, minecraftVersion, minecraftJarFile);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
         } else if (!isEmpty(fabricVersion)) {
-            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
+            installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.FABRIC;
             String finalModLoaderVersion = fabricVersion;
             mergerForFabric = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                 try {
                     return new FabricMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
         } else if (!isEmpty(quiltVersion)) {
-            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.QUILT;
+            installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.QUILT;
             String finalModLoaderVersion = quiltVersion;
             mergerForQuilt = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
                 try {
                     return new QuiltMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
@@ -250,7 +250,7 @@ public class MultiMCModpackInstaller {
                     return LiteloaderMerger.installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
@@ -258,7 +258,7 @@ public class MultiMCModpackInstaller {
 
         Void onFinished = () -> {
             try {
-                Utils.writeFile(new File(versionDir, "modpack.json"), new XJSONObject().put("type", "MultiMC").put("mmcPack", mmcPackJSON).put("instanceConfig", instanceCFG).toString(2), false);
+                FileUtils.writeFile(new File(versionDir, "modpack.json"), new XJSONObject().put("type", "MultiMC").put("mmcPack", mmcPackJSON).put("instanceConfig", instanceCFG).toString(2), false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -271,7 +271,7 @@ public class MultiMCModpackInstaller {
 
         try {
             File versionsFile = Utils.downloadVersionsFile();
-            JSONArray versions = new JSONObject(Utils.readFileContent(versionsFile)).optJSONArray("versions");
+            JSONArray versions = new JSONObject(FileUtils.readFileContent(versionsFile)).optJSONArray("versions");
             VersionInstaller.start(
                     gameVersion,
                     versionDir.getName(),
@@ -279,7 +279,7 @@ public class MultiMCModpackInstaller {
                     installAssets,
                     installNatives,
                     installLibraries,
-                    installForgeOrFabric,
+                    installForgeOrFabricOrQuilt,
                     threadCount,
                     mergerForFabric,
                     mergerForForge,
@@ -289,7 +289,7 @@ public class MultiMCModpackInstaller {
                     onFinished, null, null);
         } catch (Exception e) {
             System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
-            Utils.deleteDirectory(versionDir);
+            FileUtils.deleteDirectory(versionDir);
             return -1;
         }
         return 0;

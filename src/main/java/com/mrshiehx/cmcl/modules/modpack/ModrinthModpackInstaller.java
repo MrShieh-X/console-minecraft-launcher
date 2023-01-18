@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,17 @@
 package com.mrshiehx.cmcl.modules.modpack;
 
 import com.mrshiehx.cmcl.bean.Pair;
+import com.mrshiehx.cmcl.exceptions.DescriptionException;
 import com.mrshiehx.cmcl.exceptions.MissingElementException;
+import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
 import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
 import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
-import com.mrshiehx.cmcl.options.ModpackOption;
 import com.mrshiehx.cmcl.utils.FileUtils;
-import com.mrshiehx.cmcl.utils.ThreadsDownloader;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.internet.ThreadsDownloader;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,11 +45,11 @@ import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class ModrinthModpackInstaller {
-    public static int installModrinthModpack(JSONObject manifest, ZipFile zipFile, File modPackFile, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws Exception {
+    public static int installModrinthModpack(JSONObject manifest, ZipFile zipFile, File modPackFile, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackFunction.NotValidModPackFormat, DescriptionException, IOException {
         zipFile.stream().forEach((Consumer<ZipEntry>) zipEntry -> {
             String overrides;
             if (zipEntry.getName().startsWith("overrides")) {
@@ -70,11 +71,11 @@ public class ModrinthModpackInstaller {
         });
         JSONObject dependencies = manifest.optJSONObject("dependencies");
         if (dependencies == null)
-            throw new ModpackOption.NotValidModPackFormat(new MissingElementException("dependencies", "JSONObject").getMessage());
+            throw new ModpackFunction.NotValidModPackFormat(new MissingElementException("dependencies", "JSONObject").getMessage());
 
-        String gameVersion = null/*=dependencies.optString("minecraft")*/;
-        String forgeVersion = null/*=dependencies.optString("forge")*/;
-        String fabricVersion = null/*=dependencies.optString("fabric-loader")*/;
+        String gameVersion = null;
+        String forgeVersion = null;
+        String fabricVersion = null;
         String quiltVersion = null;
 
         for (Map.Entry<String, Object> entry : dependencies.toMap().entrySet()) {
@@ -102,7 +103,7 @@ public class ModrinthModpackInstaller {
         }
 
         if (isEmpty(gameVersion))
-            throw new ModpackOption.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
+            throw new ModpackFunction.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
 
 
         if (!isEmpty(forgeVersion) && !isEmpty(fabricVersion)) {
@@ -121,13 +122,13 @@ public class ModrinthModpackInstaller {
         }
 
 
-        VersionInstaller.InstallForgeOrFabric installForgeOrFabric = null;
+        VersionInstaller.InstallForgeOrFabricOrQuilt installForgeOrFabricOrQuilt = null;
         String modLoaderVersion;
         VersionInstaller.Merger mergerForFabric = null;
         VersionInstaller.Merger mergerForForge = null;
         VersionInstaller.Merger mergerForQuilt = null;
         if (!isEmpty(forgeVersion)) {
-            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FORGE;
+            installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.FORGE;
             modLoaderVersion = forgeVersion;
             String finalModLoaderVersion1 = modLoaderVersion;
             mergerForForge = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
@@ -137,13 +138,13 @@ public class ModrinthModpackInstaller {
                     forges = ForgeMerger.getForges(minecraftVersion);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
                 JSONObject forge = forges.get(finalModLoaderVersion1);
                 if (forge == null) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", finalModLoaderVersion1).replace("${NAME}", "Forge")));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
                 try {
@@ -151,12 +152,12 @@ public class ModrinthModpackInstaller {
                     return ForgeMerger.installInternal(forge, headJSONObject, minecraftVersion, minecraftJarFile);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
         } else if (!isEmpty(fabricVersion)) {
-            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.FABRIC;
+            installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.FABRIC;
             modLoaderVersion = fabricVersion;
             String finalModLoaderVersion = modLoaderVersion;
             mergerForFabric = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
@@ -164,12 +165,12 @@ public class ModrinthModpackInstaller {
                     return new FabricMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
         } else if (!isEmpty(quiltVersion)) {
-            installForgeOrFabric = VersionInstaller.InstallForgeOrFabric.QUILT;
+            installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.QUILT;
             modLoaderVersion = quiltVersion;
             String finalModLoaderVersion = modLoaderVersion;
             mergerForQuilt = (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
@@ -177,7 +178,7 @@ public class ModrinthModpackInstaller {
                     return new QuiltMerger().installInternal(minecraftVersion, finalModLoaderVersion, headJSONObject);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
-                    Utils.deleteDirectory(versionDir);
+                    FileUtils.deleteDirectory(versionDir);
                     return new Pair<>(false, null);
                 }
             };
@@ -209,12 +210,12 @@ public class ModrinthModpackInstaller {
                 }
 
                 if (filess.size() > 0) {
-                    ThreadsDownloader threadsDownloader = new ThreadsDownloader(filess);
+                    ThreadsDownloader threadsDownloader = new ThreadsDownloader(filess, true);
                     threadsDownloader.start();
                 }
             }
             try {
-                Utils.writeFile(new File(versionDir, "modpack.json"), manifest.toString(2), false);
+                FileUtils.writeFile(new File(versionDir, "modpack.json"), manifest.toString(2), false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -225,7 +226,7 @@ public class ModrinthModpackInstaller {
             System.out.println(getString("INSTALL_MODPACK_COMPLETE"));
         };
         File versionsFile = Utils.downloadVersionsFile();
-        JSONArray versions = new JSONObject(Utils.readFileContent(versionsFile)).optJSONArray("versions");
+        JSONArray versions = new JSONObject(FileUtils.readFileContent(versionsFile)).optJSONArray("versions");
         VersionInstaller.start(
                 gameVersion,
                 versionDir.getName(),
@@ -233,7 +234,7 @@ public class ModrinthModpackInstaller {
                 installAssets,
                 installNatives,
                 installLibraries,
-                installForgeOrFabric,
+                installForgeOrFabricOrQuilt,
                 threadCount,
                 mergerForFabric,
                 mergerForForge,
@@ -246,22 +247,22 @@ public class ModrinthModpackInstaller {
 
     }
 
-    public static int tryToInstallModrinthModpack(ZipFile zipFile, File file, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackOption.NotValidModPackFormat {
+    public static int tryToInstallModrinthModpack(ZipFile zipFile, File file, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackFunction.NotValidModPackFormat {
         ZipEntry entry = zipFile.getEntry("modrinth.index.json");
         //FileUtils.inputStream2File(zipFile.getInputStream(entry),new File(versionDir,"modpack.json"));
         if (entry == null)
-            throw new ModpackOption.NotValidModPackFormat("not a Modrinth modpack");
+            throw new ModpackFunction.NotValidModPackFormat("not a Modrinth modpack");
         try {
             InputStream i = zipFile.getInputStream(entry);
             JSONObject manifest = new XJSONObject(Utils.inputStream2String(i));
             return installModrinthModpack(manifest, zipFile, file, versionDir, keepFile, installAssets, installNatives, installLibraries, threadCount);
-        } catch (ModpackOption.NotValidModPackFormat e) {
-            Utils.deleteDirectory(versionDir);
+        } catch (ModpackFunction.NotValidModPackFormat e) {
+            FileUtils.deleteDirectory(versionDir);
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
-            Utils.deleteDirectory(versionDir);
+            FileUtils.deleteDirectory(versionDir);
         }
         return 0;
     }

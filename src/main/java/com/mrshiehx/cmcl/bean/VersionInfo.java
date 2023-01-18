@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,15 +23,17 @@ import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.cmcl.ArgumentsUtils;
+import com.mrshiehx.cmcl.utils.console.CommandUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.*;
 
 public class VersionInfo {
-    public static final String SIGN_WORKING_DIRECTORY_IN_VERSION_DIR = "&*/\\$%";
-    public static final VersionInfo EMPTY = new VersionInfo(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "");
-    public final String workingDirectory;
+    public static final String SIGN_WORKING_DIRECTORY_IN_VERSION_DIR = "&*/  \n\t\r\t\f\b\b\n \\$%";
+    public static final VersionInfo EMPTY = new VersionInfo(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "", "", "");
+    public final String gameDir;
     public final String javaPath;
     public final String maxMemory;//同下
     public final String windowSizeWidth;//同下
@@ -44,8 +46,10 @@ public class VersionInfo {
     public final String assetsDir;
     public final String resourcesDir;
     public final String exitWithMinecraft;//不用boolean是因为要表示一种“未设置”的状态
+    public final String printStartupInfo;//不用boolean是因为要表示一种“未设置”的状态
+    public final String checkAccountBeforeStart;//不用boolean是因为要表示一种“未设置”的状态
 
-    public VersionInfo(String workingDirectory,
+    public VersionInfo(String gameDir,
                        String javaPath,
                        String maxMemory,
                        String windowSizeWidth,
@@ -55,8 +59,10 @@ public class VersionInfo {
                        @NotNull Map<String, String> gameArgs,
                        String assetsDir,
                        String resourcesDir,
-                       String exitWithMinecraft) {
-        this.workingDirectory = workingDirectory;
+                       String exitWithMinecraft,
+                       String printStartupInfo,
+                       String checkAccountBeforeStart) {
+        this.gameDir = gameDir;
         this.javaPath = javaPath;
         this.maxMemory = maxMemory;
         this.windowSizeWidth = windowSizeWidth;
@@ -67,6 +73,8 @@ public class VersionInfo {
         this.assetsDir = assetsDir;
         this.resourcesDir = resourcesDir;
         this.exitWithMinecraft = exitWithMinecraft;
+        this.printStartupInfo = printStartupInfo;
+        this.checkAccountBeforeStart = checkAccountBeforeStart;
     }
 
     public static VersionInfo valueOf(JSONObject origin) {
@@ -76,11 +84,13 @@ public class VersionInfo {
                 origin.optString("windowSizeWidth"),
                 origin.optString("windowSizeHeight"),
                 origin.optString("isFullscreen"),
-                Utils.parseJVMArgs(origin.optJSONArray("jvmArgs")),
-                Utils.parseGameArgs(origin.optJSONObject("gameArgs")),
+                ArgumentsUtils.parseJVMArgs(origin.optJSONArray("jvmArgs")),
+                ArgumentsUtils.parseGameArgs(origin.optJSONObject("gameArgs")),
                 origin.optString("assetsDir"),
                 origin.optString("resourcesDir"),
-                origin.optString("exitWithMinecraft"));
+                origin.optString("exitWithMinecraft"),
+                origin.optString("printStartupInfo"),
+                origin.optString("checkAccountBeforeStart"));
     }
 
     public static VersionInfo valueOfHMCL(JSONObject origin) {
@@ -97,7 +107,7 @@ public class VersionInfo {
         Map<String, String> gameArgs = new LinkedHashMap<>();
         String gameArgsString = origin.optString("minecraftArgs");
         if (!Utils.isEmpty(gameArgsString)) {
-            Arguments arguments = new Arguments(gameArgsString, false, false);
+            Arguments arguments = new Arguments(gameArgsString, false);
             for (Argument argument : arguments.getArguments()) {
                 String key = argument.key;
                 if (Objects.equals(key, "version") || Objects.equals(key, "versionType")) continue;
@@ -114,10 +124,12 @@ public class VersionInfo {
                 origin.optString("width"),
                 origin.optString("height"),
                 origin.optString("fullscreen"),
-                Utils.parseJVMArgs(Utils.splitCommand(Utils.clearRedundantSpaces(origin.optString("javaArgs"))).toArray(new String[0])),
+                ArgumentsUtils.parseJVMArgs(CommandUtils.splitCommand(CommandUtils.clearRedundantSpaces(origin.optString("javaArgs"))).toArray(new String[0])),
                 gameArgs,
                 null,
                 null,
+                "",
+                "",
                 "");
     }
 
@@ -129,7 +141,7 @@ public class VersionInfo {
         newJvmArgs.addAll(versionInfo.jvmArgs);
         newJvmArgs.addAll(jvmArgs);
         return new VersionInfo(
-                !Utils.isEmpty(versionInfo.workingDirectory) ? versionInfo.workingDirectory : workingDirectory,
+                !Utils.isEmpty(versionInfo.gameDir) ? versionInfo.gameDir : gameDir,
                 !Utils.isEmpty(versionInfo.javaPath) ? versionInfo.javaPath : javaPath,
                 !Utils.isEmpty(versionInfo.maxMemory) ? versionInfo.maxMemory : maxMemory,
                 !Utils.isEmpty(versionInfo.windowSizeWidth) ? versionInfo.windowSizeWidth : windowSizeWidth,
@@ -139,6 +151,8 @@ public class VersionInfo {
                 newGameArgs,
                 !Utils.isEmpty(versionInfo.assetsDir) ? versionInfo.assetsDir : assetsDir,
                 !Utils.isEmpty(versionInfo.resourcesDir) ? versionInfo.resourcesDir : resourcesDir,
-                !Utils.isEmpty(versionInfo.exitWithMinecraft) ? versionInfo.exitWithMinecraft : exitWithMinecraft);
+                !Utils.isEmpty(versionInfo.exitWithMinecraft) ? versionInfo.exitWithMinecraft : exitWithMinecraft,
+                !Utils.isEmpty(versionInfo.printStartupInfo) ? versionInfo.printStartupInfo : printStartupInfo,
+                !Utils.isEmpty(versionInfo.checkAccountBeforeStart) ? versionInfo.checkAccountBeforeStart : checkAccountBeforeStart);
     }
 }

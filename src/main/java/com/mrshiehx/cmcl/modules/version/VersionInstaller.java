@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,24 @@
  */
 package com.mrshiehx.cmcl.modules.version;
 
-import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
-import com.mrshiehx.cmcl.constants.Constants;
+import com.mrshiehx.cmcl.exceptions.DescriptionException;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
-import com.mrshiehx.cmcl.utils.OperatingSystem;
-import com.mrshiehx.cmcl.utils.PercentageTextProgress;
-import com.mrshiehx.cmcl.utils.ThreadsDownloader;
+import com.mrshiehx.cmcl.modules.version.downloaders.AssetsDownloader;
+import com.mrshiehx.cmcl.modules.version.downloaders.NativesDownloader;
+import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.cmcl.version.VersionLibraryUtils;
+import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
+import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
+import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
+import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
+import com.mrshiehx.cmcl.utils.system.OperatingSystem;
+import com.mrshiehx.cmcl.utils.system.SystemUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,70 +44,20 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
+import static com.mrshiehx.cmcl.CMCL.*;
 
 public class VersionInstaller {
-    /*public static void start(String versionName2,
-                             String storage2,
-                             JSONArray versions2,
-                             boolean installAssets2,
-                             boolean installNatives2,
-                             boolean installLibraries2,
-                             InstallForgeOrFabric installForgeOrFabric2,
-                             boolean installLiteLoader2,
-                             boolean installOptiFine2,
-                             int threadCount2) {
-        try {
-            start(versionName2,
-                    storage2,
-                    versions2,
-                    installAssets2,
-                    installNatives2,
-                    installLibraries2,
-                    installForgeOrFabric2,
-                    threadCount2,
-                    (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                        Pair<Boolean, List<JSONObject>> a = new FabricMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
-                        if (askContinue && a != null && !a.getKey()) {
-                            Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                        }
-                        return a;
-                    },
-                    (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                        Pair<Boolean, List<JSONObject>> a = new ForgeMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
-                        if (askContinue && a != null && !a.getKey()) {
-                            Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                        }
-                        return a;
-                    }, installLiteLoader2 ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                        Pair<Boolean, List<JSONObject>> a = new LiteloaderMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
-                        if (askContinue && a != null && !a.getKey()) {
-                            Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                        }
-                        return a;
-                    } : null,
-                    installOptiFine2 ? (minecraftVersion, headJSONObject, minecraftJarFile, askContinue) -> {
-                        Pair<Boolean, List<JSONObject>> a = new OptiFineMerger().merge(minecraftVersion, headJSONObject, minecraftJarFile, askContinue);
-                        if (askContinue && a != null && !a.getKey()) {
-                            Utils.deleteDirectory(minecraftJarFile.getParentFile());
-                        }
-                        return a;
-                    } : null,
-                    () -> System.out.println(getString("MESSAGE_INSTALLED_NEW_VERSION")), null, null);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }*/
-
     public static void start(String versionName,
                              String storage,
                              JSONArray versions,
                              boolean installAssets,
                              boolean installNatives,
                              boolean installLibraries,
-                             InstallForgeOrFabric installForgeOrFabric,
+                             InstallForgeOrFabricOrQuilt installForgeOrFabricOrQuilt,
                              int threadCount,
                              Merger fabricMerger,
                              Merger forgeMerger,
@@ -109,15 +66,15 @@ public class VersionInstaller {
                              Merger optiFineMerger,
                              @Nullable Void onFinished,
                              @Nullable VersionJSONMerger versionJSONMerger,
-                             JSONArray librariesToBeMerged) throws Exception {
+                             JSONArray librariesToBeMerged) throws DescriptionException {
         if (!checkNetwork(DownloadSource.getProvider().versionJSON())) {
-            throw new Exception(getString("MESSAGE_FAILED_TO_CONNECT_TO_URL", DownloadSource.getProvider().versionJSON()));
+            throw new DescriptionException(getString("MESSAGE_FAILED_TO_CONNECT_TO_URL", DownloadSource.getProvider().versionJSON()));
         }
-        File cmcl = new File("cmcl");
+        File cmcl = new File(".cmcl");
         //File versionsFile = new File(cmcl, "versions.json");
         cmcl.mkdirs();
         if (versions == null || versions.length() == 0) {
-            throw new Exception(getString("MESSAGE_VERSIONS_LIST_IS_EMPTY"));
+            throw new DescriptionException(getString("MESSAGE_VERSIONS_LIST_IS_EMPTY"));
         }
         String url = null;
         for (Object o : versions) {
@@ -131,7 +88,7 @@ public class VersionInstaller {
         }
 
         if (isEmpty(url)) {
-            throw new Exception(getString("EXCEPTION_VERSION_NOT_FOUND", versionName));
+            throw new DescriptionException(getString("EXCEPTION_VERSION_NOT_FOUND", versionName));
         }
         url = url.replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionJSON()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionJSON());
         File versionDir = new File(versionsDir, storage);
@@ -141,21 +98,21 @@ public class VersionInstaller {
         if (jsonFile.exists()) jsonFile.delete();
         XJSONObject headVersionFile;
         try {
-            byte[] versionJSONBytes = ConsoleMinecraftLauncher.downloadBytes(url);
+            byte[] versionJSONBytes = DownloadUtils.downloadBytes(url);
             //downloadFile(url, jsonFile);
             headVersionFile = new com.mrshiehx.cmcl.utils.json.XJSONObject(new String(versionJSONBytes));
             headVersionFile.put("gameVersion", headVersionFile.optString("id"));
             headVersionFile.put("id", storage);
 
         } catch (IOException e) {
-            throw new Exception(getString("MESSAGE_FAILED_TO_CONTROL_VERSION_JSON_FILE", e));
+            throw new DescriptionException(getString("MESSAGE_FAILED_TO_CONTROL_VERSION_JSON_FILE", e));
         }
 
-        if (installForgeOrFabric == InstallForgeOrFabric.FABRIC) {
+        if (installForgeOrFabricOrQuilt == InstallForgeOrFabricOrQuilt.FABRIC) {
             if (!fabricMerger.merge(versionName, headVersionFile, jarFile, true).getKey()) {
                 return;
             }
-        } else if (installForgeOrFabric == InstallForgeOrFabric.QUILT) {
+        } else if (installForgeOrFabricOrQuilt == InstallForgeOrFabricOrQuilt.QUILT) {
             if (!quiltMerger.merge(versionName, headVersionFile, jarFile, true).getKey()) {
                 return;
             }
@@ -168,14 +125,14 @@ public class VersionInstaller {
         JSONObject downloadsJo = headVersionFile.optJSONObject("downloads");
         JSONObject clientJo = downloadsJo != null ? downloadsJo.optJSONObject("client") : null;
         if (downloadsJo == null) {
-            throw new Exception(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
+            throw new DescriptionException(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
         }
         if (clientJo == null) {
-            throw new Exception(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
+            throw new DescriptionException(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
         }
         String urlClient = clientJo.optString("url").replace("https://launcher.mojang.com/", DownloadSource.getProvider().versionClient());
         if (isEmpty(urlClient)) {
-            throw new Exception(getString("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY"));
+            throw new DescriptionException(getString("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY"));
         }
 
         try {
@@ -183,16 +140,15 @@ public class VersionInstaller {
 
             jarFile.createNewFile();
             try {
-                downloadFile(urlClient, jarFile, new PercentageTextProgress());
+                DownloadUtils.downloadFile(urlClient, jarFile, new PercentageTextProgress());
             } catch (Exception e) {
-                Utils.deleteDirectory(versionDir);
-                throw e;
+                FileUtils.deleteDirectory(versionDir);
+                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("MESSAGE_FAILED_DOWNLOAD_FILE", urlClient));
             }
             System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_JAR_FILE"));
 
-            /**安装顺序不可乱*/
-
-            if (installForgeOrFabric == InstallForgeOrFabric.FORGE) {
+            /*安装顺序不可乱*/
+            if (installForgeOrFabricOrQuilt == InstallForgeOrFabricOrQuilt.FORGE) {
                 System.out.println(getString("MESSAGE_START_INSTALLING_FORGE"));
                 if (!forgeMerger.merge(versionName, headVersionFile, jarFile, true).getKey()) {
                     return;
@@ -215,108 +171,40 @@ public class VersionInstaller {
             }
             jsonFile.createNewFile();
 
-            List<JSONObject> toBeMerged = Utils.jsonArrayToJSONObjectList(librariesToBeMerged);
+            List<JSONObject> toBeMerged = JSONUtils.jsonArrayToJSONObjectList(librariesToBeMerged);
             if (toBeMerged.size() > 0) {
                 headVersionFile.put("libraries",
-                        Utils.mergeLibraries(
-                                Utils.jsonArrayToJSONObjectList(headVersionFile.optJSONArray("libraries")),
+                        VersionLibraryUtils.mergeLibraries(
+                                JSONUtils.jsonArrayToJSONObjectList(headVersionFile.optJSONArray("libraries")),
                                 toBeMerged)
                 );
             }
             try {
-                Utils.writeFile(jsonFile, headVersionFile.toString(2), false);
+                FileUtils.writeFile(jsonFile, headVersionFile.toString(2), false);
             } catch (Exception e) {
-                Utils.deleteDirectory(versionDir);
+                FileUtils.deleteDirectory(versionDir);
                 throw e;
             }
 
             File librariesDir = new File(gameDir, "libraries");
-            File nativesDir = new File(versionDir, Utils.getNativesDirName());
+            File nativesDir = new File(versionDir, VersionUtils.getNativesDirName());
             File tempNatives = new File(cmcl, "temp_natives");
             //tempNatives.mkdirs();
             //librariesDir.mkdirs();
             //nativesDir.mkdirs();
 
-            ConsoleMinecraftLauncher.createLauncherProfiles();
+            CMCL.createLauncherProfiles();
             if (installLibraries || installNatives) {
                 downloadLibrariesAndNatives(installNatives, installLibraries, tempNatives, librariesDir, nativesDir, headVersionFile);
             }
 
             if (installAssets) {
                 System.out.println(getString("MESSAGE_INSTALL_DOWNLOADING_ASSETS"));
-                //downloadFile(url, jarFile, progressBar);
-
-                File assetsDir = Utils.getAssets(Utils.getConfig().optString("assetsPath"), gameDir);
-                File indexesDir = new File(assetsDir, "indexes");
-                File objectsDir = new File(assetsDir, "objects");
-                assetsDir.mkdirs();
-                indexesDir.mkdirs();
-                objectsDir.mkdirs();
-                String assetsIndex = headVersionFile.optString("assets");
-                if (isEmpty(assetsIndex)) {
-                    throw new Exception(getString("MESSAGE_INSTALL_DOWNLOAD_ASSETS_NO_INDEX"));
-                }
-                File assetsIndexFile = new File(indexesDir, assetsIndex + ".json");
-                JSONObject assetIndexObject = headVersionFile.optJSONObject("assetIndex");
-                String assetIndexUrl = assetIndexObject != null ? assetIndexObject.optString("url").replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()) : null;
-
-                if (isEmpty(assetIndexUrl)) {
-                    throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", getString("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL")));
-                }
-                try {
-                    downloadFile(assetIndexUrl, assetsIndexFile);
-                    JSONObject assetsJo = new JSONObject(Utils.readFileContent(assetsIndexFile));
-                    JSONObject objectsJo = assetsJo.optJSONObject("objects");
-
-                    Map<String, Object> map = objectsJo.toMap();
-                    List<String> nameList = new ArrayList<>(map.keySet());
-                    JSONArray names = new JSONArray(nameList);
-                    JSONArray objectsJa = objectsJo.toJSONArray(names);
-                    List<Pair<String, File>> list = new LinkedList<>();
-                    for (int i = 0; i < objectsJa.length(); i++) {
-                        JSONObject object = objectsJa.optJSONObject(i);
-                        if (object == null) {
-                            continue;
-                        }
-                        String hash = object.optString("hash");
-                        try {
-                            if (isEmpty(hash)) continue;
-                            File file;
-                            if (!assetsIndex.equals("legacy")) {
-                                File dir = new File(objectsDir, hash.substring(0, 2));
-                                dir.mkdirs();
-                                file = new File(dir, hash);
-                            } else {
-                                file = new File(assetsDir, "virtual/legacy/" + nameList.get(i));
-                                file.getParentFile().mkdirs();
-                            }
-
-
-                            if (!file.exists()) {
-                                file.createNewFile();
-                            }
-                            if (file.length() == 0)
-                                list.add(new Pair<>(DownloadSource.getProvider().assets() + hash.substring(0, 2) + "/" + hash, file));
-
-                        } catch (Exception e1) {
-                            throw new Exception(getString("MESSAGE_FAILED_DOWNLOAD_FILE", hash));
-                        }
-
-                    }
-                    ThreadsDownloader threadsDownloader = new ThreadsDownloader(list, () -> {
-                        System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_ASSETS"));
-                    /*if (installLibraries || installNatives) {
-                        downloadLibrariesAndNatives(installNatives, installLibraries, tempNatives, librariesDir, nativesDir, headVersionFile);
-                    }
-                    ConsoleMinecraftLauncher.createLauncherProfiles();*/
-                        if (onFinished != null)
-                            onFinished.execute();
-                    }, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
-                    threadsDownloader.start();
-                } catch (Exception e1) {
-                    throw new Exception(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", e1));
-                }
-
+                AssetsDownloader.start(headVersionFile, threadCount, () -> {
+                    System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_ASSETS"));
+                    if (onFinished != null)
+                        onFinished.execute();
+                });
             } else {
                 if (onFinished != null)
                     onFinished.execute();
@@ -324,7 +212,7 @@ public class VersionInstaller {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new Exception(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION", ex));
+            throw new DescriptionException(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION", ex));
         }
 
 
@@ -351,7 +239,7 @@ public class VersionInstaller {
 
                     if (!meet) continue;
                     if (installLibraries) {
-                        Pair<String, String> pair = Utils.getLibraryDownloadURLAndStoragePath(jsonObject);
+                        Pair<String, String> pair = VersionLibraryUtils.getLibraryDownloadURLAndStoragePath(jsonObject);
 
                         if (pair != null) {
                             String path = pair.getValue();
@@ -366,7 +254,7 @@ public class VersionInstaller {
                                     if (file.length() == 0) {
 
                                         System.out.print(getString("MESSAGE_DOWNLOADING_FILE", url1.substring(url1.lastIndexOf("/") + 1)));
-                                        downloadFile(url1, file, new PercentageTextProgress());
+                                        DownloadUtils.downloadFile(url1, file, new PercentageTextProgress());
                                     }
                                 } catch (Exception e1) {
                                     //e1.printStackTrace();
@@ -391,7 +279,7 @@ public class VersionInstaller {
                     if (nativesNamesJO == null) continue;
 
                     //String osName = System.getProperty("os.name");
-                    JSONObject nativesJo = classifiersJo.optJSONObject(nativesNamesJO.optString(OperatingSystem.CURRENT_OS.getCheckedName().replace("${arch}", Utils.getArchInt())));
+                    JSONObject nativesJo = classifiersJo.optJSONObject(nativesNamesJO.optString(OperatingSystem.CURRENT_OS.getCheckedName().replace("${arch}", SystemUtils.getArchInt())));
 
                     if (nativesJo == null) continue;
 
@@ -430,7 +318,7 @@ public class VersionInstaller {
         return false;
     }
 
-    public enum InstallForgeOrFabric {
+    public enum InstallForgeOrFabricOrQuilt {
         FORGE, FABRIC, QUILT
     }
 

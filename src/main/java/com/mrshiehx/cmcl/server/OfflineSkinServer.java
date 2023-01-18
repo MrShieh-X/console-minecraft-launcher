@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,10 @@
 
 package com.mrshiehx.cmcl.server;
 
-import com.mrshiehx.cmcl.utils.NetworkUtils;
+import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
+import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,6 +58,7 @@ public class OfflineSkinServer extends HttpServer {
             gen.initialize(4096, new SecureRandom());
             keyPair1 = gen.genKeyPair();
         } catch (NoSuchAlgorithmException e) {
+            if (Constants.isDebug()) e.printStackTrace();
             keyPair1 = null;
         }
         keyPair = keyPair1;
@@ -128,7 +131,7 @@ public class OfflineSkinServer extends HttpServer {
     private Response profiles(IHTTPSession session) throws IOException {
         InputStream i = session.getInputStream();
         String s = Utils.inputStream2String(i, i.available());
-        JSONArray jsonArray = Utils.parseJSONArray(s);
+        JSONArray jsonArray = JSONUtils.parseJSONArray(s);
         if (jsonArray == null) {
             return badRequest();
         }

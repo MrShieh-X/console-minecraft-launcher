@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,20 @@
 
 package com.mrshiehx.cmcl.modules.extra.forge;
 
-import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.SplitLibraryName;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
+import com.mrshiehx.cmcl.exceptions.DescriptionException;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
-import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
-import com.mrshiehx.cmcl.utils.ConsoleUtils;
+import com.mrshiehx.cmcl.modules.version.downloaders.LibrariesDownloader;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.cmcl.version.VersionLibraryUtils;
+import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
+import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
+import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +53,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.*;
+import static com.mrshiehx.cmcl.CMCL.*;
 
 public class ForgeMerger implements ExtraMerger {
     private static final String MODLOADER_NAME = "Forge";
@@ -104,7 +108,7 @@ public class ForgeMerger implements ExtraMerger {
             System.out.println(']');
 
 
-            String forgeVersionInput = selectForgeVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME), forges);
+            String forgeVersionInput = selectForgeVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME, list.get(0).getKey()), forges, list.get(0).getKey());
             if (forgeVersionInput == null)
                 return new Pair<>(false, null);
 
@@ -120,26 +124,6 @@ public class ForgeMerger implements ExtraMerger {
 
         }
 
-
-        /*JSONArray files = forge.optJSONArray("files");
-        if (files == null || files.length() == 0) {
-            System.out.println(getString("INSTALL_MODLOADER_NO_FILE", MODLOADER_NAME));
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
-        }
-        boolean has = false;
-        for (Object o : files) {
-            if (o instanceof JSONObject) {
-                JSONObject jsonObject = (JSONObject) o;
-                if (category.equals(jsonObject.optString("category")) && format.equals(jsonObject.optString("format"))) {
-                    has = true;
-                    break;
-                }
-            }
-        }
-        if (!has) {
-            System.out.println(getString("INSTALL_MODLOADER_NO_FILE", MODLOADER_NAME));
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
-        }*/
         try {
             return installInternal(forge, headJSONObject, minecraftVersion, minecraftJarFile);
         } catch (Exception e) {
@@ -148,17 +132,17 @@ public class ForgeMerger implements ExtraMerger {
         }
     }
 
-    public static Map<String, JSONObject> getForges(String minecraftVersion) throws Exception {
+    public static Map<String, JSONObject> getForges(String minecraftVersion) throws DescriptionException {
         JSONArray jsonArray;
         try {
             jsonArray = listForgeLoaderVersions(minecraftVersion);
         } catch (Exception e) {
             //e.printStackTrace();
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", MODLOADER_NAME));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", MODLOADER_NAME));
         }
 
         if (jsonArray.length() == 0) {
-            throw new Exception(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
         }
 
         String category = "installer";
@@ -185,7 +169,7 @@ public class ForgeMerger implements ExtraMerger {
         return forges;
     }
 
-    public static Pair<Boolean, List<JSONObject>> installInternal(JSONObject forge, JSONObject headJSONObject, String minecraftVersion, File minecraftJarFile) throws Exception {
+    public static Pair<Boolean, List<JSONObject>> installInternal(JSONObject forge, JSONObject headJSONObject, String minecraftVersion, File minecraftJarFile) throws DescriptionException {
 
         String category = "installer";
         String format = "jar";
@@ -204,15 +188,15 @@ public class ForgeMerger implements ExtraMerger {
         //https://download.mcbbs.net/forge/download?mcversion=1.18.2&version=40.0.1&category=installer&format=jar
 
 
-        File installer = new File("cmcl", "forge-" + s + ".jar");
+        File installer = new File(".cmcl", "forge-" + s + ".jar");
         System.out.println(getString("INSTALL_MODLOADER_DOWNLOADING_FILE"));
         String finalDownload;
         try {
-            ConsoleMinecraftLauncher.downloadFile(first, installer);
+            DownloadUtils.downloadFile(first, installer);
             finalDownload = first;
         } catch (Exception ignore) {
             try {
-                ConsoleMinecraftLauncher.downloadFile(second, installer);
+                DownloadUtils.downloadFile(second, installer);
                 finalDownload = second;
             } catch (Exception ignored) {
 
@@ -244,16 +228,16 @@ public class ForgeMerger implements ExtraMerger {
                     connection.setUseCaches(false);
                     connection.setDoOutput(true);
                     connection.setRequestMethod("GET");
-                    FileUtils.bytes2File(installer, Utils.httpURLConnection2Bytes(connection), false);
+                    FileUtils.bytes2File(installer, NetworkUtils.httpURLConnection2Bytes(connection), false);
                     finalDownload = third;
                 } catch (Exception e) {
-                    throw new Exception(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME) + ": " + e);
+                    throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME) + ": " + e);
                 }
 
             }
         }
         if (!installer.exists() || installer.length() == 0) {
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME));
         }
         JSONObject installProfile;
         ZipFile zipFile;
@@ -261,9 +245,9 @@ public class ForgeMerger implements ExtraMerger {
             zipFile = new ZipFile(installer);
             installProfile = new JSONObject(Utils.inputStream2String(zipFile.getInputStream(zipFile.getEntry("install_profile.json"))));
         } catch (IOException e) {
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_READ_FILE_WITH_PATH", installer.getAbsolutePath()) + ": " + e));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_READ_FILE_WITH_PATH", installer.getAbsolutePath()) + ": " + e));
         } catch (JSONException e) {
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_PARSE_FILE")));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_PARSE_FILE")));
         }
 
         JSONObject version = null;
@@ -271,7 +255,7 @@ public class ForgeMerger implements ExtraMerger {
         if (installProfile.has("spec")) {
             //new
             if (!installProfile.optString("minecraft").equals(minecraftVersion)) {
-                throw new Exception(getString("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", MODLOADER_NAME));
+                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", MODLOADER_NAME));
             }
             String json = installProfile.optString("json");
 
@@ -282,16 +266,16 @@ public class ForgeMerger implements ExtraMerger {
                         version = new JSONObject(new String(Files.readAllBytes((installerFileSystem = (fileSystemProvider.newFileSystem(installer.toPath(), new HashMap<>()))).getPath(json))));
                         break;
                     } catch (IOException e) {
-                        throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_READ_FILE_WITH_PATH", json) + ": " + e));
+                        throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_READ_FILE_WITH_PATH", json) + ": " + e));
 
                     } catch (JSONException e) {
-                        throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_PARSE_FILE_WITH_PATH", json)));
+                        throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_PARSE_FILE_WITH_PATH", json)));
 
                     }
                 }
             }
             if (version == null) {
-                throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_READ_FILE_WITH_PATH", json)));
+                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("EXCEPTION_READ_FILE_WITH_PATH", json)));
 
             }
 
@@ -300,7 +284,7 @@ public class ForgeMerger implements ExtraMerger {
                 for (Object object : installProfileLibraries) {
                     if (object instanceof JSONObject) {
                         JSONObject library = (JSONObject) object;
-                        Pair<String, String> pair = Utils.getLibraryDownloadURLAndStoragePath(library);
+                        Pair<String, String> pair = VersionLibraryUtils.getLibraryDownloadURLAndStoragePath(library);
                         if (pair == null) {
                             System.out.println(getString("MESSAGE_NOT_FOUND_LIBRARY_DOWNLOAD_URL", library.optString("name")));
                             continue;
@@ -311,10 +295,10 @@ public class ForgeMerger implements ExtraMerger {
 
                             File file = new File(librariesDir, path);
                             if (file.length() <= 0) {
-                                String path2 = "/maven" + Utils.addSlashIfMissingAtStart(path);
+                                String path2 = "/maven" + (!path.startsWith("/") ? "/" + path : path);
                                 try {
                                     System.out.println(getString("MESSAGE_UNZIPPING_FILE", path2));
-                                    Utils.createFile(file, true);
+                                    FileUtils.createFile(file, true);
                                     FileUtils.bytes2File(file, Files.readAllBytes(installerFileSystem.getPath(path2)), false);
                                 } catch (Exception e) {
                                     System.out.println(getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE", path2, e));
@@ -329,7 +313,7 @@ public class ForgeMerger implements ExtraMerger {
             {
                 String forgePath = installProfile.optString("path");
                 if (!isEmpty(forgePath)) {
-                    SplitLibraryName nameSplit = Utils.splitLibraryName(forgePath);
+                    SplitLibraryName nameSplit = VersionLibraryUtils.splitLibraryName(forgePath);
                     if (nameSplit != null) {
 
                         String fileName = nameSplit.getFileName();
@@ -337,10 +321,10 @@ public class ForgeMerger implements ExtraMerger {
 
                         File file = new File(librariesDir, path);
                         if (file.length() <= 0) {
-                            String path2 = "/maven" + Utils.addSlashIfMissingAtStart(path);
+                            String path2 = "/maven" + (!path.startsWith("/") ? "/" + path : path);
                             try {
                                 System.out.println(getString("MESSAGE_UNZIPPING_FILE", path2));
-                                Utils.createFile(file, true);
+                                FileUtils.createFile(file, true);
                                 FileUtils.bytes2File(file, Files.readAllBytes(installerFileSystem.getPath(path2)), false);
                             } catch (Exception e) {
                                 System.out.println(getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE", path2, e));
@@ -355,7 +339,7 @@ public class ForgeMerger implements ExtraMerger {
 
 
             Map<String, String> data = new HashMap<>();
-            File temp = new File("cmcl", "forge" + System.currentTimeMillis());
+            File temp = new File(".cmcl", "forge" + System.currentTimeMillis());
             temp.mkdirs();
             JSONObject dataJSON = installProfile.optJSONObject("data");
             for (Map.Entry<String, Object> entry : dataJSON.toMap().entrySet()) {
@@ -399,7 +383,7 @@ public class ForgeMerger implements ExtraMerger {
             data.put("LIBRARY_DIR", librariesDir.getAbsolutePath());
 
             JSONArray processorsJSON = installProfile.optJSONArray("processors");
-            List<JSONObject> processors = Utils.jsonArrayToJSONObjectList(processorsJSON, jsonObject -> {
+            List<JSONObject> processors = JSONUtils.jsonArrayToJSONObjectList(processorsJSON, jsonObject -> {
                 JSONArray sides = jsonObject.optJSONArray("sides");
                 boolean contains = false;
                 if (sides != null && sides.length() > 0) {
@@ -417,28 +401,6 @@ public class ForgeMerger implements ExtraMerger {
 
 
             for (JSONObject processor : processors) {
-                /*JSONObject outputsJSONObject=processor.optJSONObject("processor");
-                Map<String,String>outputs=new HashMap<>();
-                if(outputsJSONObject!=null){
-                    for(Map.Entry<String,Object>output:outputsJSONObject.toMap().entrySet()){
-                        if(!(output.getValue() instanceof String))continue;
-                        String key=output.getKey();
-                        String value=(String)output.getValue();
-                        if (key.charAt(0) == '[' && key.endsWith("]")) {
-                            SplitLibraryName splitLibraryName=SplitLibraryName.valueOf(key.substring(1, key.length() - 1));
-                            key = splitLibraryName.getPhysicalFile().getAbsolutePath();
-                        } else {
-                            key = replaceTokens(data, key);
-                        }
-
-                        if (!Utils.isEmpty(value))
-                            value = replaceTokens(data, value);
-
-                        outputs.put(key, value);
-                        ......
-                    }
-                }*/
-
                 SplitLibraryName splitLibraryName = SplitLibraryName.valueOf(processor.optString("jar"));
                 if (splitLibraryName == null) {
                     continue;
@@ -506,12 +468,12 @@ public class ForgeMerger implements ExtraMerger {
 
             Utils.close(zipFile);
             installer.delete();
-            Utils.deleteDirectory(temp);
+            FileUtils.deleteDirectory(temp);
 
         } else if (installProfile.optJSONObject("install") != null && installProfile.optJSONObject("versionInfo") != null) {
             ///old
             if (!installProfile.optJSONObject("install", new JSONObject()).optString("minecraft").equals(minecraftVersion)) {
-                throw new Exception(getString("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", MODLOADER_NAME));
+                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_MC_VERSION_MISMATCH", MODLOADER_NAME));
 
             }
             version = installProfile.optJSONObject("versionInfo");
@@ -519,7 +481,7 @@ public class ForgeMerger implements ExtraMerger {
             String path = installJSONObject.optString("path");
             String filePath = installJSONObject.optString("filePath");
 
-            SplitLibraryName nameSplit = Utils.splitLibraryName(path);
+            SplitLibraryName nameSplit = VersionLibraryUtils.splitLibraryName(path);
             File libraryFile = nameSplit.getPhysicalFile();
 
             try {
@@ -527,13 +489,13 @@ public class ForgeMerger implements ExtraMerger {
                 zipFile.close();
                 installer.delete();
             } catch (IOException e) {
-                throw new Exception(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE", filePath, e)));
+                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, getString("MESSAGE_FAILED_TO_DECOMPRESS_FILE", filePath, e)));
 
             }
 
 
         } else {
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", MODLOADER_NAME));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_UNKNOWN_TYPE", MODLOADER_NAME));
 
         }
 
@@ -546,7 +508,7 @@ public class ForgeMerger implements ExtraMerger {
                     JSONObject j = (JSONObject) o;
                     String name = j.optString("name");
                     if (!name.startsWith("net.minecraftforge:forge:")) {
-                        SplitLibraryName nameSplit2 = Utils.splitLibraryName(name);
+                        SplitLibraryName nameSplit2 = VersionLibraryUtils.splitLibraryName(name);
                         if (nameSplit2 != null) {
                             File file = nameSplit2.getPhysicalFile();
                             if (!file.exists() && file.length() == 0) librariesNeedToInstall.add(j);
@@ -555,7 +517,7 @@ public class ForgeMerger implements ExtraMerger {
                 }
             }
             JSONArray mcLibraries = headJSONObject.optJSONArray("libraries");
-            headJSONObject.put("libraries", Utils.mergeLibraries(Utils.jsonArrayToJSONObjectList(mcLibraries), Utils.jsonArrayToJSONObjectList(forgeLibraries)));
+            headJSONObject.put("libraries", VersionLibraryUtils.mergeLibraries(JSONUtils.jsonArrayToJSONObjectList(mcLibraries), JSONUtils.jsonArrayToJSONObjectList(forgeLibraries)));
         }
 
 
@@ -575,8 +537,8 @@ public class ForgeMerger implements ExtraMerger {
             if (hmca.isEmpty())
                 headJSONObject.put("minecraftArguments", minecraftArguments);
             else {
-                Arguments arguments1 = new Arguments(hmca, false, false);
-                Arguments arguments2 = new Arguments(minecraftArguments, false, false);
+                Arguments arguments1 = new Arguments(hmca, false);
+                Arguments arguments2 = new Arguments(minecraftArguments, false);
                 arguments1.merge(arguments2);
                 headJSONObject.put("minecraftArguments", minecraftArguments = arguments1.toString("--"));
             }
@@ -607,7 +569,7 @@ public class ForgeMerger implements ExtraMerger {
     }
 
 
-    private static String selectForgeVersion(String text, Map<String, JSONObject> forges) {
+    private static String selectForgeVersion(String text, Map<String, JSONObject> forges, String defaulx) {
         System.out.print(text);//legal
         Scanner scanner = new Scanner(System.in);
         try {
@@ -615,17 +577,17 @@ public class ForgeMerger implements ExtraMerger {
             if (!isEmpty(s)) {
                 JSONObject jsonObject = forges.get(s);
                 if (jsonObject != null) return s;
-                return selectForgeVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, MODLOADER_NAME), forges);
+                return selectForgeVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, MODLOADER_NAME, defaulx), forges, defaulx);
             } else {
-                return selectForgeVersion(text, forges);
+                return defaulx/*selectForgeVersion(text, forges,defaulx)*/;
             }
         } catch (NoSuchElementException ignore) {
             return null;
         }
     }
 
-    private static JSONArray listForgeLoaderVersions(String minecraftVersion) throws Exception {
-        return new JSONArray(Utils.get(DownloadSource.getProvider().forge() + "minecraft/" + minecraftVersion));
+    private static JSONArray listForgeLoaderVersions(String minecraftVersion) throws IOException {
+        return new JSONArray(NetworkUtils.get(DownloadSource.getProvider().forge() + "minecraft/" + minecraftVersion));
     }
 
 

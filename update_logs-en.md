@@ -1,5 +1,15 @@
 # Update Logs
-Currently, the latest version is 1.8, which was updated on November 11, 2022.
+Currently, the latest version is 2.0, which was updated on January 18, 2023.
+
+## 2.0 (Jan. 18, 2023)
+- In order to make the commands conform to the specifications, this version has made major changes to the operation commands of each function. For details, please refer to [Help Documentation](README-en.md#help-documentation), or [Video Tutorial](https://www.youtube.com/watch?v=Sqeu_Pahm-0).
+- Support nide8auth login, use `account -h` to get related information.
+- Added new interface language: Cantonese (Simplified). It can be switched by `config language cantonese`.
+- Support printing startup information (such as Java path, maximum memory, logged-in account, etc.) when starting the game, which can be turned on or off through `config printStartupInfo true/false`.
+- Fixed an issue where certain files of the CurseForge modpack could not be downloaded.
+- When installing Forge, Fabric, etc., press Enter without entering the version to select the latest version.
+- You can add `-s` or `--select` after the version installation command to select the version after installation.
+- Data file directory changed to `.cmcl`
 
 ## 1.8 (Nov. 11, 2022)
 - If the Java path, maximum memory, and window width and height of the standalone version configuration are not set in compliance with the specification, the global configuration value will be automatically used and the user will be prompted.
@@ -97,10 +107,10 @@ Currently, the latest version is 1.8, which was updated on November 11, 2022.
   Set a cape (only for offline account): `-account -c <Cape file path, if not entered it will unset the cape>`
 - Support setting proxy, proxy information is stored in configuration as storage. Proxy configuration:
 
-| Configuration Name |  Type   |                 Meaning                 |
-|--------------------|:-------:|:---------------------------------------:|
-| proxyHost          | String  |     Host Address(no proxy if empty)     |
-| proxyPort          | Integer |                  Port                   |
+| Configuration Name | Type    | Meaning                                 |
+|--------------------|---------|-----------------------------------------|
+| proxyHost          | String  | Host Address(no proxy if empty)         |
+| proxyPort          | Integer | Port                                    |
 | proxyUsername      | String  | Proxy authentication username(optional) |
 | proxyPassword      | String  | Proxy authentication password(optional) |
 

@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,16 +19,19 @@
 package com.mrshiehx.cmcl.modules.extra;
 
 import com.mrshiehx.cmcl.bean.Pair;
-import com.mrshiehx.cmcl.modules.version.LibrariesDownloader;
+import com.mrshiehx.cmcl.constants.Constants;
+import com.mrshiehx.cmcl.modules.version.downloaders.LibrariesDownloader;
+import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public abstract class ExtraInstaller {
 
@@ -41,8 +44,9 @@ public abstract class ExtraInstaller {
     public boolean install(File jsonFile, File jarFile, @Nullable String extraVersion) {
         String fileContent;
         try {
-            fileContent = Utils.readFileContent(jsonFile);
+            fileContent = FileUtils.readFileContent(jsonFile);
         } catch (Exception e) {
+            if (Constants.isDebug()) e.printStackTrace();
             System.out.println(Utils.getString("EXCEPTION_READ_FILE_WITH_PATH", jsonFile.getAbsoluteFile()));
             return false;
         }
@@ -50,6 +54,7 @@ public abstract class ExtraInstaller {
         try {
             gameJSON = new com.mrshiehx.cmcl.utils.json.XJSONObject(fileContent);
         } catch (Exception e) {
+            if (Constants.isDebug()) e.printStackTrace();
             System.out.println(Utils.getString("EXCEPTION_PARSE_FILE_WITH_PATH", jsonFile.getAbsoluteFile()));
             return false;
         }
@@ -58,7 +63,7 @@ public abstract class ExtraInstaller {
             return false;
 
 
-        String mcVersion = Utils.getGameVersion(gameJSON, jarFile).id;
+        String mcVersion = VersionUtils.getGameVersion(gameJSON, jarFile).id;
         if (isEmpty(mcVersion)) {
             System.out.println(getString("INSTALL_MODLOADER_EMPTY_MC_VERSION", getExtraName()));
             return false;
@@ -73,10 +78,11 @@ public abstract class ExtraInstaller {
                 }
             }
             try {
-                Utils.writeFile(jsonFile, gameJSON.toString(2), false);
+                FileUtils.writeFile(jsonFile, gameJSON.toString(2), false);
                 System.out.println(getString("INSTALLED_MODLOADER", getExtraName()));
                 return true;
             } catch (Exception e) {
+                if (Constants.isDebug()) e.printStackTrace();
                 System.out.println(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", getExtraName(), getString("EXCEPTION_WRITE_FILE_WITH_PATH", jsonFile.getAbsolutePath())));
                 return false;
             }

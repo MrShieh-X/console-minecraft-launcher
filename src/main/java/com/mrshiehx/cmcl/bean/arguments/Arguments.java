@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,101 +19,65 @@
 package com.mrshiehx.cmcl.bean.arguments;
 
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.CommandUtils;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Arguments {
     private final List<Argument> arguments;
     private int size;
 
-    public Arguments(String args, boolean forImmersive, boolean isForCMCL) {
-        this(Utils.splitCommand(Utils.clearRedundantSpaces(args)).toArray(new String[0]), forImmersive, isForCMCL);
+    public Arguments(String args, boolean removeDuplicate) {
+        this(CommandUtils.splitCommand(CommandUtils.clearRedundantSpaces(args)).toArray(new String[0]), removeDuplicate);
     }
 
-    public Arguments(String[] args, boolean forImmersive, boolean isForCMCL) {
+
+    public Arguments(String[] args, boolean removeDuplicate) {
         this.arguments = new LinkedList<>();
         int length = args.length;
-        if (isForCMCL && (length >= 3) &&
-                (forImmersive ? ("config".equalsIgnoreCase(args[0]))
-                        : ("-config".equalsIgnoreCase(args[0]) || "--config".equalsIgnoreCase(args[0]) ||
-                        "/config".equalsIgnoreCase(args[0]))) &&
-                !args[1].startsWith("--") &&
-                !args[1].startsWith("-") &&
-                !args[1].startsWith("/") &&
-                !args[2].startsWith("--") &&
-                !args[2].startsWith("-") &&
-                !args[2].startsWith("/")) {
-            arguments.add(new SingleArgument("config"));
-            String key = args[1];
-            arguments.add(new TextArgument(key.startsWith("\\-") ? key.substring(1) : key));
-            String value = args[2];
-            arguments.add(new TextArgument(value.startsWith("\\-") ? value.substring(1) : value));
-            this.size = arguments.size();
-            return;
-        }
-
-        if (isForCMCL && (length >= 3) &&
-                (forImmersive ? ("vcfg".equalsIgnoreCase(args[0]))
-                        : ("-vcfg".equalsIgnoreCase(args[0]) || "--vcfg".equalsIgnoreCase(args[0]) ||
-                        "/vcfg".equalsIgnoreCase(args[0]))) &&
-                !args[1].startsWith("--") &&
-                !args[1].startsWith("-") &&
-                !args[1].startsWith("/") &&
-                !args[2].startsWith("--") &&
-                !args[2].startsWith("-") &&
-                !args[2].startsWith("/") /*&&
-                (args.length < 4 || (
-                        !args[3].startsWith("--") &&
-                                !args[3].startsWith("-") &&
-                                !args[3].startsWith("/")))*/) {
-            String key = args[1];
-            arguments.add(new ValueArgument("vcfg", key.startsWith("\\-") ? key.substring(1) : key));
-            String value = args[2];
-            arguments.add(new TextArgument(value.startsWith("\\-") ? value.substring(1) : value));
-            if (args.length >= 4) {
-                String value2 = args[3];
-                if (!value2.startsWith("--") && !value2.startsWith("-") && !value2.startsWith("/")) {
-                    arguments.add(new TextArgument(value2.startsWith("\\-") ? value2.substring(1) : value2));
-                }
-            }
-            this.size = arguments.size();
-            return;
-        }
         for (int i = 0; i < length; i++) {
-            String key = args[i];
-            if (forImmersive && i == 0) {
-                String next = (args.length > (i + 1)) ? args[i + 1] : null;
-                if (!Utils.isEmpty(next) && !next.startsWith("--") && !next.startsWith("-") && !next.startsWith("/")) {
-                    arguments.add(new ValueArgument(key, next.startsWith("\\-") ? next.substring(1) : next));
-                } else {
-                    arguments.add(new SingleArgument(key));
-                }
-            } else {
-                int startLength = -1;
-                if (key.startsWith("--")) {//必须先判断“--”，否则如果“--”开头的判定为“-”开头，则最终参数名将会以“-”开头
-                    startLength = 2;
-                } else if (key.startsWith("-") || key.startsWith("/")) {
-                    startLength = 1;
-                }
-                if (startLength > 0) {
-                    if (i + 1 >= length) {
-                        arguments.add(new SingleArgument(key.substring(startLength)));
-                    } else {
+            String item = args[i];
+            if (item.startsWith("--") && item.length() > 2) {
+                String rear = item.substring(2);
+                int index = rear.indexOf('=');
+                if (index == -1) {
+                    String value = null;
+                    if (i + 1 != length) {
                         String next = args[i + 1];
-                        if (!next.startsWith("--") && !next.startsWith("-") && !next.startsWith("/")) {
-                            arguments.add(new ValueArgument(key.substring(startLength), next.startsWith("\\-") ? next.substring(1) : next));
-                        } else {
-                            arguments.add(new SingleArgument(key.substring(startLength)));
+                        if (!next.startsWith("-")) {
+                            value = next;
+                            i++;
                         }
                     }
-                } else if (isForCMCL && !forImmersive && i == 0 && (!key.startsWith("--") && !key.startsWith("-") && !key.startsWith("/"))) {
-                    arguments.add(new ValueArgument("b", key));
+                    arguments.add(value != null ? new ValueArgument(item + " " + value, new String[]{item, value}, rear, value) : new SingleArgument(item, new String[]{item}, rear));
+                } else {
+                    //如果index为0或大于0的处理方法相同
+                    String key = rear.substring(0, index);
+                    String value = rear.substring(index + 1);
+                    arguments.add(new ValueArgument(item, new String[]{item}, key, value));
                 }
+            } else if (item.startsWith("-") && item.length() > 1) {
+                if (item.length() == 2) {
+                    String key = item.substring(1);
+                    String value = null;
+                    if (i + 1 != length) {
+                        String next = args[i + 1];
+                        if (!next.startsWith("-")) {
+                            value = next;
+                            i++;
+                        }
+                    }
+                    arguments.add(value != null ? new ValueArgument(item + " " + value, new String[]{item, value}, key, value) : new SingleArgument(item, new String[]{item}, key));
+                } else {
+                    arguments.add(new ValueArgument(item, new String[]{item}, item.substring(1, 2), item.substring(2)));
+                }
+
+            } else {
+                arguments.add(new TextArgument(item));
             }
         }
-        if (isForCMCL) Utils.removeDuplicate(arguments);
+        if (removeDuplicate) Utils.removeDuplicate(arguments);
         this.size = arguments.size();
     }
 
@@ -133,13 +97,6 @@ public class Arguments {
             return s.equals(target);
         }
         return false;
-    }
-
-    public Argument opt(int number) {
-        if (number >= 0 && number < size) {
-            return optArgument(number);
-        }
-        return null;
     }
 
     public Argument optArgument(String name) {
@@ -227,7 +184,7 @@ public class Arguments {
     }
 
     public Argument optArgument(int i) {
-        if (i < size) {
+        if (i >= 0 && i < size) {
             return arguments.get(i);
         }
         return null;
@@ -239,7 +196,7 @@ public class Arguments {
 
     @Override
     public String toString() {
-        return toString("-");
+        return toString("--");
     }
 
     public String toString(String argKeyStart) {
@@ -269,8 +226,8 @@ public class Arguments {
         return sb.toString();
     }
 
-    public static Arguments valueOf(List<String> strings, boolean forImmersive, boolean isForCMCL) {
-        return new Arguments(strings.toArray(new String[0]), forImmersive, isForCMCL);
+    public static Arguments valueOf(List<String> strings, boolean isForCMCL) {
+        return new Arguments(strings.toArray(new String[0]), isForCMCL);
     }
 
     public Arguments merge(Arguments arguments) {
@@ -282,5 +239,34 @@ public class Arguments {
         }
         this.size = this.arguments.size();
         return this;
+    }
+
+    /**
+     * In order to prevent the user from inputting wrong options,
+     * or entering parameters that should not exist,
+     * the parameters that do not exist or have a wrong type in <code>arguments</code> will be filtered out,
+     * and the original <code>Arguments</code> object is not changed.
+     * Will compare the type and the key of the arguments.
+     *
+     * @return the filtered results, will not be empty
+     */
+    public List<Argument> exclude(ArgumentRequirement[] arguments, int offsetForOrigin) {
+        if (arguments == null || arguments.length == 0) return Collections.unmodifiableList(this.arguments);
+        if (this.size == 0) return Collections.emptyList();
+
+        Map<String, List<Class<? extends Argument>>> map = new HashMap<>();
+        for (ArgumentRequirement argReq : arguments) {
+            if (map.get(argReq.key) != null) {
+                map.get(argReq.key).add(argReq.clazz);
+            } else {
+                LinkedList<Class<? extends Argument>> list = new LinkedList<>();
+                list.add(argReq.clazz);
+                map.put(argReq.key, list);
+            }
+        }
+
+        return this.arguments.subList(offsetForOrigin, this.arguments.size()).stream()
+                .filter(argument -> !(argument instanceof TextArgument) && (map.get(argument.key) == null || !map.get(argument.key).contains(argument.getClass())))
+                .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,13 @@
  */
 package com.mrshiehx.cmcl.enums;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
+import static com.mrshiehx.cmcl.CMCL.getString;
 
 public enum GameCrashError {
     URLClassLoader(getString("MESSAGE_GAME_CRASH_CAUSE_URLCLASSLOADER")),
     LWJGLFailedLoad(getString("MESSAGE_GAME_CRASH_CAUSE_LWJGL_FAILED_LOAD")),
-    MemoryTooSmall(getString("MESSAGE_GAME_CRASH_CAUSE_MEMORY_TOO_SMALL"));
+    MemoryTooSmall(getString("MESSAGE_GAME_CRASH_CAUSE_MEMORY_TOO_SMALL")),
+    JvmUnrecognizedOption(getString("MESSAGE_GAME_CRASH_CAUSE_JVM_UNRECOGNIZED_OPTION"));
     public final String cause;
 
     GameCrashError(String cause) {

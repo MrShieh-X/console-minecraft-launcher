@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,9 @@ import java.util.Objects;
 public class ValueArgument extends Argument {
     public final String value;
 
-    public ValueArgument(String key, String value) {
-        super(key);
+    public ValueArgument(String originString, String[] originArray, String key, String value) {
+        super(originString, originArray, key);
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "ValueArgument{key=\"" + key + "\", value=\"" + value + "\"}";
     }
 
     @Override
@@ -48,5 +43,10 @@ public class ValueArgument extends Argument {
 
     public boolean equals(String key, String value) {
         return key.equalsIgnoreCase(this.key) && Objects.equals(this.value, value);
+    }
+
+    @Override
+    public String toString() {
+        return "ValueArgument: " + key + ", value: " + value;
     }
 }

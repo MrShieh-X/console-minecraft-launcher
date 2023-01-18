@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ public class ServerUtils {
     public static String errorHtml(String error) {
         return "\n" +
                 "<html>\n" +
-                "<head><title>" + error + " - CMCL " + Constants.CMCL_VERSION + "</title></head>\n" +
+                "<head><title>" + error + " - CMCL " + Constants.CMCL_VERSION_NAME + "</title></head>\n" +
                 "<body>\n" +
                 "<center><h1>" + error + "</h1></center>\n" +
-                "<hr><center>CMCL " + Constants.CMCL_VERSION + "</center>\n" +
+                "<hr><center>CMCL " + Constants.CMCL_VERSION_NAME + "</center>\n" +
                 "</body>\n" +
                 "</html>";
     }

@@ -1,39 +1,100 @@
 # Console Minecraft Launcher
 A Launcher for Minecraft Java Edition Running On The Console
 
-### [中文README](README.md) <br/>
-### [See Update Logs](update_logs-en.md) <br/>
+[![Latest Version](https://img.shields.io/badge/Release-v2.0-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![Release Date](https://img.shields.io/badge/Date-2023--01--18-brightgreen)
+![Software Requires](https://img.shields.io/badge/Software%20Requires-Java%208-blue)
+
+### [中文README](README.md) | [View Update Logs](update_logs-en.md) 
+
+## Video Tutorial
+English: [\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
+Chinese: [\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/)
+
+## Supported Interface Languages
+- English
+- Simplified Chinese
+- Cantonese (Simplified)
+
+## Special Thanks
+- [@Graetpro-X](https://github.com/Graetpro): Developed some functions
+- [@FZZkill](https://github.com/FZZkill): Help to beautify the README
+
+## Help Documentation
+To get all the help documentations, directly add `-h` or `--help`, such as `cmcl -h`<br/>
+To get help documentation of a single function, add `-h` or `--help` after the function option, such as `cmcl account --help`<br/>
+Note: Content in square brackets is optional. A comma in an option means that both options can do the same thing.<br/>
+For specifying content for options, you can only add content directly after the abbreviated option (a hyphen) (no spaces), such as `cmcl -lD:\.minecraft`,<br/>
+you can only add an equal sign after the complete option (two hyphens) and then enter the content, such as `cmcl --list=D:\.minecraft`,<br/>
+or add a space after the two and then enter the content, such as `cmcl -l D:\.minecraft`; `cmcl --list D:\.minecraft`, for details, please refer to the example after the option description.
+
+## Configurations
+The configurations are storing in a JSON file named cmcl.json in the launcher running directory (userDirectory/.config/cmcl under Linux), you can edit them by a file editor (need to know JSON tutorial, backup before modification) or the program arguments `config <config name> <content>` (see Help Documentation Configuration Related).<br/>
+If you edit configurations by a file editor, the configuration name and text configuration content need to be enclosed in double quotes ("").<br/>
+If you edit by command, if the configuration content contains spaces, it needs to be enclosed in double quotes ("").<br/>
+You can view this content through the options `config --view`.
+
+| Configuration Name      | Type        | Meaning                                                                                                                                       |
+|-------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| accounts                | JSON Array  | Accounts (Non-direct modification, please use "account -h" to get the relevant tutorial for modification)                                     |
+| downloadSource          | Integer     | Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS                                                                                   |
+| language                | String      | Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)                                                     |
+| selectedVersion         | String      | Selected start version                                                                                                                        |
+| maxMemory               | Integer     | [**Game related**] Maximum (Unit: MB)                                                                                                         |
+| gameDir                 | String      | [**Game related**] Custom the path of the game directory (or set working directory), default is .minecraft                                    |
+| assetsDir               | String      | [**Game related**] Custom assets resource directory path, if empty, it is the assets directory in the game directory                          |
+| resourcesDir            | String      | [**Game related**] Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory                     |
+| javaPath                | String      | [**Game related**] Java Path (It will get automatically if it is empty)                                                                       |
+| windowSizeWidth         | Integer     | [**Game related**] The width of the game window                                                                                               |
+| windowSizeHeight        | Integer     | [**Game related**] The height of the game window                                                                                              |
+| isFullscreen            | Boolean     | [**Game related**] Whether it is full screen, true if yes, false otherwise                                                                    |
+| exitWithMinecraft       | Boolean     | [**Game related**] When running the game, if you need to exit the launcher and exit the game by the way, it is true, otherwise it is false    |
+| printStartingInfo       | Boolean     | [**Game related**] When starting the game, whether to output startup information (Java path, maximum memory, etc.)                            |
+| checkAccountBeforeStart | Boolean     | [**Game related**] Check whether the account is available before starting the game                                                            |
+| jvmArgs                 | JSON Array  | [**Game related**] Customize JVM arguments (Check out the examples below or use "jvmArgs -h" to get the relevant tutorial for modification)   |
+| gameArgs                | JSON Object | [**Game related**] Customize game arguments (Check out the examples below or use "gameArgs -h" to get the relevant tutorial for modification) |
+| proxyHost               | String      | Proxy Host Address                                                                                                                            |
+| proxyPort               | Integer     | Proxy Port                                                                                                                                    |
+| proxyUsername           | String      | Proxy authentication username(optional for proxy)                                                                                             |
+| proxyPassword           | String      | Proxy authentication password(optional for proxy)                                                                                             |
+
+<details>
+<summary>Example for jvmArgs</summary>
+
+```json
+["-Dfile.encoding=UTF-8", "-Djava.library.path=natives", "-XX:+PrintGC"]
+```
+The above content means that the JVM arguments `-Dfile.encoding=UTF-8`, `-Djava.library.path=natives` and `-XX:+PrintGC` will be added.
+</details>
+
+<details>
+<summary>Example for gameArgs</summary>
+
+```json
+{
+  "fullscreen": "",
+  "arg1": "value1",
+  "arg2": "value2",
+  "arg3": "space value3"
+}
+```
+The above content means that the game arguments `--fullscreen --arg1 value1 --arg2 value2 --arg3 "space value3"` will be added.
+</details>
 
 ## Copyright
 MrShiehX owns the copyright of this program.<br/>
 Anyone can take advices of this program to us.
 
-## The latest version: 1.8 (Released on Nov. 11, 2022)
-
-## Program Screenshot
-![Program Screenshot](screenshot.gif "Program Screenshot")<br/>
-
-## Video Tutorial
-### English:
-[\[CMCL\] A Launcher for Minecraft Running On The Console](https://www.youtube.com/watch?v=SczdBQT9vOY) <br/>
-### Chinese:
-[\[CMCL\]纯命令行的Minecraft启动器 | 告别繁琐，全新体验](https://www.bilibili.com/video/BV1ua41187od) <br/>
-[\[CMCL\]今天，它，重出江湖了](https://www.bilibili.com/video/BV1AY411A7XU)
-
-## Main Developers
-### [@MrShieh-X](https://github.com/MrShieh-X)
-### [@Graetpro-X](https://github.com/Graetpro)
-
 ## License
 The software is distributed under [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) with additional terms.
 
     Console Minecraft Launcher
-    Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+    Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your function) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,190 +107,9 @@ The software is distributed under [GPL v3](https://www.gnu.org/licenses/gpl-3.0.
 ### Additional terms under GPLv3 Section 7
 You must <b>not</b> remove the copyright declaration displayed in the software. \[[under GPLv3, 7(b).](https://github.com/MrShieh-X/console-minecraft-launcher/blob/f266ff87c0af3487ce66b47afbdb5d6dbc90f240/LICENSE#L368-L370)\]
 
-## Software Configuration Required for This Program
-* Java 8 or higher
-
-## Supported Interface Languages
-- English
-- Simplified Chinese
-
-## Existing or Fixed BUGs
-- (Fixed in v1.4)~~Unable to launch game versions lower than 1.13 (without 1.13) where OptiFine and Forge coexist.~~
-
-## Configurations
-The configurations are storing in a JSON file named cmcl.json, you can edit them by a file editor (need to know JSON tutorial) or the program arguments `-config <Configuration Name> <Configuration Value>` (see [Usage Manual](#usage-manual) Configuration Related).<br/>
-If you edit configurations by a file editor, the configuration name and text configuration value need to be enclosed in double quotes ("").<br/>
-If you edit by the program arguments, if the configuration value contains spaces, it needs to be enclosed in double quotes ("").<br/>
-Note: If the type is an integer and the value is negative (or the parameter value starts with "-"), a backslash "\" (maybe two) must be added before the item, otherwise it will be mistaken for a parameter, such as: `\-10` or `\\-10`.<br/>
-This content can be viewed through the parameter `-config -view`.
-
-| Configuration Name|Type|Meaning|
-| -----|:----:|:----:|
-| accounts|JSON Array|Accounts, please use "-account -u" to get the relevant tutorial for modification|
-| downloadSource|Integer|Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS|
-| language|String|Language, zh is Simplified Chinese and en is English|
-| selectedVersion|String|Selected start version|
-| maxMemory|Integer|(**Game related**)Maximum (Unit: MB)|
-| gameDir|String|(**Game related**)Custom the path of the game directory (or set working directory), default is .minecraft|
-| assetsDir|String|(**Game related**)Custom assets resource directory path, if empty, it is the assets directory in the game directory|
-| resourcesDir|String|(**Game related**)Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory|
-| javaPath|String|(**Game related**)Java Path (It will get automatically if it is empty)|
-| windowSizeWidth|Integer|(**Game related**)The width of the game window|
-| windowSizeHeight|Integer|(**Game related**)The height of the game window|
-| isFullscreen|Boolean|(**Game related**)Whether it is full screen, true if yes, false otherwise|
-| exitWithMinecraft|Boolean|(**Game related**)When running the game, if you need to exit the program and exit the game by the way, it is true, otherwise it is false|
-| jvmArgs|JSON Array|(**Game related**)Customize JVM parameters (append or override),<br/> example: "jvmArgs":<br/>\["-Dfile.encoding=UTF-8", "-Djava.library.path=natives", "-XX:+PrintGC"\]<br/>(Set the parameters of "-Dfile.encoding=UTF-8", <br/>"-Djava.library.path=natives"<br/> and "-XX:+PrintGC") or use "-jvmArgs -u" to get the relevant tutorial for modification|
-| gameArgs|JSON Object|(**Game related**)Customize game parameters (append or override), example: "gameArgs":<br/>{"fullscreen": "",<br/>  "arg1": "value1",<br/>  "arg2": "value2",<br/>  "arg3": "space value2"}<br/>(will add "--fullscreen --arg1 value1 --arg2 value2 --arg3 "space value2" " after the game parameters) or use "-gameArgs -u" to get the relevant tutorial for modification|
-| proxyHost|String|Proxy Host Address|
-| proxyPort|Integer|Proxy Port|
-| proxyUsername|String|Proxy authentication username(optional for proxy)|
-| proxyPassword|String|Proxy authentication password(optional for proxy)|
-
-## Usage Manual
-### To get all the manuals, add -u directly, such as `java -jar CMCL.jar -u`
-### To get a single function manual, add -u after the function parameter, such as `java -jar CMCL.jar -account -u`
-&emsp;&emsp;Print usage manual:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-u` or `-usage`<br/>
-&emsp;&emsp;Start the selected version:&emsp;&emsp;&emsp;&emsp;&emsp;Direct start game without parameters or `-b` or `-start`<br/>
-&emsp;&emsp;Start a specific version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Unique parameter: `<Version Name>` or `-b <Version Name>`<br/>
-&emsp;&emsp;List all versions:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-l` or `-list` or `-ls`<br/>
-&emsp;&emsp;List all versions in another game dir: `-l <Target Game Directory>`<br/>
-&emsp;&emsp;Print the launch command:&emsp;&emsp;&emsp;&emsp; `-p <Version Name>` or `-print <Version Name>`<br/>
-&emsp;&emsp;Select version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp; `-s <Version Name>` or `-select <Version Name>`<br/>
-&emsp;&emsp;Get about description:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;`-a` or `-about`<br/>
-&emsp;&emsp;To enter immersive mode:&emsp;&emsp;&emsp;&emsp;&emsp;`-i` or `-immersive`<br/>
-&emsp;&emsp;Check for Updates:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-cfu`<br/>
-<details>
-  <summary><b><font size="4">Configuration Related</font></b></summary>
-
-&emsp;&emsp;View all settable configurations:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -view`<br/>
-&emsp;&emsp;Print a configuration:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -p <Configuration Name>`<br/>
-&emsp;&emsp;Print all configurations:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -a`<br/>
-&emsp;&emsp;Print the original content of the configuration: `-config -o <The number of spaces to indent, can be empty, defaults to 2>`<br/>
-&emsp;&emsp;Clear all configurations:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-config -c`<br/>
-&emsp;&emsp;Remove a configuration:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;`-config -r <Configuration Name>`<br/>
-&emsp;&emsp;Set a configuration(regardless of type):&emsp;&emsp;&emsp;`-config <Configuration Name> <Configuration Value>`<br/>
-&emsp;&emsp;Set a configuration: `-config -s -t <Configuration type, such as`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`i Integer,`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`b Boolean,`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`s String and`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`f Fraction> -n <Configuration Name> -v <Configuration Value>`<br/>
-</details>
-<details>
-  <summary><b><font size="4">Account Related</font></b></summary>
-
-&emsp;&emsp;Select a account:&emsp;&emsp;&emsp;&ensp;`-account <Order Number>`<br/>
-&emsp;&emsp;List all accounts:&emsp;&emsp;&emsp;&emsp;`-account -p`<br/>
-&emsp;&emsp;Delete a account:&emsp;&emsp;&emsp;&ensp;`-account -t <Order Number>`<br/>
-&emsp;&emsp;Offline Login:&emsp;&emsp;&emsp;&emsp;&emsp; `-account -l -o <Offline Playername> -s(Optional, select this account after successful login)`<br/>
-&emsp;&emsp;Microsoft Account Login:  `-account -l -m -s(Optional, select this account after successful login)`<br/>
-&emsp;&emsp;authlib-injector Login:&emsp;&emsp;`-account -l -a <Server Address> -s(Optional, select this account after successful login)`<br/>
-&emsp;&emsp;Refresh account:&emsp;&emsp;&emsp;&emsp;`-account -r`<br/>
-&emsp;&emsp;Download skin:&emsp;&emsp;&emsp;&emsp;&emsp;`-account -s -d <Skin File Storage Path>`<br/>
-&emsp;&emsp;Set skin (Microsoft account not available):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-account -s -u <Skin file path (if it is an offline account, if you do not enter it, you will cancel the skin setting)>`<br/>
-&emsp;&emsp;Set the skin to Steve (Microsoft account not available): `-account -s -e`<br/>
-&emsp;&emsp;Set the skin to Alex (Microsoft account not available):&emsp;`-account -s -x`<br/>
-&emsp;&emsp;Set a cape (only for offline account):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;`-account -c <Cape file path, if not entered it will unset the cape>`<br/>
-</details>
-<details>
-  <summary><b><font size="4">Version Related</font></b></summary>
-
-&emsp;&emsp;View Version Information: `-version -i <Version Name>`<br/>
-&emsp;&emsp;Delete a version:&emsp;&emsp;&emsp;&emsp;`-version -d <Version Name>`<br/>
-&emsp;&emsp;Rename a version:&emsp;&emsp;&emsp; `-version -r <Version Name> -t <New Version Name>`<br/>
-&emsp;&emsp;Re-download the native dependency library files:&emsp;&emsp;`-version -n <Version Name>`<br/>
-&emsp;&emsp;Find missing dependency library files and download: `-version -l <Version Name>`<br/>
-&emsp;&emsp;Complete version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -b <Version Name>`<br/>
-&emsp;&emsp;Install Fabric to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -f <Version Name> -fapi(optional, with Fabric Api)`<br/>
-&emsp;&emsp;Install Forge to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -o <Version Name>`<br/>
-&emsp;&emsp;Install LiteLoader to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -e <Version Name>`<br/>
-&emsp;&emsp;Install OptiFine to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-version -p <Version Name>`<br/>
-&emsp;&emsp;Install Quilt to local version:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-version -q <Version Name>`<br/>
-&emsp;**Note: You can specify the version by adding "-v <Version>" after the commands to install Fabric, Forge, LiteLoader, OptiFine and Quilt, so as to avoid entering the command and then selecting the version.**<br/>
-</details>
-<details>
-  <summary><b><font size="4">Version Config Related</font></b></summary>
-
-&emsp;&emsp;General: `-vcfg <Version Name> <Configuration name, use "-config -view" to view the content with "[Game related]"> <Content, add double quotes if there is a space, use global configuration if not entered>`<br/>
-&emsp;&emsp;Set version working directory(same as gameDir): `-vcfg <Version Name> -workingDirectory <Target directory, default if not entered>`<br/>
-</details>
-<details>
-  <summary><b><font size="4">Custom JVM Parameters Related</font></b></summary>
-
-Note: You can append `-version <Version Name>` to the command to specify the version to set<br/>
-&emsp;&emsp;Print all parameters: `-jvmArgs -p <The number of spaces to indent, can be empty, defaults to 2>`<br/>
-&emsp;&emsp;Add a parameter:&emsp; `-jvmArgs -a <Parameter Content>`<br/>
-&emsp;&emsp;Delete a parameter:   `-jvmArgs -d <Order number, starting from 0>`<br/>
-</details>
-<details>
-  <summary><b><font size="4">Custom Game Parameters Related</font></b></summary>
-
-Note: You can append `-version <Version Name>` to the command to specify the version to set<br/>
-&emsp;&emsp;Print all parameters: `-gameArgs -p <The number of spaces to indent, can be empty, defaults to 2>`<br/>
-&emsp;&emsp;Add a parameter:&emsp; `-gameArgs -a -n <Parameter Name> -v <Parameter Value(optional, do not enter -v if this is empty)>`<br/>
-&emsp;&emsp;Delete a parameter:   `-gameArgs -d <Parameter Name>`<br/>
-</details>
-<details>
-  <summary><b><font size="4">Installation Version Related</font></b></summary>
-
-&emsp;&emsp;Direct install version: `-install <Version Name (if there are spaces, add double quotes)> -n <Local Version Name (optional)>`<br/>
-&emsp;&emsp;Optional parameters: `-f` Install Fabric `-fapi(optional, with Fabric Api)`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-o` Install Forge<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-e` Install LiteLoader<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-p` Install OptiFine<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-q` Install Quilt<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-t <Thread Count> Set the number of threads for downloading asset files (default 64)`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-na` Do not download asset files<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-nl` Do not download dependency library files<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-nn` Do not download native dependency library files<br/>
-&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;**Note: Fabric and Forge, Fabric and LiteLoader, Fabric and OptiFine cannot be installed at the same time or coexist (Quilt is the same as Fabric, but they also cannot coexist)**<br/>
-&emsp;&emsp;&emsp;&emsp;&ensp;&emsp;&emsp;**You can specify the version after the parameters -f, -o, -e, -p, -q to avoid asking for the version during installation. For example: "-f 0.14.8" means to install Fabric with version 0.14.8.**<br/>
-&emsp;&emsp;Show installable versions (if no range is set, all versions of this type are showed by default): -`install -s <Versions types: a All; r Releases; s Snapshots; oa Ancient Alpha; ob Ancient Beta>`<br/>
-&emsp;&emsp;  Set time range (optional): `-i <from year>-<from month>-<from day>/<to year>-<to month>-<to day>`<br/>
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Example: `-i 2020-05-09/2021-10-23`<br/>
-</details>
-<details>
-  <summary><b><font size="4">Mod Related (Download Source: CurseForge)</font></b></summary>
-
-&emsp;&emsp;Search for mods and install (by name):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-mod -i <Mod Name>`<br/>
-&emsp;&emsp;Search for mods and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; `-mod -i -c <Mod ID>`<br/>
-&emsp;&emsp;Search for mods and display information (by name): `-mod -s <Mod Name>`<br/>
-&emsp;&emsp;Search for mods and display information (by ID):&emsp;&emsp;`-mod -s -c <Mod ID>`
-</details>
-<details>
-  <summary><b><font size="4">Modpack Related (Download Source: CurseForge)</font></b></summary>
-
-&emsp;Optional parameters for installing the modpack:<br/>
-&emsp;&emsp;&emsp;`-t <Thread Count>` Set the number of threads for downloading asset files (default 64)<br/>
-&emsp;&emsp;&emsp;`-na` Do not download asset files<br/>
-&emsp;&emsp;&emsp;`-nl` Do not download dependency library files<br/>
-&emsp;&emsp;&emsp;`-nn` Do not download native dependency library files<br/>
-&emsp;&emsp;Search for modpacks and install (by name):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-modpack -i <Modpack Name> -k(Optional, keep the file after installation)`<br/>
-&emsp;&emsp;Search for modpacks and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-modpack -i -c <Modpack ID> -k(Optional, keep the file after installation)`<br/>
-&emsp;&emsp;Search for modpacks and display information (by name): `-modpack -s <Modpack Name>`<br/>
-&emsp;&emsp;Search for modpacks and display information (by ID):&emsp;&emsp;`-modpack -s -c <Modpack ID>`<br/>
-&emsp;&emsp;Install local modpack:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-modpack -l <Modpack Path>`
-</details>
-<details>
-  <summary><b><font size="4">Mod Related (Download Source: Modrinth)</font></b></summary>
-
-&emsp;&emsp;Search for mods and install (by name):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-mod2 -i <Mod Name> -l <Optional, limit the number of results, default is 50>`<br/>
-&emsp;&emsp;Search for mods and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; `-mod2 -i -c <Mod ID>`<br/>
-&emsp;&emsp;Search for mods and display information (by name): `-mod2 -s <Mod Name> -l <Optional, limit the number of results, default is 50>`<br/>
-&emsp;&emsp;Search for mods and display information (by ID):&emsp;&emsp;`-mod2 -s -c <Mod ID>`
-</details>
-<details>
-  <summary><b><font size="4">Modpack Related (Download Source: Modrinth)</font></b></summary>
-
-&emsp;Optional parameters for installing the modpack:<br/>
-&emsp;&emsp;&emsp;`-t <Thread Count>` Set the number of threads for downloading asset files (default 64)<br/>
-&emsp;&emsp;&emsp;`-na` Do not download asset files<br/>
-&emsp;&emsp;&emsp;`-nl` Do not download dependency library files<br/>
-&emsp;&emsp;&emsp;`-nn` Do not download native dependency library files<br/>
-&emsp;&emsp;Search for modpacks and install (by name):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;`-modpack2 -i <Modpack Name> -k(Optional, keep the file after installation) -l <Optional, limit the number of results, default is 50>`<br/>
-&emsp;&emsp;Search for modpacks and install (by ID):&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; `-modpack2 -i -c <Modpack ID> -k(Optional, keep the file after installation)`<br/>
-&emsp;&emsp;Search for modpacks and display information (by name): `-modpack2 -s <Modpack Name> -l <Optional, limit the number of results, default is 50>`<br/>
-&emsp;&emsp;Search for modpacks and display information (by ID):&emsp;&emsp;`-modpack2 -s -c <Modpack ID>`
-</details>
+## Disclaimer
+- The copyright of Minecraft belongs to Mojang Studios and Microsoft. The software producer is not responsible for any copyright issues arising from the use of CMCL. Please support the official game.
+- All consequences arising from the use of CMCL by the user shall be borne by the user himself. Any legal disputes and conflicts involving CMCL have nothing to do with the developer, and CMCL and the developer will not bear any responsibility.
 
 ## About Author
 MrShiehX<br/>
@@ -240,4 +120,4 @@ MrShiehX<br/>
 - Youtube:<br/>
   [@MrShiehX](https://www.youtube.com/channel/UC03_vrWM8TfaU1k9VYVzW0A) <br/>
 
-## If you find any bugs in this program, or have new ideas, please leave a message on Bilibili or raise an issue
+## If you find any bugs in CMCL, or have new ideas, please leave a message on Bilibili or raise an issue.

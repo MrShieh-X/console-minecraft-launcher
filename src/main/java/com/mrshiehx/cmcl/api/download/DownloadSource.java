@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 package com.mrshiehx.cmcl.api.download;
 
-import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
@@ -45,7 +45,7 @@ public class DownloadSource {
             for (Pair<String, Integer> pair : sources) {
                 System.out.printf("[%d]%s\n", pair.getValue(), pair.getKey());
             }
-            int defaultDS = ConsoleMinecraftLauncher.getLanguage().equalsIgnoreCase("zh") ? 2 : 0;
+            int defaultDS = CMCL.getLanguage().equalsIgnoreCase("zh") || CMCL.getLanguage().equalsIgnoreCase("cantonese") ? 2 : 0;
             int value = defaultDS;
             System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDS));
             try {

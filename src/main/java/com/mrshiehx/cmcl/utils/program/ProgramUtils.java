@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 package com.mrshiehx.cmcl.utils.program;
 
-import com.mrshiehx.cmcl.constants.Languages;
+import com.mrshiehx.cmcl.constants.languages.Languages;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -30,24 +30,25 @@ import static com.mrshiehx.cmcl.utils.Utils.isEmpty;
 
 public class ProgramUtils {
     public static void main2(String[] args) {
-        printStringsThatChineseNotHave();
+        System.out.println("in En not in Can: ");
+        compareTwoLanguages(Languages.getEn(), Languages.getCantonese());
         System.out.println();
-        printStringsThatEnglishNotHave();
+        System.out.println("in Can not in En: ");
+        compareTwoLanguages(Languages.getCantonese(), Languages.getEn());
+        System.out.println();
+        System.out.println("in Can not in Zh: ");
+        compareTwoLanguages(Languages.getCantonese(), Languages.getZh());
+        System.out.println();
+        /*System.out.println("in Zh not in Can: ");
+        compareTwoLanguages(Languages.getZh(),Languages.getCantonese());//永远为空
+        System.out.println();*/
     }
 
-    public static void printStringsThatEnglishNotHave() {
-        List<String> fin = new LinkedList<>();
-
-        for (Map.Entry<String, String> e : Languages.getZh().entrySet()) {
-            String s = e.getKey();
-            if (isEmpty(Languages.getEn().get(s))) {
-                fin.add(s);
-            }
-        }
-
-        for (String s : fin) {
-            System.out.println(s);
-        }
+    /**
+     * 返回存在于x而不存在于y中的字符串名称
+     **/
+    public static void compareTwoLanguages(Map<String, String> x, Map<String, String> y) {
+        x.entrySet().stream().filter(e -> isEmpty(y.get(e.getKey()))).forEach(System.out::println);
     }
 
     public static void printStringsThatChineseNotHave() {
@@ -71,25 +72,22 @@ public class ProgramUtils {
         }
     }
 
-    public static void compareLibrary() {
-        String cmcl = "";
-        String hmcl = "";
+    public static void compareLibrary(String xstr, String ystr) {
+        List<String> x = Arrays.asList(xstr.split(";"));
+        List<String> y = Arrays.asList(ystr.split(";"));
 
-        List<String> old = Arrays.asList(cmcl.split(";"));
-        List<String> nee = Arrays.asList(hmcl.split(";"));
+        LinkedList<String> xHaveYNo = new LinkedList<>();
+        List<String> yHaveXNo = new LinkedList<>();
 
-        LinkedList<String> oldHaveNeeNo = new LinkedList<>();
-        List<String> neeHaveOldNo = new LinkedList<>();
-
-        for (String oldo : old) {
-            if (!nee.contains(oldo)) oldHaveNeeNo.add(oldo);
+        for (String oldo : x) {
+            if (!y.contains(oldo)) xHaveYNo.add(oldo);
         }
-        for (String neee : nee) {
-            if (!old.contains(neee)) neeHaveOldNo.add(neee);
+        for (String neee : y) {
+            if (!x.contains(neee)) yHaveXNo.add(neee);
         }
 
-        System.out.println("oldHaveNeeNo:");
-        for (String k : oldHaveNeeNo) {
+        System.out.println("xHaveYNo:");
+        for (String k : xHaveYNo) {
             System.out.println(k);
         }
         System.out.println();
@@ -97,8 +95,8 @@ public class ProgramUtils {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println("neeHaveOldNo:");
-        for (String k : neeHaveOldNo) {
+        System.out.println("yHaveXNo:");
+        for (String k : yHaveXNo) {
             System.out.println(k);
         }
     }

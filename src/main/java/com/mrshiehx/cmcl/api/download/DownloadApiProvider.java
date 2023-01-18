@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,11 @@ package com.mrshiehx.cmcl.api.download;
 public interface DownloadApiProvider {
     String versionManifest();//https://piston-meta.mojang.com/mc/game/version_manifest.json
 
-    String authlibInjector();//https://authlib-injector.yushi.moe/artifact/latest.json
+    String authlibInjectorFile();//https://authlib-injector.yushi.moe/artifact/latest.json
+
+    default String nide8AuthFile() {
+        return "https://login.mc-user.com:233/download/nide8auth.jar";
+    }
 
     String assets();//https://resources.download.minecraft.net/
 

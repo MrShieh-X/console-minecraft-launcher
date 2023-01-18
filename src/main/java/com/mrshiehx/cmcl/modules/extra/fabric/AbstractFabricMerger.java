@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,13 @@
 package com.mrshiehx.cmcl.modules.extra.fabric;
 
 import com.mrshiehx.cmcl.bean.Pair;
+import com.mrshiehx.cmcl.constants.Constants;
+import com.mrshiehx.cmcl.exceptions.DescriptionException;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
-import com.mrshiehx.cmcl.utils.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
+import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,8 +34,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 /**
  * Fabric 与原版的合并器
@@ -61,6 +65,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
             try {
                 jsonArray = listFabricLoaderVersions(minecraftVersion);
             } catch (Exception e) {
+                if (Constants.isDebug()) e.printStackTrace();
                 //e.printStackTrace();
                 System.out.println(getString("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", getModLoaderName()));
                 return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
@@ -91,7 +96,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
             }
             System.out.println(']');
 
-            fabricVersion = selectFabricVersion(getString("INSTALL_MODLOADER_SELECT", getModLoaderName()), fabrics);
+            fabricVersion = selectFabricVersion(getString("INSTALL_MODLOADER_SELECT", getModLoaderName(), fabricVersions.get(0)), fabrics, fabricVersions.get(0));
             if (fabricVersion == null)
                 return new Pair<>(false, null);
         } else {
@@ -101,30 +106,32 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
         try {
             return installInternal(minecraftVersion, fabricVersion, headJSONObject);
         } catch (Exception e) {
+            if (Constants.isDebug()) e.printStackTrace();
             System.out.println(e.getMessage());
             return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
         }
     }
 
-    public Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String fabricVersion, JSONObject headJSONObject) throws Exception {
+    public Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String fabricVersion, JSONObject headJSONObject) throws DescriptionException {
         String jsonUrl = getMetaUrl() + String.format("versions/loader/%s/%s", minecraftVersion, fabricVersion);
         String targetJSONString;
         try {
-            targetJSONString = Utils.get(jsonUrl);
+            targetJSONString = NetworkUtils.get(jsonUrl);
         } catch (IOException e) {
+            if (Constants.isDebug()) e.printStackTrace();
             //e.printStackTrace();
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", getModLoaderName()));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", getModLoaderName()));
         }
         if (targetJSONString.contains("no loader version found")) {
-            throw new Exception(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
         }
-        JSONObject fabricJSONOrigin = Utils.parseJSONObject(targetJSONString);
+        JSONObject fabricJSONOrigin = JSONUtils.parseJSONObject(targetJSONString);
         if (fabricJSONOrigin == null) {
-            throw new Exception(getString("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", getModLoaderName()));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", getModLoaderName()));
         }
 
         if (fabricJSONOrigin.optString("message").equalsIgnoreCase("not found")) {
-            throw new Exception(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
+            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
         }
 
         JSONObject fabricJSON = new JSONObject();
@@ -161,8 +168,6 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
                 JSONArray server = libraries.optJSONArray("server");
                 fabricJSON.put("libraries", common.putAll(server));
             }
-
-
         }
 
         JSONArray libraries = fabricJSON.optJSONArray("libraries");
@@ -236,7 +241,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
         return list;
     }
 
-    private String selectFabricVersion(String text, Map<String, JSONObject> fabrics) {
+    private String selectFabricVersion(String text, Map<String, JSONObject> fabrics, String defaulx) {
         System.out.print(text);//legal
         Scanner scanner = new Scanner(System.in);
         try {
@@ -244,9 +249,9 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
             if (!isEmpty(s)) {
                 JSONObject jsonObject = fabrics.get(s);
                 if (jsonObject != null) return s;
-                return selectFabricVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, getModLoaderName()), fabrics);
+                return selectFabricVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, getModLoaderName(), defaulx), fabrics, defaulx);
             } else {
-                return selectFabricVersion(text, fabrics);
+                return defaulx/*selectFabricVersion(text, fabrics,defaulx)*/;
             }
         } catch (NoSuchElementException ignore) {
             return null;
@@ -254,7 +259,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
     }
 
     //列出该 Minecraft 版本支持的所有 Fabric 版本
-    private JSONArray listFabricLoaderVersions(String minecraftVersion) throws Exception {
-        return new JSONArray(Utils.get(getMetaUrl() + "versions/loader/" + minecraftVersion));
+    private JSONArray listFabricLoaderVersions(String minecraftVersion) throws IOException {
+        return new JSONArray(NetworkUtils.get(getMetaUrl() + "versions/loader/" + minecraftVersion));
     }
 }

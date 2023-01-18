@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 package com.mrshiehx.cmcl.bean.arguments;
 
 import java.util.Objects;
 
 public abstract class Argument {
+    public final String originString;
+    public final String[] originArray;//按照引号外空格划分，所以每一项内都允许有空格；不可为空，至少有一项
     public final String key;
 
-    protected Argument(String key) {
+    protected Argument(String originString, String[] originArray, String key) {
+        this.originString = originString;
+        this.originArray = originArray;
         this.key = key;
     }
 
@@ -30,16 +35,17 @@ public abstract class Argument {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Argument that = (Argument) o;
-        return key.equals(that.key);
-    }
-
-    public boolean equals(String key) {
-        return key.equalsIgnoreCase(this.key);
+        Argument argument = (Argument) o;
+        return Objects.equals(key, argument.key);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(key);
     }
+
+    public boolean equals(String key) {
+        return key.equals(this.key);
+    }
+
 }

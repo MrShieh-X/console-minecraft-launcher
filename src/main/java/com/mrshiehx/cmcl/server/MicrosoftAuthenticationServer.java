@@ -1,28 +1,26 @@
 package com.mrshiehx.cmcl.server;
 
 import com.mrshiehx.cmcl.exceptions.AuthenticationException;
-import com.mrshiehx.cmcl.utils.NetworkUtils;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class MicrosoftAuthenticationServer extends NanoHTTPD {
     private final int port;
-    private final OnGotCode onGotCode;
     private final CompletableFuture<String> future = new CompletableFuture<>();
 
 
-    public MicrosoftAuthenticationServer(int port, OnGotCode onGotCode) {
+    public MicrosoftAuthenticationServer(int port) {
         super(port);
 
         this.port = port;
-        this.onGotCode = onGotCode;
     }
 
     public String getRedirectURI() {
@@ -45,7 +43,6 @@ public class MicrosoftAuthenticationServer extends NanoHTTPD {
         Map<String, String> query = Utils.mapOf(NetworkUtils.parseQuery(s));
         if (query.containsKey("code")) {
             String c = query.get("code");
-            if (onGotCode != null) new Thread(() -> onGotCode.onGotCode(c, getRedirectURI())).start();
             future.complete(c);
         } else {
             future.completeExceptionally(new AuthenticationException("failed to authenticate"));
@@ -75,9 +72,5 @@ public class MicrosoftAuthenticationServer extends NanoHTTPD {
             }
         }).start();
         return newFixedLengthResponse(Response.Status.OK, "text/html; charset=UTF-8", html);
-    }
-
-    public interface OnGotCode {
-        void onGotCode(String code, String redirect_uri);
     }
 }

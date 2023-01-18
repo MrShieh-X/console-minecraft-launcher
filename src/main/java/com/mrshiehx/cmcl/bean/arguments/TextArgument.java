@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@ package com.mrshiehx.cmcl.bean.arguments;
 
 public class TextArgument extends Argument {
     public TextArgument(String key) {
-        super(key);
+        super(key, new String[]{key}, key);
     }
 
     @Override
     public String toString() {
-        return "TextArguments{text=\"" + key + "\"}";
+        return "TextArgument: " + key;
     }
 }

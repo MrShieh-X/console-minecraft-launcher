@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2022  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,10 @@
  */
 package com.mrshiehx.cmcl.modules.account.skin;
 
-import com.mrshiehx.cmcl.ConsoleMinecraftLauncher;
-import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.authlib.AuthlibInjectorProvider;
+import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.authlib.AuthlibInjectorApiProvider;
+import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.nide8auth.Nide8AuthApiProvider;
+import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
+import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,40 +29,49 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.getString;
-import static com.mrshiehx.cmcl.ConsoleMinecraftLauncher.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class SkinDownloader {
     public static void start(File file, JSONObject account) {
-        if (file != null) {
-            String uuid = account.optString("uuid");
-            if (!isEmpty(uuid)) {
-                try {
-                    URL url = new URL(account.optInt("loginMethod") == 2 ? ("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid) : new AuthlibInjectorProvider(account.optString("url")).getProfilePropertiesURL(uuid));
-                    JSONObject result = new JSONObject(Utils.httpURLConnection2String((HttpURLConnection) url.openConnection()));
-                    JSONArray properties = result.getJSONArray("properties");
-                    for (int i = 0; i < properties.length(); i++) {
-                        JSONObject jsonObject1 = properties.optJSONObject(i);
-                        if (jsonObject1 != null) {
-                            if (jsonObject1.optString("name").equals("textures")) {
-                                JSONObject jsonObject2 = new JSONObject(new String(Base64.getDecoder().decode(jsonObject1.optString("value"))));
-                                JSONObject var = jsonObject2.optJSONObject("textures");
-                                if (var.has("SKIN")) {
-                                    ConsoleMinecraftLauncher.downloadFile(var.optJSONObject("SKIN").optString("url"), file);
-                                } else {
-                                    System.out.println(getString("MESSAGE_DOWNLOAD_SKIN_FILE_NOT_SET_TEXT"));
-                                }
-                                break;
-                            }
-                        }
-                    }
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                    System.out.println(getString("CONSOLE_FAILED_OPERATE") + exception);
-                }
-            } else {
-                System.out.println(getString("CONSOLE_FAILED_OPERATE") + getString("MESSAGE_UUID_ACCESSTOKEN_EMPTY"));
+        String uuid = account.optString("uuid");
+        if (isEmpty(uuid)) {
+            System.out.println(getString("CONSOLE_FAILED_OPERATE") + getString("MESSAGE_UUID_ACCESSTOKEN_EMPTY"));
+            return;
+        }
+        try {
+            String urlString = "";
+            switch (account.optInt("loginMethod")) {
+                case 1:
+                    urlString = new AuthlibInjectorApiProvider(account.optString("url")).getProfilePropertiesURL(uuid);
+                    break;
+                case 2:
+                    urlString = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid;
+                    break;
+                case 3:
+                    urlString = new Nide8AuthApiProvider(account.optString("serverId")).getProfilePropertiesURL(uuid);
+                    break;
             }
+
+            URL url = new URL(urlString);
+            JSONObject result = new JSONObject(NetworkUtils.httpURLConnection2String((HttpURLConnection) url.openConnection()));
+            JSONArray properties = result.getJSONArray("properties");
+            for (int i = 0; i < properties.length(); i++) {
+                JSONObject property = properties.optJSONObject(i);
+                if (property == null || !property.optString("name").equals("textures")) continue;
+                JSONObject value = new JSONObject(new String(Base64.getDecoder().decode(property.optString("value"))));
+                JSONObject textures = value.optJSONObject("textures");
+                if (textures.has("SKIN")) {
+                    DownloadUtils.downloadFile(textures.optJSONObject("SKIN").optString("url"), file);
+                } else {
+                    System.out.println(getString("MESSAGE_DOWNLOAD_SKIN_FILE_NOT_SET_TEXT"));
+                }
+                return;
+            }
+            System.out.println(getString("MESSAGE_DOWNLOAD_SKIN_FILE_NOT_SET_TEXT"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(getString("CONSOLE_FAILED_OPERATE") + e);
         }
     }
 }
