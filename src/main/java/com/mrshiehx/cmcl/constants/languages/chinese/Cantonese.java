@@ -100,7 +100,7 @@ public class Cantonese extends SimplifiedChinese {
                 "    系唔系全屏，系嘅话就系true，唔系嘅话就系false\n\n" +
                 "  [游戏相关] | exitWithMinecraft | 布尔值\n" +
                 "    运行游戏嗰阵，使唔使退出启动器嘅时候顺便退出游戏，要就系true，唔要就系false\n\n" +
-                "  [游戏相关] | printStartingInfo | 布尔值\n" +
+                "  [游戏相关] | printStartupInfo | 布尔值\n" +
                 "    开始游戏嘅时候，需唔需要输出启动信息（Java 路径、最大内存之类嘅）\n\n" +
                 "  [游戏相关] | checkAccountBeforeStart | 布尔值\n" +
                 "    开始游戏之前，需唔需要检查账号是否可用\n\n" +

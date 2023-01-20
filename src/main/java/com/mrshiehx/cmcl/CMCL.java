@@ -175,7 +175,6 @@ public class CMCL {
             configContent.put("maxMemory", SystemUtils.getDefaultMemory());
             configContent.put("windowSizeWidth", 854);
             configContent.put("windowSizeHeight", 480);
-            configContent.put("exitWithMinecraft", false);
             try {
                 FileUtils.createFile(configFile, false);
                 FileWriter writer = new FileWriter(configFile, false);

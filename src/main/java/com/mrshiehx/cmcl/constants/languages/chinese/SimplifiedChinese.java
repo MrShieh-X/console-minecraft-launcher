@@ -158,7 +158,7 @@ public class SimplifiedChinese implements Language {
                 "    是否为全屏，是则为true，否则为false\n\n" +
                 "  [游戏相关] | exitWithMinecraft | 布尔值\n" +
                 "    运行游戏时，若需要退出启动器时顺便退出游戏，则为true，否则为false\n\n" +
-                "  [游戏相关] | printStartingInfo | 布尔值\n" +
+                "  [游戏相关] | printStartupInfo | 布尔值\n" +
                 "    开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）\n\n" +
                 "  [游戏相关] | checkAccountBeforeStart | 布尔值\n" +
                 "    开始游戏之前，是否检查账号是否可用\n\n" +
@@ -442,94 +442,6 @@ public class SimplifiedChinese implements Language {
                             "            启动游戏应使用 start [<版本>]。\n" +*/
                         "\n" +
                         "以下是所有功能与选项，说明后面的内容是用法示例，每个功能都能使用 -h 或 --help 以获取帮助文档。");
-        zhHelp.put("config",
-                "配置\n" +
-                        "  功能名：config\n" +
-                        "  选项：\n" +
-                        "   <配置名> [<配置值>]       若<配置值>不为空，则为设置配置，通过-v查看可设置配置；\n" +
-                        "                             否则为输出<配置名>所对应的配置值。\n" +
-                        "                                cmcl config javaPath       输出 Java 路径\n" +
-                        "                                cmcl config maxMemory 2048 修改最大内存\n" +
-                        "   -a, --all                 输出全部配置内容\n" +
-                        "                                cmcl config -a\n" +
-                        "   --getRaw[=<缩进空格数>]   输出配置原内容，<缩进空格数>默认为2。\n" +
-                        "                                cmcl config --getRaw\n" +
-                        "   -d, --delete=<配置名>     删除<配置名>所对应的配置。\n" +
-                        "                                cmcl config -d javaPath\n" +
-                        "                                cmcl config --delete=javaPath\n" +
-                        "   -c, --clear               清空配置。\n" +
-                        "                                cmcl config --clear\n" +
-                        "   -v, --view                查看所有可设置的配置。\n" +
-                        "                                cmcl config -v");
-        zhHelp.put("account",
-                "账号\n" +
-                        "  功能名：account\n" +
-                        "  注：账号的序号可通过 -l 或 --list 获取。\n" +
-                        "  选项：\n" +
-                        "   -s, --select=<序号>                   选择账号。          cmcl account -s 3\n" +
-                        "   -l, --list                            列出所有账号。      cmcl account --list\n" +
-                        "   -d, --delete=<序号>                   删除账号。          cmcl account --delete=4\n" +
-                        "   -r, --refresh                         刷新当前选择的账号。cmcl account --refresh\n" +
-                        "   --cape[=<披风文件路径>]               自定义披风，如果不输入则为取消设置披风。此功能仅离线账号可用*。\n" +
-                        "   --download-skin=<皮肤文件存储路径>    下载皮肤文件。      cmcl account --download-skin=D:\\mySkin.png\n" +
-                        "   --skin[=steve|alex|<皮肤文件路径>]    设置皮肤为Steve、Alex，或自定义皮肤，如果是离线账号，不输入则为取消设置皮肤。\n" +
-                        "                                         此功能微软账户与统一通行证不可用*。\n" +
-                        "                                            cmcl account --skin\n" +
-                        "                                            cmcl account --skin=steve\n" +
-                        "                                            cmcl account --skin=D:\\handsome.png\n" +
-                        "   --login=offline|microsoft|authlib|nide8auth [-s, --select]\n" +
-                        "       登录账号（并选择）。\n" +
-                        "         offline 为登录离线账号，需要注明的内容：-n, --name=<用户名>，\n" +
-                        "            cmcl account --login=offline --name=Alexander\n" +
-                        "         microsoft 为登录微软账户，不需要注明内容，\n" +
-                        "            cmcl account --login=microsoft\n" +
-                        "         authlib 为外置登录，需要注明：--address=<服务器地址>，\n" +
-                        "            cmcl account --login=authlib --address=127.0.0.1\n" +
-                        "         nide8auth 为统一通行证登录，需要注明：--serverId=<服务器ID>，\n" +
-                        "            cmcl account --login=nide8auth --serverId=1234567890abcdef1234567890abcdef\n" +
-                        "   * 某些账号不支持某些功能，因无可供调用的接口，请自行到相应的网站进行此操作。");
-        zhHelp.put("version",
-                "版本\n" +
-                        "  功能名：version\n" +
-                        "  基本用法：version <目标版本> <选项>...\n" +
-                        "  选项：\n" +
-                        "   --info                                查看版本信息。cmcl version 1.19 --info\n" +
-                        "   -d, --delete                          删除版本。    cmcl version 1.19 -d\n" +
-                        "   --rename=<新名称>                     重命名版本\n" +
-                        "   --complete[=assets|libraries|natives] 补全资源（assets）、依赖库（libraries）或原生依赖库（natives），\n" +
-                        "    [-t, --thread=<线程数>]              若不指明补全哪个内容，则为补全版本。补全资源时也可以通过指定\n" +
-                        "                                         -t, --thread=<线程数>以指定线程数。\n" +
-                        "                                            cmcl version 1.19 --complete\n" +
-                        "                                            cmcl version 1.19 --complete=assets\n" +
-                        "   --config=<配置名称> [<配置内容>]      为版本单独设置配置，使用“config --view”查看的内容中带有\n" +
-                        "                                         “[游戏相关]”的即为可设置的配置。不输入<配置内容>则为使用全局配置。\n" +
-                        "   --fabric[=<Fabric 版本>] [--api]      为版本安装 Fabric，可以指明版本。加上--api为安装 Fabric API。\n" +
-                        "                                            cmcl version 1.19 --fabric --api\n" +
-                        "   --forge[=<Forge 版本>]                为版本安装 Forge，可以指明版本。\n" +
-                        "                                            cmcl version 1.19 --forge=42.0.0\n" +
-                        "   --liteloader[=<LiteLoader 版本>]      为版本安装 LiteLoader，可以指明版本。\n" +
-                        "   --optifine[=<OptiFine 版本>]          为版本安装 OptiFine，可以指明版本。\n" +
-                        "   --quilt[=<Quilt 版本>]                为版本安装 Quilt，可以指明版本。");
-        zhHelp.put("jvmArgs",
-                "自定义JVM参数\n" +
-                        "  功能名：jvmArgs\n" +
-                        "  选项：\n" +
-                        "   -p, --print[=<缩进空格数>] [-v, --version=<版本>]    输出所有参数，缩进的空格数默认为2，可指定版本。\n" +
-                        "                                                           cmcl jvmArgs -p2 -v1.19\n" +
-                        "   -a, --add=<参数内容> [-v, --version=<版本>]          添加参数，可指定版本。为了防止解析错误，请为内容加上双引号并且使用等号指定内容。\n" +
-                        "                                                           cmcl jvmArgs --add=\"-Dfile.encoding=UTF-8\"\n" +
-                        "   -d, --delete=<序号，从0开始> [-v, --version=<版本>]  删除参数，可指定版本。\n" +
-                        "                                                           cmcl jvmArgs --delete=2 --version=1.19");
-        zhHelp.put("gameArgs",
-                "自定义游戏参数\n" +
-                        "  功能名：gameArgs\n" +
-                        "  选项：\n" +
-                        "   -p, --print[=<缩进空格数>] [-v, --version=<版本>]                输出所有参数，缩进的空格数默认为2，可指定版本。\n" +
-                        "                                                                       cmcl gameArgs --print --version=1.19\n" +
-                        "   -a, --add=<参数名称> [<参数值>] [-v, --version=<版本>]           添加参数，可指定版本。\n" +
-                        "                                                                       cmcl gameArgs -a width 256\n" +
-                        "   -d, --delete=<参数名称> [-v, --version=<版本>]                   删除参数，可指定版本。\n" +
-                        "                                                                       cmcl gameArgs --delete=demo");
         zhHelp.put("install",
                 "安装版本\n" +
                         "  功能名：install\n" +
@@ -561,6 +473,94 @@ public class SimplifiedChinese implements Language {
                         "                cmcl install --show=all                            显示所有可安装版本\n" +
                         "                cmcl install --show=r                              显示所有正式版\n" +
                         "                cmcl install --show=s --time=2020-05-09/2021-10-23 显示从2020年5月9日到2021年10月23日的快照版本");
+        zhHelp.put("version",
+                "版本\n" +
+                        "  功能名：version\n" +
+                        "  基本用法：version <目标版本> <选项>...\n" +
+                        "  选项：\n" +
+                        "   --info                                查看版本信息。cmcl version 1.19 --info\n" +
+                        "   -d, --delete                          删除版本。    cmcl version 1.19 -d\n" +
+                        "   --rename=<新名称>                     重命名版本\n" +
+                        "   --complete[=assets|libraries|natives] 补全资源（assets）、依赖库（libraries）或原生依赖库（natives），\n" +
+                        "    [-t, --thread=<线程数>]              若不指明补全哪个内容，则为补全版本。补全资源时也可以通过指定\n" +
+                        "                                         -t, --thread=<线程数>以指定线程数。\n" +
+                        "                                            cmcl version 1.19 --complete\n" +
+                        "                                            cmcl version 1.19 --complete=assets\n" +
+                        "   --config=<配置名称> [<配置内容>]      为版本单独设置配置，使用“config --view”查看的内容中带有\n" +
+                        "                                         “[游戏相关]”的即为可设置的配置。不输入<配置内容>则为使用全局配置。\n" +
+                        "   --fabric[=<Fabric 版本>] [--api]      为版本安装 Fabric，可以指明版本。加上--api为安装 Fabric API。\n" +
+                        "                                            cmcl version 1.19 --fabric --api\n" +
+                        "   --forge[=<Forge 版本>]                为版本安装 Forge，可以指明版本。\n" +
+                        "                                            cmcl version 1.19 --forge=42.0.0\n" +
+                        "   --liteloader[=<LiteLoader 版本>]      为版本安装 LiteLoader，可以指明版本。\n" +
+                        "   --optifine[=<OptiFine 版本>]          为版本安装 OptiFine，可以指明版本。\n" +
+                        "   --quilt[=<Quilt 版本>]                为版本安装 Quilt，可以指明版本。");
+        zhHelp.put("account",
+                "账号\n" +
+                        "  功能名：account\n" +
+                        "  注：账号的序号可通过 -l 或 --list 获取。\n" +
+                        "  选项：\n" +
+                        "   -s, --select=<序号>                   选择账号。          cmcl account -s 3\n" +
+                        "   -l, --list                            列出所有账号。      cmcl account --list\n" +
+                        "   -d, --delete=<序号>                   删除账号。          cmcl account --delete=4\n" +
+                        "   -r, --refresh                         刷新当前选择的账号。cmcl account --refresh\n" +
+                        "   --cape[=<披风文件路径>]               自定义披风，如果不输入则为取消设置披风。此功能仅离线账号可用*。\n" +
+                        "   --download-skin=<皮肤文件存储路径>    下载皮肤文件。      cmcl account --download-skin=D:\\mySkin.png\n" +
+                        "   --skin[=steve|alex|<皮肤文件路径>]    设置皮肤为Steve、Alex，或自定义皮肤，如果是离线账号，不输入则为取消设置皮肤。\n" +
+                        "                                         此功能微软账户与统一通行证不可用*。\n" +
+                        "                                            cmcl account --skin\n" +
+                        "                                            cmcl account --skin=steve\n" +
+                        "                                            cmcl account --skin=D:\\handsome.png\n" +
+                        "   --login=offline|microsoft|authlib|nide8auth [-s, --select]\n" +
+                        "       登录账号（并选择）。\n" +
+                        "         offline 为登录离线账号，需要注明的内容：-n, --name=<用户名>，\n" +
+                        "            cmcl account --login=offline --name=Alexander\n" +
+                        "         microsoft 为登录微软账户，不需要注明内容，\n" +
+                        "            cmcl account --login=microsoft\n" +
+                        "         authlib 为外置登录，需要注明：--address=<服务器地址>，\n" +
+                        "            cmcl account --login=authlib --address=127.0.0.1\n" +
+                        "         nide8auth 为统一通行证登录，需要注明：--serverId=<服务器ID>，\n" +
+                        "            cmcl account --login=nide8auth --serverId=1234567890abcdef1234567890abcdef\n" +
+                        "   * 某些账号不支持某些功能，因无可供调用的接口，请自行到相应的网站进行此操作。");
+        zhHelp.put("config",
+                "配置\n" +
+                        "  功能名：config\n" +
+                        "  选项：\n" +
+                        "   <配置名> [<配置值>]       若<配置值>不为空，则为设置配置，通过-v查看可设置配置；\n" +
+                        "                             否则为输出<配置名>所对应的配置值。\n" +
+                        "                                cmcl config javaPath       输出 Java 路径\n" +
+                        "                                cmcl config maxMemory 2048 修改最大内存\n" +
+                        "   -a, --all                 输出全部配置内容\n" +
+                        "                                cmcl config -a\n" +
+                        "   --getRaw[=<缩进空格数>]   输出配置原内容，<缩进空格数>默认为2。\n" +
+                        "                                cmcl config --getRaw\n" +
+                        "   -d, --delete=<配置名>     删除<配置名>所对应的配置。\n" +
+                        "                                cmcl config -d javaPath\n" +
+                        "                                cmcl config --delete=javaPath\n" +
+                        "   -c, --clear               清空配置。\n" +
+                        "                                cmcl config --clear\n" +
+                        "   -v, --view                查看所有可设置的配置。\n" +
+                        "                                cmcl config -v");
+        zhHelp.put("jvmArgs",
+                "自定义JVM参数\n" +
+                        "  功能名：jvmArgs\n" +
+                        "  选项：\n" +
+                        "   -p, --print[=<缩进空格数>] [-v, --version=<版本>]    输出所有参数，缩进的空格数默认为2，可指定版本。\n" +
+                        "                                                           cmcl jvmArgs -p2 -v1.19\n" +
+                        "   -a, --add=<参数内容> [-v, --version=<版本>]          添加参数，可指定版本。为了防止解析错误，请为内容加上双引号并且使用等号指定内容。\n" +
+                        "                                                           cmcl jvmArgs --add=\"-Dfile.encoding=UTF-8\"\n" +
+                        "   -d, --delete=<序号，从0开始> [-v, --version=<版本>]  删除参数，可指定版本。\n" +
+                        "                                                           cmcl jvmArgs --delete=2 --version=1.19");
+        zhHelp.put("gameArgs",
+                "自定义游戏参数\n" +
+                        "  功能名：gameArgs\n" +
+                        "  选项：\n" +
+                        "   -p, --print[=<缩进空格数>] [-v, --version=<版本>]                输出所有参数，缩进的空格数默认为2，可指定版本。\n" +
+                        "                                                                       cmcl gameArgs --print --version=1.19\n" +
+                        "   -a, --add=<参数名称> [<参数值>] [-v, --version=<版本>]           添加参数，可指定版本。\n" +
+                        "                                                                       cmcl gameArgs -a width 256\n" +
+                        "   -d, --delete=<参数名称> [-v, --version=<版本>]                   删除参数，可指定版本。\n" +
+                        "                                                                       cmcl gameArgs --delete=demo");
         zhHelp.put("mod",
                 "模组\n" +
                         "  功能名：mod\n" +

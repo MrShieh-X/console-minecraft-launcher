@@ -1,8 +1,8 @@
 # Console Minecraft Launcher
 A Launcher for Minecraft Java Edition Running On The Console
 
-[![Latest Version](https://img.shields.io/badge/Release-v2.0-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![Release Date](https://img.shields.io/badge/Date-2023--01--18-brightgreen)
+[![Latest Version](https://img.shields.io/badge/Release-v2.0.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![Release Date](https://img.shields.io/badge/Date-2023--01--20-brightgreen)
 ![Software Requires](https://img.shields.io/badge/Software%20Requires-Java%208-blue)
 
 ### [中文README](README.md) | [View Update Logs](update_logs-en.md) 
@@ -49,7 +49,7 @@ You can view this content through the options `config --view`.
 | windowSizeHeight        | Integer     | [**Game related**] The height of the game window                                                                                              |
 | isFullscreen            | Boolean     | [**Game related**] Whether it is full screen, true if yes, false otherwise                                                                    |
 | exitWithMinecraft       | Boolean     | [**Game related**] When running the game, if you need to exit the launcher and exit the game by the way, it is true, otherwise it is false    |
-| printStartingInfo       | Boolean     | [**Game related**] When starting the game, whether to output startup information (Java path, maximum memory, etc.)                            |
+| printStartupInfo        | Boolean     | [**Game related**] When starting the game, whether to output startup information (Java path, maximum memory, etc.)                            |
 | checkAccountBeforeStart | Boolean     | [**Game related**] Check whether the account is available before starting the game                                                            |
 | jvmArgs                 | JSON Array  | [**Game related**] Customize JVM arguments (Check out the examples below or use "jvmArgs -h" to get the relevant tutorial for modification)   |
 | gameArgs                | JSON Object | [**Game related**] Customize game arguments (Check out the examples below or use "gameArgs -h" to get the relevant tutorial for modification) |

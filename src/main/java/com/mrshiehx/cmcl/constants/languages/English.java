@@ -157,7 +157,7 @@ public class English implements Language {
                 "    Whether it is full screen, true if yes, false otherwise\n\n" +
                 "  [Game related] | exitWithMinecraft | Boolean\n" +
                 "    When running the game, if you need to exit the launcher and exit the game by the way, it is true, otherwise it is false\n\n" +
-                "  [Game related] | printStartingInfo | Boolean\n" +
+                "  [Game related] | printStartupInfo | Boolean\n" +
                 "    When starting the game, whether to output startup information (Java path, maximum memory, etc.)\n\n" +
                 "  [Game related] | checkAccountBeforeStart | Boolean\n" +
                 "    Check whether the account is available before starting the game\n\n" +
@@ -442,104 +442,6 @@ public class English implements Language {
                         "   starting the game should use start [<version>].\n" +*/
                         "\n" +
                         "The following are all functions and options, and the following content is a usage example. Each function can use -h or --help to get help documentation.");
-        enHelp.put("config",
-                "Configuration\n" +
-                        "  Function Name: config\n" +
-                        "  Options:\n" +
-                        "   <config name> [<content>]        If <content> is not empty, the configuration will be set,\n" +
-                        "                                    you can use -v to view the settable configuration;\n" +
-                        "                                    otherwise, output the configuration value corresponding to <config name>.\n" +
-                        "                                       cmcl config javaPath        Output Java path\n" +
-                        "                                       cmcl config maxMemory 2048  Modify maximum memory\n" +
-                        "   -a, --all                        Output all configuration content\n" +
-                        "                                       cmcl config -a\n" +
-                        "   --getRaw[=<indent number>]       Output the original content of the configuration, <indent number> defaults to 2.\n" +
-                        "                                       cmcl config --getRaw\n" +
-                        "   -d, --delete=<config name>       Delete the configuration corresponding to <config name>.\n" +
-                        "                                       cmcl config -d javaPath\n" +
-                        "                                       cmcl config --delete=javaPath\n" +
-                        "   -c, --clear                      Clear configuration.\n" +
-                        "                                       cmcl config --clear\n" +
-                        "   -v, --view                       View all settable configurations.\n" +
-                        "                                       cmcl config -v");
-        enHelp.put("account",
-                "Account\n" +
-                        "  Function Name: account\n" +
-                        "  Note: The order number of the account can be obtained through -l or --list.\n" +
-                        "  Options:\n" +
-                        "   -s, --select=<order>                     Select an account.                      cmcl account -s 3\n" +
-                        "   -l, --list                               List all accounts.                      cmcl account --list\n" +
-                        "   -d, --delete=<order>                     Delete an account.                      cmcl account --delete=4\n" +
-                        "   -r, --refresh                            Refresh the currently selected account. cmcl account --refresh\n" +
-                        "   --cape[=<cape file path>]                Custom cape, if not entered path, the cape will be unset.\n" +
-                        "                                            This feature is only available for offline accounts*.\n" +
-                        "   --download-skin=<skin file storage path> Download skin file.      cmcl account --download-skin=D:\\mySkin.png\n" +
-                        "   --skin[=steve|alex|<skin file path>]     Set the skin to Steve, Alex, or a custom skin. If it is an offline\n" +
-                        "                                            account and if you do not enter path, the skin will be unset.\n" +
-                        "                                            This feature is not available for Microsoft accounts and nide8auth*.\n" +
-                        "                                               cmcl account --skin\n" +
-                        "                                               cmcl account --skin=steve\n" +
-                        "                                               cmcl account --skin=D:\\handsome.png\n" +
-                        "   --login=offline|microsoft|authlib|nide8auth [-s, --select]\n" +
-                        "       Login your account (and select).\n" +
-                        "         offline: To login an offline account, need to specify: -n, --name=<player name>,\n" +
-                        "            cmcl account --login=offline --name=Alexander\n" +
-                        "         microsoft: To login a Microsoft account, no content need to be specified,\n" +
-                        "            cmcl account --login=microsoft\n" +
-                        "         authlib: To login an authlib-injector account, need to specify: --address=<server address>,\n" +
-                        "            cmcl account --login=authlib --address=127.0.0.1\n" +
-                        "         nide8auth: To login an nide8auth account, need to specify: --serverId=<server ID>,\n" +
-                        "            cmcl account --login=nide8auth --serverId=1234567890abcdef1234567890abcdef\n" +
-                        "   * Some accounts do not support some functions, because there are no available APIs, please go to the corresponding website to do this by yourself.");
-        enHelp.put("version",
-                "Version\n" +
-                        "  Function Name: version\n" +
-                        "  Basic usage: version <target version> <option>...\n" +
-                        "  Options:\n" +
-                        "   --info                                View version information. cmcl version 1.19 --info\n" +
-                        "   -d, --delete                          Delete the version.       cmcl version 1.19 -d\n" +
-                        "   --rename=<new name>                   Rename the version\n" +
-                        "   --complete[=assets|libraries|natives] Complete assets, libraries or native libraries,\n" +
-                        "    [-t, --thread=<thread count>]        If you don't specify which content to complete,\n" +
-                        "                                         the version will be completed. When completing assets, you can also\n" +
-                        "                                         specify the number of threads by specifying -t, --thread=<thread count>.\n" +
-                        "                                            cmcl version 1.19 --complete\n" +
-                        "                                            cmcl version 1.19 --complete=assets\n" +
-                        "   --config=<config name> [<content>]    Set the configuration separately for the version, use \"config --view\" to\n" +
-                        "                                         view the content with \"[Game related]\" is the configuration that can be set.\n" +
-                        "                                         If no <content> is entered, the global configuration will be used.\n" +
-                        "   --fabric[=<Fabric version>] [--api]   Install Fabric for the version, you can specify the version.\n" +
-                        "                                         Add --api to install Fabric API.\n" +
-                        "                                            cmcl version 1.19 --fabric --api\n" +
-                        "   --forge[=<Forge version>]             Install Forge for the version, you can specify the version.\n" +
-                        "                                            cmcl version 1.19 --forge=42.0.0\n" +
-                        "   --liteloader[=<LiteLoader version>]   Install LiteLoader for the version, you can specify the version.\n" +
-                        "   --optifine[=<OptiFine version>]       Install OptiFine for the version, you can specify the version.\n" +
-                        "   --quilt[=<Quilt version>]             Install Quilt for the version, you can specify the version.");
-        enHelp.put("jvmArgs",
-                "Custom JVM Arguments\n" +
-                        "  Function Name: jvmArgs\n" +
-                        "  Options:\n" +
-                        "   -p, --print[=<indent number>] [-v, --version=<version>]        Output all arguments, <indent number> is 2 by\n" +
-                        "                                                                  default, and the version can be specified.\n" +
-                        "                                                                     cmcl jvmArgs -p2 -v1.19\n" +
-                        "   -a, --add=<content> [-v, --version=<version>]                  Add an argument, the version can be specified.\n" +
-                        "                                                                  To prevent parsing errors, enclose content in double\n" +
-                        "                                                                  quotes and use an equals sign to specify the content.\n" +
-                        "                                                                     cmcl jvmArgs --add=\"-Dfile.encoding=UTF-8\"\n" +
-                        "   -d, --delete=<order, starts from 0> [-v, --version=<version>]  Delete an argument, the version can be specified.\n" +
-                        "                                                                     cmcl jvmArgs --delete=2 --version=1.19");
-        enHelp.put("gameArgs",
-                "Custom Game Arguments\n" +
-                        "  Function Name: gameArgs\n" +
-                        "  Options:\n" +
-                        "   -p, --print[=<indent number>] [-v, --version=<version>]        Output all arguments, <indent number> is 2 by\n" +
-                        "                                                                  default, and the version can be specified.\n" +
-                        "                                                                     cmcl gameArgs --print --version=1.19\n" +
-                        "   -a, --add=<config name> [<content>] [-v, --version=<version>]  Add an argument, the version can be specified.\n" +
-                        "                                                                     cmcl gameArgs -a width 256\n" +
-                        "   -d, --delete=<config name> [-v, --version=<version>]           Delete an argument, the version can be specified.\n" +
-                        "                                                                     cmcl gameArgs --delete=demo");
         enHelp.put("install",
                 "Install Version\n" +
                         "  Function Name: install\n" +
@@ -573,6 +475,104 @@ public class English implements Language {
                         "           cmcl install --show=all                            Show all installable versions\n" +
                         "           cmcl install --show=r                              Show all release versions\n" +
                         "           cmcl install --show=s --time=2020-05-09/2021-10-23 Show snapshot versions from May 9, 2020 to October 23, 2021");
+        enHelp.put("version",
+                "Version\n" +
+                        "  Function Name: version\n" +
+                        "  Basic usage: version <target version> <option>...\n" +
+                        "  Options:\n" +
+                        "   --info                                View version information. cmcl version 1.19 --info\n" +
+                        "   -d, --delete                          Delete the version.       cmcl version 1.19 -d\n" +
+                        "   --rename=<new name>                   Rename the version\n" +
+                        "   --complete[=assets|libraries|natives] Complete assets, libraries or native libraries,\n" +
+                        "    [-t, --thread=<thread count>]        If you don't specify which content to complete,\n" +
+                        "                                         the version will be completed. When completing assets, you can also\n" +
+                        "                                         specify the number of threads by specifying -t, --thread=<thread count>.\n" +
+                        "                                            cmcl version 1.19 --complete\n" +
+                        "                                            cmcl version 1.19 --complete=assets\n" +
+                        "   --config=<config name> [<content>]    Set the configuration separately for the version, use \"config --view\" to\n" +
+                        "                                         view the content with \"[Game related]\" is the configuration that can be set.\n" +
+                        "                                         If no <content> is entered, the global configuration will be used.\n" +
+                        "   --fabric[=<Fabric version>] [--api]   Install Fabric for the version, you can specify the version.\n" +
+                        "                                         Add --api to install Fabric API.\n" +
+                        "                                            cmcl version 1.19 --fabric --api\n" +
+                        "   --forge[=<Forge version>]             Install Forge for the version, you can specify the version.\n" +
+                        "                                            cmcl version 1.19 --forge=42.0.0\n" +
+                        "   --liteloader[=<LiteLoader version>]   Install LiteLoader for the version, you can specify the version.\n" +
+                        "   --optifine[=<OptiFine version>]       Install OptiFine for the version, you can specify the version.\n" +
+                        "   --quilt[=<Quilt version>]             Install Quilt for the version, you can specify the version.");
+        enHelp.put("account",
+                "Account\n" +
+                        "  Function Name: account\n" +
+                        "  Note: The order number of the account can be obtained through -l or --list.\n" +
+                        "  Options:\n" +
+                        "   -s, --select=<order>                     Select an account.                      cmcl account -s 3\n" +
+                        "   -l, --list                               List all accounts.                      cmcl account --list\n" +
+                        "   -d, --delete=<order>                     Delete an account.                      cmcl account --delete=4\n" +
+                        "   -r, --refresh                            Refresh the currently selected account. cmcl account --refresh\n" +
+                        "   --cape[=<cape file path>]                Custom cape, if not entered path, the cape will be unset.\n" +
+                        "                                            This feature is only available for offline accounts*.\n" +
+                        "   --download-skin=<skin file storage path> Download skin file.      cmcl account --download-skin=D:\\mySkin.png\n" +
+                        "   --skin[=steve|alex|<skin file path>]     Set the skin to Steve, Alex, or a custom skin. If it is an offline\n" +
+                        "                                            account and if you do not enter path, the skin will be unset.\n" +
+                        "                                            This feature is not available for Microsoft accounts and nide8auth*.\n" +
+                        "                                               cmcl account --skin\n" +
+                        "                                               cmcl account --skin=steve\n" +
+                        "                                               cmcl account --skin=D:\\handsome.png\n" +
+                        "   --login=offline|microsoft|authlib|nide8auth [-s, --select]\n" +
+                        "       Login your account (and select).\n" +
+                        "         offline: To login an offline account, need to specify: -n, --name=<player name>,\n" +
+                        "            cmcl account --login=offline --name=Alexander\n" +
+                        "         microsoft: To login a Microsoft account, no content need to be specified,\n" +
+                        "            cmcl account --login=microsoft\n" +
+                        "         authlib: To login an authlib-injector account, need to specify: --address=<server address>,\n" +
+                        "            cmcl account --login=authlib --address=127.0.0.1\n" +
+                        "         nide8auth: To login an nide8auth account, need to specify: --serverId=<server ID>,\n" +
+                        "            cmcl account --login=nide8auth --serverId=1234567890abcdef1234567890abcdef\n" +
+                        "   * Some accounts do not support some functions, because there are no available APIs, please go to the corresponding website to do this by yourself.");
+        enHelp.put("config",
+                "Configuration\n" +
+                        "  Function Name: config\n" +
+                        "  Options:\n" +
+                        "   <config name> [<content>]        If <content> is not empty, the configuration will be set,\n" +
+                        "                                    you can use -v to view the settable configuration;\n" +
+                        "                                    otherwise, output the configuration value corresponding to <config name>.\n" +
+                        "                                       cmcl config javaPath        Output Java path\n" +
+                        "                                       cmcl config maxMemory 2048  Modify maximum memory\n" +
+                        "   -a, --all                        Output all configuration content\n" +
+                        "                                       cmcl config -a\n" +
+                        "   --getRaw[=<indent number>]       Output the original content of the configuration, <indent number> defaults to 2.\n" +
+                        "                                       cmcl config --getRaw\n" +
+                        "   -d, --delete=<config name>       Delete the configuration corresponding to <config name>.\n" +
+                        "                                       cmcl config -d javaPath\n" +
+                        "                                       cmcl config --delete=javaPath\n" +
+                        "   -c, --clear                      Clear configuration.\n" +
+                        "                                       cmcl config --clear\n" +
+                        "   -v, --view                       View all settable configurations.\n" +
+                        "                                       cmcl config -v");
+        enHelp.put("jvmArgs",
+                "Custom JVM Arguments\n" +
+                        "  Function Name: jvmArgs\n" +
+                        "  Options:\n" +
+                        "   -p, --print[=<indent number>] [-v, --version=<version>]        Output all arguments, <indent number> is 2 by\n" +
+                        "                                                                  default, and the version can be specified.\n" +
+                        "                                                                     cmcl jvmArgs -p2 -v1.19\n" +
+                        "   -a, --add=<content> [-v, --version=<version>]                  Add an argument, the version can be specified.\n" +
+                        "                                                                  To prevent parsing errors, enclose content in double\n" +
+                        "                                                                  quotes and use an equals sign to specify the content.\n" +
+                        "                                                                     cmcl jvmArgs --add=\"-Dfile.encoding=UTF-8\"\n" +
+                        "   -d, --delete=<order, starts from 0> [-v, --version=<version>]  Delete an argument, the version can be specified.\n" +
+                        "                                                                     cmcl jvmArgs --delete=2 --version=1.19");
+        enHelp.put("gameArgs",
+                "Custom Game Arguments\n" +
+                        "  Function Name: gameArgs\n" +
+                        "  Options:\n" +
+                        "   -p, --print[=<indent number>] [-v, --version=<version>]        Output all arguments, <indent number> is 2 by\n" +
+                        "                                                                  default, and the version can be specified.\n" +
+                        "                                                                     cmcl gameArgs --print --version=1.19\n" +
+                        "   -a, --add=<config name> [<content>] [-v, --version=<version>]  Add an argument, the version can be specified.\n" +
+                        "                                                                     cmcl gameArgs -a width 256\n" +
+                        "   -d, --delete=<config name> [-v, --version=<version>]           Delete an argument, the version can be specified.\n" +
+                        "                                                                     cmcl gameArgs --delete=demo");
         enHelp.put("mod",
                 "Mod\n" +
                         "  Function Name: mod\n" +

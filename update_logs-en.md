@@ -1,5 +1,8 @@
 # Update Logs
-Currently, the latest version is 2.0, which was updated on January 18, 2023.
+Currently, the latest version is 2.0.1, which was updated on January 20, 2023.
+
+## 2.0.1 (Jan. 20, 2023)
+- Fixed some issues.
 
 ## 2.0 (Jan. 18, 2023)
 - In order to make the commands conform to the specifications, this version has made major changes to the operation commands of each function. For details, please refer to [Help Documentation](README-en.md#help-documentation), or [Video Tutorial](https://www.youtube.com/watch?v=Sqeu_Pahm-0).

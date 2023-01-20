@@ -1,15 +1,15 @@
 {
-  "latestVersionName": "2.0",
-  "latestVersionCode": 13,
+  "latestVersionName": "2.0.1",
+  "latestVersionCode": 14,
   "latestVersionDownloadUrls": [
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/cmcl.jar",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/cmcl.exe",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0/cmcl",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/cmcl.jar",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/cmcl.exe",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0/cmcl"
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0.1/cmcl.jar",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0.1/cmcl.exe",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.0.1/cmcl",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0.1/cmcl.jar",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0.1/cmcl.exe",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.0.1/cmcl"
   ],
-  "updateDate": "2023-01-18",
-  "updateContentEn": "- In order to make the commands conform to the specifications, this version has made major changes to the operation commands of each function. For details, please refer to Help Documentation, or Video Tutorial(https://www.youtube.com/watch?v=Sqeu_Pahm-0).\n- Support nide8auth login, use \"account -h\" to get related information.\n- Added new interface language: Cantonese (Simplified). It can be switched by \"config language cantonese\".\n- Support printing startup information (such as Java path, maximum memory, logged-in account, etc.) when starting the game, which can be turned on or off through \"config printStartupInfo true/false\".\n- Fixed an issue where certain files of the CurseForge modpack could not be downloaded.\n- When installing Forge, Fabric, etc., press Enter without entering the version to select the latest version.\n- You can add \"-s\" or \"--select\" after the version installation command to select the version after installation.\n- Data file directory changed to \".cmcl\"",
-  "updateContentZh": "- \u4e3a\u4e86\u4f7f\u547d\u4ee4\u7b26\u5408\u89c4\u8303\uff0c\u672c\u7248\u672c\u5bf9\u5404\u4e2a\u529f\u80fd\u7684\u64cd\u4f5c\u547d\u4ee4\u8fdb\u884c\u4e86\u5927\u6539\u52a8\uff0c\u5177\u4f53\u5185\u5bb9\u8bf7\u67e5\u770b\u5e2e\u52a9\u6587\u6863\uff0c\u4e5f\u53ef\u4ee5\u67e5\u770b\u89c6\u9891\u6559\u7a0b(https://www.bilibili.com/video/BV1bY411R7wa/)\u3002\n- \u652f\u6301\u7edf\u4e00\u901a\u884c\u8bc1\u767b\u5f55\uff0c\u4f7f\u7528\u201caccount -h\u201d \u83b7\u53d6\u76f8\u5173\u4fe1\u606f\u3002\n- \u6dfb\u52a0\u4e86\u65b0\u7684\u754c\u9762\u8bed\u8a00\uff1a\u7ca4\u8bed\uff08\u7b80\u4f53\uff09\u3002\u53ef\u901a\u8fc7\u201cconfig language cantonese\u201d\u5207\u6362\u3002\n- \u652f\u6301\u542f\u52a8\u6e38\u620f\u65f6\u6253\u5370\u542f\u52a8\u4fe1\u606f\uff08\u5982Java \u8def\u5f84\u3001\u6700\u5927\u5185\u5b58\u3001\u767b\u5f55\u7684\u8d26\u53f7\u7b49\uff09\uff0c\u53ef\u901a\u8fc7\u201cconfig printStartupInfo true/false\u201d\u5f00\u542f\u6216\u5173\u95ed\u3002\n- \u4fee\u590d\u4e86 CurseForge \u6574\u5408\u5305\u7684\u67d0\u4e9b\u6587\u4ef6\u65e0\u6cd5\u4e0b\u8f7d\u7684\u95ee\u9898\u3002\n- \u5b89\u88c5 Forge\u3001Fabric \u7b49\u65f6\u4e0d\u8f93\u5165\u7248\u672c\u6309\u56de\u8f66\u5219\u9009\u62e9\u6700\u65b0\u7248\u672c\u3002\n- \u53ef\u5728\u7248\u672c\u5b89\u88c5\u547d\u4ee4\u540e\u9762\u52a0\u4e0a\u201c-s\u201d\u6216\u201c--select\u201d\u8868\u793a\u5b89\u88c5\u540e\u9009\u62e9\u8be5\u7248\u672c\u3002\n- \u6570\u636e\u6587\u4ef6\u76ee\u5f55\u66f4\u6539\u4e3a\u201c.cmcl\u201d"
+  "updateDate": "2023-01-20",
+  "updateContentEn": "- Fixed some issues.",
+  "updateContentZh": "- \u4fee\u590d\u4e86\u4e00\u4e9b\u95ee\u9898\u3002"
 }

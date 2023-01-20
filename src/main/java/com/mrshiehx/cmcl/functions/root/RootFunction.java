@@ -165,12 +165,12 @@ public class RootFunction implements Function {
     public static void printHelp() {
         List<String> usageNames = new LinkedList<>();
         usageNames.add("ROOT");
-        usageNames.add("config");
-        usageNames.add("account");
+        usageNames.add("install");
         usageNames.add("version");
+        usageNames.add("account");
+        usageNames.add("config");
         usageNames.add("jvmArgs");
         usageNames.add("gameArgs");
-        usageNames.add("install");
         usageNames.add("mod");
         usageNames.add("modpack");
         StringBuilder stringBuilder = new StringBuilder();

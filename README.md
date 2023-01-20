@@ -1,8 +1,8 @@
 # Console Minecraft Launcher
 一个在控制台上运行的 Minecraft Java 版启动器
 
-[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.0-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--01--18-brightgreen)
+[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.0.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--01--20-brightgreen)
 ![软件需求](https://img.shields.io/badge/%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82-Java%208-blue)
 
 ### [English README](README-en.md) | [查看更新日志](update_logs.md)
@@ -49,7 +49,7 @@
 | windowSizeHeight        | 整数     | [**游戏相关**]游戏窗口的高                                        |
 | isFullscreen            | 布尔值    | [**游戏相关**]是否为全屏，是则为true，否则为false                        |
 | exitWithMinecraft       | 布尔值    | [**游戏相关**]运行游戏时，若需要退出启动器时顺便退出游戏，则为true，否则为false         |
-| printStartingInfo       | 布尔值    | [**游戏相关**]开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）               |
+| printStartupInfo        | 布尔值    | [**游戏相关**]开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）               |
 | checkAccountBeforeStart | 布尔值    | [**游戏相关**]开始游戏之前，是否检查账号是否可用                             |
 | jvmArgs                 | JSON数组 | [**游戏相关**]自定义JVM参数（查看下方的示例或通过“jvmArgs -h”获得相关使用教程以进行修改） |
 | gameArgs                | JSON对象 | [**游戏相关**]自定义游戏参数（查看下方的示例或通过“gameArgs -h”获得相关使用教程以进行修改） |
