@@ -477,16 +477,16 @@ public class SimplifiedChinese implements Language {
         zhHelp.put("version",
                 "版本\n" +
                         "  功能名：version\n" +
-                        "  基本用法：version <目标版本> <选项>...\n" +
+                        "  基本用法：version [<目标版本>] <选项>...   操作目标版本或已选择版本\n" +
                         "  选项：\n" +
                         "   --info                                查看版本信息。cmcl version 1.19 --info\n" +
-                        "   -d, --delete                          删除版本。    cmcl version 1.19 -d\n" +
+                        "   -d, --delete                          删除版本。    cmcl version -d\n" +
                         "   --rename=<新名称>                     重命名版本\n" +
                         "   --complete[=assets|libraries|natives] 补全资源（assets）、依赖库（libraries）或原生依赖库（natives），\n" +
                         "    [-t, --thread=<线程数>]              若不指明补全哪个内容，则为补全版本。补全资源时也可以通过指定\n" +
                         "                                         -t, --thread=<线程数>以指定线程数。\n" +
                         "                                            cmcl version 1.19 --complete\n" +
-                        "                                            cmcl version 1.19 --complete=assets\n" +
+                        "                                            cmcl version --complete=assets\n" +
                         "   --config=<配置名称> [<配置内容>]      为版本单独设置配置，使用“config --view”查看的内容中带有\n" +
                         "                                         “[游戏相关]”的即为可设置的配置。不输入<配置内容>则为使用全局配置。\n" +
                         "   --fabric[=<Fabric 版本>] [--api]      为版本安装 Fabric，可以指明版本。加上--api为安装 Fabric API。\n" +

@@ -36,6 +36,7 @@ import com.mrshiehx.cmcl.modules.version.downloaders.AssetsDownloader;
 import com.mrshiehx.cmcl.modules.version.downloaders.LibrariesDownloader;
 import com.mrshiehx.cmcl.modules.version.downloaders.NativesDownloader;
 import com.mrshiehx.cmcl.utils.FileUtils;
+import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
 import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
@@ -52,7 +53,8 @@ import static com.mrshiehx.cmcl.CMCL.*;
 public class VersionFunction implements Function {
     @Override
     public void execute(Arguments arguments) {
-        if (!Function.checkArgs(arguments, 3, 2,
+        //因为版本名可能有以-或--开头的，所以不检查
+        /*ArgumentRequirement[] argumentRequirements = {
                 ArgumentRequirement.ofSingle("info"),
                 ArgumentRequirement.ofSingle("d"),
                 ArgumentRequirement.ofSingle("delete"),
@@ -72,13 +74,44 @@ public class VersionFunction implements Function {
                 ArgumentRequirement.ofValue("forge"),
                 ArgumentRequirement.ofValue("liteloader"),
                 ArgumentRequirement.ofValue("optifine"),
-                ArgumentRequirement.ofValue("quilt"))) return;
-        Argument versionArg = arguments.optArgument(1);
-        if (versionArg.originArray.length > 1) {
-            System.out.println(getString("CONSOLE_VERSION_UNCLEAR_MEANING", versionArg.originString));
-            return;
+                ArgumentRequirement.ofValue("quilt")
+        };
+        if (!Function.checkArgs(arguments, 2, 1, argumentRequirements)) return;*/
+        Argument first = arguments.optArgument(1);
+        Argument second = arguments.optArgument(2);
+
+        if (first instanceof TextArgument) {
+            //hasVersion
+            if (second instanceof ValueArgument || second instanceof SingleArgument) {
+                operate(arguments, second, arguments.optArgument(3), first.key);
+            } else {
+                System.out.println(getString("CONSOLE_ONLY_HELP"));
+            }
+        } else {
+            String selectedVersion = Utils.getConfig().optString("selectedVersion");
+            if (second == null) {
+                if (isEmpty(selectedVersion)) {
+                    System.out.println(getString("MESSAGE_TO_SELECT_VERSION"));
+                    return;
+                }
+                operate(arguments, first, null, selectedVersion);
+            } else {
+                //cmcl version --forge 12 -a
+                //cmcl version "-a" --forge 12
+                if (VersionUtils.versionExists(first.originArray[0])) {
+                    operate(arguments, second, arguments.optArgument(3), first.originArray[0]);
+                } else {
+                    if (isEmpty(selectedVersion)) {
+                        System.out.println(getString("MESSAGE_TO_SELECT_VERSION"));
+                        return;
+                    }
+                    operate(arguments, first, second, selectedVersion);
+                }
+            }
         }
-        String versionName = versionArg.originString;
+    }
+
+    private static void operate(Arguments arguments, Argument operateArg, Argument operateArgNext, String versionName) {
         File versionDir = new File(versionsDir, versionName);
         File jsonFile = new File(versionDir, versionName + ".json");
         File jarFile = new File(versionDir, versionName + ".jar");
@@ -86,9 +119,8 @@ public class VersionFunction implements Function {
             System.out.println(getString("EXCEPTION_VERSION_NOT_FOUND", versionName));
             return;
         }
-        Argument secondArg = arguments.optArgument(2);
-        if (secondArg instanceof SingleArgument) {
-            String key = secondArg.key;
+        if (operateArg instanceof SingleArgument) {
+            String key = operateArg.key;
             switch (key) {
                 case "info":
                     PrintVersionInfo.execute(jsonFile, jarFile, versionDir, versionName);
@@ -116,12 +148,12 @@ public class VersionFunction implements Function {
                     installExtra(jsonFile, jarFile, new QuiltInstaller(), null);
                     break;
                 default:
-                    System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", secondArg.originString));
+                    System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", operateArg.originString));
                     break;
             }
-        } else if (secondArg instanceof ValueArgument) {
-            String key = secondArg.key;
-            String secondValue = ((ValueArgument) secondArg).value;
+        } else if (operateArg instanceof ValueArgument) {
+            String key = operateArg.key;
+            String secondValue = ((ValueArgument) operateArg).value;
             switch (key) {
                 case "rename":
                     if (VersionUtils.versionExists(secondValue)) {
@@ -180,9 +212,6 @@ public class VersionFunction implements Function {
                     }
                     break;
                 case "config": {
-                    String name = secondValue;
-                    Argument third = arguments.optArgument(3);
-
                     File cfgFile = new File(versionDir, "cmclversion.json");
                     JSONObject versionCfg;
                     if (cfgFile.exists()) {
@@ -195,10 +224,10 @@ public class VersionFunction implements Function {
                         versionCfg = new JSONObject();
                     }
 
-                    if (third != null)
-                        versionCfg.put(name, third.originArray[0]);
+                    if (operateArgNext != null)
+                        versionCfg.put(secondValue, operateArgNext.originArray[0]);
                     else
-                        versionCfg.remove(name);
+                        versionCfg.remove(secondValue);
                     try {
                         FileUtils.writeFile(cfgFile, versionCfg.toString(), false);
                     } catch (IOException e) {
@@ -222,7 +251,7 @@ public class VersionFunction implements Function {
                     installExtra(jsonFile, jarFile, new QuiltInstaller(), secondValue);
                     break;
                 default:
-                    System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", secondArg.originString));
+                    System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", operateArg.originString));
                     break;
             }
 

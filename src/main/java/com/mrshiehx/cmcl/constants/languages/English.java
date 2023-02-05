@@ -479,17 +479,17 @@ public class English implements Language {
         enHelp.put("version",
                 "Version\n" +
                         "  Function Name: version\n" +
-                        "  Basic usage: version <target version> <option>...\n" +
+                        "  Basic usage: version [<target version>] <option>... Operate target version or selected version\n" +
                         "  Options:\n" +
                         "   --info                                View version information. cmcl version 1.19 --info\n" +
-                        "   -d, --delete                          Delete the version.       cmcl version 1.19 -d\n" +
+                        "   -d, --delete                          Delete the version.       cmcl version -d\n" +
                         "   --rename=<new name>                   Rename the version\n" +
                         "   --complete[=assets|libraries|natives] Complete assets, libraries or native libraries,\n" +
                         "    [-t, --thread=<thread count>]        If you don't specify which content to complete,\n" +
                         "                                         the version will be completed. When completing assets, you can also\n" +
                         "                                         specify the number of threads by specifying -t, --thread=<thread count>.\n" +
                         "                                            cmcl version 1.19 --complete\n" +
-                        "                                            cmcl version 1.19 --complete=assets\n" +
+                        "                                            cmcl version --complete=assets\n" +
                         "   --config=<config name> [<content>]    Set the configuration separately for the version, use \"config --view\" to\n" +
                         "                                         view the content with \"[Game related]\" is the configuration that can be set.\n" +
                         "                                         If no <content> is entered, the global configuration will be used.\n" +
