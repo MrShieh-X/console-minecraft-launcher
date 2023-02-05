@@ -63,6 +63,10 @@ public class RootFunction implements Function {
                     case "list":
                         VersionsLister.execute(null);
                         break;
+                    case "p":
+                    case "print":
+                        CommandPrinter.execute(null);
+                        break;
                     default:
                         tryToStartVersion(originArray[0]);
                         break;
@@ -120,11 +124,11 @@ public class RootFunction implements Function {
                     VersionsLister.execute(dir);
                     break;
                 case "print":
-                    if (secondArgument == null) {
-                        System.out.println(getString("CONSOLE_IMMERSIVE_MISSING_PARAMETER"));
-                        return;
+                    String versionToPrint = null;
+                    if (secondArgument != null) {
+                        versionToPrint = secondArgument.originArray[0];
                     }
-                    CommandPrinter.execute(secondArgument.originArray[0]);
+                    CommandPrinter.execute(versionToPrint);
                     break;
                 case "select":
                     if (secondArgument == null) {

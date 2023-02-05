@@ -132,6 +132,7 @@ public class SimplifiedChinese implements Language {
                 "${JVM_ARGS}\n" +
                 "自定义游戏参数：\n" +
                 "${GAME_ARGS}");
+        zh.put("MESSAGE_TO_SELECT_VERSION", "请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
         zh.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
                 "    账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n\n" +
                 "  downloadSource | 整数\n" +
@@ -428,8 +429,8 @@ public class SimplifiedChinese implements Language {
                         "     -h, --help                获得帮助文档\n" +
                         "     -l, --list[=<游戏目录>]   列出当前游戏目录或<游戏目录>内的所有游戏版本。\n" +
                         "                                  例：cmcl -l；cmcl --list=D:\\.minecraft\n" +
-                        "     -p, --print=<版本>        打印<版本>的启动命令\n" +
-                        "                                  例：cmcl -p1.19；cmcl --print=1.19\n" +
+                        "     -p, --print[=<版本>]      打印选择的版本或<版本>的启动命令\n" +
+                        "                                  例：cmcl -p；cmcl --print=1.19\n" +
                         "     -s, --select=<版本>       选择版本\n" +
                         "     -a, --about               显示关于信息\n" +
                         //"     -i, --immersive           进入沉浸模式*\n" +

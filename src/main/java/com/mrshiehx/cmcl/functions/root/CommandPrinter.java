@@ -46,6 +46,14 @@ import static com.mrshiehx.cmcl.modules.MinecraftLauncher.getMinecraftLaunchComm
 public class CommandPrinter {
     public static void execute(String version) {
         JSONObject config = Utils.getConfig();
+
+        if (isEmpty(version)) {
+            version = config.optString("selectedVersion");
+            if (isEmpty(version)) {
+                System.out.println(getString("MESSAGE_TO_SELECT_VERSION"));
+                return;
+            }
+        }
         if (!config.has("checkAccountBeforeStart")) {
             config.put("checkAccountBeforeStart", ConsoleUtils.yesOrNo(getString("CONSOLE_ASK_CHECK_ACCOUNT")));
         }

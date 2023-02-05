@@ -74,6 +74,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("MESSAGE_YGGDRASIL_ACCOUNT_REFRESH_OLD_CHARACTER_DELETED", "你嘅角色畀删咗，请拣一个新嘅角色。");
         cantonese.put("MESSAGE_GAME_CRASH_CAUSE_JVM_UNRECOGNIZED_OPTION", "您加入咗错误嘅JVM参数。通过“jvmArgs --help”嚟获取相关信息。");
         cantonese.put("MESSAGE_TELL_USER_CHECK_ACCOUNT_CAN_BE_OFF", "如果你唔想启动之前检查账号可唔可用，可以用“config checkAccountBeforeStart false”或“version <版本> --config=checkAccountBeforeStart false”嚟关闭。");
+        cantonese.put("MESSAGE_TO_SELECT_VERSION", "唔该用“-s <版本名称>”拣一个可启动嘅版本或者用“install <版本名称>”安装一个新嘅版本并选择。");
         cantonese.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
                 "    账号（唔系直接改嘅，请通过“account -h”获得相关使用教程先至进行修改）\n\n" +
                 "  downloadSource | 整数\n" +

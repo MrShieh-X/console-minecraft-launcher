@@ -131,6 +131,7 @@ public class English implements Language {
                 "${JVM_ARGS}\n" +
                 "Custom Game Arguments:\n" +
                 "${GAME_ARGS}");
+        en.put("MESSAGE_TO_SELECT_VERSION", "Please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
         en.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON Array\n" +
                 "    Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n\n" +
                 "  downloadSource | Integer\n" +
@@ -428,8 +429,8 @@ public class English implements Language {
                         "     -h, --help                Get help documentation\n" +
                         "     -l, --list[=<game dir>]   List all game versions in current game directory or <game dir>.\n" +
                         "                                  e.g. cmcl -l; cmcl --list=D:\\.minecraft\n" +
-                        "     -p, --print=<version>     Print the startup command for <version>.\n" +
-                        "                                  e.g. cmcl -p1.19; cmcl --print=1.19\n" +
+                        "     -p, --print[=<version>]   Print the startup command for selected version or <version>.\n" +
+                        "                                  e.g. cmcl -p; cmcl --print=1.19\n" +
                         "     -s, --select=<version>    Select version.\n" +
                         "     -a, --about               Show about information.\n" +
                         //"     -i, --immersive           Enter immersive mode*\n" +
