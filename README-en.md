@@ -113,8 +113,6 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 
 ## About Author
 MrShiehX<br/>
-- Occupation: <br/>
-  Student<br/>
 - Bilibili:<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
 - Youtube:<br/>

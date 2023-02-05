@@ -113,8 +113,6 @@ MrShiehX 拥有该程序的版权。<br/>
 
 ## 关于作者
 MrShiehX<br/>
-- 职业：<br/>
-  学生<br/>
 - 哔哩哔哩：<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
 - Youtube：<br/>
