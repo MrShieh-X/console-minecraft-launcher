@@ -20,7 +20,7 @@ package com.mrshiehx.cmcl.functions.root;
 
 import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.bean.RunningMinecraft;
-import com.mrshiehx.cmcl.bean.VersionInfo;
+import com.mrshiehx.cmcl.bean.VersionConfig;
 import com.mrshiehx.cmcl.enums.GameCrashError;
 import com.mrshiehx.cmcl.exceptions.*;
 import com.mrshiehx.cmcl.functions.AccountFunction;
@@ -45,13 +45,12 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.mrshiehx.cmcl.CMCL.*;
 import static com.mrshiehx.cmcl.modules.MinecraftLauncher.launchMinecraft;
 
 public class VersionStarter {
-    public static VersionInfo getVersionInfo(File versionFolder) {
+    public static VersionConfig getVersionInfo(File versionFolder) {
         File versionInfoFile = new File(versionFolder, "cmclversion.json");
         File versionInfoFileHMCL = new File(versionFolder, "hmclversion.cfg");
         JSONObject cmclJO = null, hmclJO = null;
@@ -68,15 +67,15 @@ public class VersionStarter {
             }
         }
 
-        VersionInfo cmcl = null, hmcl = null;
+        VersionConfig cmcl = null, hmcl = null;
         if (cmclJO != null) {
-            cmcl = VersionInfo.valueOf(cmclJO);
+            cmcl = VersionConfig.valueOf(cmclJO);
         }
         if (hmclJO != null) {
-            hmcl = VersionInfo.valueOfHMCL(hmclJO);
+            hmcl = VersionConfig.valueOfHMCL(hmclJO);
         }
 
-        VersionInfo Final = VersionInfo.EMPTY;
+        VersionConfig Final = VersionConfig.EMPTY;
         if (cmcl != null && hmcl != null) {
             Final = hmcl.merge(cmcl);
         } else if (cmcl != null) {
@@ -132,23 +131,21 @@ public class VersionStarter {
                 uuid = account.optString("uuid", uuid);
             }
 
-            VersionInfo versionInfo = getVersionInfo(versionFolder);
-            File workingDirectory = !Utils.isEmpty(versionInfo.gameDir) ?
-                    ((Objects.equals(versionInfo.gameDir, VersionInfo.SIGN_WORKING_DIRECTORY_IN_VERSION_DIR))
-                            ? versionFolder
-                            : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : new File(versionInfo.gameDir)))
-                    : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : gameDir);
-
+            VersionConfig versionConfig = VersionStarter.getVersionInfo(versionFolder);
+            File workingDirectory = Boolean.parseBoolean(versionConfig.isolate) ? versionFolder :
+                    (!Utils.isEmpty(versionConfig.gameDir)
+                            ? new File(versionConfig.gameDir)
+                            : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : gameDir));
 
             String javaPath;
             int maxMemory;
             int windowSizeWidth;
             int windowSizeHeight;
 
-            String viJavaPath = versionInfo.javaPath;
-            String viMaxMemory = versionInfo.maxMemory;
-            String viWindowSizeWidth = versionInfo.windowSizeWidth;
-            String viWindowSizeHeight = versionInfo.windowSizeHeight;
+            String viJavaPath = versionConfig.javaPath;
+            String viMaxMemory = versionConfig.maxMemory;
+            String viWindowSizeWidth = versionConfig.windowSizeWidth;
+            String viWindowSizeHeight = versionConfig.windowSizeHeight;
             if (isEmpty(viJavaPath)) javaPath = CMCL.javaPath;
             else {
                 try {
@@ -197,14 +194,14 @@ public class VersionStarter {
             }
 
 
-            boolean isFullscreen = !Utils.isEmpty(versionInfo.isFullscreen) ? Boolean.parseBoolean(versionInfo.isFullscreen) : config.optBoolean("isFullscreen");
-            List<String> jvmArgs = versionInfo.jvmArgs.size() > 0 ? versionInfo.jvmArgs : ArgumentsUtils.parseJVMArgs(config.optJSONArray("jvmArgs"));
-            Map<String, String> gameArgs = versionInfo.gameArgs.size() > 0 ? versionInfo.gameArgs : ArgumentsUtils.parseGameArgs(config.optJSONObject("gameArgs"));
-            File assetsDir = !Utils.isEmpty(versionInfo.assetsDir) ? new File(versionInfo.assetsDir) : CMCL.assetsDir;
-            File resourcePackDir = !Utils.isEmpty(versionInfo.resourcesDir) ? new File(versionInfo.resourcesDir) : resourcePacksDir;
-            boolean exitWithMinecraft = !Utils.isEmpty(versionInfo.exitWithMinecraft) ? Boolean.parseBoolean(versionInfo.exitWithMinecraft) : config.optBoolean("exitWithMinecraft");
-            boolean printStartupInfo = !Utils.isEmpty(versionInfo.printStartupInfo) ? Boolean.parseBoolean(versionInfo.printStartupInfo) : config.optBoolean("printStartupInfo");
-            boolean checkAccountBeforeStart = !Utils.isEmpty(versionInfo.checkAccountBeforeStart) ? Boolean.parseBoolean(versionInfo.checkAccountBeforeStart) : config.optBoolean("checkAccountBeforeStart");
+            boolean isFullscreen = !Utils.isEmpty(versionConfig.isFullscreen) ? Boolean.parseBoolean(versionConfig.isFullscreen) : config.optBoolean("isFullscreen");
+            List<String> jvmArgs = versionConfig.jvmArgs.size() > 0 ? versionConfig.jvmArgs : ArgumentsUtils.parseJVMArgs(config.optJSONArray("jvmArgs"));
+            Map<String, String> gameArgs = versionConfig.gameArgs.size() > 0 ? versionConfig.gameArgs : ArgumentsUtils.parseGameArgs(config.optJSONObject("gameArgs"));
+            File assetsDir = !Utils.isEmpty(versionConfig.assetsDir) ? new File(versionConfig.assetsDir) : CMCL.assetsDir;
+            File resourcePackDir = !Utils.isEmpty(versionConfig.resourcesDir) ? new File(versionConfig.resourcesDir) : resourcePacksDir;
+            boolean exitWithMinecraft = !Utils.isEmpty(versionConfig.exitWithMinecraft) ? Boolean.parseBoolean(versionConfig.exitWithMinecraft) : config.optBoolean("exitWithMinecraft");
+            boolean printStartupInfo = !Utils.isEmpty(versionConfig.printStartupInfo) ? Boolean.parseBoolean(versionConfig.printStartupInfo) : config.optBoolean("printStartupInfo");
+            boolean checkAccountBeforeStart = !Utils.isEmpty(versionConfig.checkAccountBeforeStart) ? Boolean.parseBoolean(versionConfig.checkAccountBeforeStart) : config.optBoolean("checkAccountBeforeStart");
 
 
             if (isEmpty(javaPath) || !new File(javaPath).exists()) {

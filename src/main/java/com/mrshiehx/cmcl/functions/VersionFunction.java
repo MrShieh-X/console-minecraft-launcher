@@ -147,6 +147,46 @@ public class VersionFunction implements Function {
                 case "quilt":
                     installExtra(jsonFile, jarFile, new QuiltInstaller(), null);
                     break;
+                case "isolate": {
+                    File cfgFile = new File(versionDir, "cmclversion.json");
+                    JSONObject versionCfg;
+                    if (cfgFile.exists()) {
+                        try {
+                            versionCfg = new JSONObject(FileUtils.readFileContent(cfgFile));
+                        } catch (Throwable ignored) {
+                            versionCfg = new JSONObject();
+                        }
+                    } else {
+                        versionCfg = new JSONObject();
+                    }
+                    versionCfg.put("isolate", true);
+                    try {
+                        FileUtils.writeFile(cfgFile, versionCfg.toString(), false);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+                case "unset-isolate": {
+                    File cfgFile = new File(versionDir, "cmclversion.json");
+                    JSONObject versionCfg;
+                    if (cfgFile.exists()) {
+                        try {
+                            versionCfg = new JSONObject(FileUtils.readFileContent(cfgFile));
+                        } catch (Throwable ignored) {
+                            versionCfg = new JSONObject();
+                        }
+                    } else {
+                        versionCfg = new JSONObject();
+                    }
+                    versionCfg.put("isolate", false);
+                    try {
+                        FileUtils.writeFile(cfgFile, versionCfg.toString(), false);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
                 default:
                     System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", operateArg.originString));
                     break;

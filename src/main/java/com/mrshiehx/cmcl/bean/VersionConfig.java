@@ -30,9 +30,8 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-public class VersionInfo {
-    public static final String SIGN_WORKING_DIRECTORY_IN_VERSION_DIR = "&*/  \n\t\r\t\f\b\b\n \\$%";
-    public static final VersionInfo EMPTY = new VersionInfo(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "", "", "");
+public class VersionConfig {
+    public static final VersionConfig EMPTY = new VersionConfig(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "", "", "", "");
     public final String gameDir;
     public final String javaPath;
     public final String maxMemory;//同下
@@ -48,20 +47,22 @@ public class VersionInfo {
     public final String exitWithMinecraft;//不用boolean是因为要表示一种“未设置”的状态
     public final String printStartupInfo;//不用boolean是因为要表示一种“未设置”的状态
     public final String checkAccountBeforeStart;//不用boolean是因为要表示一种“未设置”的状态
+    public final String isolate;//同上
 
-    public VersionInfo(String gameDir,
-                       String javaPath,
-                       String maxMemory,
-                       String windowSizeWidth,
-                       String windowSizeHeight,
-                       String isFullscreen,
-                       @NotNull List<String> jvmArgs,
-                       @NotNull Map<String, String> gameArgs,
-                       String assetsDir,
-                       String resourcesDir,
-                       String exitWithMinecraft,
-                       String printStartupInfo,
-                       String checkAccountBeforeStart) {
+    public VersionConfig(String gameDir,
+                         String javaPath,
+                         String maxMemory,
+                         String windowSizeWidth,
+                         String windowSizeHeight,
+                         String isFullscreen,
+                         @NotNull List<String> jvmArgs,
+                         @NotNull Map<String, String> gameArgs,
+                         String assetsDir,
+                         String resourcesDir,
+                         String exitWithMinecraft,
+                         String printStartupInfo,
+                         String checkAccountBeforeStart,
+                         String isolate) {
         this.gameDir = gameDir;
         this.javaPath = javaPath;
         this.maxMemory = maxMemory;
@@ -75,10 +76,11 @@ public class VersionInfo {
         this.exitWithMinecraft = exitWithMinecraft;
         this.printStartupInfo = printStartupInfo;
         this.checkAccountBeforeStart = checkAccountBeforeStart;
+        this.isolate = isolate;
     }
 
-    public static VersionInfo valueOf(JSONObject origin) {
-        return new VersionInfo(origin.optString("gameDir"),
+    public static VersionConfig valueOf(JSONObject origin) {
+        return new VersionConfig(origin.optString("gameDir"),
                 origin.optString("javaPath"),
                 origin.optString("maxMemory"),
                 origin.optString("windowSizeWidth"),
@@ -90,16 +92,18 @@ public class VersionInfo {
                 origin.optString("resourcesDir"),
                 origin.optString("exitWithMinecraft"),
                 origin.optString("printStartupInfo"),
-                origin.optString("checkAccountBeforeStart"));
+                origin.optString("checkAccountBeforeStart"),
+                origin.optString("isolate"));
     }
 
-    public static VersionInfo valueOfHMCL(JSONObject origin) {
+    public static VersionConfig valueOfHMCL(JSONObject origin) {
         //workingDirectory
+        String isolate = "false";
         String workingDirectory = null;
         {
             int gameDirType = origin.optInt("gameDirType");
             if (gameDirType == 1) {
-                workingDirectory = SIGN_WORKING_DIRECTORY_IN_VERSION_DIR;
+                isolate = "true";
             } else if (gameDirType == 2) {
                 workingDirectory = origin.optString("gameDir");
             }
@@ -118,7 +122,7 @@ public class VersionInfo {
                 }
             }
         }
-        return new VersionInfo(workingDirectory,
+        return new VersionConfig(workingDirectory,
                 origin.optString("defaultJavaPath"),
                 origin.optString("maxMemory"),
                 origin.optString("width"),
@@ -130,29 +134,31 @@ public class VersionInfo {
                 null,
                 "",
                 "",
-                "");
+                "",
+                isolate);
     }
 
-    public VersionInfo merge(VersionInfo versionInfo) {
+    public VersionConfig merge(VersionConfig versionConfig) {
         Map<String, String> newGameArgs = new LinkedHashMap<>();
-        newGameArgs.putAll(versionInfo.gameArgs);
+        newGameArgs.putAll(versionConfig.gameArgs);
         newGameArgs.putAll(gameArgs);
         List<String> newJvmArgs = new LinkedList<>();
-        newJvmArgs.addAll(versionInfo.jvmArgs);
+        newJvmArgs.addAll(versionConfig.jvmArgs);
         newJvmArgs.addAll(jvmArgs);
-        return new VersionInfo(
-                !Utils.isEmpty(versionInfo.gameDir) ? versionInfo.gameDir : gameDir,
-                !Utils.isEmpty(versionInfo.javaPath) ? versionInfo.javaPath : javaPath,
-                !Utils.isEmpty(versionInfo.maxMemory) ? versionInfo.maxMemory : maxMemory,
-                !Utils.isEmpty(versionInfo.windowSizeWidth) ? versionInfo.windowSizeWidth : windowSizeWidth,
-                !Utils.isEmpty(versionInfo.windowSizeHeight) ? versionInfo.windowSizeHeight : windowSizeHeight,
-                !Utils.isEmpty(versionInfo.isFullscreen) ? versionInfo.isFullscreen : isFullscreen,
+        return new VersionConfig(
+                !Utils.isEmpty(versionConfig.gameDir) ? versionConfig.gameDir : gameDir,
+                !Utils.isEmpty(versionConfig.javaPath) ? versionConfig.javaPath : javaPath,
+                !Utils.isEmpty(versionConfig.maxMemory) ? versionConfig.maxMemory : maxMemory,
+                !Utils.isEmpty(versionConfig.windowSizeWidth) ? versionConfig.windowSizeWidth : windowSizeWidth,
+                !Utils.isEmpty(versionConfig.windowSizeHeight) ? versionConfig.windowSizeHeight : windowSizeHeight,
+                !Utils.isEmpty(versionConfig.isFullscreen) ? versionConfig.isFullscreen : isFullscreen,
                 newJvmArgs,
                 newGameArgs,
-                !Utils.isEmpty(versionInfo.assetsDir) ? versionInfo.assetsDir : assetsDir,
-                !Utils.isEmpty(versionInfo.resourcesDir) ? versionInfo.resourcesDir : resourcesDir,
-                !Utils.isEmpty(versionInfo.exitWithMinecraft) ? versionInfo.exitWithMinecraft : exitWithMinecraft,
-                !Utils.isEmpty(versionInfo.printStartupInfo) ? versionInfo.printStartupInfo : printStartupInfo,
-                !Utils.isEmpty(versionInfo.checkAccountBeforeStart) ? versionInfo.checkAccountBeforeStart : checkAccountBeforeStart);
+                !Utils.isEmpty(versionConfig.assetsDir) ? versionConfig.assetsDir : assetsDir,
+                !Utils.isEmpty(versionConfig.resourcesDir) ? versionConfig.resourcesDir : resourcesDir,
+                !Utils.isEmpty(versionConfig.exitWithMinecraft) ? versionConfig.exitWithMinecraft : exitWithMinecraft,
+                !Utils.isEmpty(versionConfig.printStartupInfo) ? versionConfig.printStartupInfo : printStartupInfo,
+                !Utils.isEmpty(versionConfig.checkAccountBeforeStart) ? versionConfig.checkAccountBeforeStart : checkAccountBeforeStart,
+                !Utils.isEmpty(versionConfig.isolate) ? versionConfig.isolate : isolate);
     }
 }

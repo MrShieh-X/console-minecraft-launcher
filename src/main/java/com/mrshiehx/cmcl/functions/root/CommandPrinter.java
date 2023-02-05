@@ -19,7 +19,7 @@
 package com.mrshiehx.cmcl.functions.root;
 
 import com.mrshiehx.cmcl.CMCL;
-import com.mrshiehx.cmcl.bean.VersionInfo;
+import com.mrshiehx.cmcl.bean.VersionConfig;
 import com.mrshiehx.cmcl.exceptions.EmptyNativesException;
 import com.mrshiehx.cmcl.exceptions.InvalidJavaException;
 import com.mrshiehx.cmcl.exceptions.LaunchException;
@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.mrshiehx.cmcl.CMCL.*;
 import static com.mrshiehx.cmcl.modules.MinecraftLauncher.getMinecraftLaunchCommand;
@@ -79,23 +78,21 @@ public class CommandPrinter {
             }
 
 
-            VersionInfo versionInfo = VersionStarter.getVersionInfo(versionFolder);
-            File workingDirectory = !Utils.isEmpty(versionInfo.gameDir) ?
-                    ((Objects.equals(versionInfo.gameDir, VersionInfo.SIGN_WORKING_DIRECTORY_IN_VERSION_DIR))
-                            ? versionFolder
-                            : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : new File(versionInfo.gameDir)))
-                    : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : gameDir);
-
+            VersionConfig versionConfig = VersionStarter.getVersionInfo(versionFolder);
+            File workingDirectory = Boolean.parseBoolean(versionConfig.isolate) ? versionFolder :
+                    (!Utils.isEmpty(versionConfig.gameDir)
+                            ? new File(versionConfig.gameDir)
+                            : (MinecraftLauncher.isModpack(versionFolder) ? versionFolder : gameDir));
 
             String javaPath;
             int maxMemory;
             int windowSizeWidth;
             int windowSizeHeight;
 
-            String viJavaPath = versionInfo.javaPath;
-            String viMaxMemory = versionInfo.maxMemory;
-            String viWindowSizeWidth = versionInfo.windowSizeWidth;
-            String viWindowSizeHeight = versionInfo.windowSizeHeight;
+            String viJavaPath = versionConfig.javaPath;
+            String viMaxMemory = versionConfig.maxMemory;
+            String viWindowSizeWidth = versionConfig.windowSizeWidth;
+            String viWindowSizeHeight = versionConfig.windowSizeHeight;
             if (isEmpty(viJavaPath)) javaPath = CMCL.javaPath;
             else {
                 try {
@@ -144,14 +141,14 @@ public class CommandPrinter {
             }
 
 
-            boolean checkAccountBeforeStart = !Utils.isEmpty(versionInfo.checkAccountBeforeStart) ? Boolean.parseBoolean(versionInfo.checkAccountBeforeStart) : config.optBoolean("checkAccountBeforeStart");
-            boolean isFullscreen = !Utils.isEmpty(versionInfo.isFullscreen) ? Boolean.parseBoolean(versionInfo.isFullscreen) : config.optBoolean("isFullscreen");
+            boolean checkAccountBeforeStart = !Utils.isEmpty(versionConfig.checkAccountBeforeStart) ? Boolean.parseBoolean(versionConfig.checkAccountBeforeStart) : config.optBoolean("checkAccountBeforeStart");
+            boolean isFullscreen = !Utils.isEmpty(versionConfig.isFullscreen) ? Boolean.parseBoolean(versionConfig.isFullscreen) : config.optBoolean("isFullscreen");
             List<String> jvmArgs = ArgumentsUtils.parseJVMArgs(config.optJSONArray("jvmArgs"));
-            jvmArgs.addAll(versionInfo.jvmArgs);
+            jvmArgs.addAll(versionConfig.jvmArgs);
             Map<String, String> gameArgs = ArgumentsUtils.parseGameArgs(config.optJSONObject("gameArgs"));
-            gameArgs.putAll(versionInfo.gameArgs);
-            File assetsDir = !Utils.isEmpty(versionInfo.assetsDir) ? new File(versionInfo.assetsDir) : CMCL.assetsDir;
-            File resourcesDir = !Utils.isEmpty(versionInfo.resourcesDir) ? new File(versionInfo.resourcesDir) : resourcePacksDir;
+            gameArgs.putAll(versionConfig.gameArgs);
+            File assetsDir = !Utils.isEmpty(versionConfig.assetsDir) ? new File(versionConfig.assetsDir) : CMCL.assetsDir;
+            File resourcesDir = !Utils.isEmpty(versionConfig.resourcesDir) ? new File(versionConfig.resourcesDir) : resourcePacksDir;
             if (isEmpty(javaPath) || !new File(javaPath).exists()) {
                 System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
                 return;

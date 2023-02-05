@@ -500,7 +500,9 @@ public class English implements Language {
                         "                                            cmcl version 1.19 --forge=42.0.0\n" +
                         "   --liteloader[=<LiteLoader version>]   Install LiteLoader for the version, you can specify the version.\n" +
                         "   --optifine[=<OptiFine version>]       Install OptiFine for the version, you can specify the version.\n" +
-                        "   --quilt[=<Quilt version>]             Install Quilt for the version, you can specify the version.");
+                        "   --quilt[=<Quilt version>]             Install Quilt for the version, you can specify the version.\n" +
+                        "   --isolate                             Set version working directory isolation(override gameDir configuration)\n" +
+                        "   --unset-isolate                       Unset version working directory isolation");
         enHelp.put("account",
                 "Account\n" +
                         "  Function Name: account\n" +

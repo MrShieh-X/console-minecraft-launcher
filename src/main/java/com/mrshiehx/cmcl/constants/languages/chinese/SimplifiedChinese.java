@@ -495,7 +495,9 @@ public class SimplifiedChinese implements Language {
                         "                                            cmcl version 1.19 --forge=42.0.0\n" +
                         "   --liteloader[=<LiteLoader 版本>]      为版本安装 LiteLoader，可以指明版本。\n" +
                         "   --optifine[=<OptiFine 版本>]          为版本安装 OptiFine，可以指明版本。\n" +
-                        "   --quilt[=<Quilt 版本>]                为版本安装 Quilt，可以指明版本。");
+                        "   --quilt[=<Quilt 版本>]                为版本安装 Quilt，可以指明版本。\n" +
+                        "   --isolate                             设置版本隔离（覆盖gameDir配置）\n" +
+                        "   --unset-isolate                       取消设置版本隔离");
         zhHelp.put("account",
                 "账号\n" +
                         "  功能名：account\n" +
