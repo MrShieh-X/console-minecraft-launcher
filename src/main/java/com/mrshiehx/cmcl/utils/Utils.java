@@ -55,32 +55,12 @@ public class Utils {
         return value == null ? "" : value.toString();
     }
 
-    public static void saveConfig(JSONObject jsonObject) {
-        CMCL.configContent = jsonObject;
-        File configFile = CMCL.getConfigFile();
-        try {
-            if (!configFile.exists())
-                FileUtils.createFile(configFile, false);
-            FileWriter writer = new FileWriter(configFile, false);
-            writer.write(jsonObject.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void saveConfig(JSONObject config) {
+        CMCL.saveConfig(config);
     }
 
     public static JSONObject getConfig() {
-        /*JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(ConsoleMinecraftLauncher.configContent);
-        } catch (Exception e3) {
-            e3.printStackTrace();
-            jsonObject = new JSONObject();
-        }
-        return jsonObject;*/
-        if (CMCL.configContent != null)
-            return CMCL.configContent;
-        return CMCL.initConfig();
+        return CMCL.getConfig();
     }
 
     public static <X> List<X> removeDuplicate(List<X> list) {

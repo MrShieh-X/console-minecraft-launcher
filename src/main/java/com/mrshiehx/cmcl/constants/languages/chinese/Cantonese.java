@@ -129,6 +129,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", "搵唔到文件“%s”嘅下载地址");
         cantonese.put("EXCEPTION_VERSION_JAR_NOT_FOUND", "目标版本嘅JAR文件唔存在，请重新安装呢个版本。");
         cantonese.put("EXCEPTION_NIDE8AUTH_JAVA_VERSION_TOO_LOW", "Java 版本细于 8u101 无法使用统一通行证，请换一个符合要求嘅 Java 后重试。");
+        cantonese.put("EXCEPTION_READ_CONFIG_FILE", "读取配置文件失败，请确保配置文件 cmcl.json 系可读取嘅文件并且内容无误：%s");
         cantonese.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭呢个页面跟住返到启动器完成登录。");
         cantonese.put("CONSOLE_UNSUPPORTED_VALUE", "唔支持嘅值：%s");
         cantonese.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请喺浏览器嗰度登录你嘅微软账户，\n登录成功嘅话，就返嚟呢度，等待完成登录。\n登录要一定嘅时间，唔该畀啲耐心。");

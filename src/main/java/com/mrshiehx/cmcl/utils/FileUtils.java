@@ -201,7 +201,7 @@ public class FileUtils {
         }
         fr.close();
         reader.close();
-        return sbf.substring(0, sbf.length() - 1);
+        return sbf.length() == 0 ? "" : sbf.substring(0, sbf.length() - 1);
     }
 
     public static byte[] getBytes(File file) throws IOException {

@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class CMCL {
     public static File gameDir;
@@ -53,7 +54,7 @@ public class CMCL {
     public static File launcherProfiles;
     public static RunningMinecraft runningMc;
 
-    public static JSONObject configContent;
+    private static JSONObject configJSONObject;
     public static String javaPath;
 
     private static String language;
@@ -61,13 +62,9 @@ public class CMCL {
 
     public static boolean isImmersiveMode;
 
-    static {
-        initConfig();
-    }
-
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (runningMc != null && runningMc.exitWithMinecraft/*configContent.optBoolean("exitWithMinecraft")*/) {
+            if (runningMc != null && runningMc.exitWithMinecraft) {
                 if (runningMc.process.isAlive()) {
                     runningMc.process.destroy();
                 }
@@ -137,13 +134,29 @@ public class CMCL {
     public static JSONObject initConfig() {
         File configFile = getConfigFile();
         if (configFile.exists()) {
+            String EXCEPTION_READ_CONFIG_FILE = Optional.ofNullable(("zh".equals(Locale.getDefault().getLanguage()) ? Languages.getZh() : Languages.getEn()).get("EXCEPTION_READ_CONFIG_FILE")).orElse("Failed to read the configuration file, please make sure the configuration file (cmcl.json) is readable and the content is correct: %s");
+            String configFileContent;
             try {
-                configContent = new JSONObject(FileUtils.readFileContent(configFile));
+                configFileContent = FileUtils.readFileContent(configFile);
             } catch (Exception e) {
-                if (Constants.isDebug()) e.printStackTrace();
-                configContent = new JSONObject();
+                e.printStackTrace();
+                System.out.println(String.format(EXCEPTION_READ_CONFIG_FILE, e));
+                System.exit(1);
+                return configJSONObject;
             }
-            JSONArray accounts = configContent.optJSONArray("accounts");
+            if (isEmpty(configFileContent)) {
+                configJSONObject = new JSONObject();
+            } else {
+                try {
+                    configJSONObject = new JSONObject(configFileContent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println(String.format(EXCEPTION_READ_CONFIG_FILE, e));
+                    System.exit(1);
+                    return configJSONObject;
+                }
+            }
+            JSONArray accounts = configJSONObject.optJSONArray("accounts");
             if (accounts != null && accounts.length() > 0) {
                 boolean alreadyHave = false;
                 for (Object o : accounts) {
@@ -161,24 +174,24 @@ public class CMCL {
                         accounts.remove(i);
                     }
                 }
-                Utils.saveConfig(configContent);
+                Utils.saveConfig(configJSONObject);
             }
-            javaPath = configContent.optString("javaPath", JavaUtils.getDefaultJavaPath());
-            gameDir = new File(!isEmpty(configContent.optString("gameDir")) ? configContent.optString("gameDir") : ".minecraft");
-            assetsDir = !isEmpty(configContent.optString("assetsDir")) ? new File(configContent.optString("assetsDir")) : new File(gameDir, "assets");
-            resourcePacksDir = !isEmpty(configContent.optString("resourcesDir")) ? new File(configContent.optString("resourcesDir")) : new File(gameDir, "resourcepacks");
+            javaPath = configJSONObject.optString("javaPath", JavaUtils.getDefaultJavaPath());
+            gameDir = new File(!isEmpty(configJSONObject.optString("gameDir")) ? configJSONObject.optString("gameDir") : ".minecraft");
+            assetsDir = !isEmpty(configJSONObject.optString("assetsDir")) ? new File(configJSONObject.optString("assetsDir")) : new File(gameDir, "assets");
+            resourcePacksDir = !isEmpty(configJSONObject.optString("resourcesDir")) ? new File(configJSONObject.optString("resourcesDir")) : new File(gameDir, "resourcepacks");
         } else {
             initDefaultDirs();
-            configContent = new JSONObject();
-            configContent.put("language", Locale.getDefault().getLanguage());
-            configContent.put("javaPath", javaPath = JavaUtils.getDefaultJavaPath());
-            configContent.put("maxMemory", SystemUtils.getDefaultMemory());
-            configContent.put("windowSizeWidth", 854);
-            configContent.put("windowSizeHeight", 480);
+            configJSONObject = new JSONObject();
+            configJSONObject.put("language", Locale.getDefault().getLanguage());
+            configJSONObject.put("javaPath", javaPath = JavaUtils.getDefaultJavaPath());
+            configJSONObject.put("maxMemory", SystemUtils.getDefaultMemory());
+            configJSONObject.put("windowSizeWidth", 854);
+            configJSONObject.put("windowSizeHeight", 480);
             try {
                 FileUtils.createFile(configFile, false);
                 FileWriter writer = new FileWriter(configFile, false);
-                writer.write(configContent.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
+                writer.write(configJSONObject.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
                 writer.close();
             } catch (IOException e) {
                 if (Constants.isDebug()) e.printStackTrace();
@@ -186,8 +199,8 @@ public class CMCL {
             }
         }
         initChangelessDirs();
-        initProxy(configContent);
-        return configContent;
+        initProxy(configJSONObject);
+        return configJSONObject;
     }
 
     private static void initChangelessDirs() {
@@ -209,7 +222,6 @@ public class CMCL {
         NetworkUtils.setProxy(proxyHost, proxyPort, configContent.optString("proxyUsername"), configContent.optString("proxyPassword"));
     }
 
-
     public static boolean isEmpty(String s) {
         return null == s || s.length() == 0;
     }
@@ -217,7 +229,6 @@ public class CMCL {
     public static boolean isEmpty(JSONObject s) {
         return null == s || s.length() == 0;
     }
-
 
     public static String getString(String name, Object... objects) {
         return String.format(getString(name), objects);
@@ -244,15 +255,13 @@ public class CMCL {
         if (language == null) {
             String lang = Utils.getConfig().optString("language");
             if (isEmpty(lang)) {
-                configContent.put("language", language = Locale.getDefault().getLanguage());
-                Utils.saveConfig(configContent);
+                Utils.saveConfig(Utils.getConfig().put("language", language = Locale.getDefault().getLanguage()));
             } else {
                 language = lang;
             }
         }
         return language;
     }
-
 
     public static List<String> listVersions(File versionsDir) {
         List<String> versionsStrings = new ArrayList<>();
@@ -306,5 +315,26 @@ public class CMCL {
             return inConfigDir;
         }
         return Constants.DEFAULT_CONFIG_FILE;
+    }
+
+    public static void saveConfig(JSONObject jsonObject) {
+        configJSONObject = jsonObject;
+        File configFile = CMCL.getConfigFile();
+        try {
+            if (!configFile.exists())
+                FileUtils.createFile(configFile, false);
+            FileWriter writer = new FileWriter(configFile, false);
+            writer.write(jsonObject.toString(com.mrshiehx.cmcl.constants.Constants.INDENT_FACTOR));
+            writer.close();
+        } catch (IOException e) {
+            if (Constants.isDebug()) e.printStackTrace();
+            System.out.println(getString("EXCEPTION_SAVE_CONFIG", e));
+        }
+    }
+
+    public static JSONObject getConfig() {
+        if (configJSONObject != null)
+            return configJSONObject;
+        return initConfig();
     }
 }
