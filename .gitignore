@@ -118,7 +118,7 @@ gradle-app.setting
 cmcl.json
 .minecraft/
 logs/
-/cmcl/
+/.cmcl/
 src/main/java/com/mrshiehx/cmcl/Test.java
 console-minecraft-launcher.rar
 natives/
