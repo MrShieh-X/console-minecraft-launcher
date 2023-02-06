@@ -62,6 +62,10 @@ public class CMCL {
 
     public static boolean isImmersiveMode;
 
+    static {
+        initConfig();
+    }
+
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (runningMc != null && runningMc.exitWithMinecraft) {

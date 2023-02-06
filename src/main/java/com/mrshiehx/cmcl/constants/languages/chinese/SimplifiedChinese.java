@@ -133,6 +133,8 @@ public class SimplifiedChinese implements Language {
                 "自定义游戏参数：\n" +
                 "${GAME_ARGS}");
         zh.put("MESSAGE_TO_SELECT_VERSION", "请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
+        zh.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "提示：启动命令过长，您可能无法直接在cmd中运行或保存至bat文件后执行，推荐您使用“version [<版本>] --export-script-ps=<脚本文件>”导出为 PowerShell 脚本文件后使用。");
+        zh.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件的长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
         zh.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
                 "    账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n\n" +
                 "  downloadSource | 整数\n" +
@@ -499,7 +501,10 @@ public class SimplifiedChinese implements Language {
                         "   --optifine[=<OptiFine 版本>]          为版本安装 OptiFine，可以指明版本。\n" +
                         "   --quilt[=<Quilt 版本>]                为版本安装 Quilt，可以指明版本。\n" +
                         "   --isolate                             设置版本隔离（覆盖gameDir配置）\n" +
-                        "   --unset-isolate                       取消设置版本隔离");
+                        "   --unset-isolate                       取消设置版本隔离\n" +
+                        "   -p, --print-command                   打印启动命令\n" +
+                        "   --export-script=<脚本文件>            导出启动脚本（Windows 下为 bat 格式否则为 sh 格式）\n" +
+                        "   --export-script-ps=<脚本文件>         导出 PowerShell 启动脚本（.ps1）");
         zhHelp.put("account",
                 "账号\n" +
                         "  功能名：account\n" +

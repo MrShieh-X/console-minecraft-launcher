@@ -94,4 +94,26 @@ public class CommandUtils {
         }
         return quoting ? (new String(chars) + "\"").trim() : new String(chars).trim();//Judging whether it is still quoted, that is, judging whether the double quotes are complete
     }
+
+    public static String argsToCommand(List<String> args) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < args.size(); i++) {
+            String str = args.get(i);
+            if (str.contains(" ")) {
+                str = "\"" + str + "\"";
+                if (str.contains("\\")) {
+                    str = str.replace("\\", "\\\\");
+                }
+            }
+            stringBuilder.append(str);
+            if (i + 1 != args.size()) {
+                stringBuilder.append(" ");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String powershellString(String str) {
+        return "'" + str.replace("'", "''") + "'";
+    }
 }

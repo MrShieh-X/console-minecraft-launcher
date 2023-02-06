@@ -65,7 +65,7 @@ public class RootFunction implements Function {
                         break;
                     case "p":
                     case "print":
-                        CommandPrinter.execute(null);
+                        LaunchCommands.print(null);
                         break;
                     default:
                         tryToStartVersion(originArray[0]);
@@ -80,7 +80,7 @@ public class RootFunction implements Function {
                         break;
                     case "p":
                     case "print":
-                        CommandPrinter.execute(value);
+                        LaunchCommands.print(value);
                         break;
                     case "s":
                     case "select":
@@ -128,7 +128,7 @@ public class RootFunction implements Function {
                     if (secondArgument != null) {
                         versionToPrint = secondArgument.originArray[0];
                     }
-                    CommandPrinter.execute(versionToPrint);
+                    LaunchCommands.print(versionToPrint);
                     break;
                 case "select":
                     if (secondArgument == null) {

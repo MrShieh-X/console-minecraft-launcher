@@ -75,6 +75,8 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("MESSAGE_GAME_CRASH_CAUSE_JVM_UNRECOGNIZED_OPTION", "您加入咗错误嘅JVM参数。通过“jvmArgs --help”嚟获取相关信息。");
         cantonese.put("MESSAGE_TELL_USER_CHECK_ACCOUNT_CAN_BE_OFF", "如果你唔想启动之前检查账号可唔可用，可以用“config checkAccountBeforeStart false”或“version <版本> --config=checkAccountBeforeStart false”嚟关闭。");
         cantonese.put("MESSAGE_TO_SELECT_VERSION", "唔该用“-s <版本名称>”拣一个可启动嘅版本或者用“install <版本名称>”安装一个新嘅版本并选择。");
+        cantonese.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "提示：启动命令过长，你可能唔可以直接喺cmd中运行或保存到bat文件之后执行，推荐你使用“version [<版本>] --export-script-ps=<脚本文件>”导出为 PowerShell 脚本文件后使用。");
+        cantonese.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件嘅长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
         cantonese.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
                 "    账号（唔系直接改嘅，请通过“account -h”获得相关使用教程先至进行修改）\n\n" +
                 "  downloadSource | 整数\n" +

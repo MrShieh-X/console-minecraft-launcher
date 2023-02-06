@@ -21,7 +21,9 @@ import com.mrshiehx.cmcl.bean.Library;
 import com.mrshiehx.cmcl.bean.ThreeReturns;
 import com.mrshiehx.cmcl.bean.arguments.*;
 import com.mrshiehx.cmcl.constants.Constants;
+import com.mrshiehx.cmcl.exceptions.CommandTooLongException;
 import com.mrshiehx.cmcl.functions.mod.ModFunction;
+import com.mrshiehx.cmcl.functions.root.LaunchCommands;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
 import com.mrshiehx.cmcl.modules.extra.ExtraInstaller;
@@ -40,6 +42,7 @@ import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
 import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
+import com.mrshiehx.cmcl.utils.system.SystemUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -187,36 +190,40 @@ public class VersionFunction implements Function {
                     }
                 }
                 break;
+                case "p":
+                case "print-command":
+                    LaunchCommands.print(versionName);
+                    break;
                 default:
                     System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", operateArg.originString));
                     break;
             }
         } else if (operateArg instanceof ValueArgument) {
             String key = operateArg.key;
-            String secondValue = ((ValueArgument) operateArg).value;
+            String value = ((ValueArgument) operateArg).value;
             switch (key) {
                 case "rename":
-                    if (VersionUtils.versionExists(secondValue)) {
-                        System.out.println(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS", secondValue));
+                    if (VersionUtils.versionExists(value)) {
+                        System.out.println(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS", value));
                         return;
                     }
                     try {
                         JSONObject head = new com.mrshiehx.cmcl.utils.json.XJSONObject(FileUtils.readFileContent(jsonFile));
-                        head.put("id", secondValue);
+                        head.put("id", value);
                         FileUtils.writeFile(jsonFile, head.toString(2), false);
                     } catch (Exception e) {
                         System.out.println(getString("MESSAGE_FAILED_RENAME_VERSION", e));
                         return;
                     }
-                    File newFile = new File(versionsDir, secondValue);
+                    File newFile = new File(versionsDir, value);
                     File file2 = new File(newFile, versionName + ".jar");
                     File file3 = new File(newFile, versionName + ".json");
                     versionDir.renameTo(newFile);
-                    file2.renameTo(new File(newFile, secondValue + ".jar"));
-                    file3.renameTo(new File(newFile, secondValue + ".json"));
+                    file2.renameTo(new File(newFile, value + ".jar"));
+                    file3.renameTo(new File(newFile, value + ".json"));
                     break;
                 case "complete":
-                    if ("assets".equalsIgnoreCase(secondValue)) {
+                    if ("assets".equalsIgnoreCase(value)) {
                         try {
                             AssetsDownloader.start(
                                     new JSONObject(FileUtils.readFileContent(jsonFile)),
@@ -225,7 +232,7 @@ public class VersionFunction implements Function {
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
-                    } else if ("libraries".equalsIgnoreCase(secondValue)) {
+                    } else if ("libraries".equalsIgnoreCase(value)) {
                         try {
                             JSONArray libraries = new JSONObject(FileUtils.readFileContent(jsonFile)).optJSONArray("libraries");
                             ThreeReturns<List<Library>, List<Library>, Boolean> pair = MinecraftLauncher.getLibraries(libraries);
@@ -238,7 +245,7 @@ public class VersionFunction implements Function {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else if ("natives".equalsIgnoreCase(secondValue)) {
+                    } else if ("natives".equalsIgnoreCase(value)) {
                         try {
                             JSONArray libraries = new JSONObject(FileUtils.readFileContent(jsonFile)).optJSONArray("libraries");
                             System.out.println(getString("MESSAGE_INSTALL_DOWNLOADING_LIBRARIES"));
@@ -248,7 +255,7 @@ public class VersionFunction implements Function {
                             e.printStackTrace();
                         }
                     } else {
-                        System.out.println(getString("VERSION_UNKNOWN_COMPLETING", secondValue));
+                        System.out.println(getString("VERSION_UNKNOWN_COMPLETING", value));
                     }
                     break;
                 case "config": {
@@ -265,9 +272,9 @@ public class VersionFunction implements Function {
                     }
 
                     if (operateArgNext != null)
-                        versionCfg.put(secondValue, operateArgNext.originArray[0]);
+                        versionCfg.put(value, operateArgNext.originArray[0]);
                     else
-                        versionCfg.remove(secondValue);
+                        versionCfg.remove(value);
                     try {
                         FileUtils.writeFile(cfgFile, versionCfg.toString(), false);
                     } catch (IOException e) {
@@ -276,20 +283,48 @@ public class VersionFunction implements Function {
                 }
                 break;
                 case "fabric":
-                    installFabric(jsonFile, jarFile, secondValue, arguments.contains("api"));
+                    installFabric(jsonFile, jarFile, value, arguments.contains("api"));
                     break;
                 case "forge":
-                    installExtra(jsonFile, jarFile, new ForgeInstaller(), secondValue);
+                    installExtra(jsonFile, jarFile, new ForgeInstaller(), value);
                     break;
                 case "liteloader":
-                    installExtra(jsonFile, jarFile, new LiteloaderInstaller(), secondValue);
+                    installExtra(jsonFile, jarFile, new LiteloaderInstaller(), value);
                     break;
                 case "optifine":
-                    installExtra(jsonFile, jarFile, new OptiFineInstaller(), secondValue);
+                    installExtra(jsonFile, jarFile, new OptiFineInstaller(), value);
                     break;
                 case "quilt":
-                    installExtra(jsonFile, jarFile, new QuiltInstaller(), secondValue);
+                    installExtra(jsonFile, jarFile, new QuiltInstaller(), value);
                     break;
+                case "export-script": {
+                    File scriptFilePs = new File(value);
+                    if (scriptFilePs.exists()) {
+                        System.out.println(getString("CONSOLE_FILE_EXISTS", value));
+                        return;
+                    }
+                    try {
+                        FileUtils.writeFile(scriptFilePs, SystemUtils.isWindows() ? LaunchCommands.getBatContent(versionName) : LaunchCommands.getShContent(versionName), false);
+                    } catch (CommandTooLongException e) {
+                        System.out.println(getString("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT"));
+                    } catch (Exception e) {
+                        System.out.println(getString("EXCEPTION_WRITE_FILE") + ": " + e);
+                    }
+                }
+                break;
+                case "export-script-ps": {
+                    File scriptFilePs = new File(value);
+                    if (scriptFilePs.exists()) {
+                        System.out.println(getString("CONSOLE_FILE_EXISTS", value));
+                        return;
+                    }
+                    try {
+                        FileUtils.writeFile(scriptFilePs, LaunchCommands.getPowerShellContent(versionName), false);
+                    } catch (Exception e) {
+                        System.out.println(getString("EXCEPTION_WRITE_FILE") + ": " + e);
+                    }
+                }
+                break;
                 default:
                     System.out.println(getString("CONSOLE_UNKNOWN_COMMAND_OR_MEANING", operateArg.originString));
                     break;

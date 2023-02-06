@@ -132,6 +132,8 @@ public class English implements Language {
                 "Custom Game Arguments:\n" +
                 "${GAME_ARGS}");
         en.put("MESSAGE_TO_SELECT_VERSION", "Please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
+        en.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Tip: The startup command is too long, you may not be able to run it directly in cmd or save it to a bat file and execute it. It is recommended that you use \"version [<version>] --export-script-ps=<script file>\" to export it as a PowerShell script file used later.");
+        en.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Unable to export the script file: Due to the length limit of the bat script file, the startup command is too long and cannot be exported as a bat file. You can only use \"version [<version>] --export-script-ps=<script file with .ps1 as the suffix>\" to export as a PowerShell script file.");
         en.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON Array\n" +
                 "    Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n\n" +
                 "  downloadSource | Integer\n" +
@@ -504,7 +506,10 @@ public class English implements Language {
                         "   --optifine[=<OptiFine version>]       Install OptiFine for the version, you can specify the version.\n" +
                         "   --quilt[=<Quilt version>]             Install Quilt for the version, you can specify the version.\n" +
                         "   --isolate                             Set version working directory isolation(override gameDir configuration)\n" +
-                        "   --unset-isolate                       Unset version working directory isolation");
+                        "   --unset-isolate                       Unset version working directory isolation\n" +
+                        "   -p, --print-command                   Print the startup command.\n" +
+                        "   --export-script=<script file>         Export launch script (bat format under Windows, otherwise sh format)\n" +
+                        "   --export-script-ps=<script file>      Export PowerShell launch script (.ps1)");
         enHelp.put("account",
                 "Account\n" +
                         "  Function Name: account\n" +
