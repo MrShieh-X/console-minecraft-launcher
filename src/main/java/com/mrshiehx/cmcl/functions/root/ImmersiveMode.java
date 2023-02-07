@@ -72,7 +72,7 @@ public class ImmersiveMode {
                             RootFunction.printHelp();
                             break;
                         }
-                        Function function = Functions.MAP.get(key);
+                        Function function = Functions.get(key);
                         if (function == null) {
                             //交给RootOption
                             RootFunction.execute(args, true);

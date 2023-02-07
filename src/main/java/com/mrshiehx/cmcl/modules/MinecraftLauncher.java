@@ -506,10 +506,10 @@ public class MinecraftLauncher {
                     jvmArguments.set(i, s = s.replace(source, librariesString.toString()));
                 }
                 if (s.contains(source = "${file_separator}")) {
-                    jvmArguments.set(i, s = s.replace(source, OperatingSystem.FILE_SEPARATOR));
+                    jvmArguments.set(i, s = s.replace(source, File.separator));
                 }
                 if (s.contains(source = "${classpath_separator}")) {
-                    jvmArguments.set(i, s = s.replace(source, OperatingSystem.PATH_SEPARATOR));
+                    jvmArguments.set(i, s = s.replace(source, File.pathSeparator));
                 }
                 if (s.contains(source = "${library_directory}")) {
                     jvmArguments.set(i, s = s.replace(source, librariesFile.getAbsolutePath()));

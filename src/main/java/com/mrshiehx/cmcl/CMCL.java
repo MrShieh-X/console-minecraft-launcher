@@ -85,7 +85,7 @@ public class CMCL {
             }
         } else {
             String first = args[0];
-            Function function = Functions.MAP.get(first);
+            Function function = Functions.get(first);
             boolean isRoot;
             if (function != null) {
                 isRoot = false;

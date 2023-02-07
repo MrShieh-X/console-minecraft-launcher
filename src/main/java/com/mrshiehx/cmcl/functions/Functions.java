@@ -20,20 +20,26 @@ package com.mrshiehx.cmcl.functions;
 import com.mrshiehx.cmcl.functions.mod.ModFunction;
 import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Functions {
-    public static final Map<String, Function> MAP = new HashMap<>();
-
-    static {
-        MAP.put("config", new ConfigFunction());
-        MAP.put("account", new AccountFunction());
-        MAP.put("version", new VersionFunction());
-        MAP.put("jvmArgs", new JVMArgsFunction());
-        MAP.put("gameArgs", new GameArgsFunction());
-        MAP.put("install", new InstallFunction());
-        MAP.put("mod", new ModFunction());
-        MAP.put("modpack", new ModpackFunction());
+    public static Function get(String name) {
+        switch (name) {
+            case "config":
+                return new ConfigFunction();
+            case "account":
+                return new AccountFunction();
+            case "version":
+                return new VersionFunction();
+            case "jvmArgs":
+                return new JVMArgsFunction();
+            case "gameArgs":
+                return new GameArgsFunction();
+            case "install":
+                return new InstallFunction();
+            case "mod":
+                return new ModFunction();
+            case "modpack":
+                return new ModpackFunction();
+        }
+        return null;
     }
 }

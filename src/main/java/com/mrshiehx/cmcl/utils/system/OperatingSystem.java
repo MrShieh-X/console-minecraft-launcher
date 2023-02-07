@@ -1,57 +1,17 @@
-/*
- * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- */
-
 package com.mrshiehx.cmcl.utils.system;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * Represents the operating system.
+ *
+ * @author huangyuhui (HMCL)
+ */
 public enum OperatingSystem {
-    /**
-     * Microsoft Windows.
-     */
-    WINDOWS("windows"),
-    /**
-     * Linux and Unix like OS, including Solaris.
-     */
-    LINUX("linux"),
-    /**
-     * Mac OS X.
-     */
-    OSX("osx"),
-    /**
-     * Unknown operating system.
-     */
-    UNKNOWN("universal");
+    WINDOWS("windows"), LINUX("linux"), OSX("osx"), UNKNOWN("universal");
 
     private final String checkedName;
 
@@ -71,37 +31,37 @@ public enum OperatingSystem {
     /**
      * The total memory/MB this computer have.
      */
-    public static final int TOTAL_MEMORY;
+    //public static final int TOTAL_MEMORY;
 
     /**
      * The suggested memory size/MB for Minecraft to allocate.
      */
-    public static final int SUGGESTED_MEMORY;
+    //public static final int SUGGESTED_MEMORY;
 
-    public static final String PATH_SEPARATOR = File.pathSeparator;
-    public static final String FILE_SEPARATOR = File.separator;
-    public static final String LINE_SEPARATOR = System.lineSeparator();
+    //public static final String PATH_SEPARATOR = File.pathSeparator;
+    //public static final String FILE_SEPARATOR = File.separator;
+    //public static final String LINE_SEPARATOR = System.lineSeparator();
 
     /**
      * The system default encoding.
      */
-    public static final String ENCODING = System.getProperty("sun.jnu.encoding", Charset.defaultCharset().name());
+    //public static final String ENCODING = System.getProperty("sun.jnu.encoding", Charset.defaultCharset().name());
 
     /**
      * The version of current operating system.
      */
-    public static final String SYSTEM_VERSION;
+    //public static final String SYSTEM_VERSION;
     /**
      * Windows system build number.
      * When the version number is not recognized or on another system, the value will be -1.
      */
-    public static final int SYSTEM_BUILD_NUMBER;
+    //public static final int SYSTEM_BUILD_NUMBER;
 
-    public static final Pattern INVALID_RESOURCE_CHARACTERS;
-    private static final String[] INVALID_RESOURCE_BASENAMES;
-    private static final String[] INVALID_RESOURCE_FULLNAMES;
+    //public static final Pattern INVALID_RESOURCE_CHARACTERS;
+    //private static final String[] INVALID_RESOURCE_BASENAMES;
+    //private static final String[] INVALID_RESOURCE_FULLNAMES;
 
-    private static final Pattern MEMINFO_PATTERN = Pattern.compile("^(?<key>.*?):\\s+(?<value>\\d+) kB?$");
+    //private static final Pattern MEMINFO_PATTERN = Pattern.compile("^(?<key>.*?):\\s+(?<value>\\d+) kB?$");
 
     /**
      * The system default charset.
@@ -119,12 +79,12 @@ public enum OperatingSystem {
         else
             CURRENT_OS = UNKNOWN;
 
-        TOTAL_MEMORY = getPhysicalMemoryStatus()
+        /*TOTAL_MEMORY = getPhysicalMemoryStatus()
                 .map(PhysicalMemoryStatus::getTotal)
                 .map(bytes -> (int) (bytes / 1024 / 1024))
                 .orElse(1024);
 
-        SUGGESTED_MEMORY = (int) (Math.round(1.0 * TOTAL_MEMORY / 4.0 / 128.0) * 128);
+        SUGGESTED_MEMORY = (int) (Math.round(1.0 * TOTAL_MEMORY / 4.0 / 128.0) * 128);*/
         Charset nativeCharset = Charset.defaultCharset();
 
         String nativeEncoding = System.getProperty("native.encoding");
@@ -145,7 +105,7 @@ public enum OperatingSystem {
         NATIVE_CHARSET = nativeCharset;
 
         // setup the invalid names
-        if (CURRENT_OS == WINDOWS) {
+        /*if (CURRENT_OS == WINDOWS) {
             // valid names and characters taken from http://msdn.microsoft.com/library/default.asp?url=/library/en-us/fileio/fs/naming_a_file.asp
             INVALID_RESOURCE_CHARACTERS = Pattern.compile("[/\"<>|?*:\\\\]");
             INVALID_RESOURCE_BASENAMES = new String[]{"aux", "com1", "com2", "com3", "com4",
@@ -177,12 +137,12 @@ public enum OperatingSystem {
                 versionNumber = System.getProperty("os.version");
             }
 
-            /*String osName = System.getProperty("os.name");
+            *//*String osName = System.getProperty("os.name");
 
             // Java 17 or earlier recognizes Windows 11 as Windows 10
             if (osName.equals("Windows 10") && buildNumber >= 22000) {
                 osName = "Windows 11";
-            }*/
+            }*//*
 
             SYSTEM_VERSION = versionNumber;
             SYSTEM_BUILD_NUMBER = buildNumber;
@@ -194,10 +154,10 @@ public enum OperatingSystem {
             INVALID_RESOURCE_FULLNAMES = null;
             SYSTEM_VERSION = System.getProperty("os.version");
             SYSTEM_BUILD_NUMBER = -1;
-        }
+        }*/
     }
 
-    public static Optional<PhysicalMemoryStatus> getPhysicalMemoryStatus() {
+    /*public static Optional<PhysicalMemoryStatus> getPhysicalMemoryStatus() {
         if (CURRENT_OS == LINUX) {
             try {
                 long free = 0, available = 0, total = 0;
@@ -254,13 +214,13 @@ public enum OperatingSystem {
             default:
                 return Paths.get(home, folder);
         }
-    }
+    }*/
 
     /**
      * Returns true if the given name is a valid file name on this operating system,
      * and false otherwise.
      */
-    public static boolean isNameValid(String name) {
+    /*public static boolean isNameValid(String name) {
         // empty filename is not allowed
         if (name.isEmpty())
             return false;
@@ -291,9 +251,9 @@ public enum OperatingSystem {
         }
 
         return true;
-    }
+    }*/
 
-    public static class PhysicalMemoryStatus {
+    /*public static class PhysicalMemoryStatus {
         private final long total;
         private final long available;
 
@@ -335,5 +295,5 @@ public enum OperatingSystem {
         }
 
         public static final PhysicalMemoryStatus INVALID = new PhysicalMemoryStatus(0, -1);
-    }
+    }*/
 }
