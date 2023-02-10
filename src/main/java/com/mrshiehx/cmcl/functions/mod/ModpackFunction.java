@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -115,12 +116,18 @@ public class ModpackFunction implements Function {
         String sourceStr = arguments.opt("source");
 
         if (isEmpty(sourceStr)) {
-            System.out.println(getString("MOD_NO_SOURCE"));
-            return;
+            JSONObject config = getConfig();
+            sourceStr = config.optString("modpackDownloadSource");
+            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth")) {
+                sourceStr = ConsoleUtils.inputStringInFilter(getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR"), getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN"), string -> "curseforge".equalsIgnoreCase(string) || "modrinth".equalsIgnoreCase(string));
+                if (sourceStr != null) {
+                    Utils.saveConfig(config.put("modpackDownloadSource", sourceStr));
+                }
+            }
         }
 
         int source;
-        switch (sourceStr.toLowerCase()) {
+        switch (Objects.requireNonNull(sourceStr).toLowerCase()) {
             case "cf":
             case "curseforge":
                 source = 0;

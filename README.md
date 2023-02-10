@@ -58,6 +58,8 @@
 | proxyPort               | 整数     | 代理端口                                                    |
 | proxyUsername           | 字符串    | 代理验证的账户（代理可选）                                           |
 | proxyPassword           | 字符串    | 代理验证的密码（代理可选）                                           |
+| modDownloadSource       | 字符串    | 模组下载源，curseforge或modrinth                               |
+| modpackDownloadSource   | 字符串    | 整合包下载源，curseforge或modrinth                              |
 
 <details>
 <summary>jvmArgs 示例</summary>

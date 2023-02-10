@@ -118,7 +118,11 @@ public class Cantonese extends SimplifiedChinese {
                 "  proxyUsername | 字符串\n" +
                 "    代理验证嘅账户（代理可选）\n\n" +
                 "  proxyPassword | 字符串\n" +
-                "    代理验证嘅密码（代理可选）");
+                "    代理验证嘅密码（代理可选）\n\n" +
+                "  modDownloadSource | 字符串\n" +
+                "    模组下载源，curseforge或modrinth\n\n" +
+                "  modpackDownloadSource | 字符串\n" +
+                "    整合包下载源，curseforge或modrinth");
         cantonese.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本嘅JSON文件或JAR文件唔喺度，用“-s <版本名称>”拣一个可启动嘅版本或者用“install <版本名称>”安装一个新嘅版本并选择。");
         cantonese.put("EXCEPTION_VERSION_NOT_FOUND", "%s：游戏版本唔存在");
         cantonese.put("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND", "搵唔到原生依赖库（natives）目录或者系空嘅，你要用“version <版本名称> --complete=natives”下载原生依赖库文件先至可以启动游戏。");
@@ -215,7 +219,6 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("INSTALL_FABRIC_API_WITHOUT_FABRIC", "唔装 Fabric，点装 Fabric API 呢？");
         cantonese.put("VERSION_COMPLETE_LIBRARIES_NO_NEED_TO", "冇缺少嘅依赖库需要补全。");
         cantonese.put("MOD_CONTAINS_BOTH", "--install 同 --info 唔可以同时存在。");
-        cantonese.put("MOD_NO_SOURCE", "必须指定 --source=<下载源>。用选项 -h 或 --help 嚟获取更多信息。");
         cantonese.put("MOD_UNKNOWN_SOURCE", "%s：未知下载源。用选项 -h 或 --help 嚟获取更多信息。");
         cantonese.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n 或 --name 同 --id 唔可以同时存在。");
         cantonese.put("MOD_CONTAINS_BOTH_NOT_NAME_AND_ID", "必须指定 -n 或 --name 或 --id。用选项 -h 或 --help 嚟获取更多信息。");

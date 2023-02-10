@@ -28,16 +28,17 @@ import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeModManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
 
-import static com.mrshiehx.cmcl.CMCL.getString;
-import static com.mrshiehx.cmcl.CMCL.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.*;
 
 public class ModFunction implements Function {
     @Override
@@ -62,12 +63,18 @@ public class ModFunction implements Function {
         String sourceStr = arguments.opt("source");
 
         if (isEmpty(sourceStr)) {
-            System.out.println(getString("MOD_NO_SOURCE"));
-            return;
+            JSONObject config = getConfig();
+            sourceStr = config.optString("modDownloadSource");
+            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth")) {
+                sourceStr = ConsoleUtils.inputStringInFilter(getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR"), getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN"), string -> "curseforge".equalsIgnoreCase(string) || "modrinth".equalsIgnoreCase(string));
+                if (sourceStr != null) {
+                    Utils.saveConfig(config.put("modDownloadSource", sourceStr));
+                }
+            }
         }
 
         int source;
-        switch (sourceStr.toLowerCase()) {
+        switch (Objects.requireNonNull(sourceStr).toLowerCase()) {
             case "cf":
             case "curseforge":
                 source = 0;

@@ -58,6 +58,8 @@ You can view this content through the options `config --view`.
 | proxyPort               | Integer     | Proxy Port                                                                                                                                    |
 | proxyUsername           | String      | Proxy authentication username(optional for proxy)                                                                                             |
 | proxyPassword           | String      | Proxy authentication password(optional for proxy)                                                                                             |
+| modDownloadSource       | String      | Mod download source, curseforge or modrinth                                                                                                   |
+| modpackDownloadSource   | String      | Modpack download source, curseforge or modrinth                                                                                               |
 
 <details>
 <summary>Example for jvmArgs</summary>

@@ -24,9 +24,6 @@ import com.mrshiehx.cmcl.bean.arguments.*;
 import com.mrshiehx.cmcl.functions.Function;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static com.mrshiehx.cmcl.utils.Utils.getString;
 
 public class RootFunction implements Function {

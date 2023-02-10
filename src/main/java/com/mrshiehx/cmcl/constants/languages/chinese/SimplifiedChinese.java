@@ -176,7 +176,11 @@ public class SimplifiedChinese implements Language {
                 "  proxyUsername | 字符串\n" +
                 "    代理验证的账户（代理可选）\n\n" +
                 "  proxyPassword | 字符串\n" +
-                "    代理验证的密码（代理可选）");
+                "    代理验证的密码（代理可选）\n\n" +
+                "  modDownloadSource | 字符串\n" +
+                "    模组下载源，curseforge或modrinth\n\n" +
+                "  modpackDownloadSource | 字符串\n" +
+                "    整合包下载源，curseforge或modrinth");
         zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
         zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
         zh.put("EXCEPTION_VERSION_NOT_FOUND", "%s：游戏版本不存在");
@@ -240,6 +244,8 @@ public class SimplifiedChinese implements Language {
         zh.put("CONSOLE_ASK_EXIT_WITH_MC", "请问是否需要退出启动器时顺便退出游戏（可通过“config exitWithMinecraft true/false”开启或关闭）？");
         zh.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "请问是否需要启动游戏时打印启动信息（如Java 路径、最大内存、登录的账号等，可通过“config printStartupInfo true/false”开启或关闭）？");
         zh.put("CONSOLE_ASK_CHECK_ACCOUNT", "请问是否需要在启动游戏之前检查账号是否可用（启动前会花时间，可通过“config checkAccountBeforeStart true/false”开启或关闭）？");
+        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "请选择下载源(curseforge 或 modrinth)：");
+        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN", "未知下载源：%s。");
         zh.put("DATATYPE_STRING", "字符串");
         zh.put("DATATYPE_INTEGER", "整数");
         zh.put("DATATYPE_BOOLEAN", "布尔值");
@@ -396,7 +402,6 @@ public class SimplifiedChinese implements Language {
         zh.put("MOD_FAILED_TO_GET_ALL_FILES", "获得${NAME}文件列表失败：%s");
         zh.put("MOD_CONTAINS_BOTH", "--install 和 --info 不能同时存在。");
         zh.put("MOD_CONTAINS_BOTH_NOT", "必须指定 --install 或 --info。");
-        zh.put("MOD_NO_SOURCE", "必须指定 --source=<下载源>。使用选项 -h 或 --help 以获取更多信息。");
         zh.put("MOD_UNKNOWN_SOURCE", "%s：未知下载源。使用选项 -h 或 --help 以获取更多信息。");
         zh.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n 或 --name 与 --id 不能同时存在。");
         zh.put("MOD_CONTAINS_BOTH_NOT_NAME_AND_ID", "必须指定 -n 或 --name 或 --id。使用选项 -h 或 --help 以获取更多信息。");
@@ -587,14 +592,14 @@ public class SimplifiedChinese implements Language {
                         "  功能名：mod\n" +
                         "  注：<下载源>可输入cf或curseforge（CurseForge）、mr或modrinth（Modrinth）。\n" +
                         "  选项：\n" +
-                        "   --install --source=<下载源> -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
+                        "   --install [--source=<下载源>] -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
                         "     通过模组名称或ID搜索并安装模组。通过模组名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。\n" +
-                        "        cmcl mod --install --source=cf -n Tweakeroo --limit=30\n" +
+                        "        cmcl mod --install -nMinis --limit=30\n" +
                         "        cmcl mod --install --source=curseforge --id=297344\n" +
-                        "        cmcl mod --install --source=modrinth --name=TweakerMore --limit=30\n" +
+                        "        cmcl mod --install --name=Sodium --limit=30\n" +
                         "        cmcl mod --install --source=mr --id=GBeCx05I\n" +
-                        "   --info --source=<下载源> -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
+                        "   --info [--source=<下载源>] -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
                         "     通过模组名称或ID搜索并显示模组信息。通过模组名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。");
         zhHelp.put("modpack",
@@ -605,14 +610,14 @@ public class SimplifiedChinese implements Language {
                         "      它们的作用请查看“安装版本”（install）的帮助文档。\n" +
                         "  选项：\n" +
                         "   --file=<整合包路径> [--storage=<存储的版本名称>]：安装本地整合包\n" +
-                        "   --install --source=<下载源> -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>] [--storage=<存储的版本名称>] [-k, --keep-file]\n" +
+                        "   --install [--source=<下载源>] -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>] [--storage=<存储的版本名称>] [-k, --keep-file]\n" +
                         "     通过整合包名称或ID搜索并安装整合包。通过整合包名称搜索时，结果数量默认为50，可以对其进行限制。\n" +
                         "     若<下载源>为 CurseForge，限制数量最大为50。加上-k 或 --keep-file 意为安装后保留文件（在目录 .cmcl/modpacks）。\n" +
-                        "        cmcl modpack --install --source=cf -n RLCraft --limit=30 --storage=\"New Game\"\n" +
+                        "        cmcl modpack --install -nRLCraft --limit=30 --storage=\"New Game\"\n" +
                         "        cmcl modpack --install --source=curseforge --id=285109\n" +
-                        "        cmcl modpack --install --source=modrinth --name=Adrenaline --limit=30 --storage NewModpack\n" +
+                        "        cmcl modpack --install --name=\"Sugar Optimization\" --limit=30 --storage NewModpack\n" +
                         "        cmcl modpack --install --source=mr --id=BYN9yKrV\n" +
-                        "   --info --source=<下载源> -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>]\n" +
+                        "   --info [--source=<下载源>] -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>]\n" +
                         "     通过整合包名称或ID搜索并显示整合包信息。通过整合包名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。");
         return zhHelp;

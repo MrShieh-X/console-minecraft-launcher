@@ -175,7 +175,11 @@ public class English implements Language {
                 "  proxyUsername | String\n" +
                 "    Proxy authentication username(optional for proxy)\n\n" +
                 "  proxyPassword | String\n" +
-                "    Proxy authentication password(optional for proxy)");
+                "    Proxy authentication password(optional for proxy)\n\n" +
+                "  modDownloadSource | String\n" +
+                "    Mod download source, curseforge or modrinth\n\n" +
+                "  modpackDownloadSource | String\n" +
+                "    Modpack download source, curseforge or modrinth");
         en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
         en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
         en.put("EXCEPTION_VERSION_NOT_FOUND", "%s: Version does not exist");
@@ -239,6 +243,8 @@ public class English implements Language {
         en.put("CONSOLE_ASK_EXIT_WITH_MC", "Do you need to exit the game when exiting the launcher (can be turned on or off through \"config exitWithMinecraft true/false\")?");
         en.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "Do you need to print startup information when starting the game (such as Java path, maximum memory, login account, etc., which can be turned on or off through \"config printStartupInfo true/false\")?");
         en.put("CONSOLE_ASK_CHECK_ACCOUNT", "Do you need to check whether the account is available before starting the game (it will take time before starting, you can turn it on or off through \"config checkAccountBeforeStart true/false\")?");
+        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (curseforge or modrinth): ");
+        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN", "Unknown download source: %s.");
         en.put("DATATYPE_STRING", "String");
         en.put("DATATYPE_INTEGER", "Integer");
         en.put("DATATYPE_BOOLEAN", "Boolean");
@@ -395,7 +401,6 @@ public class English implements Language {
         en.put("MOD_FAILED_TO_GET_ALL_FILES", "Failed to get list of ${NAME} files: %s");
         en.put("MOD_CONTAINS_BOTH", "--install and --info cannot exist at the same time.");
         en.put("MOD_CONTAINS_BOTH_NOT", "Must specify --install or --info.");
-        en.put("MOD_NO_SOURCE", "Must specify --source=<download source>. Use option -h or --help for more information.");
         en.put("MOD_UNKNOWN_SOURCE", "%s: Unknown download source. Use option -h or --help for more information.");
         en.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n or --name and --id cannot exist at the same time.");
         en.put("MOD_CONTAINS_BOTH_NOT_NAME_AND_ID", "Must specify -n or --name or --id. Use option -h or --help for more information.");
@@ -600,14 +605,14 @@ public class English implements Language {
                         "  Function Name: mod\n" +
                         "  Note: <source> can input cf or curseforge (CurseForge), mr or modrinth (Modrinth).\n" +
                         "  Options:\n" +
-                        "   --install --source=<source> -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
+                        "   --install [--source=<source>] -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
                         "     Search and install mod by mod name or ID. When searching by mod name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.\n" +
-                        "        cmcl mod --install --source=cf -n Tweakeroo --limit=30\n" +
+                        "        cmcl mod --install -nMinis --limit=30\n" +
                         "        cmcl mod --install --source=curseforge --id=297344\n" +
-                        "        cmcl mod --install --source=modrinth --name=TweakerMore --limit=30\n" +
+                        "        cmcl mod --install --name=Sodium --limit=30\n" +
                         "        cmcl mod --install --source=mr --id=GBeCx05I\n" +
-                        "   --info --source=<source> -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
+                        "   --info [--source=<source>] -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
                         "     Search and display mod information by mod name or ID. When searching by mod name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.");
         enHelp.put("modpack",
@@ -618,15 +623,15 @@ public class English implements Language {
                         "        For their functions, please refer to the help documentation of \"Install Version\"(install).\n" +
                         "  Options:\n" +
                         "   --file=<modpack path> [--storage=<version storage name>]: Install local modpack\n" +
-                        "   --install --source=<source> -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>] [--storage=<version storage name>] [-k, --keep-file]\n" +
+                        "   --install [--source=<source>] -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>] [--storage=<version storage name>] [-k, --keep-file]\n" +
                         "     Search and install modpack by modpack name or ID. When searching by modpack name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.\n" +
                         "     Adding -k or --keep-file means to keep the file (in directory .cmcl/modpacks) after installation.\n" +
-                        "        cmcl modpack --install --source=cf -n RLCraft --limit=30 --storage=\"New Game\"\n" +
+                        "        cmcl modpack --install -nRLCraft --limit=30 --storage=\"New Game\"\n" +
                         "        cmcl modpack --install --source=curseforge --id=285109\n" +
-                        "        cmcl modpack --install --source=modrinth --name=Adrenaline --limit=30 --storage NewModpack\n" +
+                        "        cmcl modpack --install --name=\"Sugar Optimization\" --limit=30 --storage NewModpack\n" +
                         "        cmcl modpack --install --source=mr --id=BYN9yKrV\n" +
-                        "   --info --source=<source> -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>]\n" +
+                        "   --info [--source=<source>] -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>]\n" +
                         "     Search and display modpack information by modpack name or ID. When searching by modpack name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.");
         return enHelp;
