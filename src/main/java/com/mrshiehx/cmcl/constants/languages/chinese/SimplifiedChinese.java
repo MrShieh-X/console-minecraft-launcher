@@ -439,14 +439,25 @@ public class SimplifiedChinese implements Language {
                         "     -a, --about               显示关于信息\n" +
                         //"     -i, --immersive           进入沉浸模式*\n" +
                         "     -c, --check-for-updates   检查更新\n" +
-                        "     <功能> <选项>...          把“功能与选项”的功能名带入<功能>中（无需横\n" +
+                        "     <功能> <选项>...          把“所有功能”中的功能名带入<功能>中（无需横\n" +
                         "                               杠），把选项放在功能名后方，以执行相应的操作。\n" +
-                            /*"\n" +
-                            " *沉浸模式：在此模式下，执行上方的命令只能使用完整的选项，如help、list、print；\n" +
-                            "            执行下方的命令无需输入“cmcl”，如config maxMemory 2048；\n" +
-                            "            启动游戏应使用 start [<版本>]。\n" +*/
+                        /*"\n" +
+                        " *沉浸模式：在此模式下，执行上方的命令只能使用完整的选项，如help、list、print；\n" +
+                        "            执行下方的命令无需输入“cmcl”，如config maxMemory 2048；\n" +
+                        "            启动游戏应使用 start [<版本>]。\n" +*/
                         "\n" +
-                        "以下是所有功能与选项，说明后面的内容是用法示例，每个功能都能使用 -h 或 --help 以获取帮助文档。");
+                        " 所有功能：\n" +
+                        "    功能名    功能所做之事与何相关\n" +
+                        "    install   安装版本\n" +
+                        "    version   版本操作\n" +
+                        "    account   账号操作\n" +
+                        "    config    更改启动器配置\n" +
+                        "    jvmArgs   自定义JVM参数\n" +
+                        "    gameArgs  自定义游戏参数\n" +
+                        "    mod       模组搜索与安装\n" +
+                        "    modpack   整合包搜索与安装\n" +
+                        "    \n" +
+                        "每个功能都能使用 -h 或 --help 获取帮助文档以获取相关的选项。功能帮助文档中，说明后面的内容是用法示例。");
         zhHelp.put("install",
                 "安装版本\n" +
                         "  功能名：install\n" +

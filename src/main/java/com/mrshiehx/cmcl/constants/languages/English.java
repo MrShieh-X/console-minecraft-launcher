@@ -439,14 +439,26 @@ public class English implements Language {
                         "     -a, --about               Show about information.\n" +
                         //"     -i, --immersive           Enter immersive mode*\n" +
                         "     -c, --check-for-updates   Check for updates\n" +
-                        "     <function> <option>...    Bring the function name of \"function and option\" into <function> (without hyphen),\n" +
-                        "                               and put the option after the function name to perform the corresponding operation.\n" +
+                        "     <function> <option>...    Put the function name in \"All functions\" into <function> (without hyphen), and\n" +
+                        "                               put the option after the function name to perform the corresponding operation.\n" +
                         /*"\n" +
                         " * Immersive mode: In this mode, only complete options can be used to execute the above command, such as help,\n" +
                         "   list, print; execute the command below without entering \"cmcl\", such as config maxMemory 2048;\n" +
                         "   starting the game should use start [<version>].\n" +*/
                         "\n" +
-                        "The following are all functions and options, and the following content is a usage example. Each function can use -h or --help to get help documentation.");
+                        "All functions:\n" +
+                        "     function name     what the function does is related to\n" +
+                        "     install           Install versions\n" +
+                        "     version           Version operation\n" +
+                        "     account           Account operation\n" +
+                        "     config            Modify launcher configuration\n" +
+                        "     jvmArgs           Custom JVM arguments\n" +
+                        "     gameArgs          Custom game arguments\n" +
+                        "     mod               Mods searching and installation\n" +
+                        "     modpack           Modpacks searching and installation\n" +
+                        "    \n" +
+                        "Each function can use -h or --help to get help documentation for related options.\n" +
+                        "In the function help documentation, the content following the description is a usage example.");
         enHelp.put("install",
                 "Install Version\n" +
                         "  Function Name: install\n" +

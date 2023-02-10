@@ -167,24 +167,6 @@ public class RootFunction implements Function {
     }
 
     public static void printHelp() {
-        List<String> usageNames = new LinkedList<>();
-        usageNames.add("ROOT");
-        usageNames.add("install");
-        usageNames.add("version");
-        usageNames.add("account");
-        usageNames.add("config");
-        usageNames.add("jvmArgs");
-        usageNames.add("gameArgs");
-        usageNames.add("mod");
-        usageNames.add("modpack");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < usageNames.size(); i++) {
-            stringBuilder.append(CMCL.getHelpDocumentation(usageNames.get(i)));
-            if (i + 1 < usageNames.size()) {
-                stringBuilder.append('\n');
-                stringBuilder.append('\n');
-            }
-        }
-        System.out.println(stringBuilder);
+        System.out.println(CMCL.getHelpDocumentation("ROOT"));
     }
 }
