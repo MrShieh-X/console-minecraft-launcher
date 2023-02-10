@@ -5,11 +5,12 @@
 ![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--01--20-brightgreen)
 ![软件需求](https://img.shields.io/badge/%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82-Java%208-blue)
 
-### [English README](README-en.md) | [查看更新日志](update_logs.md)
+### [English README](README-en.md) | [更新日志](update_logs.md) | [疑难解答](troubleshooting.md)
 
 ## 视频教程
 中文：[\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/) <br/>
-英语：[\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0)
+英语：[\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
+如果你观看完视频后或使用时仍然有任何问题，可以参考[疑难解答](troubleshooting.md)或通过在[关于作者](#关于作者)中找到的作者联系信息向作者提出疑问。
 
 ## 支持的界面语言
 - 英语
@@ -29,7 +30,7 @@
 或在此两者后加上空格再输入内容，如`cmcl -l D:\.minecraft`；`cmcl --list D:\.minecraft`，详细请参考选项说明后面的例子。
 
 ## 配置
-配置存储在程序运行目录（在 Linux 下则为 用户目录/.config/cmcl）的一个名为cmcl.json的JSON文件，你可以使用文本编辑器（需了解JSON教程，修改前备份）或`config <配置名称> <配置值>`的程序参数（详见帮助文档配置相关）以修改配置。<br/>
+配置存储在程序运行目录（在 Linux 下则为 `用户目录/.config/cmcl`）的一个名为cmcl.json的JSON文件，你可以使用文本编辑器（需了解JSON教程，修改前备份）或`config <配置名称> <配置值>`的程序参数（详见帮助文档配置相关）以修改配置。<br/>
 使用文本编辑器编辑的话，配置名称以及文本配置值需要在英语的双引号（""）内。<br/>
 使用命令来修改时，如果配置值包含空格，则需要使用英语的双引号（""）括起来<br/>
 该内容可通过参数`config --view`查看。

@@ -5,11 +5,12 @@ A Launcher for Minecraft Java Edition Running On The Console
 ![Release Date](https://img.shields.io/badge/Date-2023--01--20-brightgreen)
 ![Software Requires](https://img.shields.io/badge/Software%20Requires-Java%208-blue)
 
-### [中文README](README.md) | [View Update Logs](update_logs-en.md) 
+### [中文README](README.md) | [Update Logs](update_logs-en.md) | [Troubleshooting](troubleshooting-en.md)
 
 ## Video Tutorial
 English: [\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
-Chinese: [\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/)
+Chinese: [\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/)<br/>
+If you still have any problems after watching the video or using it, you can refer to [Troubleshooting](troubleshooting-en.md) or ask the author through the author's contact information found in [About Author](#about-author).
 
 ## Supported Interface Languages
 - English
@@ -29,7 +30,7 @@ you can only add an equal sign after the complete option (two hyphens) and then 
 or add a space after the two and then enter the content, such as `cmcl -l D:\.minecraft`; `cmcl --list D:\.minecraft`, for details, please refer to the example after the option description.
 
 ## Configurations
-The configurations are storing in a JSON file named cmcl.json in the launcher running directory (userDirectory/.config/cmcl under Linux), you can edit them by a file editor (need to know JSON tutorial, backup before modification) or the program arguments `config <config name> <content>` (see Help Documentation Configuration Related).<br/>
+The configurations are storing in a JSON file named cmcl.json in the launcher running directory (`userDirectory/.config/cmcl` under Linux), you can edit them by a file editor (need to know JSON tutorial, backup before modification) or the program arguments `config <config name> <content>` (see Help Documentation Configuration Related).<br/>
 If you edit configurations by a file editor, the configuration name and text configuration content need to be enclosed in double quotes ("").<br/>
 If you edit by command, if the configuration content contains spaces, it needs to be enclosed in double quotes ("").<br/>
 You can view this content through the options `config --view`.
