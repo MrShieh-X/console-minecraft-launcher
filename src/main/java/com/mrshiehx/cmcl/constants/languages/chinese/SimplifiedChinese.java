@@ -593,14 +593,22 @@ public class SimplifiedChinese implements Language {
                         "  注：<下载源>可输入cf或curseforge（CurseForge）、mr或modrinth（Modrinth）。\n" +
                         "  选项：\n" +
                         "   --url=<模组地址> 从互联网下载模组\n" +
-                        "   --install [--source=<下载源>] -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
+                        "   --install\n" +
+                        "      [--source=<下载源>]\n" +
+                        "      -n, --name=<模组名称>|--id=<模组ID>\n" +
+                        "      [--limit=<限制搜索结果数量>]\n" +
+                        "      [--game-version=<游戏版本>]\n" +
+                        "      [-v, --version=<模组版本>]\n" +
                         "     通过模组名称或ID搜索并安装模组。通过模组名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。\n" +
                         "        cmcl mod --install -nMinis --limit=30\n" +
                         "        cmcl mod --install --source=curseforge --id=297344\n" +
                         "        cmcl mod --install --name=Sodium --limit=30\n" +
                         "        cmcl mod --install --source=mr --id=GBeCx05I\n" +
-                        "   --info [--source=<下载源>] -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
+                        "   --info\n" +
+                        "      [--source=<下载源>]\n" +
+                        "      -n, --name=<模组名称>|--id=<模组ID>\n" +
+                        "      [--limit=<限制搜索结果数量>]\n" +
                         "     通过模组名称或ID搜索并显示模组信息。通过模组名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。");
         zhHelp.put("modpack",
@@ -612,14 +620,24 @@ public class SimplifiedChinese implements Language {
                         "  选项：\n" +
                         "   --url=<整合包地址> [--storage=<存储的版本名称>]  从互联网下载并安装整合包\n" +
                         "   --file=<整合包路径> [--storage=<存储的版本名称>] 安装本地整合包\n" +
-                        "   --install [--source=<下载源>] -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>] [--storage=<存储的版本名称>] [-k, --keep-file]\n" +
+                        "   --install\n" +
+                        "      [--source=<下载源>]\n" +
+                        "      -n, --name=<整合包名称>|--id=<整合包ID>\n" +
+                        "      [--limit=<限制搜索结果数量>]\n" +
+                        "      [--storage=<存储的版本名称>]\n" +
+                        "      [-k, --keep-file]\n" +
+                        "      [--game-version=<游戏版本>]\n" +
+                        "      [-v, --version=<整合包版本>]\n" +
                         "     通过整合包名称或ID搜索并安装整合包。通过整合包名称搜索时，结果数量默认为50，可以对其进行限制。\n" +
                         "     若<下载源>为 CurseForge，限制数量最大为50。加上-k 或 --keep-file 意为安装后保留文件（在目录 .cmcl/modpacks）。\n" +
                         "        cmcl modpack --install -nRLCraft --limit=30 --storage=\"New Game\"\n" +
                         "        cmcl modpack --install --source=curseforge --id=285109\n" +
                         "        cmcl modpack --install --name=\"Sugar Optimization\" --limit=30 --storage NewModpack\n" +
                         "        cmcl modpack --install --source=mr --id=BYN9yKrV\n" +
-                        "   --info [--source=<下载源>] -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>]\n" +
+                        "   --info\n" +
+                        "      [--source=<下载源>]\n" +
+                        "      -n, --name=<整合包名称>|--id=<整合包ID>\n" +
+                        "      [--limit=<限制搜索结果数量>]\n" +
                         "     通过整合包名称或ID搜索并显示整合包信息。通过整合包名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。");
         return zhHelp;

@@ -68,7 +68,10 @@ public class ModpackFunction implements Function {
                 ArgumentRequirement.ofValue("limit"),
                 ArgumentRequirement.ofValue("t"),
                 ArgumentRequirement.ofValue("thread"),
-                ArgumentRequirement.ofValue("url"))) return;
+                ArgumentRequirement.ofValue("url"),
+                ArgumentRequirement.ofValue("game-version"),
+                ArgumentRequirement.ofValue("v"),
+                ArgumentRequirement.ofValue("version"))) return;
         int count = 0;
         if (arguments.contains("install")) count++;
         if (arguments.contains("info")) count++;
@@ -187,7 +190,7 @@ public class ModpackFunction implements Function {
             String modpackName = mod.optString("name");
             if (todo == 0) {
                 int modId = mod.optInt("id");
-                String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, null);
+                String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
                 if (isEmpty(modpackDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
                 if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
@@ -211,7 +214,7 @@ public class ModpackFunction implements Function {
             String modName = result.modName, modID = result.modID;
 
             if (todo == 0) {
-                String modDownloadLink = mr.getDownloadLink(modID, modName, null);
+                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
                 if (isEmpty(modDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
                 if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(

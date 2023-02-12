@@ -606,14 +606,22 @@ public class English implements Language {
                         "  Note: <source> can input cf or curseforge (CurseForge), mr or modrinth (Modrinth).\n" +
                         "  Options:\n" +
                         "   --url=<mod url> Download mod from Internet\n" +
-                        "   --install [--source=<source>] -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
+                        "   --install\n" +
+                        "      [--source=<source>]\n" +
+                        "      -n, --name=<mod name>|--id=<mod ID>\n" +
+                        "      [--limit=<limit the number of search results>]\n" +
+                        "      [--game-version=<game version>]\n" +
+                        "      [-v, --version=<mod version>]\n" +
                         "     Search and install mod by mod name or ID. When searching by mod name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.\n" +
                         "        cmcl mod --install -nMinis --limit=30\n" +
                         "        cmcl mod --install --source=curseforge --id=297344\n" +
                         "        cmcl mod --install --name=Sodium --limit=30\n" +
                         "        cmcl mod --install --source=mr --id=GBeCx05I\n" +
-                        "   --info [--source=<source>] -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
+                        "   --info\n" +
+                        "      [--source=<source>]\n" +
+                        "      -n, --name=<mod name>|--id=<mod ID>\n" +
+                        "      [--limit=<limit the number of search results>]\n" +
                         "     Search and display mod information by mod name or ID. When searching by mod name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.");
         enHelp.put("modpack",
@@ -625,7 +633,14 @@ public class English implements Language {
                         "  Options:\n" +
                         "   --url=<modpack url> [--storage=<version storage name>]   Download and install modpack from Internet\n" +
                         "   --file=<modpack path> [--storage=<version storage name>] Install local modpack\n" +
-                        "   --install [--source=<source>] -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>] [--storage=<version storage name>] [-k, --keep-file]\n" +
+                        "   --install\n" +
+                        "      [--source=<source>]\n" +
+                        "      -n, --name=<modpack name>|--id=<modpack ID>\n" +
+                        "      [--limit=<limit the number of search results>]\n" +
+                        "      [--storage=<version storage name>]\n" +
+                        "      [-k, --keep-file]\n" +
+                        "      [--game-version=<game version>]\n" +
+                        "      [-v, --version=<modpack version>]\n" +
                         "     Search and install modpack by modpack name or ID. When searching by modpack name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.\n" +
                         "     Adding -k or --keep-file means to keep the file (in directory .cmcl/modpacks) after installation.\n" +
@@ -633,7 +648,10 @@ public class English implements Language {
                         "        cmcl modpack --install --source=curseforge --id=285109\n" +
                         "        cmcl modpack --install --name=\"Sugar Optimization\" --limit=30 --storage NewModpack\n" +
                         "        cmcl modpack --install --source=mr --id=BYN9yKrV\n" +
-                        "   --info [--source=<source>] -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>]\n" +
+                        "   --info\n" +
+                        "      [--source=<source>]\n" +
+                        "      -n, --name=<modpack name>|--id=<modpack ID>\n" +
+                        "      [--limit=<limit the number of search results>]\n" +
                         "     Search and display modpack information by modpack name or ID. When searching by modpack name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.");
         return enHelp;

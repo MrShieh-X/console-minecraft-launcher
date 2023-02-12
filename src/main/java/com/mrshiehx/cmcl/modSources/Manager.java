@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public abstract class Manager<Section> {
     public abstract Section getSection();
 
-    public abstract String getDownloadLink(String modId, String modName, @Nullable String mcversion);
+    public abstract String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion);
 
     protected abstract String getNameAllLowerCase();
 

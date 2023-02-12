@@ -19,6 +19,7 @@
 package com.mrshiehx.cmcl.modSources.curseforge;
 
 import com.mrshiehx.cmcl.CMCL;
+import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.modSources.Manager;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -36,6 +37,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
@@ -51,7 +53,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
 
     protected abstract String getNameFirstUpperCase();
 
-    public String getDownloadLink(String modId, String modName, @Nullable String mcversion) {
+    public String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             JSONObject jsonObject = new JSONObject(NetworkUtils.curseForgeGet(GET_ADDON_INFORMATION + modId + "/files?pageSize=10000"));
@@ -174,18 +176,34 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
             System.out.println(getString("CF_NO_VERSION_FOR_GAME_VERSION", getNameAllLowerCase()));
             return null;
         }
-        AnsiConsole.systemInstall();
-        for (int i = versions.size() - 1; i >= 0; i--) {
-            System.out.print(Ansi.ansi().fg(Ansi.Color.WHITE).a("[") + "" + Ansi.ansi().fg(Ansi.Color.CYAN).a(i + 1) + Ansi.ansi().fg(Ansi.Color.WHITE).a("]" + (versions.get(i).optString("fileName")) + "\n"));
+
+
+        JSONObject targetFile = null;
+        if (!isEmpty(addonVersion)) {
+            List<JSONObject> matches = versions.stream().filter(mod -> {
+                String fileName = mod.optString("fileName");
+                return fileName.contains(addonVersion);
+            }).collect(Collectors.toList());
+            if (matches.size() == 1) {
+                targetFile = matches.get(0);
+            }
         }
-        AnsiConsole.systemUninstall();
 
-        int modVersionOfSingleMcVersion = ConsoleUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
+        if (targetFile == null) {
+            AnsiConsole.systemInstall();
+            for (int i = versions.size() - 1; i >= 0; i--) {
+                System.out.print(Ansi.ansi().fg(Ansi.Color.WHITE).a("[") + "" + Ansi.ansi().fg(Ansi.Color.CYAN).a(i + 1) + Ansi.ansi().fg(Ansi.Color.WHITE).a("]" + (versions.get(i).optString("fileName")) + "\n"));
+            }
+            AnsiConsole.systemUninstall();
 
-        if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
-            return null;
+            int modVersionOfSingleMcVersion = ConsoleUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
 
-        JSONObject targetFile = versions.get(modVersionOfSingleMcVersion - 1);
+            if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
+                return null;
+
+            targetFile = versions.get(modVersionOfSingleMcVersion - 1);
+        }
+
 
         JSONArray jsonArray = targetFile.optJSONArray("dependencies");
         if (jsonArray != null && jsonArray.length() > 0) {

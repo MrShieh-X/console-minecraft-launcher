@@ -39,6 +39,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
@@ -274,7 +275,7 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
         return mod;
     }
 
-    public String getDownloadLink(String modID, String modName, @Nullable String mcversion) {
+    public String getDownloadLink(String modID, String modName, @Nullable String mcversion, @Nullable String addonVersion) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             modAllVersionsJsonArrayFather = new JSONArray(NetworkUtils.get(ROOT + "project/" + modID + "/version"));
@@ -370,20 +371,32 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             System.out.print(',');
         }
         System.out.print("\b]");*/
-        AnsiConsole.systemInstall();
-        for (int i = versions.size() - 1; i >= 0; i--) {
-            System.out.print(Ansi.ansi().fg(Ansi.Color.WHITE).a("[") + "" + Ansi.ansi().fg(Ansi.Color.CYAN).a(i + 1) + Ansi.ansi().fg(Ansi.Color.WHITE).a("]" + (versions.get(i).getKey().optString("filename")) + "\n"));
+        Pair<JSONObject, JSONObject> targetFile = null;
+        if (!isEmpty(addonVersion)) {
+            List<Pair<JSONObject, JSONObject>> matches = versions.stream().filter(pair -> {
+                String version_number = pair.getValue().optString("version_number");
+                return version_number.contains(addonVersion);
+            }).collect(Collectors.toList());
+            if (matches.size() == 1) {
+                targetFile = matches.get(0);
+            }
         }
-        AnsiConsole.systemUninstall();
+
+        if (targetFile == null) {
+            AnsiConsole.systemInstall();
+            for (int i = versions.size() - 1; i >= 0; i--) {
+                System.out.print(Ansi.ansi().fg(Ansi.Color.WHITE).a("[") + "" + Ansi.ansi().fg(Ansi.Color.CYAN).a(i + 1) + Ansi.ansi().fg(Ansi.Color.WHITE).a("]" + (versions.get(i).getKey().optString("filename")) + "\n"));
+            }
+            AnsiConsole.systemUninstall();
 
 
-        int modVersionOfSingleMcVersion = ConsoleUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
+            int modVersionOfSingleMcVersion = ConsoleUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
 
-        if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
-            return null;
+            if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
+                return null;
 
-        Pair<JSONObject, JSONObject> targetFile = versions.get(modVersionOfSingleMcVersion - 1);
-
+            targetFile = versions.get(modVersionOfSingleMcVersion - 1);
+        }
 
         //System.out.println(targetFile.getValue());
         JSONArray jsonArray = targetFile.getValue().optJSONArray("dependencies");

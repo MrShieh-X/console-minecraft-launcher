@@ -51,7 +51,10 @@ public class ModFunction implements Function {
                 ArgumentRequirement.ofValue("name"),
                 ArgumentRequirement.ofValue("id"),
                 ArgumentRequirement.ofValue("limit"),
-                ArgumentRequirement.ofValue("url"))) return;
+                ArgumentRequirement.ofValue("url"),
+                ArgumentRequirement.ofValue("game-version"),
+                ArgumentRequirement.ofValue("v"),
+                ArgumentRequirement.ofValue("version"))) return;
         int count = 0;
         if (arguments.contains("install")) count++;
         if (arguments.contains("info")) count++;
@@ -134,7 +137,7 @@ public class ModFunction implements Function {
             String modName = mod.optString("name");
             if (todo == 0) {
                 int modId = mod.optInt("id");
-                String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, null);
+                String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
             } else if (todo == 1) {
@@ -148,7 +151,7 @@ public class ModFunction implements Function {
             String modName = result.modName, modID = result.modID;
 
             if (todo == 0) {
-                String modDownloadLink = mr.getDownloadLink(modID, modName, null);
+                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
             } else if (todo == 1) {
