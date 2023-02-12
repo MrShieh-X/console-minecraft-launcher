@@ -1,5 +1,19 @@
 # 更新日志
-目前的最新版本为2.0.1，发布日期是2023年1月20日。
+目前的最新版本为2.1，发布日期是2023年2月12日。
+
+## 2.1（2023年2月12日）
+- 优化了启动器的启动速度。
+- 与版本相关的操作（version）后面可以不接版本以操作已选择版本，如`cmcl version --fabric --api`。
+- 可通过`version [<版本>] --isolate`与`version [<版本>] --unset-isolate`设置与取消设置版本隔离。
+- 可通过`version [<版本>] -p`或`version [<版本>] --print-command`打印版本的启动命令。
+- 可通过`version [<版本>] --export-script=<脚本文件>`导出启动脚本，通过`version [<版本>] --export-script-ps=<脚本文件>`导出 PowerShell 格式的启动脚本。
+- 原打印启动命令的选项`-p`与`--print`后面可不加上版本，意为打印已选择版本的启动命令。
+### 由 [Jaffe2718](https://github.com/Jaffe2718) 于 [Issue#25](https://github.com/MrShieh-X/console-minecraft-launcher/issues/25) 提出的新特性
+- 帮助文档更加整洁。
+- 将会自动安装前置模组。
+- 安装模组与整合包时可以不指定下载源，首次下载时会询问并保存到本地供下次使用。
+- 可通过`cmcl mod --url=<模组地址>`与`cmcl modpack --url=<整合包地址> [--storage=<版本存储名称>]`从互联网下载模组、下载与安装整合包。
+- 安装模组与整合包时，可通过`--game-version=<游戏版本>`指定游戏版本，通过`-v, --version=<模组版本>`指定模组或整合包的版本。因 CurseForge 中某些模组或整合包的版本名称不存在于文件名中，所以对于他们，并不能正确地找到相应的模组或整合包，此功能可能会无济于事，甚至会匹配错误。
 
 ## 2.0.1（2023年1月20日）
 - 修复了一些问题。

@@ -1,5 +1,19 @@
 # Update Logs
-Currently, the latest version is 2.0.1, which was updated on January 20, 2023.
+Currently, the latest version is 2.1, which was updated on February 12, 2023.
+
+## 2.1 (Feb. 12, 2023)
+- Optimized the startup speed of the launcher.
+- Version-related operations (version) may not be followed by the version to operate the selected version, such as `cmcl version --fabric --api`.
+- Version isolation can be set and unset via `version [<version>] --isolate` and `version [<version>] --unset-isolate`.
+- The startup command of the version can be printed by `version [<version>] -p` or `version [<version>] --print-command`.
+- You can export the startup script via `version [<version>] --export-script=<script file>`, or `version [<version>] --export-script-ps=<script file>` in PowerShell format.
+- The original startup command printing options `-p` and `--print` can not be followed by the version, which means to print the startup command of the selected version.
+### New features proposed by [Jaffe2718](https://github.com/Jaffe2718) on [Issue#25](https://github.com/MrShieh-X/console-minecraft-launcher/issues/25)
+- Cleaner help documentation.
+- Will automatically install mod dependencies.
+- You can not specify the download source when installing mods and modpacks. When you download for the first time, you will be asked and saved locally for next use.
+- You can download mods, download and install modpacks from the Internet through `cmcl mod --url=<mod url>` and `cmcl modpack --url=<modpack url> [--storage=<version storage name>]`.
+- When installing mods and modpacks, you can use `--game-version=<game version>` to specify the game version, and `-v, --version=<mod version>` to specify the mod or modpack version. For some mods or modpacks in CurseForge whose version name does not exist in the filename, so for them, the corresponding mod or modpack cannot be found correctly, this function may not help, or even match wrongly.
 
 ## 2.0.1 (Jan. 20, 2023)
 - Fixed some issues.
