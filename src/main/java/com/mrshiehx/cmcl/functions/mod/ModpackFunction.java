@@ -67,11 +67,13 @@ public class ModpackFunction implements Function {
                 ArgumentRequirement.ofValue("id"),
                 ArgumentRequirement.ofValue("limit"),
                 ArgumentRequirement.ofValue("t"),
-                ArgumentRequirement.ofValue("thread"))) return;
+                ArgumentRequirement.ofValue("thread"),
+                ArgumentRequirement.ofValue("url"))) return;
         int count = 0;
         if (arguments.contains("install")) count++;
         if (arguments.contains("info")) count++;
         if (arguments.contains("file")) count++;
+        if (arguments.contains("url")) count++;
 
         if (count == 0) {
             System.out.println(getString("MODPACK_CONTAINS_NOTHING"));
@@ -85,6 +87,7 @@ public class ModpackFunction implements Function {
         if (arguments.contains("install")) todo = 0;
         else if (arguments.contains("info")) todo = 1;
         else if (arguments.contains("file")) todo = 2;
+        else if (arguments.contains("url")) todo = 3;
 
         if (todo == 2) {
             File modpack = new File(arguments.opt("file"));
@@ -110,6 +113,20 @@ public class ModpackFunction implements Function {
                 System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
                 FileUtils.deleteDirectory(versionDir);
             }
+            return;
+        } else if (todo == 3) {
+            String url = arguments.opt("url");
+            String versionStorageName = arguments.opt("storage");
+            if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
+                    getString("MESSAGE_INPUT_VERSION_NAME"),
+                    getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"),
+                    string -> !isEmpty(string) && !VersionUtils.versionExists(string));
+            if (isEmpty(versionStorageName)) return;
+            if (VersionUtils.versionExists(versionStorageName)) {
+                System.out.println(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS", versionStorageName));
+                return;
+            }
+            downloadModpackWithInstalling(versionStorageName, url, arguments, -1);
             return;
         }
 
@@ -177,14 +194,13 @@ public class ModpackFunction implements Function {
                         getString("MESSAGE_INPUT_VERSION_NAME"),
                         getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"),
                         string -> !isEmpty(string) && !VersionUtils.versionExists(string));
-                if (isEmpty(versionStorageName))
-                    return;
+                if (isEmpty(versionStorageName)) return;
                 if (VersionUtils.versionExists(versionStorageName)) {
                     System.out.println(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS", versionStorageName));
                     return;
                 }
-                downloadModpack(versionStorageName, modpackDownloadLink, arguments, source);
-            } else {
+                downloadModpackWithInstalling(versionStorageName, modpackDownloadLink, arguments, source);
+            } else if (todo == 1) {
                 cf.printInformation(mod, modpackName);
             }
         } else {
@@ -207,8 +223,8 @@ public class ModpackFunction implements Function {
                     System.out.println(getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS", versionStorageName));
                     return;
                 }
-                downloadModpack(versionStorageName, modDownloadLink, arguments, source);
-            } else {
+                downloadModpackWithInstalling(versionStorageName, modDownloadLink, arguments, source);
+            } else if (todo == 1) {
                 mr.printInformation(mod, modByID, null, null);
             }
         }
@@ -257,10 +273,11 @@ public class ModpackFunction implements Function {
     }
 
 
-    private static void downloadModpack(String versionName, String modDownloadLink, Arguments arguments, int source) {
+    private static void downloadModpackWithInstalling(String versionName, String modDownloadLink, Arguments arguments, int source) {
         File modpacks = new File(".cmcl", "modpacks");
         modpacks.mkdirs();
         String fileName = modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1);
+        if (Utils.isEmpty(fileName)) fileName = System.currentTimeMillis() + ".zip";
         File modpackFile = new File(modpacks, fileName);
         if (modpackFile.exists()) {
             File file = askStorage(modpackFile);
@@ -283,18 +300,23 @@ public class ModpackFunction implements Function {
         File versionDir = new File(versionsDir, versionName);
 
         try (ZipFile zipFile = new ZipFile(modpackFile)) {
-            ZipEntry entry = zipFile.getEntry(source == 0 ? "manifest.json" : "modrinth.index.json");
-            //FileUtils.inputStream2File(zipFile.getInputStream(entry),new File(versionDir,"modpack.json"));
-            JSONObject manifest = new XJSONObject(Utils.inputStream2String(zipFile.getInputStream(entry)));
-            if (source == 0)
-                CurseForgeModpackInstaller.installCurseForgeModpack(manifest, zipFile, modpackFile, versionDir, arguments.contains("k") || arguments.contains("keep-file"), !arguments.contains("no-assets"), !arguments.contains("no-natives"), !arguments.contains("no-libraries"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
-            else
-                ModrinthModpackInstaller.installModrinthModpack(manifest, zipFile, modpackFile, versionDir, arguments.contains("k") || arguments.contains("keep-file"), !arguments.contains("no-assets"), !arguments.contains("no-natives"), !arguments.contains("no-libraries"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+            if (source == 0 || source == 1) {
+                ZipEntry entry = zipFile.getEntry(source == 0 ? "manifest.json" : "modrinth.index.json");
+                //FileUtils.inputStream2File(zipFile.getInputStream(entry),new File(versionDir,"modpack.json"));
+                JSONObject manifest = new XJSONObject(Utils.inputStream2String(zipFile.getInputStream(entry)));
+                if (source == 0)
+                    CurseForgeModpackInstaller.installCurseForgeModpack(manifest, zipFile, modpackFile, versionDir, arguments.contains("k") || arguments.contains("keep-file"), !arguments.contains("no-assets"), !arguments.contains("no-natives"), !arguments.contains("no-libraries"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+                else
+                    ModrinthModpackInstaller.installModrinthModpack(manifest, zipFile, modpackFile, versionDir, arguments.contains("k") || arguments.contains("keep-file"), !arguments.contains("no-assets"), !arguments.contains("no-natives"), !arguments.contains("no-libraries"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+            } else {
+                installModpack(zipFile, modpackFile, versionDir, true, !arguments.contains("no-assets"), !arguments.contains("no-natives"), !arguments.contains("no-libraries"), threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT);
+            }
         } catch (Exception e) {
             System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e));
             FileUtils.deleteDirectory(versionDir);
         }
     }
+
 
     public static class NotValidModPackFormat extends Exception {
         public NotValidModPackFormat(String message) {

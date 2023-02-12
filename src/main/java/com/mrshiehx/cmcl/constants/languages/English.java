@@ -399,19 +399,19 @@ public class English implements Language {
         en.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "The target game component is not a ${NAME}, the category ID of this component is %d.");
         en.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "The target game component is not a ${NAME}, the component is a ${TARGET}.");
         en.put("MOD_FAILED_TO_GET_ALL_FILES", "Failed to get list of ${NAME} files: %s");
-        en.put("MOD_CONTAINS_BOTH", "--install and --info cannot exist at the same time.");
-        en.put("MOD_CONTAINS_BOTH_NOT", "Must specify --install or --info.");
         en.put("MOD_UNKNOWN_SOURCE", "%s: Unknown download source. Use option -h or --help for more information.");
         en.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n or --name and --id cannot exist at the same time.");
         en.put("MOD_CONTAINS_BOTH_NOT_NAME_AND_ID", "Must specify -n or --name or --id. Use option -h or --help for more information.");
         en.put("MOD_SEARCH_LIMIT_GREATER_THAN_FIFTY", "If the download source is CurseForge, the maximum limit is 50.");
         en.put("MOD_ID_LIMIT_COEXIST", "You don't need the search function of -n or --name, how can you use --limit to limit the search results?");
+        en.put("MOD_CONTAINS_NOTHING", "Must specify --install, --info or --url.");
+        en.put("MOD_CONTAINS_TWO_OR_MORE", "Only one of --install, --info or --url can exist.");
         en.put("NO_SEARCH_RESULTS", "No search results.");
         en.put("DOWNLOAD_SOURCE_OFFICIAL", "Official");
         en.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
         en.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS");
-        en.put("MODPACK_CONTAINS_TWO_OR_MORE", "Only one of --install, --info or --file can exist.");
-        en.put("MODPACK_CONTAINS_NOTHING", "Must specify --install, --info or --file.");
+        en.put("MODPACK_CONTAINS_TWO_OR_MORE", "Only one of --install, --info, --file or --url can exist.");
+        en.put("MODPACK_CONTAINS_NOTHING", "Must specify --install, --info, --file or --url.");
         return en;
     }
 
@@ -605,6 +605,7 @@ public class English implements Language {
                         "  Function Name: mod\n" +
                         "  Note: <source> can input cf or curseforge (CurseForge), mr or modrinth (Modrinth).\n" +
                         "  Options:\n" +
+                        "   --url=<mod url> Download mod from Internet\n" +
                         "   --install [--source=<source>] -n, --name=<mod name>|--id=<mod ID> [--limit=<limit the number of search results>]\n" +
                         "     Search and install mod by mod name or ID. When searching by mod name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.\n" +
@@ -622,7 +623,8 @@ public class English implements Language {
                         "        -t, --thread=<thread count>, --no-assets, --no-libraries and --no-natives are also supported when installing the modpack.\n" +
                         "        For their functions, please refer to the help documentation of \"Install Version\"(install).\n" +
                         "  Options:\n" +
-                        "   --file=<modpack path> [--storage=<version storage name>]: Install local modpack\n" +
+                        "   --url=<modpack url> [--storage=<version storage name>]   Download and install modpack from Internet\n" +
+                        "   --file=<modpack path> [--storage=<version storage name>] Install local modpack\n" +
                         "   --install [--source=<source>] -n, --name=<modpack name>|--id=<modpack ID> [--limit=<limit the number of search results>] [--storage=<version storage name>] [-k, --keep-file]\n" +
                         "     Search and install modpack by modpack name or ID. When searching by modpack name, the number\n" +
                         "     of results defaults to 50, it can be restricted. If <source> is CurseForge, the limit is 50 at most.\n" +

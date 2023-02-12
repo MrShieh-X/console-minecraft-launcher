@@ -400,19 +400,19 @@ public class SimplifiedChinese implements Language {
         zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标游戏组件不是一个${NAME}，该组件的类别ID为%d。");
         zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "目标游戏组件不是一个${NAME}，该游戏组件是一个${TARGET}。");
         zh.put("MOD_FAILED_TO_GET_ALL_FILES", "获得${NAME}文件列表失败：%s");
-        zh.put("MOD_CONTAINS_BOTH", "--install 和 --info 不能同时存在。");
-        zh.put("MOD_CONTAINS_BOTH_NOT", "必须指定 --install 或 --info。");
         zh.put("MOD_UNKNOWN_SOURCE", "%s：未知下载源。使用选项 -h 或 --help 以获取更多信息。");
         zh.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n 或 --name 与 --id 不能同时存在。");
         zh.put("MOD_CONTAINS_BOTH_NOT_NAME_AND_ID", "必须指定 -n 或 --name 或 --id。使用选项 -h 或 --help 以获取更多信息。");
         zh.put("MOD_SEARCH_LIMIT_GREATER_THAN_FIFTY", "如果下载源为 CurseForge，限制数量最大为50。");
         zh.put("MOD_ID_LIMIT_COEXIST", "都不用-n或者--name的搜索功能咯，还怎么用--limit限制搜索结果嘞？");
+        zh.put("MOD_CONTAINS_NOTHING", "必须指定 --install、--info 或 --url。");
+        zh.put("MOD_CONTAINS_TWO_OR_MORE", "--install、--info 或 --url 只能存在一个。");
         zh.put("NO_SEARCH_RESULTS", "无任何搜索结果。");
         zh.put("DOWNLOAD_SOURCE_OFFICIAL", "官方");
         zh.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
         zh.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS 我的世界中文论坛（中国大陆用户推荐）");
-        zh.put("MODPACK_CONTAINS_TWO_OR_MORE", "--install、--info 或 --file 只能存在一个。");
-        zh.put("MODPACK_CONTAINS_NOTHING", "必须指定 --install、--info 或 --file。");
+        zh.put("MODPACK_CONTAINS_TWO_OR_MORE", "--install、--info、--file 或 --url 只能存在一个。");
+        zh.put("MODPACK_CONTAINS_NOTHING", "必须指定 --install、--info、--file 或 --url。");
         return zh;
     }
 
@@ -592,6 +592,7 @@ public class SimplifiedChinese implements Language {
                         "  功能名：mod\n" +
                         "  注：<下载源>可输入cf或curseforge（CurseForge）、mr或modrinth（Modrinth）。\n" +
                         "  选项：\n" +
+                        "   --url=<模组地址> 从互联网下载模组\n" +
                         "   --install [--source=<下载源>] -n, --name=<模组名称>|--id=<模组ID> [--limit=<限制搜索结果数量>]\n" +
                         "     通过模组名称或ID搜索并安装模组。通过模组名称搜索时，结果数量默认为50，\n" +
                         "     可以对其进行限制。若<下载源>为 CurseForge，限制数量最大为50。\n" +
@@ -609,7 +610,8 @@ public class SimplifiedChinese implements Language {
                         "      安装整合包时也支持-t, --thread=<线程数>、--no-assets、--no-libraries与--no-natives，\n" +
                         "      它们的作用请查看“安装版本”（install）的帮助文档。\n" +
                         "  选项：\n" +
-                        "   --file=<整合包路径> [--storage=<存储的版本名称>]：安装本地整合包\n" +
+                        "   --url=<整合包地址> [--storage=<存储的版本名称>]  从互联网下载并安装整合包\n" +
+                        "   --file=<整合包路径> [--storage=<存储的版本名称>] 安装本地整合包\n" +
                         "   --install [--source=<下载源>] -n, --name=<整合包名称>|--id=<整合包ID> [--limit=<限制搜索结果数量>] [--storage=<存储的版本名称>] [-k, --keep-file]\n" +
                         "     通过整合包名称或ID搜索并安装整合包。通过整合包名称搜索时，结果数量默认为50，可以对其进行限制。\n" +
                         "     若<下载源>为 CurseForge，限制数量最大为50。加上-k 或 --keep-file 意为安装后保留文件（在目录 .cmcl/modpacks）。\n" +

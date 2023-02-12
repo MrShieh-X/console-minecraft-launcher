@@ -218,7 +218,6 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("INSTALL_COEXIST", "%1$s 同 %2$s 唔可用共存。请使用选项 -h 或 --help 嚟获取帮助文档。");
         cantonese.put("INSTALL_FABRIC_API_WITHOUT_FABRIC", "唔装 Fabric，点装 Fabric API 呢？");
         cantonese.put("VERSION_COMPLETE_LIBRARIES_NO_NEED_TO", "冇缺少嘅依赖库需要补全。");
-        cantonese.put("MOD_CONTAINS_BOTH", "--install 同 --info 唔可以同时存在。");
         cantonese.put("MOD_UNKNOWN_SOURCE", "%s：未知下载源。用选项 -h 或 --help 嚟获取更多信息。");
         cantonese.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n 或 --name 同 --id 唔可以同时存在。");
         cantonese.put("MOD_CONTAINS_BOTH_NOT_NAME_AND_ID", "必须指定 -n 或 --name 或 --id。用选项 -h 或 --help 嚟获取更多信息。");

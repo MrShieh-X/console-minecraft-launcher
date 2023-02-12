@@ -50,15 +50,31 @@ public class ModFunction implements Function {
                 ArgumentRequirement.ofValue("n"),
                 ArgumentRequirement.ofValue("name"),
                 ArgumentRequirement.ofValue("id"),
-                ArgumentRequirement.ofValue("limit"))) return;
-        if (arguments.contains("install") && arguments.contains("info")) {
-            System.out.println(getString("MOD_CONTAINS_BOTH"));
+                ArgumentRequirement.ofValue("limit"),
+                ArgumentRequirement.ofValue("url"))) return;
+        int count = 0;
+        if (arguments.contains("install")) count++;
+        if (arguments.contains("info")) count++;
+        if (arguments.contains("url")) count++;
+
+        if (count == 0) {
+            System.out.println(getString("MOD_CONTAINS_NOTHING"));
             return;
-        } else if (!arguments.contains("install") && !arguments.contains("info")) {
-            System.out.println(getString("MOD_CONTAINS_BOTH_NOT"));
+        } else if (count > 1) {
+            System.out.println(getString("MOD_CONTAINS_TWO_OR_MORE"));
             return;
         }
-        int todo = arguments.contains("install") ? 0 : 1;
+
+
+        int todo = -1;
+        if (arguments.contains("install")) todo = 0;
+        else if (arguments.contains("info")) todo = 1;
+        else if (arguments.contains("url")) todo = 3;
+
+        if (todo == 3) {
+            downloadMod(arguments.opt("url"));
+            return;
+        }
 
         String sourceStr = arguments.opt("source");
 
@@ -121,7 +137,7 @@ public class ModFunction implements Function {
                 String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, null);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
-            } else {
+            } else if (todo == 1) {
                 cf.printInformation(mod, modName);
             }
         } else {
@@ -135,7 +151,7 @@ public class ModFunction implements Function {
                 String modDownloadLink = mr.getDownloadLink(modID, modName, null);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
-            } else {
+            } else if (todo == 1) {
                 mr.printInformation(mod, modByID, null, null);
             }
         }
@@ -166,6 +182,7 @@ public class ModFunction implements Function {
         File mods = new File(CMCL.gameDir, "mods");
         mods.mkdirs();
         String fileName = modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1);
+        if (Utils.isEmpty(fileName)) fileName = System.currentTimeMillis() + ".jar";
         File modFile = new File(mods, fileName);
         if (modFile.exists()) {
             File file = askStorage(modFile);
