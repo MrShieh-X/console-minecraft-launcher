@@ -183,7 +183,7 @@ public class InstallFunction implements Function {
                                 Utils.saveConfig(Utils.getConfig().put("selectedVersion", storage));
                             }
                             if (installFabric && arguments.contains("api")) {
-                                String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", version.replace(" Pre-Release ", "-pre"), null);
+                                String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", version.replace(" Pre-Release ", "-pre"), null, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
                                 if (!isEmpty(url)) {
                                     ModFunction.downloadMod(url);
                                 }

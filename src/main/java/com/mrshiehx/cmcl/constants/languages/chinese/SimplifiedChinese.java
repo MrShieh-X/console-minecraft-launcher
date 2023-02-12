@@ -389,7 +389,7 @@ public class SimplifiedChinese implements Language {
         zh.put("CF_INFORMATION_AUTHOR_URL", "         主页：");
         zh.put("CF_GET_BY_ID_FAILED", "无法获得目标${NAME}：%s\n出现该错误有可能的原因：\n1.目标${NAME}不存在\n2.网络异常\n3.服务器出现问题");
         zh.put("CF_GET_BY_ID_NOT_OF_MC", "目标游戏组件不是 Minecraft 的${NAME}，该组件的游戏ID为%d。");
-        zh.put("CF_DEPENDENCIES_TIP", "此${NAME}需要以下前置${NAME}才能正常运行，请在安装完此${NAME}之后安装以下前置${NAME}。");
+        zh.put("CF_DEPENDENCIES_TIP", "此${NAME}需要以下前置${NAME}才能正常运行，将会先安装以下前置${NAME}。");
         zh.put("CF_DEPENDENCY_INFORMATION_ID", "   ID：  %d");
         zh.put("CF_DEPENDENCY_INFORMATION_ID_STRING", "   ID：  %s");
         zh.put("CF_DEPENDENCY_INFORMATION_NAME", "   名称：%s");

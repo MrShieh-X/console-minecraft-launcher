@@ -40,6 +40,8 @@ import com.mrshiehx.cmcl.utils.json.XJSONObject;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Scanner;
@@ -138,7 +140,7 @@ public class ModpackFunction implements Function {
         if (isEmpty(sourceStr)) {
             JSONObject config = getConfig();
             sourceStr = config.optString("modpackDownloadSource");
-            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth")) {
+            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth") && !sourceStr.equalsIgnoreCase("cf") && !sourceStr.equalsIgnoreCase("mr")) {
                 sourceStr = ConsoleUtils.inputStringInFilter(getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR"), getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN"), string -> "curseforge".equalsIgnoreCase(string) || "modrinth".equalsIgnoreCase(string));
                 if (sourceStr != null) {
                     Utils.saveConfig(config.put("modpackDownloadSource", sourceStr));
@@ -190,7 +192,7 @@ public class ModpackFunction implements Function {
             String modpackName = mod.optString("name");
             if (todo == 0) {
                 int modId = mod.optInt("id");
-                String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
+                String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), (x, y, z) -> {/*don't know what to do*/});
                 if (isEmpty(modpackDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
                 if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
@@ -214,7 +216,7 @@ public class ModpackFunction implements Function {
             String modName = result.modName, modID = result.modID;
 
             if (todo == 0) {
-                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
+                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), (x, y, z) -> {/*don't know what to do*/});
                 if (isEmpty(modDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
                 if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
@@ -279,7 +281,12 @@ public class ModpackFunction implements Function {
     private static void downloadModpackWithInstalling(String versionName, String modDownloadLink, Arguments arguments, int source) {
         File modpacks = new File(".cmcl", "modpacks");
         modpacks.mkdirs();
-        String fileName = modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1);
+        String fileName;
+        try {
+            fileName = URLDecoder.decode(modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         if (Utils.isEmpty(fileName)) fileName = System.currentTimeMillis() + ".zip";
         File modpackFile = new File(modpacks, fileName);
         if (modpackFile.exists()) {

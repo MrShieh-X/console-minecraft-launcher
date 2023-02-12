@@ -19,7 +19,6 @@
 package com.mrshiehx.cmcl.modSources.curseforge;
 
 import com.mrshiehx.cmcl.CMCL;
-import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.modSources.Manager;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -53,7 +52,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
 
     protected abstract String getNameFirstUpperCase();
 
-    public String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion) {
+    public String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion, Manager.DependencyInstaller dependencyInstaller) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             JSONObject jsonObject = new JSONObject(NetworkUtils.curseForgeGet(GET_ADDON_INFORMATION + modId + "/files?pageSize=10000"));
@@ -144,6 +143,13 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
                     }
                 }
             });
+
+            if (isEmpty(modName)) {
+                try {
+                    modName = new JSONObject(NetworkUtils.curseForgeGet(GET_ADDON_INFORMATION + modId)).optJSONObject("data").optString("name");
+                } catch (Exception ignore) {
+                }
+            }
 
             System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
 
@@ -242,7 +248,9 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
                     System.out.println(stringBuilder);//legal
                     i++;
                 }
-                System.out.println();
+                for (Map.Entry<Integer, String> entry : list.entrySet()) {
+                    dependencyInstaller.install(modSupportMinecraftVersion, entry.getValue(), String.valueOf(entry.getKey()));
+                }
             }
         }
         return targetFile.optString("downloadUrl");

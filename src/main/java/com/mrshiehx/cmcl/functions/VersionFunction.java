@@ -344,7 +344,7 @@ public class VersionFunction implements Function {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver, null);
+            String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver, null, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
             if (!isEmpty(url)) {
                 ModFunction.downloadMod(url);
             }

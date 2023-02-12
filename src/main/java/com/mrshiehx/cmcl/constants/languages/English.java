@@ -388,7 +388,7 @@ public class English implements Language {
         en.put("CF_INFORMATION_AUTHOR_URL", "         Homepage: ");
         en.put("CF_GET_BY_ID_FAILED", "Unable to get target ${NAME}: %s\nPossible reasons for this error:\n1. The target ${NAME} does not exist\n2. Network exception\n3. There is a problem with the server");
         en.put("CF_GET_BY_ID_NOT_OF_MC", "The target add-on is not a Minecraft ${NAME}, the game ID of the add-on is %d.");
-        en.put("CF_DEPENDENCIES_TIP", "This ${NAME} requires the following pre-${NAME}s to work properly, please install the following pre-${NAME}s after installing this ${NAME}.");
+        en.put("CF_DEPENDENCIES_TIP", "This ${NAME} requires the following pre-${NAME}s to work properly, will install the following pre-${NAME}s first.");
         en.put("CF_DEPENDENCY_INFORMATION_ID", "   ID:   %d");
         en.put("CF_DEPENDENCY_INFORMATION_ID_STRING", "   ID:   %s");
         en.put("CF_DEPENDENCY_INFORMATION_NAME", "   Name: %s");

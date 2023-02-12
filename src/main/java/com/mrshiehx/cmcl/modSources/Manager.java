@@ -24,9 +24,13 @@ import org.json.JSONObject;
 public abstract class Manager<Section> {
     public abstract Section getSection();
 
-    public abstract String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion);
+    public abstract String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion, DependencyInstaller dependencyInstaller);
 
     protected abstract String getNameAllLowerCase();
 
     public abstract JSONObject search(String searchContent, int limit);
+
+    public interface DependencyInstaller {
+        void install(String mcVersion, String name, String id);
+    }
 }

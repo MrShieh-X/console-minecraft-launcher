@@ -23,8 +23,10 @@ import com.mrshiehx.cmcl.bean.arguments.ArgumentRequirement;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.functions.Function;
+import com.mrshiehx.cmcl.modSources.Manager;
 import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeManager;
 import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeModManager;
+import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeModpackManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -34,6 +36,8 @@ import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Scanner;
@@ -41,6 +45,19 @@ import java.util.Scanner;
 import static com.mrshiehx.cmcl.CMCL.*;
 
 public class ModFunction implements Function {
+    public final static Manager.DependencyInstaller MOD_CF_DEPENDENCY_INSTALLER = new Manager.DependencyInstaller() {
+        @Override
+        public void install(String mcVersion, String name, String id) {
+            downloadMod(new CurseForgeModpackManager().getDownloadLink(id, name, mcVersion, null, MOD_CF_DEPENDENCY_INSTALLER));
+        }
+    };
+    public final static Manager.DependencyInstaller MOD_MR_DEPENDENCY_INSTALLER = new Manager.DependencyInstaller() {
+        @Override
+        public void install(String mcVersion, String name, String id) {
+            downloadMod(new ModrinthModManager().getDownloadLink(id, name, mcVersion, null, MOD_MR_DEPENDENCY_INSTALLER));
+        }
+    };
+
     @Override
     public void execute(Arguments arguments) {
         if (!Function.checkArgs(arguments, 2, 1,
@@ -84,7 +101,7 @@ public class ModFunction implements Function {
         if (isEmpty(sourceStr)) {
             JSONObject config = getConfig();
             sourceStr = config.optString("modDownloadSource");
-            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth")) {
+            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth") && !sourceStr.equalsIgnoreCase("cf") && !sourceStr.equalsIgnoreCase("mr")) {
                 sourceStr = ConsoleUtils.inputStringInFilter(getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR"), getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN"), string -> "curseforge".equalsIgnoreCase(string) || "modrinth".equalsIgnoreCase(string));
                 if (sourceStr != null) {
                     Utils.saveConfig(config.put("modDownloadSource", sourceStr));
@@ -137,7 +154,7 @@ public class ModFunction implements Function {
             String modName = mod.optString("name");
             if (todo == 0) {
                 int modId = mod.optInt("id");
-                String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
+                String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), MOD_CF_DEPENDENCY_INSTALLER);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
             } else if (todo == 1) {
@@ -151,7 +168,7 @@ public class ModFunction implements Function {
             String modName = result.modName, modID = result.modID;
 
             if (todo == 0) {
-                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")));
+                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), MOD_MR_DEPENDENCY_INSTALLER);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
             } else if (todo == 1) {
@@ -184,7 +201,12 @@ public class ModFunction implements Function {
     public static void downloadMod(String modDownloadLink) {
         File mods = new File(CMCL.gameDir, "mods");
         mods.mkdirs();
-        String fileName = modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1);
+        String fileName;
+        try {
+            fileName = URLDecoder.decode(modDownloadLink.substring(modDownloadLink.lastIndexOf('/') + 1), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         if (Utils.isEmpty(fileName)) fileName = System.currentTimeMillis() + ".jar";
         File modFile = new File(mods, fileName);
         if (modFile.exists()) {

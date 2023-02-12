@@ -208,7 +208,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持嘅游戏版本：");
         cantonese.put("CF_GET_BY_ID_FAILED", "无法获得目标${NAME}：%s\n出现呢个错误可能嘅原因：\n1.目标${NAME}唔存在\n2.网络异常\n3.服务器出现问题");
         cantonese.put("CF_GET_BY_ID_NOT_OF_MC", "目标游戏组件唔系 Minecraft 嘅${NAME}，呢个组件嘅游戏ID为%d。");
-        cantonese.put("CF_DEPENDENCIES_TIP", "呢个${NAME}需要以下前置${NAME}先至能够正常运行，你需要喺安装完呢个${NAME}之后安装以下前置${NAME}。");
+        cantonese.put("CF_DEPENDENCIES_TIP", "呢个${NAME}需要下面嘅前置${NAME}先至能够正常运行，将会先安装以下前置${NAME}。");
         cantonese.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标游戏组件唔系一个${NAME}，呢个组件嘅类别ID系%d。");
         cantonese.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "目标游戏组件唔系一个${NAME}，呢个游戏组件系一个${TARGET}。");
         cantonese.put("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", "下载 projectId 系 %d 嘅模组失败：%s");

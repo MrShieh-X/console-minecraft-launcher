@@ -275,7 +275,7 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
         return mod;
     }
 
-    public String getDownloadLink(String modID, String modName, @Nullable String mcversion, @Nullable String addonVersion) {
+    public String getDownloadLink(String modID, String modName, @Nullable String mcversion, @Nullable String addonVersion, Manager.DependencyInstaller dependencyInstaller) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             modAllVersionsJsonArrayFather = new JSONArray(NetworkUtils.get(ROOT + "project/" + modID + "/version"));
@@ -336,8 +336,14 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
 
             //排序算法
             modSupportedMcVer.sort(VersionUtils.VERSION_COMPARATOR);
+            Collections.reverse(modSupportedMcVer);
 
-
+            if (isEmpty(modName)) {
+                try {
+                    modName = getByID(modID).optString("title");
+                } catch (Exception ignored) {
+                }
+            }
             System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
 
             System.out.print('[');
@@ -414,8 +420,6 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
                     }
                     if (!isEmpty(dmodid))
                         list.put(dmodid, name);
-
-
                 }
             }
             if (list.size() > 0) {
@@ -437,6 +441,9 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
                     i++;
                 }
                 System.out.println();
+                for (Map.Entry<String, String> entry : list.entrySet()) {
+                    dependencyInstaller.install(modSupportMinecraftVersion, entry.getValue(), entry.getKey());
+                }
             }
         }
         return targetFile.getKey().optString("url");
