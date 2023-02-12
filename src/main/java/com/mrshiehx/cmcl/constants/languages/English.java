@@ -243,7 +243,7 @@ public class English implements Language {
         en.put("CONSOLE_ASK_EXIT_WITH_MC", "Do you need to exit the game when exiting the launcher (can be turned on or off through \"config exitWithMinecraft true/false\")?");
         en.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "Do you need to print startup information when starting the game (such as Java path, maximum memory, login account, etc., which can be turned on or off through \"config printStartupInfo true/false\")?");
         en.put("CONSOLE_ASK_CHECK_ACCOUNT", "Do you need to check whether the account is available before starting the game (it will take time before starting, you can turn it on or off through \"config checkAccountBeforeStart true/false\")?");
-        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (curseforge or modrinth): ");
+        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (curseforge or modrinth, store as configuration): ");
         en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN", "Unknown download source: %s.");
         en.put("DATATYPE_STRING", "String");
         en.put("DATATYPE_INTEGER", "Integer");
