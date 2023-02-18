@@ -26,6 +26,8 @@ import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public class UpdatesChecker {
     public static void execute() {
         JSONObject newVersion = null;
@@ -53,7 +55,7 @@ public class UpdatesChecker {
                     urls.append("  ").append((String) o).append('\n');
                 }
             }
-            System.out.println(Utils.getString("MESSAGE_NEW_VERSION", latestVersionName, updateDate, urls.toString(), CMCL.getLanguage().equalsIgnoreCase("zh") || CMCL.getLanguage().equalsIgnoreCase("cantonese") ? updateContentZh : updateContentEn));
+            System.out.println(Utils.getString("MESSAGE_NEW_VERSION", latestVersionName, updateDate, urls.toString(), CMCL.getLanguage().locale == Locale.CHINA ? updateContentZh : updateContentEn));
         } else {
             System.out.println(Utils.getString("MESSAGE_CURRENT_IS_LATEST_VERSION"));
         }

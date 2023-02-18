@@ -19,7 +19,7 @@
 
 package com.mrshiehx.cmcl.utils.program;
 
-import com.mrshiehx.cmcl.constants.languages.Languages;
+import com.mrshiehx.cmcl.constants.languages.LanguageEnum;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,12 +30,12 @@ import java.util.*;
 public class FindOutRedundantStrings {
     public static void main2(String[] args) throws IOException {
         System.out.println("en:");
-        main(Languages.getEn());
+        main(LanguageEnum.ENGLISH.getTextMap());
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println("can:");
-        main(Languages.getCantonese());
+        main(LanguageEnum.CANTONESE.getTextMap());
     }
 
     public static void main(Map<String, String> map) throws IOException {

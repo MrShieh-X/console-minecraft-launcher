@@ -68,7 +68,8 @@ public class InstallFunction implements Function {
                     ArgumentRequirement.ofValue("forge"),
                     ArgumentRequirement.ofValue("liteloader"),
                     ArgumentRequirement.ofValue("optifine"),
-                    ArgumentRequirement.ofValue("quilt"))) return;
+                    ArgumentRequirement.ofValue("quilt"),
+                    ArgumentRequirement.ofValue("api"))) return;
             String version = firstArg.originString;
             String storage = arguments.opt("n", arguments.opt("name", version));
             if (new File(versionsDir, storage + "/" + storage + ".json").exists()) {
@@ -183,7 +184,7 @@ public class InstallFunction implements Function {
                                 Utils.saveConfig(Utils.getConfig().put("selectedVersion", storage));
                             }
                             if (installFabric && arguments.contains("api")) {
-                                String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", version.replace(" Pre-Release ", "-pre"), null, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
+                                String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", version.replace(" Pre-Release ", "-pre"), arguments.opt("api"), ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
                                 if (!isEmpty(url)) {
                                     ModFunction.downloadMod(url);
                                 }

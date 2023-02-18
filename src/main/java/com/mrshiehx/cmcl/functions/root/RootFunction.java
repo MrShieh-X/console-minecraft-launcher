@@ -22,8 +22,10 @@ package com.mrshiehx.cmcl.functions.root;
 import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.bean.arguments.*;
 import com.mrshiehx.cmcl.functions.Function;
+import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
 
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 import static com.mrshiehx.cmcl.utils.Utils.getString;
 
 public class RootFunction implements Function {
@@ -61,9 +63,15 @@ public class RootFunction implements Function {
                         VersionsLister.execute(null);
                         break;
                     case "p":
-                    case "print":
-                        LaunchCommands.print(null);
-                        break;
+                    case "print": {
+                        String selectedVersion = Utils.getConfig().optString("selectedVersion");
+                        if (isEmpty(selectedVersion)) {
+                            System.out.println(CMCL.getString("MESSAGE_TO_SELECT_VERSION"));
+                            return;
+                        }
+                        LaunchCommands.print(selectedVersion);
+                    }
+                    break;
                     default:
                         tryToStartVersion(originArray[0]);
                         break;

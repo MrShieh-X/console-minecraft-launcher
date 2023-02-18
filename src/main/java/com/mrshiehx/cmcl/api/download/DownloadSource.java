@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class DownloadSource {
@@ -45,7 +46,7 @@ public class DownloadSource {
             for (Pair<String, Integer> pair : sources) {
                 System.out.printf("[%d]%s\n", pair.getValue(), pair.getKey());
             }
-            int defaultDS = CMCL.getLanguage().equalsIgnoreCase("zh") || CMCL.getLanguage().equalsIgnoreCase("cantonese") ? 2 : 0;
+            int defaultDS = CMCL.getLanguage().locale == Locale.CHINA ? 2 : 0;
             int value = defaultDS;
             System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDS));
             try {

@@ -22,7 +22,7 @@ import com.mrshiehx.cmcl.bean.arguments.Argument;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.bean.arguments.SingleArgument;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.constants.languages.Languages;
+import com.mrshiehx.cmcl.constants.languages.LanguageEnum;
 import com.mrshiehx.cmcl.functions.Function;
 import com.mrshiehx.cmcl.functions.Functions;
 import com.mrshiehx.cmcl.functions.root.RootFunction;
@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 public class CMCL {
     public static File gameDir;
@@ -57,7 +56,7 @@ public class CMCL {
     private static JSONObject configJSONObject;
     public static String javaPath;
 
-    private static String language;
+    private static LanguageEnum languageEnum;
     private static Locale locale;
 
     public static boolean isImmersiveMode;
@@ -123,22 +122,15 @@ public class CMCL {
 
     public static String getHelpDocumentation(String name) {
         if (isEmpty(name)) return null;
-        String lang;
-        String t;
-        if ("zh".equalsIgnoreCase(getLanguage())) {
-            t = Languages.getZhHelp().get(name);
-        } else if ("cantonese".equalsIgnoreCase(getLanguage())) {
-            t = Languages.getCantoneseHelp().get(name);
-        } else
-            t = Languages.getEnHelp().get(name);
-        return !isEmpty(t) ? t : "";
+        String helpDocumentation = getLanguage().getHelpMap().get(name);
+        return !isEmpty(helpDocumentation) ? helpDocumentation : "";
     }
 
 
     public static JSONObject initConfig() {
         File configFile = getConfigFile();
         if (configFile.exists()) {
-            String EXCEPTION_READ_CONFIG_FILE = Optional.ofNullable(("zh".equals(Locale.getDefault().getLanguage()) ? Languages.getZh() : Languages.getEn()).get("EXCEPTION_READ_CONFIG_FILE")).orElse("Failed to read the configuration file, please make sure the configuration file (cmcl.json) is readable and the content is correct: %s");
+            String EXCEPTION_READ_CONFIG_FILE = LanguageEnum.overriddenValueOf(Locale.getDefault().getLanguage()).getTextMap().get("EXCEPTION_READ_CONFIG_FILE");
             String configFileContent;
             try {
                 configFileContent = FileUtils.readFileContent(configFile);
@@ -239,32 +231,29 @@ public class CMCL {
     }
 
     public static String getString(String name) {
-        //先检查粤语的，如果粤语没有的就读取中文的
-        if ("cantonese".equalsIgnoreCase(getLanguage())) {
-            String text = Languages.getCantonese().get(name);
-            if (!Utils.isEmpty(text))
-                return text;
-        }
-        if ("zh".equalsIgnoreCase(getLanguage()) || "cantonese".equalsIgnoreCase(getLanguage())) {
-            String text = Languages.getZh().get(name);
-            if (!Utils.isEmpty(text))
-                return text;
-        }
-        String text = Languages.getEn().get(name);
-        if (!Utils.isEmpty(text)) return text;
-        else return name;
-    }
-
-    public static String getLanguage() {
-        if (language == null) {
-            String lang = Utils.getConfig().optString("language");
-            if (isEmpty(lang)) {
-                Utils.saveConfig(Utils.getConfig().put("language", language = Locale.getDefault().getLanguage()));
+        String text = getLanguage().getTextMap().get(name);
+        if (!Utils.isEmpty(text)) {
+            return text;
+        } else {
+            String inEnglish = LanguageEnum.ENGLISH.getTextMap().get(name);
+            if (!Utils.isEmpty(inEnglish)) {
+                return inEnglish;
             } else {
-                language = lang;
+                return name;
             }
         }
-        return language;
+    }
+
+    public static LanguageEnum getLanguage() {
+        if (languageEnum == null) {
+            String languageString = Utils.getConfig().optString("language");
+            if (isEmpty(languageString)) {
+                Utils.saveConfig(Utils.getConfig().put("language", (languageEnum = LanguageEnum.overriddenValueOf(Locale.getDefault().getLanguage())).codes.stream().findAny().orElse("en")));
+            } else {
+                languageEnum = LanguageEnum.overriddenValueOf(languageString);
+            }
+        }
+        return languageEnum;
     }
 
     public static List<String> listVersions(File versionsDir) {
@@ -296,13 +285,7 @@ public class CMCL {
 
     public static Locale getLocale() {
         if (locale == null) {
-            String lang = getLanguage();
-            if ("zh".equalsIgnoreCase(lang)) {
-                locale = Locale.SIMPLIFIED_CHINESE;
-            } else if ("cantonese".equalsIgnoreCase(lang)) {
-                locale = Locale.CHINA;
-            } else
-                locale = Locale.ENGLISH;
+            locale = getLanguage().locale;
         }
         return locale;
     }

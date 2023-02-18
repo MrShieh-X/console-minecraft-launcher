@@ -452,7 +452,7 @@ public class English implements Language {
                         "   starting the game should use start [<version>].\n" +*/
                         "\n" +
                         "All functions:\n" +
-                        "     function name     what the function does is related to\n" +
+                        "     function name     effect\n" +
                         "     install           Install versions\n" +
                         "     version           Version operation\n" +
                         "     account           Account operation\n" +
@@ -474,8 +474,8 @@ public class English implements Language {
                         "                                           cmcl install 1.18.2 -n my1.18.2\n" +
                         "   -s, --select                         Select this version after installing.\n" +
                         "                                           cmcl install 1.18.2 -s\n" +
-                        "   --fabric[=<Fabric version>] [--api]  Install Fabric, you can choose whether to install Fabric API.\n" +
-                        "                                        Not compatible with Forge, LiteLoader, OptiFine, Quilt.\n" +
+                        "   --fabric[=<Fabric version>]          Install Fabric, you can choose whether to install Fabric API and specify\n" +
+                        "      [--api[=<Fabric API version>]]    its version. Not compatible with Forge, LiteLoader, OptiFine, Quilt.\n" +
                         "                                           cmcl install 1.19 --fabric=0.14.12 --api\n" +
                         "   --forge[=<Forge version>]            Install Forge\n" +
                         "                                           cmcl install 1.19 --forge\n" +
@@ -514,9 +514,9 @@ public class English implements Language {
                         "   --config=<config name> [<content>]    Set the configuration separately for the version, use \"config --view\" to\n" +
                         "                                         view the content with \"[Game related]\" is the configuration that can be set.\n" +
                         "                                         If no <content> is entered, the global configuration will be used.\n" +
-                        "   --fabric[=<Fabric version>] [--api]   Install Fabric for the version, you can specify the version.\n" +
-                        "                                         Add --api to install Fabric API.\n" +
-                        "                                            cmcl version 1.19 --fabric --api\n" +
+                        "   --fabric[=<Fabric version>]           Install Fabric for the version, you can specify the version.\n" +
+                        "      [--api[=<Fabric API version>]]     Add --api to install Fabric API, you can also specify the version.\n" +
+                        "                                            cmcl version 1.19 --fabric --api=0.58.0\n" +
                         "   --forge[=<Forge version>]             Install Forge for the version, you can specify the version.\n" +
                         "                                            cmcl version 1.19 --forge=42.0.0\n" +
                         "   --liteloader[=<LiteLoader version>]   Install LiteLoader for the version, you can specify the version.\n" +

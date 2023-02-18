@@ -136,7 +136,7 @@ public class VersionFunction implements Function {
                     VersionCompleter.execute(jsonFile, jarFile, versionName);
                     break;
                 case "fabric":
-                    installFabric(jsonFile, jarFile, null, arguments.contains("api"));
+                    installFabric(jsonFile, jarFile, null, arguments.contains("api"), arguments.opt("api"));
                     break;
                 case "forge":
                     installExtra(jsonFile, jarFile, new ForgeInstaller(), null);
@@ -283,7 +283,7 @@ public class VersionFunction implements Function {
                 }
                 break;
                 case "fabric":
-                    installFabric(jsonFile, jarFile, value, arguments.contains("api"));
+                    installFabric(jsonFile, jarFile, value, arguments.contains("api"), arguments.opt("api"));
                     break;
                 case "forge":
                     installExtra(jsonFile, jarFile, new ForgeInstaller(), value);
@@ -335,7 +335,7 @@ public class VersionFunction implements Function {
         }
     }
 
-    private static boolean installFabric(File jsonFile, File jarFile, @Nullable String fabricVersion, boolean installApi) {
+    private static boolean installFabric(File jsonFile, File jarFile, @Nullable String fabricVersion, boolean installApi, @Nullable String fabricApiVersion) {
         boolean success = new FabricInstaller().install(jsonFile, jarFile, fabricVersion);
         if (success && installApi) {
             String ver = null;
@@ -344,7 +344,7 @@ public class VersionFunction implements Function {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver, null, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
+            String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver, fabricApiVersion, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
             if (!isEmpty(url)) {
                 ModFunction.downloadMod(url);
             }

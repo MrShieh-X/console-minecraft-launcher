@@ -19,7 +19,7 @@
 
 package com.mrshiehx.cmcl.utils.program;
 
-import com.mrshiehx.cmcl.constants.languages.Languages;
+import com.mrshiehx.cmcl.constants.languages.LanguageEnum;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -31,13 +31,13 @@ import static com.mrshiehx.cmcl.utils.Utils.isEmpty;
 public class ProgramUtils {
     public static void main2(String[] args) {
         System.out.println("in En not in Can: ");
-        compareTwoLanguages(Languages.getEn(), Languages.getCantonese());
+        compareTwoLanguages(LanguageEnum.ENGLISH.getTextMap(), LanguageEnum.CANTONESE.getTextMap());
         System.out.println();
         System.out.println("in Can not in En: ");
-        compareTwoLanguages(Languages.getCantonese(), Languages.getEn());
+        compareTwoLanguages(LanguageEnum.CANTONESE.getTextMap(), LanguageEnum.ENGLISH.getTextMap());
         System.out.println();
         System.out.println("in Can not in Zh: ");
-        compareTwoLanguages(Languages.getCantonese(), Languages.getZh());
+        compareTwoLanguages(LanguageEnum.CANTONESE.getTextMap(), LanguageEnum.SIMPLIFIED_CHINESE.getTextMap());
         System.out.println();
         /*System.out.println("in Zh not in Can: ");
         compareTwoLanguages(Languages.getZh(),Languages.getCantonese());//永远为空
@@ -53,10 +53,9 @@ public class ProgramUtils {
 
     public static void printStringsThatChineseNotHave() {
         List<String> fin = new LinkedList<>();
-
-        for (Map.Entry<String, String> e : Languages.getEn().entrySet()) {
+        for (Map.Entry<String, String> e : LanguageEnum.ENGLISH.getTextMap().entrySet()) {
             String s = e.getKey();
-            if (isEmpty(Languages.getZh().get(s))) {
+            if (isEmpty(LanguageEnum.SIMPLIFIED_CHINESE.getTextMap().get(s))) {
                 fin.add(s);
             }
         }
