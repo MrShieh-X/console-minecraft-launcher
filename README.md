@@ -20,6 +20,7 @@
 ## 特别鸣谢
 - [@Graetpro-X](https://github.com/Graetpro)：开发部分功能
 - [@FZZkill](https://github.com/FZZkill)：帮助美化README
+- [@mail_set](https://space.bilibili.com/435654748)（[个人网站](https://mailset.top)）：上传CMCL至AUR仓库（名称为`cmcl`）
 
 ## 帮助文档
 获得全部帮助文档，直接加 `-h` 或 `--help`，如`cmcl -h`<br/>

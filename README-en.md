@@ -20,6 +20,7 @@ If you still have any problems after watching the video or using it, you can ref
 ## Special Thanks
 - [@Graetpro-X](https://github.com/Graetpro): Developed some functions
 - [@FZZkill](https://github.com/FZZkill): Help to beautify the README
+- [@mail_set](https://space.bilibili.com/435654748) ([Personal Website](https://mailset.top)): Upload CMCL to AUR repository (named`cmcl`)
 
 ## Help Documentation
 To get all the help documentations, directly add `-h` or `--help`, such as `cmcl -h`<br/>
