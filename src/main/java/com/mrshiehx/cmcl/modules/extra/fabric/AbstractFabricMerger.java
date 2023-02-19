@@ -96,7 +96,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
             }
             System.out.println(']');
 
-            fabricVersion = selectFabricVersion(getString("INSTALL_MODLOADER_SELECT", getModLoaderName(), fabricVersions.get(0)), fabrics, fabricVersions.get(0));
+            fabricVersion = ExtraMerger.selectExtraVersion(getString("INSTALL_MODLOADER_SELECT", getModLoaderName(), fabricVersions.get(0)), fabrics, fabricVersions.get(0), getModLoaderName());
             if (fabricVersion == null)
                 return new Pair<>(false, null);
         } else {
@@ -239,23 +239,6 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
             }
         }
         return list;
-    }
-
-    private String selectFabricVersion(String text, Map<String, JSONObject> fabrics, String defaulx) {
-        System.out.print(text);//legal
-        Scanner scanner = new Scanner(System.in);
-        try {
-            String s = scanner.nextLine();
-            if (!isEmpty(s)) {
-                JSONObject jsonObject = fabrics.get(s);
-                if (jsonObject != null) return s;
-                return selectFabricVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, getModLoaderName(), defaulx), fabrics, defaulx);
-            } else {
-                return defaulx/*selectFabricVersion(text, fabrics,defaulx)*/;
-            }
-        } catch (NoSuchElementException ignore) {
-            return null;
-        }
     }
 
     //列出该 Minecraft 版本支持的所有 Fabric 版本

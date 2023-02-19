@@ -101,7 +101,7 @@ public class OptiFineMerger implements ExtraMerger {
             System.out.println(']');
 
 
-            String inputOFVersion = selectOptiFineVersion(getString("INSTALL_MODLOADER_SELECT", EXTRA_NAME, optifineVersionNames.get(0)), versionsMap, optifineVersionNames.get(0));
+            String inputOFVersion = ExtraMerger.selectExtraVersion(getString("INSTALL_MODLOADER_SELECT", EXTRA_NAME, optifineVersionNames.get(0)), versionsMap, optifineVersionNames.get(0), EXTRA_NAME);
             if (inputOFVersion == null)
                 return new Pair<>(false, null);
             optifineVersionString = inputOFVersion;
@@ -291,23 +291,5 @@ public class OptiFineMerger implements ExtraMerger {
         optifine.put("jarUrl", url);
         headJSONObject.put("optifine", optifine);
         return new Pair<>(true, returns);
-    }
-
-
-    private static String selectOptiFineVersion(String text, Map<String, JSONObject> optiFines, String defaulx) {
-        System.out.print(text);//legal
-        Scanner scanner = new Scanner(System.in);
-        try {
-            String s = scanner.nextLine();
-            if (!isEmpty(s)) {
-                JSONObject jsonObject = optiFines.get(s);
-                if (jsonObject != null) return s;
-                return selectOptiFineVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, EXTRA_NAME, defaulx), optiFines, defaulx);
-            } else {
-                return defaulx/*selectOptiFineVersion(text, optiFines)*/;
-            }
-        } catch (NoSuchElementException ignore) {
-            return null;
-        }
     }
 }

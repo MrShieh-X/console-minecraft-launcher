@@ -38,7 +38,10 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
@@ -95,7 +98,7 @@ public class LiteloaderMerger implements ExtraMerger {
             }
             System.out.println(']');
 
-            String inputLLVersion = selectLiteloaderVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME, liteloaderVersions.get(0)), versionsOfLiteLoader, liteloaderVersions.get(0));
+            String inputLLVersion = ExtraMerger.selectExtraVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME, liteloaderVersions.get(0)), versionsOfLiteLoader, liteloaderVersions.get(0), MODLOADER_NAME);
             if (inputLLVersion == null)
                 return new Pair<>(false, null);
 
@@ -227,23 +230,6 @@ public class LiteloaderMerger implements ExtraMerger {
             this.version = version;
             this.libraries = libraries;
             this.url = url;
-        }
-    }
-
-    private static String selectLiteloaderVersion(String text, Map<String, LiteloaderVersion> liteloaders, String defaulx) {
-        System.out.print(text);//legal
-        Scanner scanner = new Scanner(System.in);
-        try {
-            String s = scanner.nextLine();
-            if (!isEmpty(s)) {
-                LiteloaderVersion jsonObject = liteloaders.get(s);
-                if (jsonObject != null) return s;
-                return selectLiteloaderVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, MODLOADER_NAME, defaulx), liteloaders, defaulx);
-            } else {
-                return /*selectLiteloaderVersion(text, liteloaders)*/defaulx;
-            }
-        } catch (NoSuchElementException ignore) {
-            return null;
         }
     }
 }

@@ -108,7 +108,7 @@ public class ForgeMerger implements ExtraMerger {
             System.out.println(']');
 
 
-            String forgeVersionInput = selectForgeVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME, list.get(0).getKey()), forges, list.get(0).getKey());
+            String forgeVersionInput = ExtraMerger.selectExtraVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME, list.get(0).getKey()), forges, list.get(0).getKey(), MODLOADER_NAME);
             if (forgeVersionInput == null)
                 return new Pair<>(false, null);
 
@@ -566,24 +566,6 @@ public class ForgeMerger implements ExtraMerger {
 
 
         return new Pair<>(true, librariesNeedToInstall);
-    }
-
-
-    private static String selectForgeVersion(String text, Map<String, JSONObject> forges, String defaulx) {
-        System.out.print(text);//legal
-        Scanner scanner = new Scanner(System.in);
-        try {
-            String s = scanner.nextLine();
-            if (!isEmpty(s)) {
-                JSONObject jsonObject = forges.get(s);
-                if (jsonObject != null) return s;
-                return selectForgeVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, MODLOADER_NAME, defaulx), forges, defaulx);
-            } else {
-                return defaulx/*selectForgeVersion(text, forges,defaulx)*/;
-            }
-        } catch (NoSuchElementException ignore) {
-            return null;
-        }
     }
 
     private static JSONArray listForgeLoaderVersions(String minecraftVersion) throws IOException {

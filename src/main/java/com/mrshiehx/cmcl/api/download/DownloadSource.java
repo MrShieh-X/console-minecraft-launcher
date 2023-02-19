@@ -46,9 +46,9 @@ public class DownloadSource {
             for (Pair<String, Integer> pair : sources) {
                 System.out.printf("[%d]%s\n", pair.getValue(), pair.getKey());
             }
-            int defaultDS = CMCL.getLanguage().locale == Locale.CHINA ? 2 : 0;
-            int value = defaultDS;
-            System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDS));
+            int defaultDownloadSource = CMCL.getLanguage().locale == Locale.CHINA ? 2 : 0;
+            int value = defaultDownloadSource;
+            System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDownloadSource));
             try {
                 value = Integer.parseInt(new Scanner(System.in).nextLine());
             } catch (NumberFormatException ignore) {

@@ -33,8 +33,6 @@ public enum LanguageEnum {
     public final Set<String> codes;
     public final Locale locale;
     public final Language language;
-
-
     private Map<String, String> textMap;
     private Map<String, String> helpMap;
 

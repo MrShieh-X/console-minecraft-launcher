@@ -24,7 +24,30 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
+import static com.mrshiehx.cmcl.CMCL.getString;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public interface ExtraMerger {
     Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue, @Nullable String extraVersion);
+
+    public static <V> String selectExtraVersion(String text, Map<String, V> extras, String defaultVersion, String extraName) {
+        System.out.print(text);//legal
+        Scanner scanner = new Scanner(System.in);
+        try {
+            String s = scanner.nextLine();
+            if (!isEmpty(s)) {
+                V versionObject = extras.get(s);
+                if (versionObject != null) return s;
+                return selectExtraVersion(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND", s, extraName, defaultVersion), extras, defaultVersion, extraName);
+            } else {
+                return defaultVersion;
+            }
+        } catch (NoSuchElementException ignore) {
+            return null;
+        }
+    }
 }
