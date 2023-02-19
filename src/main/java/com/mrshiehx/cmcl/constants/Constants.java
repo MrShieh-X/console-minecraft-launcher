@@ -34,7 +34,7 @@ public class Constants {
     public static boolean ECHO_OPEN_FOR_IMMERSIVE = true;
     public static final int DEFAULT_DOWNLOAD_THREAD_COUNT = 64;
     public static final String[] CHECK_FOR_UPDATES_INFORMATION_URLS = {
-            //"https://gitee.com/MrShiehX/console-minecraft-launcher/raw/master/new_version.json",
+            "https://gitee.com/MrShiehX/console-minecraft-launcher/raw/master/new_version.json",
             "https://raw.githubusercontent.com/MrShieh-X/console-minecraft-launcher/master/new_version.json"
     };
 
