@@ -53,7 +53,9 @@ public class VersionStarter {
     public static VersionConfig getVersionInfo(File versionFolder) {
         File versionInfoFile = new File(versionFolder, "cmclversion.json");
         File versionInfoFileHMCL = new File(versionFolder, "hmclversion.cfg");
+        File versionInfoFilePCL2 = new File(versionFolder, "PCL/Setup.ini");
         JSONObject cmclJO = null, hmclJO = null;
+        String pcl2File = null;
         if (versionInfoFile.exists()) {
             try {
                 cmclJO = JSONUtils.parseJSONObject(FileUtils.readFileContent(versionInfoFile));
@@ -66,22 +68,39 @@ public class VersionStarter {
             } catch (Throwable ignored) {
             }
         }
+        if (versionInfoFilePCL2.exists()) {
+            try {
+                pcl2File = FileUtils.readFileContent(versionInfoFilePCL2);
+            } catch (Throwable ignored) {
+            }
+        }
 
-        VersionConfig cmcl = null, hmcl = null;
+        VersionConfig cmcl = null, hmcl = null, pcl2 = null;
         if (cmclJO != null) {
             cmcl = VersionConfig.valueOf(cmclJO);
         }
         if (hmclJO != null) {
             hmcl = VersionConfig.valueOfHMCL(hmclJO);
         }
+        if (pcl2File != null) {
+            pcl2 = VersionConfig.valueOfPCL2(pcl2File);
+        }
 
         VersionConfig Final = VersionConfig.EMPTY;
-        if (cmcl != null && hmcl != null) {
-            Final = hmcl.merge(cmcl);
+        if (cmcl != null && hmcl != null && pcl2 != null) {
+            Final = pcl2.mergeTo(hmcl.mergeTo(cmcl));
+        } else if (cmcl != null && hmcl != null) {
+            Final = hmcl.mergeTo(cmcl);
+        } else if (cmcl != null && pcl2 != null) {
+            Final = pcl2.mergeTo(cmcl);
+        } else if (hmcl != null && pcl2 != null) {
+            Final = pcl2.mergeTo(hmcl);
         } else if (cmcl != null) {
             Final = cmcl;
         } else if (hmcl != null) {
             Final = hmcl;
+        } else if (pcl2 != null) {
+            Final = pcl2;
         }
         return Final;
     }

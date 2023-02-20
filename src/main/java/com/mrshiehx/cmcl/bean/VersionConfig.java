@@ -26,9 +26,12 @@ import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.ArgumentsUtils;
 import com.mrshiehx.cmcl.utils.console.CommandUtils;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class VersionConfig {
     public static final VersionConfig EMPTY = new VersionConfig(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "", "", "", "");
@@ -96,6 +99,61 @@ public class VersionConfig {
                 origin.optString("isolate"));
     }
 
+    public static VersionConfig valueOfPCL2(String setupIni) {
+        if (Utils.isEmpty(setupIni)) return EMPTY;
+        String[] lines = setupIni.split("\n");
+        Map<String, String> gameArgs = new LinkedHashMap<>();
+        List<String> jvmArgs = Collections.emptyList();
+        String javaPath = null;
+        String isolate = "";
+        for (String line : lines) {
+            int indexOf = line.indexOf(":");
+            if (indexOf <= 0) continue;
+            String name = line.substring(0, indexOf);
+            String value;
+            Matcher matcher = Pattern.compile(name + ":\\s*(?<value>[\\s\\S]*)").matcher(line);
+            if (matcher.find()) {
+                value = matcher.group("value");
+            } else value = "";
+
+            if (!Utils.isEmpty(value)) {
+                switch (name) {
+                    case "VersionAdvanceGame":
+                        Arguments arguments = new Arguments(value, false);
+                        for (Argument argument : arguments.getArguments()) {
+                            String key = argument.key;
+                            if (Objects.equals(key, "version") || Objects.equals(key, "versionType")) continue;
+                            if (argument instanceof ValueArgument) {
+                                gameArgs.put(key, ((ValueArgument) argument).value);
+                            } else {
+                                gameArgs.put(key, null);
+                            }
+                        }
+                        break;
+                    case "VersionArgumentJavaSelect":
+                        try {
+                            javaPath = new JSONObject(value).optString("Path");
+                        } catch (JSONException ignored) {
+                        }
+                        break;
+                    case "VersionAdvanceJvm":
+                        jvmArgs = ArgumentsUtils.parseJVMArgs(CommandUtils.splitCommand(CommandUtils.clearRedundantSpaces(value)).toArray(new String[0]));
+                        break;
+                    case "VersionArgumentIndie":
+                        if ("1".equals(value)) {
+                            isolate = "true";
+                        } else if ("2".equals(value)) {
+                            isolate = "false";
+                        } else {
+                            isolate = "";
+                        }
+                        break;
+                }
+            }
+        }
+        return new VersionConfig(null, javaPath, "", "", "", "", jvmArgs, gameArgs, null, null, "", "", "", isolate);
+    }
+
     public static VersionConfig valueOfHMCL(JSONObject origin) {
         //workingDirectory
         String isolate = "false";
@@ -138,7 +196,11 @@ public class VersionConfig {
                 isolate);
     }
 
-    public VersionConfig merge(VersionConfig versionConfig) {
+    /**
+     * 合并本对象与 <code>versionConfig</code> 并返回新的版本配置对象。
+     * <p>若 <code>versionConfig</code> 某项为空才会把本对象的对应项作为新版本配置对象的对应项。
+     **/
+    public VersionConfig mergeTo(VersionConfig versionConfig) {
         Map<String, String> newGameArgs = new LinkedHashMap<>();
         newGameArgs.putAll(versionConfig.gameArgs);
         newGameArgs.putAll(gameArgs);

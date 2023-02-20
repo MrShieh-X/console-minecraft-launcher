@@ -1062,19 +1062,38 @@ public class MinecraftLauncher {
     }
 
     public static boolean isModpack(File versionDir/*, JSONObject versionJSON*/) {
-        if (new File(versionDir, "modpack.cfg").exists()) return true;//兼容 HMCL
-        return new File(versionDir, "modpack.json").exists();
+        if (new File(versionDir, "modpack.cfg").exists())//兼容 HMCL
+            return true;
+
+        if (new File(versionDir, "modpack.json").exists())//CMCL
+            return true;
+
+        if (new File(versionDir, "manifest.json").exists() || new File(versionDir, "mcbbs.packmeta").exists() || new File(versionDir, "modrinth.index.json").exists() || new File(versionDir, "mmc-pack.json").exists())//兼容 BakaXL
+            return true;
+
+        File setupIni = new File(versionDir, "PCL/Setup.ini");
+        try {
+            if (setupIni.isFile() && Pattern.compile("VersionArgumentIndie:\\s*1").matcher(FileUtils.readFileContent(setupIni)).find())//兼容 PCL2，严格来说此处不严谨，因为是判断是否设置版本隔离，不过也没有问题
+                return true;
+        } catch (IOException ignored) {
+        }
+        return false;
     }
 
     public static String getRealJavaPath(String javaPath) throws InvalidJavaException {
-        File javaPathFile = new File(/*!isEmpty(versionInfo.javaPath) ? (javaPath = versionInfo.javaPath) : */javaPath);
+        File javaPathFile = new File(javaPath);
         if (!javaPathFile.exists()) {
             throw new InvalidJavaException(getString("EXCEPTION_JAVA_NOT_FOUND"));
         } else {
             if (javaPathFile.isDirectory()) {
                 javaPathFile = new File(javaPathFile, javaPathFile.getName().equalsIgnoreCase("bin") ? (SystemUtils.isWindows() ? "java.exe" : "java") : (SystemUtils.isWindows() ? "bin\\java.exe" : "bin/java"));
                 if (!javaPathFile.exists()) {
-                    throw new InvalidJavaException(getString("CONSOLE_INCORRECT_JAVA"));
+                    javaPathFile = new File(javaPath, (SystemUtils.isWindows() ? "java.exe" : "java"));
+                    if (!javaPathFile.exists()) {
+                        throw new InvalidJavaException(getString("CONSOLE_INCORRECT_JAVA"));
+                    } else {
+                        javaPath = javaPathFile.getPath();
+                    }
                 } else {
                     javaPath = javaPathFile.getPath();
                 }
