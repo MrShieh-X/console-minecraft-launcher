@@ -12,15 +12,39 @@
 英语：[\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
 如果你观看完视频后或使用时仍然有任何问题，可以参考[疑难解答](troubleshooting.md)或通过在[关于作者](#关于作者)中找到的作者联系信息向作者提出疑问。
 
-## 支持的界面语言
-- 英语
-- 简体中文
-- 粤语（简体）
-
 ## 特别鸣谢
 - [@Graetpro-X](https://github.com/Graetpro)：开发部分功能
 - [@FZZkill](https://github.com/FZZkill)：帮助美化README
 - [@mail_set](https://space.bilibili.com/435654748)（[个人网站](https://mailset.top)）：上传CMCL至AUR仓库（名称为`cmcl`）
+
+## 使用教程
+- 如果您的操作系统是 Windows，则可以在 Releases 中下载`cmcl.exe`，然后在终端（或 Windows 下的 cmd）打开`cmcl.exe`所在的目录，执行命令`cmcl`，后面加上选项与参数。
+- 如果您的操作系统是 ArchLinux，您可以使用yay安装CMCL，命令如下：
+```shell
+yay -S cmcl
+```
+然后直接输入命令`cmcl`即可，后面加上选项与参数。
+- 如果您的操作系统是 macOS，您可以使用 Homebrew 进行安装CMCL，命令如下：
+```shell
+brew tap MrShieh-X/brew
+brew install cmcl
+```
+然后直接输入命令`cmcl`即可，后面加上选项与参数。</br>
+更新启动器的命令为：
+```shell
+brew update
+brew upgrade cmcl
+```
+卸载的命令为：
+```shell
+brew uninstall cmcl
+```
+- 如果您既不是 ArchLinux 用户，或者您是 macOS 用户，但不希望使用 Homebrew 进行安装，您可以在 Releases 中找到最新版本，下载`cmcl`，然后在终端打开`cmcl`所在的目录，执行`./cmcl`，后面加上选项与参数即可。
+- 如果以上方法都不适用于您，您可以在 Releases 中找到最新版本，下载`cmcl.jar`，然后在终端（或 Windows 下的 cmd）打开`cmcl.jar`所在的目录，执行以下命令，后面加上选项与参数。这种方法在多数操作系统中都可用。
+```shell
+java -jar cmcl.jar
+```
+具体使用方法，请查阅[帮助文档](#帮助文档)。 如果你想对启动器的配置进行修改，请查阅[配置](#配置)。
 
 ## 帮助文档
 获得全部帮助文档，直接加 `-h` 或 `--help`，如`cmcl -h`<br/>
@@ -84,6 +108,11 @@
 ```
 以上内容将会加入游戏参数`--fullscreen --arg1 value1 --arg2 value2 --arg3 "space value3"`
 </details>
+
+## 支持的界面语言
+- 英语
+- 简体中文
+- 粤语（简体）
 
 ## 版权
 MrShiehX 拥有该程序的版权。<br/>

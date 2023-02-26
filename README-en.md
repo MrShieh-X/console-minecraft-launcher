@@ -12,15 +12,39 @@ English: [\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|a
 Chinese: [\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/)<br/>
 If you still have any problems after watching the video or using it, you can refer to [Troubleshooting](troubleshooting-en.md) or ask the author through the author's contact information found in [About Author](#about-author).
 
-## Supported Interface Languages
-- English
-- Simplified Chinese
-- Cantonese (Simplified)
-
 ## Special Thanks
 - [@Graetpro-X](https://github.com/Graetpro): Developed some functions
 - [@FZZkill](https://github.com/FZZkill): Help to beautify the README
 - [@mail_set](https://space.bilibili.com/435654748) ([Personal Website](https://mailset.top)): Upload CMCL to AUR repository (named`cmcl`)
+
+## Tutorial
+- If your operating system is Windows, you can download `cmcl.exe` in Releases, then open the directory where `cmcl.exe` is located in the terminal (or cmd under Windows), execute the command `cmcl`, followed by options and parameters.
+- If your operating system is ArchLinux, you can use yay to install CMCL, the command is as follows:
+```shell
+yay -S cmcl
+```
+Then directly enter the command `cmcl`, followed by options and parameters.
+- If your operating system is macOS, you can use Homebrew to install CMCL, the command is as follows:
+```shell
+brew tap MrShieh-X/brew
+brew install cmcl
+```
+Then directly enter the command `cmcl`, followed by options and parameters. </br>
+The command to update the launcher is:
+```shell
+brew update
+brew upgrade cmcl
+```
+The command to uninstall is:
+```shell
+brew uninstall cmcl
+```
+- If you are not an ArchLinux user, or you are a macOS user, but do not want to use Homebrew to install, you can find the latest version in Releases, download `cmcl`, and then open the directory where `cmcl` is located in the terminal, execute `. /cmcl`, followed by options and parameters.
+- If none of the above methods apply to you, you can find the latest version in Releases, download `cmcl.jar`, then open the directory where `cmcl.jar` is located in the terminal (or cmd under Windows), and execute the following command, Followed by options and parameters. This method is available on most operating systems.
+```shell
+java -jar cmcl.jar
+```
+For specific usage, please refer to [Help Documentation](#help-documentation). If you want to modify the configuration of the launcher, please refer to [Configurations](#configurations).
 
 ## Help Documentation
 To get all the help documentations, directly add `-h` or `--help`, such as `cmcl -h`<br/>
@@ -84,6 +108,11 @@ The above content means that the JVM arguments `-Dfile.encoding=UTF-8`, `-Djava.
 ```
 The above content means that the game arguments `--fullscreen --arg1 value1 --arg2 value2 --arg3 "space value3"` will be added.
 </details>
+
+## Supported Interface Languages
+- English
+- Simplified Chinese
+- Cantonese (Simplified)
 
 ## Copyright
 MrShiehX owns the copyright of this program.<br/>
