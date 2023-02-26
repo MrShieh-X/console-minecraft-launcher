@@ -1,5 +1,12 @@
 # Update Logs
-Currently, the latest version is 2.1, which was updated on February 12, 2023.
+Currently, the latest version is 2.1.1, which was updated on February 26, 2023.
+
+## 2.1.1 (Feb. 26, 2023)
+- The version of Fabric API can be specified after the installation option `--api`.
+- Enhanced compatibility with versions installed by other launchers.
+- Fixed the problem that the startup command cannot be printed by `cmcl -p`.
+- Same as Linux, will read `~/.config/cmcl/cmcl.json` as the configuration file by default under macOS
+- Under Linux and macOS, the working directory of CMCL is changed from the `.cmcl` folder under the directory where CMCL is located to the `.cmcl` folder under the user directory.
 
 ## 2.1 (Feb. 12, 2023)
 - Optimized the startup speed of the launcher.

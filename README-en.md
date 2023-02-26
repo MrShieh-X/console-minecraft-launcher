@@ -1,8 +1,8 @@
 # Console Minecraft Launcher
 A Launcher for Minecraft Java Edition Running On The Console
 
-[![Latest Version](https://img.shields.io/badge/Release-v2.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![Release Date](https://img.shields.io/badge/Date-2023--02--12-brightgreen)
+[![Latest Version](https://img.shields.io/badge/Release-v2.1.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![Release Date](https://img.shields.io/badge/Date-2023--02--26-brightgreen)
 ![Software Requires](https://img.shields.io/badge/Software%20Requires-Java%208-blue)
 
 ### [中文README](README.md) | [Update Logs](update_logs-en.md) | [Troubleshooting](troubleshooting-en.md)
