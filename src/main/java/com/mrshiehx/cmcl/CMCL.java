@@ -291,7 +291,7 @@ public class CMCL {
     }
 
     public static File getConfigFile() {
-        if (OperatingSystem.CURRENT_OS == OperatingSystem.LINUX) {
+        if (OperatingSystem.CURRENT_OS == OperatingSystem.LINUX || OperatingSystem.CURRENT_OS == OperatingSystem.OSX) {
             File inConfigDir = new File(System.getProperty("user.home"), ".config/cmcl/cmcl.json");
             if (inConfigDir.exists()) {
                 return inConfigDir;
