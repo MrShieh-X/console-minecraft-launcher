@@ -18,6 +18,7 @@
 
 package com.mrshiehx.cmcl.modules.extra.forge;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.SplitLibraryName;
@@ -188,7 +189,7 @@ public class ForgeMerger implements ExtraMerger {
         //https://download.mcbbs.net/forge/download?mcversion=1.18.2&version=40.0.1&category=installer&format=jar
 
 
-        File installer = new File(".cmcl", "forge-" + s + ".jar");
+        File installer = new File(CMCL.getCMCLWorkingDirectory(), "forge-" + s + ".jar");
         System.out.println(getString("INSTALL_MODLOADER_DOWNLOADING_FILE"));
         String finalDownload;
         try {
@@ -339,7 +340,7 @@ public class ForgeMerger implements ExtraMerger {
 
 
             Map<String, String> data = new HashMap<>();
-            File temp = new File(".cmcl", "forge" + System.currentTimeMillis());
+            File temp = new File(CMCL.getCMCLWorkingDirectory(), "forge" + System.currentTimeMillis());
             temp.mkdirs();
             JSONObject dataJSON = installProfile.optJSONObject("data");
             for (Map.Entry<String, Object> entry : dataJSON.toMap().entrySet()) {

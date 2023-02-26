@@ -18,6 +18,7 @@
  */
 package com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.nide8auth;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DefaultApiProvider;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.exceptions.DescriptionException;
@@ -244,7 +245,7 @@ public class Nide8AuthAuthentication {
     }
 
     public static File getNide8AuthFile() throws IOException {
-        File cmcl = new File(".cmcl");
+        File cmcl = CMCL.getCMCLWorkingDirectory();
         cmcl.mkdirs();
         File file = new File(cmcl, "nide8auth.jar");
         if (file.exists() && file.isFile() && file.length() > 0) return file;

@@ -70,7 +70,7 @@ public class VersionInstaller {
         if (!checkNetwork(DownloadSource.getProvider().versionJSON())) {
             throw new DescriptionException(getString("MESSAGE_FAILED_TO_CONNECT_TO_URL", DownloadSource.getProvider().versionJSON()));
         }
-        File cmcl = new File(".cmcl");
+        File cmcl = CMCL.getCMCLWorkingDirectory();
         //File versionsFile = new File(cmcl, "versions.json");
         cmcl.mkdirs();
         if (versions == null || versions.length() == 0) {

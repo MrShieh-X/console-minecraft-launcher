@@ -112,7 +112,7 @@ public class Utils {
     }
 
     public static File downloadVersionsFile() throws IOException {
-        File cmcl = new File(".cmcl");
+        File cmcl = CMCL.getCMCLWorkingDirectory();
         cmcl.mkdirs();
         File versionsFile = new File(cmcl, "versions.json");
         FileUtils.createFile(versionsFile, true);

@@ -324,4 +324,11 @@ public class CMCL {
             return configJSONObject;
         return initConfig();
     }
+
+    public static File getCMCLWorkingDirectory() {
+        if (OperatingSystem.CURRENT_OS == OperatingSystem.LINUX || OperatingSystem.CURRENT_OS == OperatingSystem.OSX) {
+            return new File(System.getProperty("user.home"), ".cmcl");
+        }
+        return new File(".cmcl");
+    }
 }

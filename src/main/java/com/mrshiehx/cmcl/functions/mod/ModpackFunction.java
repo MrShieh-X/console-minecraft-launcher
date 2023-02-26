@@ -18,6 +18,7 @@
 
 package com.mrshiehx.cmcl.functions.mod;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.bean.arguments.ArgumentRequirement;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
@@ -279,7 +280,7 @@ public class ModpackFunction implements Function {
 
 
     private static void downloadModpackWithInstalling(String versionName, String modDownloadLink, Arguments arguments, int source) {
-        File modpacks = new File(".cmcl", "modpacks");
+        File modpacks = new File(CMCL.getCMCLWorkingDirectory(), "modpacks");
         modpacks.mkdirs();
         String fileName;
         try {

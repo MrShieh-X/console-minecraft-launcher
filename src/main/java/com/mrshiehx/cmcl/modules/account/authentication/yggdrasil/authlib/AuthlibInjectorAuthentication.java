@@ -18,6 +18,7 @@
 
 package com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.authlib;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.exceptions.DescriptionException;
@@ -255,7 +256,7 @@ public class AuthlibInjectorAuthentication {
 
 
     public static File getAuthlibInjectorFile() throws IOException {
-        File cmcl = new File(".cmcl");
+        File cmcl = CMCL.getCMCLWorkingDirectory();
         cmcl.mkdirs();
         File file = new File(cmcl, "authlib-injector.jar");
         if (file.exists() && file.isFile() && file.length() > 0) return file;

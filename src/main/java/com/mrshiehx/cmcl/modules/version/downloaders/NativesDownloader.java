@@ -17,6 +17,7 @@
  */
 package com.mrshiehx.cmcl.modules.version.downloaders;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
 import com.mrshiehx.cmcl.utils.FileUtils;
@@ -38,7 +39,7 @@ import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class NativesDownloader {
     public static void download(File versionDir, List<JSONObject> librariesJa) {
-        File tempNatives = new File(".cmcl", "temp_natives");
+        File tempNatives = new File(CMCL.getCMCLWorkingDirectory(), "temp_natives");
         tempNatives.mkdirs();
 
         try {
