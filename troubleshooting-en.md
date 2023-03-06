@@ -5,7 +5,7 @@ It's not crashing, it's your operation method is wrong. Open cmd, enter `cd /d`,
 ---
 
 ### Executing cmcl.exe says that the Java version is inappropriate?
-This is the problem of packaging exe. You can download cmcl.jar and start it with `java -jar cmcl.jar`. We are working on finding an exe packaging method that can solve this problem.
+Use `cmcl2.exe` instead of `cmcl.exe`; you can also download cmcl.jar and start it with `java -jar cmcl.jar`.
 
 ---
 

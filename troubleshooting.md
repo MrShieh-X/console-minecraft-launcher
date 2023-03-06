@@ -4,8 +4,8 @@
 
 ---
 
-### 执行cmcl.exe说Java版本不合适？
-这个是打包exe的问题，可以下载cmcl.jar，通过`java -jar cmcl.jar`来启动，我们正致力于寻找一种能解决这个问题的exe打包方式。
+### 执行cmcl.exe说 Java 版本不合适？
+使用`cmcl2.exe`代替`cmcl.exe`；也可以下载cmcl.jar，通过`java -jar cmcl.jar`来启动。
 
 ---
 

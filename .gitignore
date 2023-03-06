@@ -125,3 +125,6 @@ natives/
 META-INF
 META-INF/*
 tempUpdates.txt
+
+CMCLExe/x64
+CMCLExe/CMCL/x64

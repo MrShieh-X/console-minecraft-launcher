@@ -18,7 +18,7 @@ If you still have any problems after watching the video or using it, you can ref
 - [@mail_set](https://space.bilibili.com/435654748) ([Personal Website](https://mailset.top)): Upload CMCL to AUR repository (named`cmcl`)
 
 ## Tutorial
-- If your operating system is Windows, you can download `cmcl.exe` in Releases, then open cmd, use `cd /d <directory path>` to open the directory where `cmcl.exe` is located, and execute the command `cmcl` , followed by options and parameters. If you want to use CMCL in any directory, please refer to ["How to use CMCL in any path?" in Troubleshooting](troubleshooting-en.md#how-to-use-cmcl-in-any-path).
+- If your operating system is Windows, you can download `cmcl.exe` (If Java is installed but CMCL prompts that there is no Java when starting, please download `cmcl2.exe`) in Releases, then open cmd, use `cd /d <directory path>` to open the directory where `cmcl.exe` is located, and execute the command `cmcl` , followed by options and parameters. If you want to use CMCL in any directory, please refer to ["How to use CMCL in any path?" in Troubleshooting](troubleshooting-en.md#how-to-use-cmcl-in-any-path).
 - If your operating system is ArchLinux, you can use yay to install CMCL, the command is as follows:
 ```shell
 yay -S cmcl

@@ -18,7 +18,7 @@
 - [@mail_set](https://space.bilibili.com/435654748)（[个人网站](https://mailset.top)）：上传CMCL至AUR仓库（名称为`cmcl`）
 
 ## 使用教程
-- 如果您的操作系统是 Windows，则可以在 Releases 中下载`cmcl.exe`，然后打开 cmd，使用`cd /d <目录路径>`打开`cmcl.exe`所在的目录，执行命令`cmcl`，后面加上选项与参数。如果想要在任意目录都能使用CMCL，请参考[疑难解答中的“怎么做到在任何路径下都能用CMCL？”](troubleshooting.md#怎么做到在任何路径下都能用cmcl)。
+- 如果您的操作系统是 Windows，则可以在 Releases 中下载`cmcl.exe`（如果安装了 Java 但启动时却提示没有 Java，请下载`cmcl2.exe`），然后打开 cmd，使用`cd /d <目录路径>`打开`cmcl.exe`所在的目录，执行命令`cmcl`，后面加上选项与参数。如果想要在任意目录都能使用CMCL，请参考[疑难解答中的“怎么做到在任何路径下都能用CMCL？”](troubleshooting.md#怎么做到在任何路径下都能用cmcl)。
 - 如果您的操作系统是 ArchLinux，您可以使用yay安装CMCL，命令如下：
 ```shell
 yay -S cmcl
