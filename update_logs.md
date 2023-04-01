@@ -1,5 +1,8 @@
 # 更新日志
-目前的最新版本为2.1.1，发布日期是2023年2月26日。
+目前的最新版本为2.1.2，发布日期是2023年4月1日。
+
+## 2.1.2（2023年4月1日）
+- 解决了由 [Butterblock233](https://github.com/Butterblock233) 于 [Issue#26](https://github.com/MrShieh-X/console-minecraft-launcher/issues/26) 提出的问题。
 
 ## 2.1.1（2023年2月26日）
 - 可在安装 Fabric API 的选项`--api`后面指定版本。

@@ -4,6 +4,7 @@
 #include "java.h"
 #include "lang.h"
 #include <cstdlib>
+#include <direct.h>
 #pragma warning(disable : 4996)
 
 Version J8(TEXT("8"));
@@ -44,6 +45,12 @@ std::wstring chars2Wstring(const char *chars)  //返回值类型是wstring类型
   std::wstring wString = (wchar_t *)pUnicode;  //强转后赋值给返回变量
   delete[] pUnicode;
   return wString;
+}
+
+std::wstring CurrentWorkingDirectory() {
+  char buff[500];
+  _getcwd(buff, 500);
+  return chars2Wstring(buff);
 }
 
 LPCWSTR VENDOR_DIRS[] = {L"Java",  L"Microsoft",          L"BellSoft",
@@ -104,21 +111,21 @@ void FindJavaInDirAndLaunchJVM(const std::wstring &baseDir,
 }
 
 int main(int argc, char *argv[]) {
-  std::wstring path, exeName;
+  std::wstring path, exePath;
 
   // Since Jar file is appended to this executable, we should first get the
   // location of JAR file.
-  if (ERROR_SUCCESS != MyGetModuleFileName(NULL, exeName)) return 1;
+  if (ERROR_SUCCESS != MyGetModuleFileName(NULL, exePath)) return 1;
 
-  std::wstring workdir;
-  size_t last_slash = exeName.find_last_of(L"/\\");
-  if (last_slash != std::wstring::npos && last_slash + 1 < exeName.size()) {
-    workdir = exeName.substr(0, last_slash);
-    // exeName = exeName.substr(last_slash + 1);
-  }
+  std::wstring workdir = CurrentWorkingDirectory();
+  /*size_t last_slash = exePath.find_last_of(L"/\\");
+  if (last_slash != std::wstring::npos && last_slash + 1 < exePath.size()) {
+    workdir = exePath.substr(0, last_slash);
+    // exePath = exePath.substr(last_slash + 1);
+  }*/
 
   // Try java in PATH
-  RawLaunchJVM(L"java", workdir, exeName, argc, argv);
+  RawLaunchJVM(L"java", workdir, exePath, argc, argv);
 
   /*OSVERSIONINFOEX osvi;
   DWORDLONG dwlConditionMask = 0;
@@ -140,7 +147,7 @@ int main(int argc, char *argv[]) {
 
   // Find Java in environment variables and Registry
   if (FindJava(path))
-    LaunchJVM(path + L"\\bin\\java.exe", workdir, exeName, argc, argv);
+    LaunchJVM(path + L"\\bin\\java.exe", workdir, exePath, argc, argv);
 
   std::wstring programFiles;
 
@@ -152,7 +159,7 @@ int main(int argc, char *argv[]) {
     MyPathAppend(dir, vendorDir);
     MyPathAddBackslash(dir);
 
-    FindJavaInDirAndLaunchJVM(dir, workdir, exeName, argc, argv);
+    FindJavaInDirAndLaunchJVM(dir, workdir, exePath, argc, argv);
   }
 
   // Consider C:\Program Files (x86)
@@ -163,7 +170,7 @@ int main(int argc, char *argv[]) {
     MyPathAppend(dir, vendorDir);
     MyPathAddBackslash(dir);
 
-    FindJavaInDirAndLaunchJVM(dir, workdir, exeName, argc, argv);
+    FindJavaInDirAndLaunchJVM(dir, workdir, exePath, argc, argv);
   }
 
   SYSTEM_INFO systemInfo;
@@ -176,12 +183,12 @@ int main(int argc, char *argv[]) {
       (systemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_ARM64);
 
   /*if (isARM64) {
-    RawLaunchJVM(L"jre-arm64\\bin\\java.exe", workdir, exeName, argc ,argv);
+    RawLaunchJVM(L"jre-arm64\\bin\\java.exe", workdir, exePath, argc ,argv);
   }
   if (isX64) {
-    RawLaunchJVM(L"jre-x64\\bin\\java.exe", workdir, exeName, argc, argv);
+    RawLaunchJVM(L"jre-x64\\bin\\java.exe", workdir, exePath, argc, argv);
   }
-  RawLaunchJVM(L"jre-x86\\bin\\java.exe", workdir, exeName, argc, argv);*/
+  RawLaunchJVM(L"jre-x86\\bin\\java.exe", workdir, exePath, argc, argv);*/
 
   std::wstring cmclJavaDir;
   {
@@ -203,7 +210,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (!cmclJavaDir.empty()) {
-    FindJavaInDirAndLaunchJVM(cmclJavaDir, workdir, exeName, argc, argv);
+    FindJavaInDirAndLaunchJVM(cmclJavaDir, workdir, exePath, argc, argv);
   }
 
 error:

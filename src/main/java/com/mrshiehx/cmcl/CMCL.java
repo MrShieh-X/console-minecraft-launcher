@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class CMCL {
     public static File gameDir;
@@ -291,6 +292,8 @@ public class CMCL {
     }
 
     public static File getConfigFile() {
+        if (Constants.isDebug())
+            return Constants.DEFAULT_CONFIG_FILE;
         if (OperatingSystem.CURRENT_OS == OperatingSystem.LINUX || OperatingSystem.CURRENT_OS == OperatingSystem.OSX) {
             File inConfigDir = new File(System.getProperty("user.home"), ".config/cmcl/cmcl.json");
             if (inConfigDir.exists()) {
@@ -301,7 +304,11 @@ public class CMCL {
             }
             return inConfigDir;
         }
-        return Constants.DEFAULT_CONFIG_FILE;
+        if (Constants.DEFAULT_CONFIG_FILE.exists() && Constants.DEFAULT_CONFIG_FILE.canWrite())
+            return Constants.DEFAULT_CONFIG_FILE;
+        String executableFilePath = Utils.getExecutableFilePath();
+        File executableFile = new File(!Utils.isEmpty(executableFilePath) ? executableFilePath : ".");
+        return new File(executableFile.isDirectory() ? executableFile : Optional.ofNullable(executableFile.getParentFile()).orElse(new File(".")), "cmcl.json");
     }
 
     public static void saveConfig(JSONObject jsonObject) {
@@ -326,9 +333,13 @@ public class CMCL {
     }
 
     public static File getCMCLWorkingDirectory() {
+        if (Constants.isDebug())
+            return new File(".cmcl");
         if (OperatingSystem.CURRENT_OS == OperatingSystem.LINUX || OperatingSystem.CURRENT_OS == OperatingSystem.OSX) {
             return new File(System.getProperty("user.home"), ".cmcl");
         }
-        return new File(".cmcl");
+        String executableFilePath = Utils.getExecutableFilePath();
+        File executableFile = new File(!Utils.isEmpty(executableFilePath) ? executableFilePath : ".");
+        return new File(executableFile.isDirectory() ? executableFile : Optional.ofNullable(executableFile.getParentFile()).orElse(new File(".")), ".cmcl");
     }
 }

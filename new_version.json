@@ -1,15 +1,15 @@
 {
-  "latestVersionName": "2.1.1",
-  "latestVersionCode": 16,
+  "latestVersionName": "2.1.2",
+  "latestVersionCode": 17,
   "latestVersionDownloadUrls": [
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.1/cmcl.jar",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.1/cmcl.exe",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.1/cmcl",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.1/cmcl.jar",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.1/cmcl.exe",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.1/cmcl"
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.2/cmcl.jar",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.2/cmcl.exe",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.2/cmcl",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.2/cmcl.jar",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.2/cmcl.exe",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.2/cmcl"
   ],
-  "updateDate": "2023-02-26",
-  "updateContentEn": "- The version of Fabric API can be specified after the installation option `--api`.\n- Enhanced compatibility with versions installed by other launchers.\n- Fixed the problem that the startup command cannot be printed by `cmcl -p`.\n- Same as Linux, will read `~/.config/cmcl/cmcl.json` as the configuration file by default under macOS\n- Under Linux and macOS, the working directory of CMCL is changed from the `.cmcl` folder under the directory where CMCL is located to the `.cmcl` folder under the user directory.",
-  "updateContentZh": "- \u53ef\u5728\u5b89\u88c5 Fabric API \u7684\u9009\u9879`--api`\u540e\u9762\u6307\u5b9a\u7248\u672c\u3002\n- \u589e\u5f3a\u4e86\u5bf9\u5176\u4ed6\u542f\u52a8\u5668\u5b89\u88c5\u7684\u7248\u672c\u7684\u517c\u5bb9\u6027\u3002\n- \u4fee\u590d\u4e86\u65e0\u6cd5\u901a\u8fc7`cmcl -p`\u6253\u5370\u542f\u52a8\u547d\u4ee4\u7684\u95ee\u9898\u3002\n- \u4e0e Linux \u4e00\u6837\uff0c\u5728 macOS \u4e2d\uff0c\u5c06\u9ed8\u8ba4\u8bfb\u53d6`~/.config/cmcl/cmcl.json`\u4f5c\u4e3a\u914d\u7f6e\u6587\u4ef6\u3002\n- \u5728 Linux \u4e0e macOS \u4e0b\uff0cCMCL\u7684\u5de5\u4f5c\u76ee\u5f55\u7531CMCL\u6240\u5728\u76ee\u5f55\u4e0b\u7684`.cmcl`\u6587\u4ef6\u5939\u8f6c\u5230\u7528\u6237\u76ee\u5f55\u4e0b\u7684`.cmcl`\u6587\u4ef6\u5939\u3002"
+  "updateDate": "2023-04-01",
+  "updateContentEn": "- Fixed issue raised by Butterblock233 on Issue#26.",
+  "updateContentZh": "- \u89e3\u51b3\u4e86\u7531 Butterblock233 \u4e8e Issue#26 \u63d0\u51fa\u7684\u95ee\u9898\u3002"
 }

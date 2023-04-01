@@ -1,5 +1,8 @@
 # Update Logs
-Currently, the latest version is 2.1.1, which was updated on February 26, 2023.
+Currently, the latest version is 2.1.2, which was updated on April 1, 2023.
+
+## 2.1.2 (Apr. 1, 2023)
+- Fixed issue raised by [Butterblock233](https://github.com/Butterblock233) on [Issue#26](https://github.com/MrShieh-X/console-minecraft-launcher/issues/26).
 
 ## 2.1.1 (Feb. 26, 2023)
 - The version of Fabric API can be specified after the installation option `--api`.

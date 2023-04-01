@@ -196,4 +196,7 @@ public class Utils {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
     }
 
+    public static String getExecutableFilePath() {
+        return Utils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+    }
 }
