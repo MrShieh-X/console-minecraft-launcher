@@ -1,13 +1,13 @@
 {
-  "latestVersionName": "2.1.2",
-  "latestVersionCode": 17,
+  "latestVersionName": "2.1.3",
+  "latestVersionCode": 18,
   "latestVersionDownloadUrls": [
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.2/cmcl.jar",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.2/cmcl.exe",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.2/cmcl",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.2/cmcl.jar",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.2/cmcl.exe",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.2/cmcl"
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.3/cmcl.jar",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.3/cmcl.exe",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.3/cmcl",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.3/cmcl.jar",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.3/cmcl.exe",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.3/cmcl"
   ],
   "updateDate": "2023-04-01",
   "updateContentEn": "- Fixed issue raised by Butterblock233 on Issue#26.",

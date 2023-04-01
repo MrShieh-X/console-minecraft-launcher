@@ -25,6 +25,7 @@ import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -197,6 +198,10 @@ public class Utils {
     }
 
     public static String getExecutableFilePath() {
-        return Utils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        try {
+            return URLDecoder.decode(Utils.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,7 +1,7 @@
 # Console Minecraft Launcher
 一个在控制台上运行的 Minecraft Java 版启动器
 
-[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.1.2-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.1.3-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
 ![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--04--01-brightgreen)
 ![软件需求](https://img.shields.io/badge/%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82-Java%208-blue)
 

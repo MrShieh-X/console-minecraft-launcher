@@ -1,5 +1,8 @@
 # 更新日志
-目前的最新版本为2.1.2，发布日期是2023年4月1日。
+目前的最新版本为2.1.3，发布日期是2023年4月1日。
+
+## 2.1.3（2023年4月1日）
+- 修复了一些问题。
 
 ## 2.1.2（2023年4月1日）
 - 解决了由 [Butterblock233](https://github.com/Butterblock233) 于 [Issue#26](https://github.com/MrShieh-X/console-minecraft-launcher/issues/26) 提出的问题。

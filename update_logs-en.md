@@ -1,5 +1,8 @@
 # Update Logs
-Currently, the latest version is 2.1.2, which was updated on April 1, 2023.
+Currently, the latest version is 2.1.3, which was updated on April 1, 2023.
+
+## 2.1.3 (Apr. 1, 2023)
+- Fixed some issues.
 
 ## 2.1.2 (Apr. 1, 2023)
 - Fixed issue raised by [Butterblock233](https://github.com/Butterblock233) on [Issue#26](https://github.com/MrShieh-X/console-minecraft-launcher/issues/26).
