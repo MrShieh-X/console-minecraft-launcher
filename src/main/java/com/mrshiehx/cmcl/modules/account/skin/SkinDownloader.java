@@ -19,14 +19,17 @@ package com.mrshiehx.cmcl.modules.account.skin;
 
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.authlib.AuthlibInjectorApiProvider;
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.nide8auth.Nide8AuthApiProvider;
+import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Base64;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
@@ -54,7 +57,15 @@ public class SkinDownloader {
             }
 
             URL url = new URL(urlString);
-            JSONObject result = new JSONObject(NetworkUtils.httpURLConnection2String((HttpURLConnection) url.openConnection()));
+            URLConnection connection;
+            try {
+                connection = url.openConnection();
+            } catch (IOException e) {
+                if (Utils.getConfig().optBoolean("proxyEnabled"))
+                    System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+                throw e;
+            }
+            JSONObject result = new JSONObject(NetworkUtils.httpURLConnection2String((HttpURLConnection) connection));
             JSONArray properties = result.getJSONArray("properties");
             for (int i = 0; i < properties.length(); i++) {
                 JSONObject property = properties.optJSONObject(i);

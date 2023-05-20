@@ -58,7 +58,8 @@ or add a space after the two and then enter the content, such as `cmcl -l D:\.mi
 The configurations are storing in a JSON file named cmcl.json in the launcher running directory (`userDirectory/.config/cmcl` under Linux), you can edit them by a file editor (need to know JSON tutorial, backup before modification) or the program arguments `config <config name> <content>` (see Help Documentation Configuration Related).<br/>
 If you edit configurations by a file editor, the configuration name and text configuration content need to be enclosed in double quotes ("").<br/>
 If you edit by command, if the configuration content contains spaces, it needs to be enclosed in double quotes ("").<br/>
-You can view this content through the options `config --view`.
+You can view this content through the options `config --view`.<br/>
+Note: For configurations whose type is Boolean, its value can be `true` which means "yes", or `false` which means "no".
 
 | Configuration Name      | Type        | Meaning                                                                                                                                       |
 |-------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -73,12 +74,13 @@ You can view this content through the options `config --view`.
 | javaPath                | String      | [**Game related**] Java Path (It will get automatically if it is empty)                                                                       |
 | windowSizeWidth         | Integer     | [**Game related**] The width of the game window                                                                                               |
 | windowSizeHeight        | Integer     | [**Game related**] The height of the game window                                                                                              |
-| isFullscreen            | Boolean     | [**Game related**] Whether it is full screen, true if yes, false otherwise                                                                    |
-| exitWithMinecraft       | Boolean     | [**Game related**] When running the game, if you need to exit the launcher and exit the game by the way, it is true, otherwise it is false    |
+| isFullscreen            | Boolean     | [**Game related**] Whether the game window is fullscreen or not                                                                               |
+| exitWithMinecraft       | Boolean     | [**Game related**] When running the game, whether or not you need to exit the launcher and exit the game by the way                           |
 | printStartupInfo        | Boolean     | [**Game related**] When starting the game, whether to output startup information (Java path, maximum memory, etc.)                            |
 | checkAccountBeforeStart | Boolean     | [**Game related**] Check whether the account is available before starting the game                                                            |
 | jvmArgs                 | JSON Array  | [**Game related**] Customize JVM arguments (Check out the examples below or use "jvmArgs -h" to get the relevant tutorial for modification)   |
 | gameArgs                | JSON Object | [**Game related**] Customize game arguments (Check out the examples below or use "gameArgs -h" to get the relevant tutorial for modification) |
+| proxyEnabled             | Boolean     | Whether to enable network proxy                                                                                                               |
 | proxyHost               | String      | Proxy Host Address                                                                                                                            |
 | proxyPort               | Integer     | Proxy Port                                                                                                                                    |
 | proxyUsername           | String      | Proxy authentication username(optional for proxy)                                                                                             |

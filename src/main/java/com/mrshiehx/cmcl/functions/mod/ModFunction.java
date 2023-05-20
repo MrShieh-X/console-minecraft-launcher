@@ -19,6 +19,7 @@
 package com.mrshiehx.cmcl.functions.mod;
 
 import com.mrshiehx.cmcl.CMCL;
+import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.arguments.ArgumentRequirement;
 import com.mrshiehx.cmcl.bean.arguments.Arguments;
 import com.mrshiehx.cmcl.constants.Constants;
@@ -30,7 +31,6 @@ import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeModpackManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
 import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import org.json.JSONObject;
@@ -38,9 +38,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.mrshiehx.cmcl.CMCL.*;
 
@@ -100,13 +98,7 @@ public class ModFunction implements Function {
 
         if (isEmpty(sourceStr)) {
             JSONObject config = getConfig();
-            sourceStr = config.optString("modDownloadSource");
-            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth") && !sourceStr.equalsIgnoreCase("cf") && !sourceStr.equalsIgnoreCase("mr")) {
-                sourceStr = ConsoleUtils.inputStringInFilter(getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR"), getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN"), string -> "curseforge".equalsIgnoreCase(string) || "modrinth".equalsIgnoreCase(string));
-                if (sourceStr != null) {
-                    Utils.saveConfig(config.put("modDownloadSource", sourceStr));
-                }
-            }
+            sourceStr = getModDownloadSource(config);
         }
 
         int source;
@@ -226,5 +218,33 @@ public class ModFunction implements Function {
             //Utils.downloadFileFailed(modDownloadLink, modFile, e);
             System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON", fileName, e));
         }
+    }
+
+    public static String getModDownloadSource(JSONObject config) {
+        String sourceStr = config.optString("modDownloadSource");
+        if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth") && !sourceStr.equalsIgnoreCase("cf") && !sourceStr.equalsIgnoreCase("mr")) {
+            List<Pair<String, Integer>> sources = new ArrayList<>(2);
+            sources.add(0, new Pair<>("CurseForge", 0));
+            sources.add(1, new Pair<>("Modrinth", 1));
+            for (Pair<String, Integer> pair : sources) {
+                System.out.printf("[%d]%s\n", pair.getValue(), pair.getKey());
+            }
+            int defaultDownloadSource = 0;
+            int value = 0;
+            System.out.print(Utils.getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", defaultDownloadSource));
+            try {
+                value = Integer.parseInt(new Scanner(System.in).nextLine());
+            } catch (NumberFormatException | NoSuchElementException ignore) {
+            }
+            String mds;
+            if (value == 1) {
+                mds = "modrinth";
+            } else {
+                mds = "curseforge";
+            }
+            config.put("modDownloadSource", mds);
+            Utils.saveConfig(config);
+        }
+        return config.optString("modDownloadSource");
     }
 }

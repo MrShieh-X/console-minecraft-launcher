@@ -223,13 +223,29 @@ public class ForgeMerger implements ExtraMerger {
                 String third = DownloadSource.getProvider().thirdPartyForge() + stringBuilder;
 
                 try {
+                    //应该是常规的下载文件函数下载不了这个链接，所以才下载了bytes弄去文件那里；也可能下载bytes的函数下载不了，才这样特别
                     URL ConnectUrl = new URL(third);
-                    HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
+                    HttpURLConnection connection;
+                    try {
+                        connection = (HttpURLConnection) ConnectUrl.openConnection();
+                    } catch (IOException e) {
+                        if (Utils.getConfig().optBoolean("proxyEnabled"))
+                            System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+                        throw e;
+                    }
                     connection.setDoInput(true);
                     connection.setUseCaches(false);
                     connection.setDoOutput(true);
                     connection.setRequestMethod("GET");
-                    FileUtils.bytes2File(installer, NetworkUtils.httpURLConnection2Bytes(connection), false);
+                    byte[] bytes;
+                    try {
+                        bytes = NetworkUtils.httpURLConnection2Bytes(connection);
+                    } catch (IOException e) {
+                        if (Utils.getConfig().optBoolean("proxyEnabled"))
+                            System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+                        throw e;
+                    }
+                    FileUtils.bytes2File(installer, bytes, false);
                     finalDownload = third;
                 } catch (Exception e) {
                     throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME) + ": " + e);

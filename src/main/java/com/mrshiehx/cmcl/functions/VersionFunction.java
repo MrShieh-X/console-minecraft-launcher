@@ -228,7 +228,7 @@ public class VersionFunction implements Function {
                             AssetsDownloader.start(
                                     new JSONObject(FileUtils.readFileContent(jsonFile)),
                                     arguments.optInt("t", arguments.optInt("thread", Constants.DEFAULT_DOWNLOAD_THREAD_COUNT)),
-                                    null);
+                                    () -> System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_ASSETS")));
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }

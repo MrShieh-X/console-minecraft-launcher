@@ -552,9 +552,10 @@ public class MinecraftLauncher {
 
 
         JSONObject config = Utils.getConfig();
+        boolean proxyEnabled = config.optBoolean("proxyEnabled");
         String proxyHost = config.optString("proxyHost");
         String proxyPort = config.optString("proxyPort");
-        if (!Utils.isEmpty(proxyHost)
+        if (proxyEnabled && !Utils.isEmpty(proxyHost)
                 && !Utils.isEmpty(proxyPort)
                 && config.optString("proxyUsername").isEmpty()
                 && config.optString("proxyPassword").isEmpty()) {

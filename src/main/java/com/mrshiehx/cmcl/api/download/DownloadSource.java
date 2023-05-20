@@ -23,10 +23,7 @@ import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.utils.Utils;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class DownloadSource {
     private static final DefaultApiProvider defaultApiProvider = new DefaultApiProvider();
@@ -51,7 +48,7 @@ public class DownloadSource {
             System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDownloadSource));
             try {
                 value = Integer.parseInt(new Scanner(System.in).nextLine());
-            } catch (NumberFormatException ignore) {
+            } catch (NumberFormatException | NoSuchElementException ignore) {
             }
             config.put("downloadSource", value);
             Utils.saveConfig(config);

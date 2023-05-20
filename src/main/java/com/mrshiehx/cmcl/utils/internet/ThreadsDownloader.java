@@ -39,43 +39,49 @@ import static com.mrshiehx.cmcl.CMCL.isEmpty;
  * @author MrShiehX
  **/
 public class ThreadsDownloader {
-    private final int threadsCount;
+    private final int totalThreadsCount;
+    private int doneThreadsCount;
+
+    private final int totalFilesCount;
+    private int doneFilesCount;
+    private final String preMessage;
+
     private boolean started;
     public final Map<Integer, List<Pair<String, File>>> maps;
     private final Void onDownloaded;
-    private int done;
-    private final boolean deleteIfExist;
+    private final boolean deleteTargetFileIfExist;
 
-    public ThreadsDownloader(List<Pair<String, File>> files, boolean deleteIfExist) {
-        this(files, null, deleteIfExist);
+    public ThreadsDownloader(List<Pair<String, File>> files, boolean deleteTargetFileIfExist) {
+        this(files, null, deleteTargetFileIfExist);
     }
 
-    public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded, boolean deleteIfExist) {
-        this(files, onDownloaded, Constants.DEFAULT_DOWNLOAD_THREAD_COUNT, deleteIfExist);
+    public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded, boolean deleteTargetFileIfExist) {
+        this(files, onDownloaded, Constants.DEFAULT_DOWNLOAD_THREAD_COUNT, deleteTargetFileIfExist);
     }
 
-    public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded, int threadsCount, boolean deleteIfExist) {
-        this.threadsCount = threadsCount;
+    public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded, int totalThreadsCount, boolean deleteTargetFileIfExist) {
+        this.totalThreadsCount = totalThreadsCount;
         this.maps = new HashMap<>();
-        for (int i = 0; i < threadsCount; i++) {
+        for (int i = 0; i < totalThreadsCount; i++) {
             maps.put(i, new LinkedList<>());
         }
         this.onDownloaded = onDownloaded;
-        this.deleteIfExist = deleteIfExist;
+        this.deleteTargetFileIfExist = deleteTargetFileIfExist;
 
-        int size = files.size();
-        if (size > 0) {
-            if (size <= 10) {
+        this.totalFilesCount = files.size();
+        this.preMessage = "[%d/" + totalFilesCount + "]";
+        if (totalFilesCount > 0) {
+            if (totalFilesCount <= 10) {
                 int i = 0;
                 for (Pair<String, File> entry : files) {
                     getMap(i).add(entry);
                     i++;
                 }
             } else {
-                int quotient = size / threadsCount;
-                int remainder = size % threadsCount;
+                int quotient = totalFilesCount / totalThreadsCount;
+                int remainder = totalFilesCount % totalThreadsCount;
 
-                for (int i = 0; i < threadsCount; i++) {
+                for (int i = 0; i < totalThreadsCount; i++) {
                     List<Pair<String, File>> map = getMap(i);
                     int start = quotient * i;
                     for (int j = start; j < start + quotient; j++) {
@@ -84,11 +90,11 @@ public class ThreadsDownloader {
                     }
                 }
                 if (remainder > 0) {
-                    int start = quotient * threadsCount;
-                    for (int i = 0; i < threadsCount; i++) {
+                    int start = quotient * totalThreadsCount;
+                    for (int i = 0; i < totalThreadsCount; i++) {
                         List<Pair<String, File>> map = getMap(i);
                         int j = start + i;
-                        if (j < size) {
+                        if (j < totalFilesCount) {
                             Pair<String, File> one = files.get(j);
                             map.add(one);
                         }
@@ -100,7 +106,7 @@ public class ThreadsDownloader {
 
     public void start() {
         if (started) return;
-        for (int i = 0; i < threadsCount; i++) {
+        for (int i = 0; i < totalThreadsCount; i++) {
             int finalI = i;
             new Thread(() -> {
                 List<Pair<String, File>> map = getMap(finalI);
@@ -108,21 +114,24 @@ public class ThreadsDownloader {
                     String url = pair.getKey();
                     File file = pair.getValue();
                     if (isEmpty(url)) {
-                        System.out.println(getString("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", file.getName()));
+                        doneAddOneFile();
+                        System.out.println(String.format(preMessage, doneFilesCount) + getString("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", file.getName()));
                         continue;
                     }
-                    //System.out.println(getString("MESSAGE_DOWNLOADING_FILE", url.substring(url.lastIndexOf('/') + 1)));
-                    //不知为何多线程读取MAP会出现读取不了的问题（直接输出MESSAGE_DOWNLOADING_FILE），所以直接输出文件名
-                    System.out.println(url.substring(url.lastIndexOf('/') + 1));
                     try {
-                        DownloadUtils.multipleAttemptsDownload(url, file, deleteIfExist);
+                        DownloadUtils.multipleAttemptsDownload(url, file, deleteTargetFileIfExist);
+
+                        doneAddOneFile();
+                        //System.out.println(getString("MESSAGE_DOWNLOADING_FILE", url.substring(url.lastIndexOf('/') + 1)));
+                        //不知为何多线程读取MAP会出现读取不了的问题（直接输出MESSAGE_DOWNLOADING_FILE），所以直接输出文件名
+                        System.out.println(String.format(preMessage, doneFilesCount) + url.substring(url.lastIndexOf('/') + 1));
                     } catch (IOException e) {
-                        Utils.downloadFileFailed(url, file, e);
-                        //System.out.println(getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON", file.getName(),e));
+                        doneAddOneFile();
+                        System.out.println(String.format(preMessage, doneFilesCount) + Utils.downloadFileFailedText(url, file, e));
                     }
                 }
                 //System.out.println(done+"/"+threadsCount);
-                doneAddOne();
+                doneAddOneThread();
                 /*if (done == threadsCount) {
                     if (onDownloaded != null) {
                         onDownloaded.execute();
@@ -138,7 +147,7 @@ public class ThreadsDownloader {
             } catch (Exception ignore) {
 
             }
-            if (done >= threadsCount) {
+            if (doneThreadsCount >= totalThreadsCount) {
                 if (onDownloaded != null) {
                     onDownloaded.execute();
                 }
@@ -147,16 +156,22 @@ public class ThreadsDownloader {
         }
     }
 
-    private List<Pair<String, File>> getMap(int count) {
-        if (count >= threadsCount) {
+    private List<Pair<String, File>> getMap(int index) {
+        if (index >= totalThreadsCount) {
             throw new RuntimeException("unsupported number");
         }
-        return maps.get(count);
+        return maps.get(index);
     }
 
-    private void doneAddOne() {
+    private void doneAddOneThread() {
         synchronized (this) {
-            done++;
+            doneThreadsCount++;
+        }
+    }
+
+    private void doneAddOneFile() {
+        synchronized (this) {
+            doneFilesCount++;
         }
     }
 }

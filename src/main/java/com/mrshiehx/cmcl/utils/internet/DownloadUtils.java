@@ -20,11 +20,13 @@
 package com.mrshiehx.cmcl.utils.internet;
 
 import com.mrshiehx.cmcl.utils.FileUtils;
+import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DownloadUtils {
@@ -46,8 +48,8 @@ public class DownloadUtils {
     }
 
     public static void downloadFile(String urlString, File to, @Nullable PercentageTextProgress progressBar, boolean deleteIfExist) throws IOException {
+        FileUtils.createFile(to, deleteIfExist || to.length() == 0);
         try {
-            FileUtils.createFile(to, deleteIfExist || to.length() == 0);
             URL url = new URL(NetworkUtils.encodeURL(urlString));
             HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
             int completeFileSize = httpConnection.getContentLength();
@@ -73,8 +75,13 @@ public class DownloadUtils {
             bout.close();
             fos.close();
             in.close();
+        } catch (MalformedURLException e) {
+            throw e;
         } catch (IOException e) {
-            if (progressBar != null && !progressBar.done) System.out.println();
+            if (progressBar != null && !progressBar.done)
+                System.out.println();
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
             to.delete();//万一没开始下载就失败了，如果deleteIfExist（是否原文件存在就删除）为true，那才删，否则没叫删除的，没开始下载就失败了，就不动原文件
             throw e;
         }
@@ -82,14 +89,22 @@ public class DownloadUtils {
 
 
     public static byte[] downloadBytes(String url) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(new URL(NetworkUtils.encodeURL(url)).openStream());
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] dataBuffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-            byteArrayOutputStream.write(dataBuffer, 0, bytesRead);
+        try {
+            BufferedInputStream in = new BufferedInputStream(new URL(NetworkUtils.encodeURL(url)).openStream());
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] dataBuffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                byteArrayOutputStream.write(dataBuffer, 0, bytesRead);
+            }
+            return byteArrayOutputStream.toByteArray();
+        } catch (MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
         }
-        return byteArrayOutputStream.toByteArray();
     }
 
     public static byte[] downloadBytes(String urlString, @Nullable PercentageTextProgress progressBar) throws IOException {
@@ -116,8 +131,12 @@ public class DownloadUtils {
                 progressBar.setValue(completeFileSize);
             in.close();
             return byteArrayOutputStream.toByteArray();
+        } catch (MalformedURLException e) {
+            throw e;
         } catch (IOException e) {
             if (progressBar != null && !progressBar.done) System.out.println();
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
             throw e;
         }
     }
@@ -132,10 +151,16 @@ public class DownloadUtils {
 
     public static void multipleAttemptsDownload(String urlString, File to, @Nullable PercentageTextProgress progressBar, int times, boolean deleteIfExist) throws IOException {
         IOException finalThrowable = null;
+        FileUtils.createFile(to, deleteIfExist || to.length() == 0);
         for (int i = 0; i < times; i++) {
             try {
                 multipleAttemptsDownloadInternal(urlString, to, progressBar, deleteIfExist);
                 return;
+            } catch (MalformedURLException e) {
+                if (progressBar != null && progressBar.printed && !progressBar.done) {
+                    progressBar.setValue(0);
+                }
+                throw e;
             } catch (IOException e) {
                 finalThrowable = e;
                 if (progressBar != null && progressBar.printed && !progressBar.done) {
@@ -143,13 +168,16 @@ public class DownloadUtils {
                 }
             }
         }
-        if (finalThrowable != null) throw finalThrowable;
+        if (finalThrowable != null) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw finalThrowable;
+        }
     }
 
 
-    private static void multipleAttemptsDownloadInternal(String urlString, File to, @Nullable PercentageTextProgress progressBar, boolean deleteIfExist) throws IOException {
+    private static void multipleAttemptsDownloadInternal(String urlString, File to, @Nullable PercentageTextProgress progressBar, boolean deleteIfExist) throws MalformedURLException, IOException {
         try {
-            FileUtils.createFile(to, deleteIfExist || to.length() == 0);
             URL url = new URL(NetworkUtils.encodeURL(urlString));
             HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
             int completeFileSize = httpConnection.getContentLength();
@@ -175,6 +203,8 @@ public class DownloadUtils {
             bout.close();
             fos.close();
             in.close();
+        } catch (MalformedURLException e) {
+            throw e;
         } catch (IOException e) {
             if (deleteIfExist) to.delete();//万一没开始下载就失败了，如果deleteIfExist（是否原文件存在就删除）为true，那才删，否则没叫删除的，没开始下载就失败了，就不动原文件
             throw e;

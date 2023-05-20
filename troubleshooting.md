@@ -34,6 +34,22 @@ cmcl version 1.19.3 --config=gameDir D:\wokingdirs\1.19.3
 
 ---
 
+### 如何设置网络代理？
+先执行以下命令，配置代理信息：
+```
+cmcl config proxyHost <代理主机地址>
+cmcl config proxyPort <代理端口>
+```
+如果有设置账户与密码的需要，可执行以下命令，但不是必须的：
+```
+cmcl config proxyUsername <代理验证的账户>
+cmcl config proxyPassword <代理验证的密码>
+```
+最后可通过`cmcl config proxyEnabled true`来开启代理，通过`cmcl config proxyEnabled false`关闭代理。</br>
+注意：如果您开启了代理，进行需要联网的操作时出错，则有可能是您的网络代理不可用，您可以检查您的网络代理是否出现了问题。
+
+---
+
 ### 支持联机、开服吗？
 抱歉，暂时不行。
 

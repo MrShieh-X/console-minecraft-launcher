@@ -25,10 +25,7 @@ import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -68,20 +65,28 @@ public class NetworkUtils {
     }
 
     public static String post(String url, String content, String contentType, String accept) throws IOException {
-        URL connectUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) connectUrl.openConnection();
-        //here is your code above
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", contentType);
-        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
-        OutputStream wrt = connection.getOutputStream();
+        try {
+            URL connectUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) connectUrl.openConnection();
+            //here is your code above
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", contentType);
+            if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+            OutputStream wrt = connection.getOutputStream();
 
-        if (content != null) wrt.write(content.getBytes());
-        String s = httpURLConnection2String(connection);
-        wrt.close();
-        return s;
+            if (content != null) wrt.write(content.getBytes());
+            String s = httpURLConnection2String(connection);
+            wrt.close();
+            return s;
+        } catch (ProtocolException | MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
+        }
     }
 
     public static String getWithToken(String url, String tokenType, String token) throws IOException {
@@ -89,16 +94,24 @@ public class NetworkUtils {
     }
 
     public static String getWithToken(String url, String tokenType, String token, String contentType, String accept) throws IOException {
-        URL connectUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) connectUrl.openConnection();
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setDoOutput(true);
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", contentType);
-        connection.setRequestProperty("Authorization", tokenType + " " + token);
-        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
-        return (httpURLConnection2String(connection));
+        try {
+            URL connectUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) connectUrl.openConnection();
+            connection.setDoInput(true);
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", contentType);
+            connection.setRequestProperty("Authorization", tokenType + " " + token);
+            if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+            return (httpURLConnection2String(connection));
+        } catch (ProtocolException | MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
+        }
     }
 
     public static String get(String url) throws IOException {
@@ -106,15 +119,23 @@ public class NetworkUtils {
     }
 
     public static String get(String url, String contentType, String accept) throws IOException {
-        URL ConnectUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setDoOutput(true);
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", contentType);
-        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
-        return (httpURLConnection2String(connection));
+        try {
+            URL ConnectUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
+            connection.setDoInput(true);
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", contentType);
+            if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+            return (httpURLConnection2String(connection));
+        } catch (ProtocolException | MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
+        }
     }
 
     public static String curseForgeGet(String url) throws IOException {
@@ -122,16 +143,24 @@ public class NetworkUtils {
     }
 
     public static String curseForgeGet(String url, String contentType, String accept) throws IOException {
-        URL ConnectUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setDoOutput(true);
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", contentType);
-        connection.setRequestProperty("x-api-key", Constants.getCurseForgeApiKey());
-        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
-        return (httpURLConnection2String(connection));
+        try {
+            URL ConnectUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
+            connection.setDoInput(true);
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", contentType);
+            connection.setRequestProperty("x-api-key", Constants.getCurseForgeApiKey());
+            if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+            return (httpURLConnection2String(connection));
+        } catch (ProtocolException | MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
+        }
     }
 
     public static String delete(String url, String tokenType, String token) throws IOException {
@@ -139,45 +168,65 @@ public class NetworkUtils {
     }
 
     public static String delete(String url, String tokenType, String token, String contentType, String accept) throws IOException {
-        URL ConnectUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
-        //here is your code above
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setDoOutput(true);
-        connection.setRequestMethod("DELETE");
-        connection.setRequestProperty("Content-Type", contentType);
-        connection.setRequestProperty("Authorization", tokenType + " " + token);
-        //System.out.println(tokenType);
-        //System.out.println(token);
-        if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
-        //connection.getOutputStream();//.write("\"publicCreateProfileDTO\":\"45\"".getBytes(UTF_8));
-        return (httpURLConnection2String(connection));
+        try {
+            URL ConnectUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) ConnectUrl.openConnection();
+            //here is your code above
+            connection.setDoInput(true);
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Content-Type", contentType);
+            connection.setRequestProperty("Authorization", tokenType + " " + token);
+            //System.out.println(tokenType);
+            //System.out.println(token);
+            if (!Utils.isEmpty(accept)) connection.setRequestProperty("Accept", accept);
+            //connection.getOutputStream();//.write("\"publicCreateProfileDTO\":\"45\"".getBytes(UTF_8));
+            return (httpURLConnection2String(connection));
+        } catch (ProtocolException | MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
+        }
     }
 
     public static String httpURLConnection2String(HttpURLConnection con) throws IOException {
         try {
-            try (InputStream stdout = con.getInputStream()) {
-                return Utils.inputStream2String(stdout);
+            try {
+                try (InputStream stdout = con.getInputStream()) {
+                    return Utils.inputStream2String(stdout);
+                }
+            } catch (IOException e) {
+                try (InputStream stderr = con.getErrorStream()) {
+                    if (stderr == null) throw e;
+                    return Utils.inputStream2String(stderr);
+                }
             }
         } catch (IOException e) {
-            try (InputStream stderr = con.getErrorStream()) {
-                if (stderr == null) throw e;
-                return Utils.inputStream2String(stderr);
-            }
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
         }
     }
 
     public static byte[] httpURLConnection2Bytes(HttpURLConnection con) throws IOException {
         try {
-            try (InputStream stdout = con.getInputStream()) {
-                return FileUtils.inputStream2ByteArray(stdout);
+            try {
+                try (InputStream stdout = con.getInputStream()) {
+                    return FileUtils.inputStream2ByteArray(stdout);
+                }
+            } catch (IOException e) {
+                try (InputStream stderr = con.getErrorStream()) {
+                    if (stderr == null) throw e;
+                    return FileUtils.inputStream2ByteArray(stderr);
+                }
             }
         } catch (IOException e) {
-            try (InputStream stderr = con.getErrorStream()) {
-                if (stderr == null) throw e;
-                return FileUtils.inputStream2ByteArray(stderr);
-            }
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
         }
     }
 
@@ -202,16 +251,24 @@ public class NetworkUtils {
     }
 
     public static String getWithToken(String url) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        byte[] dataBuffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-            byteOutputStream.write(dataBuffer, 0, bytesRead);
+        try {
+            BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+            byte[] dataBuffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                byteOutputStream.write(dataBuffer, 0, bytesRead);
+            }
+            byteOutputStream.close();
+            in.close();
+            return byteOutputStream.toString();
+        } catch (MalformedURLException e) {
+            throw e;
+        } catch (IOException e) {
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+            throw e;
         }
-        byteOutputStream.close();
-        in.close();
-        return byteOutputStream.toString();
     }
 
     public static String addSlashIfMissing(String url) {

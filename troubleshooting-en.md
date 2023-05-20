@@ -34,6 +34,22 @@ Among them, the usage related to the version can be obtained through `cmcl versi
 
 ---
 
+### How to set up network proxy?
+First execute the following command to configure proxy information:
+```
+cmcl config proxyHost <proxy host address>
+cmcl config proxyPort <proxy port>
+```
+If you need to set username and password, you can execute the following command, but it is not necessary:
+```
+cmcl config proxyUsername <username for proxy authentication>
+cmcl config proxyPassword <password for proxy authentication>
+```
+Finally, the proxy can be enabled by `cmcl config proxyEnabled true`, and disabled by `cmcl config proxyEnabled false`. </br>
+Note: If you have enabled the proxy and an error occurs when performing operations that require networking, it may be that your network proxy is not available. You can check whether there is a problem with your network proxy.
+
+---
+
 ### Does it support playing with others online and server opening?
 Sorry, not at the moment.
 

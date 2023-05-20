@@ -105,7 +105,7 @@ public class English implements Language {
         en.put("MESSAGE_INSTALL_MODPACK_COEXIST", "Failed to install the modpack: %1$s and %2$s cannot be installed at the same time.");
         en.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "This version is complete and does not need to be completed. If the version is indeed incomplete after checking, please reinstall the version.");
         en.put("MESSAGE_COMPLETED_VERSION", "Version completed successfully");
-        en.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "Please select the download source for the first download (default is %d): ");
+        en.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "Please select the download source for the first download (default is %d, stored as configuration \"downloadSource\"): ");
         en.put("MESSAGE_SELECT_ACCOUNT", "Please enter the order number of the account you want to select (%d-%d): ");
         en.put("MESSAGE_SELECT_ACCOUNT_TYPE", "No account is currently available, please select the account type of the new account (%d-%d): ");
         en.put("MESSAGE_FAILED_TO_CHECK_FOR_UPDATES", "Failed to check for updates");
@@ -134,52 +134,56 @@ public class English implements Language {
         en.put("MESSAGE_TO_SELECT_VERSION", "Please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
         en.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Tip: The startup command is too long, you may not be able to run it directly in cmd or save it to a bat file and execute it. It is recommended that you use \"version [<version>] --export-script-ps=<script file>\" to export it as a PowerShell script file used later.");
         en.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Unable to export the script file: Due to the length limit of the bat script file, the startup command is too long and cannot be exported as a bat file. You can only use \"version [<version>] --export-script-ps=<script file with .ps1 as the suffix>\" to export as a PowerShell script file.");
-        en.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON Array\n" +
-                "    Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n\n" +
-                "  downloadSource | Integer\n" +
-                "    Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS\n\n" +
-                "  language | String\n" +
-                "    Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)\n\n" +
-                "  selectedVersion | String\n" +
-                "    Selected start version\n\n" +
-                "  [Game related] | maxMemory | Integer\n" +
-                "    Maximum (Unit: MB)|\n\n" +
-                "  [Game related] | gameDir | String\n" +
-                "    Custom the path of the game directory (or set working directory), default is .minecraft\n\n" +
-                "  [Game related] | assetsDir | String\n" +
-                "    Custom assets resource directory path, if empty, it is the assets directory in the game directory\n\n" +
-                "  [Game related] | resourcesDir | String\n" +
-                "    Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory\n\n" +
-                "  [Game related] | javaPath | String\n" +
-                "    Java Path (It will get automatically if it is empty)\n\n" +
-                "  [Game related] | windowSizeWidth | Integer\n" +
-                "    The width of the game window\n\n" +
-                "  [Game related] | windowSizeHeight | Integer\n" +
-                "    The height of the game window\n\n" +
-                "  [Game related] | isFullscreen | Boolean\n" +
-                "    Whether it is full screen, true if yes, false otherwise\n\n" +
-                "  [Game related] | exitWithMinecraft | Boolean\n" +
-                "    When running the game, if you need to exit the launcher and exit the game by the way, it is true, otherwise it is false\n\n" +
-                "  [Game related] | printStartupInfo | Boolean\n" +
-                "    When starting the game, whether to output startup information (Java path, maximum memory, etc.)\n\n" +
-                "  [Game related] | checkAccountBeforeStart | Boolean\n" +
-                "    Check whether the account is available before starting the game\n\n" +
-                "  [Game related] | jvmArgs | JSON Array\n" +
-                "    Customize JVM arguments (Non-direct modification, please use \"jvmArgs -h\" to get the relevant tutorial for modification)\n\n" +
-                "  [Game related] | gameArgs | JSON Object\n" +
-                "    Customize game arguments (Non-direct modification, please use \"gameArgs -h\" to get the relevant tutorial for modification)\n\n" +
-                "  proxyHost | String\n" +
-                "    Proxy Host Address\n\n" +
-                "  proxyPort | Integer\n" +
-                "    Proxy Port\n\n" +
-                "  proxyUsername | String\n" +
-                "    Proxy authentication username(optional for proxy)\n\n" +
-                "  proxyPassword | String\n" +
-                "    Proxy authentication password(optional for proxy)\n\n" +
-                "  modDownloadSource | String\n" +
-                "    Mod download source, curseforge or modrinth\n\n" +
-                "  modpackDownloadSource | String\n" +
-                "    Modpack download source, curseforge or modrinth");
+        en.put("MESSAGE_CONFIGURATIONS",
+                " Note: For configurations whose type is Boolean, its value can be \"true\" which means \"yes\", or \"false\" which means \"no\".\n" +
+                        "  accounts | JSON Array\n" +
+                        "    Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n\n" +
+                        "  downloadSource | Integer\n" +
+                        "    Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS\n\n" +
+                        "  language | String\n" +
+                        "    Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)\n\n" +
+                        "  selectedVersion | String\n" +
+                        "    Selected start version\n\n" +
+                        "  [Game related] | maxMemory | Integer\n" +
+                        "    Maximum (Unit: MB)|\n\n" +
+                        "  [Game related] | gameDir | String\n" +
+                        "    Custom the path of the game directory (or set working directory), default is .minecraft\n\n" +
+                        "  [Game related] | assetsDir | String\n" +
+                        "    Custom assets resource directory path, if empty, it is the assets directory in the game directory\n\n" +
+                        "  [Game related] | resourcesDir | String\n" +
+                        "    Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory\n\n" +
+                        "  [Game related] | javaPath | String\n" +
+                        "    Java Path (It will get automatically if it is empty)\n\n" +
+                        "  [Game related] | windowSizeWidth | Integer\n" +
+                        "    The width of the game window\n\n" +
+                        "  [Game related] | windowSizeHeight | Integer\n" +
+                        "    The height of the game window\n\n" +
+                        "  [Game related] | isFullscreen | Boolean\n" +
+                        "    Whether the game window is fullscreen or not\n\n" +
+                        "  [Game related] | exitWithMinecraft | Boolean\n" +
+                        "    When running the game, whether or not you need to exit the launcher and exit the game by the way\n\n" +
+                        "  [Game related] | printStartupInfo | Boolean\n" +
+                        "    When starting the game, whether to output startup information (Java path, maximum memory, etc.)\n\n" +
+                        "  [Game related] | checkAccountBeforeStart | Boolean\n" +
+                        "    Check whether the account is available before starting the game\n\n" +
+                        "  [Game related] | jvmArgs | JSON Array\n" +
+                        "    Customize JVM arguments (Non-direct modification, please use \"jvmArgs -h\" to get the relevant tutorial for modification)\n\n" +
+                        "  [Game related] | gameArgs | JSON Object\n" +
+                        "    Customize game arguments (Non-direct modification, please use \"gameArgs -h\" to get the relevant tutorial for modification)\n\n" +
+                        "  proxyEnabled | Boolean\n" +
+                        "    Whether to enable network proxy\n\n" +
+                        "  proxyHost | String\n" +
+                        "    Proxy Host Address\n\n" +
+                        "  proxyPort | Integer\n" +
+                        "    Proxy Port\n\n" +
+                        "  proxyUsername | String\n" +
+                        "    Proxy authentication username(optional for proxy)\n\n" +
+                        "  proxyPassword | String\n" +
+                        "    Proxy authentication password(optional for proxy)\n\n" +
+                        "  modDownloadSource | String\n" +
+                        "    Mod download source, curseforge or modrinth\n\n" +
+                        "  modpackDownloadSource | String\n" +
+                        "    Modpack download source, curseforge or modrinth");
         en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
         en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
         en.put("EXCEPTION_VERSION_NOT_FOUND", "%s: Version does not exist");
@@ -209,6 +213,7 @@ public class English implements Language {
         en.put("EXCEPTION_GET_USER_PROPERTIES", "Failed to get user profile: %s");
         en.put("EXCEPTION_SAVE_CONFIG", "Failed to save configuration: %s");
         en.put("EXCEPTION_READ_CONFIG_FILE", "Failed to read the configuration file, please make sure the configuration file (cmcl.json) is readable and the content is correct: %s");
+        en.put("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY", "Network error: If it is not the problem of the target website, there may be a problem with your proxy, please check if your network proxy is available!");
         en.put("ON_AUTHENTICATED_PAGE_TEXT", "Microsoft account authorization has been completed. Please close this page and back to the launcher to complete login.");
         en.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "Login Microsoft Account - Console Minecraft Launcher");
         en.put("CONSOLE_UNSUPPORTED_VALUE", "Unsupported value: %s");
@@ -243,8 +248,8 @@ public class English implements Language {
         en.put("CONSOLE_ASK_EXIT_WITH_MC", "Do you need to exit the game when exiting the launcher (can be turned on or off through \"config exitWithMinecraft true/false\")?");
         en.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "Do you need to print startup information when starting the game (such as Java path, maximum memory, login account, etc., which can be turned on or off through \"config printStartupInfo true/false\")?");
         en.put("CONSOLE_ASK_CHECK_ACCOUNT", "Do you need to check whether the account is available before starting the game (it will take time before starting, you can turn it on or off through \"config checkAccountBeforeStart true/false\")?");
-        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (curseforge or modrinth, store as configuration): ");
-        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN", "Unknown download source: %s.");
+        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (%d by default, stored as configuration \"modDownloadSource\"): ");
+        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_UNKNOWN", "Unknown download source: %s.");
         en.put("DATATYPE_STRING", "String");
         en.put("DATATYPE_INTEGER", "Integer");
         en.put("DATATYPE_BOOLEAN", "Boolean");

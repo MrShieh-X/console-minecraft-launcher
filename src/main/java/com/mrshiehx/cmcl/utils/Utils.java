@@ -178,11 +178,15 @@ public class Utils {
         }
     }
 
+
+    public static String downloadFileFailedText(String url, File file, Exception e) {
+        return url.endsWith("/" + file.getName()) ?
+                getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", e, url, file.getParentFile().getAbsolutePath()) :
+                getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", e, url, file.getParentFile().getAbsolutePath(), file.getName());
+    }
+
     public static void downloadFileFailed(String url, File file, Exception e) {
-        System.out.println(
-                url.endsWith("/" + file.getName()) ?
-                        getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL", e, url, file.getParentFile().getAbsolutePath()) :
-                        getString("MESSAGE_FAILED_DOWNLOAD_FILE_WITH_REASON_WITH_URL_WITH_NAME", e, url, file.getParentFile().getAbsolutePath(), file.getName()));
+        System.out.println(downloadFileFailedText(url, file, e));
     }
 
     public static String[] xsplit(String s, String regex) {

@@ -140,13 +140,7 @@ public class ModpackFunction implements Function {
 
         if (isEmpty(sourceStr)) {
             JSONObject config = getConfig();
-            sourceStr = config.optString("modpackDownloadSource");
-            if (!sourceStr.equalsIgnoreCase("curseforge") && !sourceStr.equalsIgnoreCase("modrinth") && !sourceStr.equalsIgnoreCase("cf") && !sourceStr.equalsIgnoreCase("mr")) {
-                sourceStr = ConsoleUtils.inputStringInFilter(getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR"), getString("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN"), string -> "curseforge".equalsIgnoreCase(string) || "modrinth".equalsIgnoreCase(string));
-                if (sourceStr != null) {
-                    Utils.saveConfig(config.put("modpackDownloadSource", sourceStr));
-                }
-            }
+            sourceStr = ModFunction.getModDownloadSource(config);
         }
 
         int source;

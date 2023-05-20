@@ -196,7 +196,7 @@ public class CMCL {
             }
         }
         initChangelessDirs();
-        initProxy(configJSONObject);
+        initProxyIfEnabled(configJSONObject);
         return configJSONObject;
     }
 
@@ -212,10 +212,11 @@ public class CMCL {
         resourcePacksDir = new File(gameDir, "resourcepacks");
     }
 
-    private static void initProxy(JSONObject configContent) {
+    private static void initProxyIfEnabled(JSONObject configContent) {
+        boolean proxyEnabled = configContent.optBoolean("proxyEnabled");
         String proxyHost = configContent.optString("proxyHost");
         String proxyPort = configContent.optString("proxyPort");
-        if (isEmpty(proxyHost) || isEmpty(proxyPort)) return;
+        if (!proxyEnabled || isEmpty(proxyHost) || isEmpty(proxyPort)) return;
         NetworkUtils.setProxy(proxyHost, proxyPort, configContent.optString("proxyUsername"), configContent.optString("proxyPassword"));
     }
 

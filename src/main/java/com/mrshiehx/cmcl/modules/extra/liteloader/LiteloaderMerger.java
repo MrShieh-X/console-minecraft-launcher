@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -206,7 +207,7 @@ public class LiteloaderMerger implements ExtraMerger {
             String url = (DownloadSource.getProvider() instanceof DefaultApiProvider) ? (repoUrl + "com/mumfrey/liteloader/" + gameVersion + "/" + file) : (DownloadSource.getProvider().thirdPartyLiteLoaderDownload() + "?version=" + version);
             if (snapshotBool) {
                 try {
-                    Element snapshot = (Element) DocumentBuilderFactory.newInstance().newDocumentBuilder().parse((NetworkUtils.addSlashIfMissing(repoUrl) + "com/mumfrey/liteloader/" + versionJO.optString("version") + "/") + "maven-metadata.xml").getDocumentElement().getElementsByTagName("snapshot").item(0);
+                    Element snapshot = (Element) DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(NetworkUtils.get(NetworkUtils.addSlashIfMissing(repoUrl) + "com/mumfrey/liteloader/" + versionJO.optString("version") + "/" + "maven-metadata.xml").getBytes())).getDocumentElement().getElementsByTagName("snapshot").item(0);
                     version = version.replace("SNAPSHOT", snapshot.getElementsByTagName("timestamp").item(0).getTextContent() + "-" + snapshot.getElementsByTagName("buildNumber").item(0).getTextContent());
                     url = repoUrl + "com/mumfrey/liteloader/" + versionJO.optString("version") + "/liteloader-" + version + "-release.jar";
                 } catch (Exception ignore) {

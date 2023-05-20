@@ -28,6 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -96,8 +98,13 @@ public class YggdrasilAuthentication {
             } else {
                 System.out.println(getString("SUCCESSFULLY_SET_SKIN"));
             }
-        } catch (Exception e) {
+        } catch (ProtocolException | MalformedURLException e) {
             e.printStackTrace();
+            Utils.printfln(getString("UNABLE_SET_SKIN"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (Utils.getConfig().optBoolean("proxyEnabled"))
+                System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
             Utils.printfln(getString("UNABLE_SET_SKIN"));
         }
 

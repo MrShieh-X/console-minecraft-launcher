@@ -67,9 +67,9 @@ public class VersionInstaller {
                              @Nullable Void onFinished,
                              @Nullable VersionJSONMerger versionJSONMerger,
                              JSONArray librariesToBeMerged) throws DescriptionException {
-        if (!checkNetwork(DownloadSource.getProvider().versionJSON())) {
+        /*if (!checkNetwork(DownloadSource.getProvider().versionJSON())) {
             throw new DescriptionException(getString("MESSAGE_FAILED_TO_CONNECT_TO_URL", DownloadSource.getProvider().versionJSON()));
-        }
+        }*/
         File cmcl = CMCL.getCMCLWorkingDirectory();
         //File versionsFile = new File(cmcl, "versions.json");
         cmcl.mkdirs();

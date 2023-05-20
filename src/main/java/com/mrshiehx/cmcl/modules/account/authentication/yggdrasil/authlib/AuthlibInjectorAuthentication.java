@@ -37,6 +37,7 @@ import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -78,17 +79,28 @@ public class AuthlibInjectorAuthentication {
         /*metadata存储时变成base64，启动时直接拿来用*/
         String metadata;
         try {
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection conn;
+            try {
+                conn = (HttpURLConnection) new URL(url).openConnection();
 
-            String ali = conn.getHeaderField("x-authlib-injector-api-location");
-            if (ali != null) {
-                URL absoluteAli = new URL(conn.getURL(), ali);
-                if (!NetworkUtils.urlEqualsIgnoreSlash(url, absoluteAli.toString())) {
-                    conn.disconnect();
-                    url = absoluteAli.toString();
-                    conn = (HttpURLConnection) absoluteAli.openConnection();
+                String ali = conn.getHeaderField("x-authlib-injector-api-location");
+                if (ali != null) {
+                    URL absoluteAli = new URL(conn.getURL(), ali);
+                    if (!NetworkUtils.urlEqualsIgnoreSlash(url, absoluteAli.toString())) {
+                        conn.disconnect();
+                        url = absoluteAli.toString();
+                        conn = (HttpURLConnection) absoluteAli.openConnection();
+                    }
                 }
+            } catch (MalformedURLException e) {
+                throw e;
+            } catch (IOException e) {
+                if (Utils.getConfig().optBoolean("proxyEnabled"))
+                    System.err.println(Utils.getString("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY"));
+                throw e;
             }
+
+
             if (!url.endsWith("/"))
                 url += "/";
 

@@ -106,7 +106,7 @@ public class SimplifiedChinese implements Language {
         zh.put("MESSAGE_INSTALL_MODPACK_COEXIST", "安装整合包失败：%1$s 和 %2$s 不能同时安装。");
         zh.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "该版本为完整的版本，无需补全。若经检查版本的确不完整，请您手动重新安装该版本。");
         zh.put("MESSAGE_COMPLETED_VERSION", "补充版本成功");
-        zh.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "首次下载请选择下载源(默认为%d)：");
+        zh.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "首次下载请选择下载源(默认为%d，存储为配置 downloadSource)：");
         zh.put("MESSAGE_SELECT_ACCOUNT", "请输入要选择账号的序号(%d-%d)：");
         zh.put("MESSAGE_SELECT_ACCOUNT_TYPE", "暂无可用的账号，请选择新账号的账号类型(%d-%d)：");
         zh.put("MESSAGE_FAILED_TO_CHECK_FOR_UPDATES", "检查更新失败");
@@ -135,52 +135,56 @@ public class SimplifiedChinese implements Language {
         zh.put("MESSAGE_TO_SELECT_VERSION", "请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
         zh.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "提示：启动命令过长，您可能无法直接在cmd中运行或保存至bat文件后执行，推荐您使用“version [<版本>] --export-script-ps=<脚本文件>”导出为 PowerShell 脚本文件后使用。");
         zh.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件的长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
-        zh.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
-                "    账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n\n" +
-                "  downloadSource | 整数\n" +
-                "    下载源，0为默认，1为BMCLAPI，2为MCBBS\n\n" +
-                "  language | 字符串\n" +
-                "    语言，zh为简体中文，en为英文，cantonese是粤语（简体）\n\n" +
-                "  selectedVersion | 字符串\n" +
-                "    已选择的版本\n\n" +
-                "  [游戏相关] | maxMemory | 整数\n" +
-                "    最大内存（单位：MB）\n\n" +
-                "  [游戏相关] | gameDir | 字符串\n" +
-                "    自定义游戏目录路径（或设置版本隔离），默认为.minecraft\n\n" +
-                "  [游戏相关] | assetsDir | 字符串\n" +
-                "    自定义assets资源目录路径，若为空则为游戏目录内的assets目录\n\n" +
-                "  [游戏相关] | resourcesDir | 字符串\n" +
-                "    自定义资源包目录路径，若为空则为游戏目录内的resourcepacks目录\n\n" +
-                "  [游戏相关] | javaPath | 字符串\n" +
-                "    Java 路径（如果为空会自动获得）\n\n" +
-                "  [游戏相关] | windowSizeWidth | 整数\n" +
-                "    游戏窗口的宽\n\n" +
-                "  [游戏相关] | windowSizeHeight | 整数\n" +
-                "    游戏窗口的高\n\n" +
-                "  [游戏相关] | isFullscreen | 布尔值\n" +
-                "    是否为全屏，是则为true，否则为false\n\n" +
-                "  [游戏相关] | exitWithMinecraft | 布尔值\n" +
-                "    运行游戏时，若需要退出启动器时顺便退出游戏，则为true，否则为false\n\n" +
-                "  [游戏相关] | printStartupInfo | 布尔值\n" +
-                "    开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）\n\n" +
-                "  [游戏相关] | checkAccountBeforeStart | 布尔值\n" +
-                "    开始游戏之前，是否检查账号是否可用\n\n" +
-                "  [游戏相关] | jvmArgs | JSON数组\n" +
-                "    自定义JVM参数（非直接修改，请通过“jvmArgs -h”获得相关使用教程以进行修改）\n\n" +
-                "  [游戏相关] | gameArgs | JSON对象\n" +
-                "    自定义游戏参数（非直接修改，请通过“gameArgs -h”获得相关使用教程以进行修改）\n\n" +
-                "  proxyHost | 字符串\n" +
-                "    代理主机地址\n\n" +
-                "  proxyPort | 整数\n" +
-                "    代理端口\n\n" +
-                "  proxyUsername | 字符串\n" +
-                "    代理验证的账户（代理可选）\n\n" +
-                "  proxyPassword | 字符串\n" +
-                "    代理验证的密码（代理可选）\n\n" +
-                "  modDownloadSource | 字符串\n" +
-                "    模组下载源，curseforge或modrinth\n\n" +
-                "  modpackDownloadSource | 字符串\n" +
-                "    整合包下载源，curseforge或modrinth");
+        zh.put("MESSAGE_CONFIGURATIONS",
+                " 注：类型为布尔值的配置，它的值可以输入表示“是”的“true”，也可以是表示“否”的“false”。\n" +
+                        "  accounts | JSON数组\n" +
+                        "    账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n\n" +
+                        "  downloadSource | 整数\n" +
+                        "    下载源，0为默认，1为BMCLAPI，2为MCBBS\n\n" +
+                        "  language | 字符串\n" +
+                        "    语言，zh为简体中文，en为英文，cantonese是粤语（简体）\n\n" +
+                        "  selectedVersion | 字符串\n" +
+                        "    已选择的版本\n\n" +
+                        "  [游戏相关] | maxMemory | 整数\n" +
+                        "    最大内存（单位：MB）\n\n" +
+                        "  [游戏相关] | gameDir | 字符串\n" +
+                        "    自定义游戏目录路径（或设置版本隔离），默认为.minecraft\n\n" +
+                        "  [游戏相关] | assetsDir | 字符串\n" +
+                        "    自定义assets资源目录路径，若为空则为游戏目录内的assets目录\n\n" +
+                        "  [游戏相关] | resourcesDir | 字符串\n" +
+                        "    自定义资源包目录路径，若为空则为游戏目录内的resourcepacks目录\n\n" +
+                        "  [游戏相关] | javaPath | 字符串\n" +
+                        "    Java 路径（如果为空会自动获得）\n\n" +
+                        "  [游戏相关] | windowSizeWidth | 整数\n" +
+                        "    游戏窗口的宽\n\n" +
+                        "  [游戏相关] | windowSizeHeight | 整数\n" +
+                        "    游戏窗口的高\n\n" +
+                        "  [游戏相关] | isFullscreen | 布尔值\n" +
+                        "    游戏窗口是否为全屏\n\n" +
+                        "  [游戏相关] | exitWithMinecraft | 布尔值\n" +
+                        "    运行游戏时，是否需要退出启动器时顺便退出游戏\n\n" +
+                        "  [游戏相关] | printStartupInfo | 布尔值\n" +
+                        "    开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）\n\n" +
+                        "  [游戏相关] | checkAccountBeforeStart | 布尔值\n" +
+                        "    开始游戏之前，是否检查账号是否可用\n\n" +
+                        "  [游戏相关] | jvmArgs | JSON数组\n" +
+                        "    自定义JVM参数（非直接修改，请通过“jvmArgs -h”获得相关使用教程以进行修改）\n\n" +
+                        "  [游戏相关] | gameArgs | JSON对象\n" +
+                        "    自定义游戏参数（非直接修改，请通过“gameArgs -h”获得相关使用教程以进行修改）\n\n" +
+                        "  proxyEnabled | 布尔值\n" +
+                        "    是否开启网络代理\n\n" +
+                        "  proxyHost | 字符串\n" +
+                        "    代理主机地址\n\n" +
+                        "  proxyPort | 整数\n" +
+                        "    代理端口\n\n" +
+                        "  proxyUsername | 字符串\n" +
+                        "    代理验证的账户（代理可选）\n\n" +
+                        "  proxyPassword | 字符串\n" +
+                        "    代理验证的密码（代理可选）\n\n" +
+                        "  modDownloadSource | 字符串\n" +
+                        "    模组下载源，curseforge或modrinth\n\n" +
+                        "  modpackDownloadSource | 字符串\n" +
+                        "    整合包下载源，curseforge或modrinth");
         zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
         zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
         zh.put("EXCEPTION_VERSION_NOT_FOUND", "%s：游戏版本不存在");
@@ -210,6 +214,7 @@ public class SimplifiedChinese implements Language {
         zh.put("EXCEPTION_INCOMPLETE_VERSION", "该版本不完整，请通过“version <版本名称> --complete”把该版本补充完整后再启动。");
         zh.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK", "找不到文件下载地址");
         zh.put("EXCEPTION_NOT_FOUND_DOWNLOAD_LINK_WITH_FILENAME", "找不到文件“%s”的下载地址");
+        zh.put("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY", "网络错误：如果不是目标网站的问题，则可能是您的代理出现了问题，请检查您的网络代理是否可用！");
         zh.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭此页面并返回到启动器完成登录。");
         zh.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "登录微软账户 - Console Minecraft Launcher");
         zh.put("CONSOLE_UNSUPPORTED_VALUE", "不支持的值：%s");
@@ -244,8 +249,8 @@ public class SimplifiedChinese implements Language {
         zh.put("CONSOLE_ASK_EXIT_WITH_MC", "请问是否需要退出启动器时顺便退出游戏（可通过“config exitWithMinecraft true/false”开启或关闭）？");
         zh.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "请问是否需要启动游戏时打印启动信息（如Java 路径、最大内存、登录的账号等，可通过“config printStartupInfo true/false”开启或关闭）？");
         zh.put("CONSOLE_ASK_CHECK_ACCOUNT", "请问是否需要在启动游戏之前检查账号是否可用（启动前会花时间，可通过“config checkAccountBeforeStart true/false”开启或关闭）？");
-        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "请选择下载源(curseforge 或 modrinth，存储为配置)：");
-        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR_UNKNOWN", "未知下载源：%s。");
+        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "请选择下载源(默认为%d，存储为配置 modDownloadSource)：");
+        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_UNKNOWN", "未知下载源：%s。");
         zh.put("DATATYPE_STRING", "字符串");
         zh.put("DATATYPE_INTEGER", "整数");
         zh.put("DATATYPE_BOOLEAN", "布尔值");
