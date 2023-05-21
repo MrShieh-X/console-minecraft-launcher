@@ -249,7 +249,6 @@ public class English implements Language {
         en.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "Do you need to print startup information when starting the game (such as Java path, maximum memory, login account, etc., which can be turned on or off through \"config printStartupInfo true/false\")?");
         en.put("CONSOLE_ASK_CHECK_ACCOUNT", "Do you need to check whether the account is available before starting the game (it will take time before starting, you can turn it on or off through \"config checkAccountBeforeStart true/false\")?");
         en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (%d by default, stored as configuration \"modDownloadSource\"): ");
-        en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_UNKNOWN", "Unknown download source: %s.");
         en.put("DATATYPE_STRING", "String");
         en.put("DATATYPE_INTEGER", "Integer");
         en.put("DATATYPE_BOOLEAN", "Boolean");

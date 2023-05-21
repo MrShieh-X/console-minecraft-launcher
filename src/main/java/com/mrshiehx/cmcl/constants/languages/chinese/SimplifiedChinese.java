@@ -250,7 +250,6 @@ public class SimplifiedChinese implements Language {
         zh.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "请问是否需要启动游戏时打印启动信息（如Java 路径、最大内存、登录的账号等，可通过“config printStartupInfo true/false”开启或关闭）？");
         zh.put("CONSOLE_ASK_CHECK_ACCOUNT", "请问是否需要在启动游戏之前检查账号是否可用（启动前会花时间，可通过“config checkAccountBeforeStart true/false”开启或关闭）？");
         zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "请选择下载源(默认为%d，存储为配置 modDownloadSource)：");
-        zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_UNKNOWN", "未知下载源：%s。");
         zh.put("DATATYPE_STRING", "字符串");
         zh.put("DATATYPE_INTEGER", "整数");
         zh.put("DATATYPE_BOOLEAN", "布尔值");

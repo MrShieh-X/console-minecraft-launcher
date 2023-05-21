@@ -1,15 +1,15 @@
 {
-  "latestVersionName": "2.1.3",
-  "latestVersionCode": 18,
+  "latestVersionName": "2.1.4",
+  "latestVersionCode": 19,
   "latestVersionDownloadUrls": [
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.3/cmcl.jar",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.3/cmcl.exe",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.3/cmcl",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.3/cmcl.jar",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.3/cmcl.exe",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.3/cmcl"
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.4/cmcl.jar",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.4/cmcl.exe",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.1.4/cmcl",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.4/cmcl.jar",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.4/cmcl.exe",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.1.4/cmcl"
   ],
-  "updateDate": "2023-04-01",
-  "updateContentEn": "- Fixed issue raised by Butterblock233 on Issue#26.",
-  "updateContentZh": "- \u89e3\u51b3\u4e86\u7531 Butterblock233 \u4e8e Issue#26 \u63d0\u51fa\u7684\u95ee\u9898\u3002"
+  "updateDate": "2023-05-21",
+  "updateContentEn": "- You can enable or disable the proxy by setting the configuration `proxyEnabled` to `true` or `false`. When a network error occurs, if the proxy is enabled, the user will be prompted to confirm whether the proxy is available.\n- Multi-threaded download files (assets, mod files of modpacks) will output the log after a single file is successfully downloaded, and will display the number of downloaded files and the total number of files to be downloaded.\n- Changed the way to choose the mod download source.",
+  "updateContentZh": "- \u53ef\u901a\u8fc7\u8bbe\u7f6e\u914d\u7f6e`proxyEnabled`\u4e3a`true`\u6216`false`\u5f00\u5173\u4ee3\u7406\uff0c\u7f51\u7edc\u51fa\u9519\u65f6\u82e5\u68c0\u6d4b\u5230\u5f00\u542f\u4e86\u4ee3\u7406\u5219\u4f1a\u63d0\u793a\u7528\u6237\u786e\u8ba4\u4ee3\u7406\u662f\u5426\u53ef\u7528\u3002\n- \u591a\u7ebf\u7a0b\u4e0b\u8f7d\u6587\u4ef6\uff08\u8d44\u6e90\u6587\u4ef6\u3001\u6574\u5408\u5305\u7684\u6a21\u7ec4\u6587\u4ef6\uff09\u5c06\u4f1a\u5728\u5355\u4e2a\u6587\u4ef6\u4e0b\u8f7d\u6210\u529f\u540e\u624d\u8f93\u51fa\u5176\u65e5\u5fd7\uff0c\u4e14\u4f1a\u663e\u793a\u5df2\u4e0b\u8f7d\u6587\u4ef6\u7684\u6570\u91cf\u548c\u8981\u4e0b\u8f7d\u7684\u6587\u4ef6\u603b\u6570\u91cf\u3002\n- \u66f4\u6539\u4e86\u6a21\u7ec4\u4e0b\u8f7d\u6e90\u7684\u9009\u62e9\u65b9\u5f0f\u3002"
 }

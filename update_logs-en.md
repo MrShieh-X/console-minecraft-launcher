@@ -1,5 +1,10 @@
 # Update Logs
-Currently, the latest version is 2.1.3, which was updated on April 1, 2023.
+Currently, the latest version is 2.1.4, which was updated on May 21, 2023.
+
+## 2.1.4 (May 21, 2023)
+- You can enable or disable the proxy by setting the configuration `proxyEnabled` to `true` or `false`. When a network error occurs, if the proxy is enabled, the user will be prompted to confirm whether the proxy is available.
+- Multi-threaded download files (assets, mod files of modpacks) will output the log after a single file is successfully downloaded, and will display the number of downloaded files and the total number of files to be downloaded.
+- Changed the way to choose the mod download source.
 
 ## 2.1.3 (Apr. 1, 2023)
 - Fixed some issues.
