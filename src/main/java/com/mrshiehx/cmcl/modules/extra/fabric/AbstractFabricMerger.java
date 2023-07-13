@@ -20,10 +20,11 @@ package com.mrshiehx.cmcl.modules.extra.fabric;
 
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +57,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
     /**
      * 将 Fabric 的JSON合并到原版JSON
      *
-     * @return key: 如果无法安装Fabric，是否继续安装 value:如果成功合并，则为需要安装的依赖库集合，否则为空
+     * @return key: 如果无法安装Fabric，是否继续安装；value：如果成功合并，则为需要安装的依赖库集合，否则为空
      **/
     public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue, @Nullable String extraVersion) {
         String fabricVersion;
@@ -68,13 +69,13 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
                 if (Constants.isDebug()) e.printStackTrace();
                 //e.printStackTrace();
                 System.out.println(getString("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", getModLoaderName()));
-                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
+                return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
             }
 
 
             if (jsonArray.length() == 0) {
                 System.out.println(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", getModLoaderName()));
-                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
+                return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
             }
             Map<String, JSONObject> fabrics = new LinkedHashMap<>();
             for (Object object : jsonArray) {
@@ -83,19 +84,8 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
                     fabrics.put(jsonObject.optJSONObject("loader", new JSONObject()).optString("version"), jsonObject);
                 }
             }
-            System.out.print('[');
-
             List<String> fabricVersions = new ArrayList<>(fabrics.keySet());
-            for (int i = fabricVersions.size() - 1; i >= 0; i--) {
-                String versionName = fabricVersions.get(i);
-                if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
-                System.out.print(versionName);//legal
-                if (i > 0) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.println(']');
-
+            PrintingUtils.printListItems(fabricVersions, true, 4, 2, true);
             fabricVersion = ExtraMerger.selectExtraVersion(getString("INSTALL_MODLOADER_SELECT", getModLoaderName(), fabricVersions.get(0)), fabrics, fabricVersions.get(0), getModLoaderName());
             if (fabricVersion == null)
                 return new Pair<>(false, null);
@@ -108,11 +98,11 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
         } catch (Exception e) {
             if (Constants.isDebug()) e.printStackTrace();
             System.out.println(e.getMessage());
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
+            return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", getModLoaderName())), null);
         }
     }
 
-    public Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String fabricVersion, JSONObject headJSONObject) throws DescriptionException {
+    public Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String fabricVersion, JSONObject headJSONObject) throws ExceptionWithDescription {
         String jsonUrl = getMetaUrl() + String.format("versions/loader/%s/%s", minecraftVersion, fabricVersion);
         String targetJSONString;
         try {
@@ -120,18 +110,18 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
         } catch (IOException e) {
             if (Constants.isDebug()) e.printStackTrace();
             //e.printStackTrace();
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", getModLoaderName()));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_TO_GET_TARGET_JSON", getModLoaderName()));
         }
         if (targetJSONString.contains("no loader version found")) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
         }
         JSONObject fabricJSONOrigin = JSONUtils.parseJSONObject(targetJSONString);
         if (fabricJSONOrigin == null) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", getModLoaderName()));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", getModLoaderName()));
         }
 
         if (fabricJSONOrigin.optString("message").equalsIgnoreCase("not found")) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
         }
 
         JSONObject fabricJSON = new JSONObject();

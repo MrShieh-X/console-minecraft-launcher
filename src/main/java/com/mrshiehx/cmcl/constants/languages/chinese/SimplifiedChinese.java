@@ -29,8 +29,8 @@ public class SimplifiedChinese implements Language {
     public Map<String, String> getTextMap() {
         Map<String, String> zh = new HashMap<>();
         zh.put("APPLICATION_NAME", "Console Minecraft Launcher");
-        zh.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher %1$s");
-        zh.put("MESSAGE_ABOUT_DESCRIPTION_2", "一个 Minecraft Java 版的启动器");
+        zh.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher v%1$s");
+        zh.put("MESSAGE_ABOUT_DESCRIPTION_2", "一个在命令行上运行的 Minecraft Java 版启动器");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_4", "源代码仓库：");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_6", "依赖库：");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_MAIN_DEVELOPERS", "主要开发者：");
@@ -132,59 +132,43 @@ public class SimplifiedChinese implements Language {
                 "${JVM_ARGS}\n" +
                 "自定义游戏参数：\n" +
                 "${GAME_ARGS}");
+        zh.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_LOG_FILE_PATH", "快速游玩日志文件路径：${QUICK_PLAY_LOG_FILE_PATH}");
+        zh.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_SAVE_NAME", "快速游玩直接进入的存档名：${QUICK_PLAY_SAVE_NAME}");
+        zh.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_SERVER_ADDRESS", "快速游玩直接进入的服务器地址：${QUICK_PLAY_SERVER_ADDRESS}");
+        zh.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_REALMS_ID", "快速游玩直接进入的领域ID：${QUICK_PLAY_REALMS_ID}");
         zh.put("MESSAGE_TO_SELECT_VERSION", "请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
         zh.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "提示：启动命令过长，您可能无法直接在cmd中运行或保存至bat文件后执行，推荐您使用“version [<版本>] --export-script-ps=<脚本文件>”导出为 PowerShell 脚本文件后使用。");
         zh.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件的长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
-        zh.put("MESSAGE_CONFIGURATIONS",
-                " 注：类型为布尔值的配置，它的值可以输入表示“是”的“true”，也可以是表示“否”的“false”。\n" +
-                        "  accounts | JSON数组\n" +
-                        "    账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n\n" +
-                        "  downloadSource | 整数\n" +
-                        "    下载源，0为默认，1为BMCLAPI，2为MCBBS\n\n" +
-                        "  language | 字符串\n" +
-                        "    语言，zh为简体中文，en为英文，cantonese是粤语（简体）\n\n" +
-                        "  selectedVersion | 字符串\n" +
-                        "    已选择的版本\n\n" +
-                        "  [游戏相关] | maxMemory | 整数\n" +
-                        "    最大内存（单位：MB）\n\n" +
-                        "  [游戏相关] | gameDir | 字符串\n" +
-                        "    自定义游戏目录路径（或设置版本隔离），默认为.minecraft\n\n" +
-                        "  [游戏相关] | assetsDir | 字符串\n" +
-                        "    自定义assets资源目录路径，若为空则为游戏目录内的assets目录\n\n" +
-                        "  [游戏相关] | resourcesDir | 字符串\n" +
-                        "    自定义资源包目录路径，若为空则为游戏目录内的resourcepacks目录\n\n" +
-                        "  [游戏相关] | javaPath | 字符串\n" +
-                        "    Java 路径（如果为空会自动获得）\n\n" +
-                        "  [游戏相关] | windowSizeWidth | 整数\n" +
-                        "    游戏窗口的宽\n\n" +
-                        "  [游戏相关] | windowSizeHeight | 整数\n" +
-                        "    游戏窗口的高\n\n" +
-                        "  [游戏相关] | isFullscreen | 布尔值\n" +
-                        "    游戏窗口是否为全屏\n\n" +
-                        "  [游戏相关] | exitWithMinecraft | 布尔值\n" +
-                        "    运行游戏时，是否需要退出启动器时顺便退出游戏\n\n" +
-                        "  [游戏相关] | printStartupInfo | 布尔值\n" +
-                        "    开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）\n\n" +
-                        "  [游戏相关] | checkAccountBeforeStart | 布尔值\n" +
-                        "    开始游戏之前，是否检查账号是否可用\n\n" +
-                        "  [游戏相关] | jvmArgs | JSON数组\n" +
-                        "    自定义JVM参数（非直接修改，请通过“jvmArgs -h”获得相关使用教程以进行修改）\n\n" +
-                        "  [游戏相关] | gameArgs | JSON对象\n" +
-                        "    自定义游戏参数（非直接修改，请通过“gameArgs -h”获得相关使用教程以进行修改）\n\n" +
-                        "  proxyEnabled | 布尔值\n" +
-                        "    是否开启网络代理\n\n" +
-                        "  proxyHost | 字符串\n" +
-                        "    代理主机地址\n\n" +
-                        "  proxyPort | 整数\n" +
-                        "    代理端口\n\n" +
-                        "  proxyUsername | 字符串\n" +
-                        "    代理验证的账户（代理可选）\n\n" +
-                        "  proxyPassword | 字符串\n" +
-                        "    代理验证的密码（代理可选）\n\n" +
-                        "  modDownloadSource | 字符串\n" +
-                        "    模组下载源，curseforge或modrinth\n\n" +
-                        "  modpackDownloadSource | 字符串\n" +
-                        "    整合包下载源，curseforge或modrinth");
+        zh.put("MESSAGE_CONFIGURATIONS_TIP", "注：类型为布尔值的配置，它的值可以输入表示“是”的“true”，也可以是表示“否”的“false”。");
+        zh.put("MESSAGE_CONFIGURATIONS_TABLE_CONTENT", "accounts|JSON数组|账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n" +
+                "downloadSource|整数|下载源，0为官方，1为BMCLAPI，2为MCBBS\n" +
+                "language|文本|语言，zh为简体中文，en为英文，cantonese是粤语（简体）\n" +
+                "selectedVersion|文本|已选择的版本，可直接使用“cmcl”进行启动\n" +
+                "maxMemory|整数|[游戏相关]最大内存（单位：MB）\n" +
+                "gameDir|文本|[游戏相关]自定义游戏目录路径（或设置版本隔离），默认为.minecraft\n" +
+                "assetsDir|文本|[游戏相关]自定义assets资源目录路径，若为空则为游戏目录内的assets目录\n" +
+                "resourcesDir|文本|[游戏相关]自定义资源包目录路径，若为空则为游戏目录内的resourcepacks目录\n" +
+                "javaPath|文本|[游戏相关]Java 路径（如果为空会自动获得）\n" +
+                "windowSizeWidth|整数|[游戏相关]游戏窗口的宽\n" +
+                "windowSizeHeight|整数|[游戏相关]游戏窗口的高\n" +
+                "isFullscreen|布尔值|[游戏相关]游戏窗口是否为全屏\n" +
+                "exitWithMinecraft|布尔值|[游戏相关]运行游戏时，是否需要退出启动器时顺便退出游戏\n" +
+                "printStartupInfo|布尔值|[游戏相关]开始游戏的时候，是否输出启动信息（Java 路径、最大内存等）\n" +
+                "checkAccountBeforeStart|布尔值|[游戏相关]开始游戏之前，是否检查账号是否可用\n" +
+                "jvmArgs|JSON数组|[游戏相关]自定义JVM参数（通过“jvmArgs -h”获得相关使用教程以进行修改）\n" +
+                "gameArgs|JSON对象|[游戏相关]自定义游戏参数（通过“gameArgs -h”获得相关使用教程以进行修改）\n" +
+                "qpLogFile|文本|[游戏相关]快速游玩（Quick Play，Minecraft 1.20 的新功能，设置下面三项配置即可启动游戏后分别直接进入存档、服务器、领域，只能设置一项）的日志文件路径（相对于游戏目录），可选\n" +
+                "qpSaveName|文本|[游戏相关]快速游玩直接进入的存档名称\n" +
+                "qpServerAddress|文本|[游戏相关]快速游玩直接进入的服务器地址（包括端口），该配置也适用于1.20之前的版本\n" +
+                "qpRealmsID|文本|[游戏相关]快速游玩直接进入的领域ID\n" +
+                "proxyEnabled|布尔值|是否开启网络代理\n" +
+                "proxyHost|文本|代理主机地址\n" +
+                "proxyPort|整数|代理端口\n" +
+                "proxyUsername|文本|代理验证的账户（代理可选）\n" +
+                "proxyPassword|文本|代理验证的密码（代理可选）\n" +
+                "modDownloadSource|文本|模组下载源，curseforge或modrinth\n" +
+                "modpackDownloadSource|文本|整合包下载源，curseforge或modrinth\n" +
+                "simplifyCommands|JSON对象|简化命令（通过“simplify -h”获得相关使用教程以进行修改）");
         zh.put("ERROR_WITH_MESSAGE", "错误：%1$s\n错误信息：%2$s");
         zh.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本的JSON文件或JAR文件不存在，请使用“-s <版本名称>”选择一个可启动的版本或使用“install <版本名称>”安装一个新的版本并选择。");
         zh.put("EXCEPTION_VERSION_NOT_FOUND", "%s：游戏版本不存在");
@@ -242,7 +226,6 @@ public class SimplifiedChinese implements Language {
         zh.put("CONSOLE_IMMERSIVE_MISSING_PARAMETER", "缺少参数。请输入 help 以获取帮助文档。");
         zh.put("CONSOLE_NOT_FOUND_VERSION_OR_OPTION", "找不到以“%s”为名的可启动版本或选项。您可以借助由输入选项 -h 或 --help 以获取的帮助文档检查输入的信息是否有误。");
         zh.put("CONSOLE_HELP_WRONG_WRITE", "正确写法是 -h 或 --help，不携带参数值，而不是“%s”。");
-        zh.put("CONSOLE_VERSION_UNCLEAR_MEANING", "“%s”意义不明，它是一个版本吗？记得加上双引号哦。");
         zh.put("CONSOLE_UNKNOWN_USAGE", "未知用法：%s。请使用选项 -h 或 --help 以获取帮助文档。");
         zh.put("CONSOLE_ARG_CHECKING_ONE", "%s：选项用法错误或不应在此出现。请使用选项 -h 或 --help 以获取帮助文档");
         zh.put("CONSOLE_ARG_CHECKING_PLURAL", "以下选项用法错误或不应在此出现。请使用选项 -h 或 --help 以获取帮助文档。\n%s");
@@ -250,7 +233,7 @@ public class SimplifiedChinese implements Language {
         zh.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "请问是否需要启动游戏时打印启动信息（如Java 路径、最大内存、登录的账号等，可通过“config printStartupInfo true/false”开启或关闭）？");
         zh.put("CONSOLE_ASK_CHECK_ACCOUNT", "请问是否需要在启动游戏之前检查账号是否可用（启动前会花时间，可通过“config checkAccountBeforeStart true/false”开启或关闭）？");
         zh.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "请选择下载源(默认为%d，存储为配置 modDownloadSource)：");
-        zh.put("DATATYPE_STRING", "字符串");
+        zh.put("DATATYPE_STRING", "文本");
         zh.put("DATATYPE_INTEGER", "整数");
         zh.put("DATATYPE_BOOLEAN", "布尔值");
         zh.put("DATATYPE_FRACTION", "小数");
@@ -260,7 +243,6 @@ public class SimplifiedChinese implements Language {
         zh.put("ACCOUNT_TYPE_OAS", "外置账号");
         zh.put("ACCOUNT_TYPE_NIDE8AUTH", "统一通行证");
         zh.put("ACCOUNT_TYPE_NIDE8AUTH_WITH_DETAIL", "统一通行证：%s %s");
-        zh.put("ACCOUNT_SELECTED", "已选择");
         zh.put("ACCOUNT_NOT_EXISTS", "账号不存在：%d");
         zh.put("ACCOUNT_TYPE_OAS_WITH_DETAIL", "外置账号：%s %s");
         zh.put("ACCOUNT_INVALID", "账号无效：%d");
@@ -366,8 +348,8 @@ public class SimplifiedChinese implements Language {
         zh.put("CF_SELECT_TARGET", "请选择目标${NAME}(%d-%d)：");
         zh.put("CF_SUPPORTED_GAME_VERSION", "%s 支持的游戏版本：");
         zh.put("CF_INPUT_GAME_VERSION", "请输入您要下载的版本：");
-        zh.put("CF_INPUT_VERSION", "请选择您要下载的${NAME}版本(%d-%d，-1为退出)：");
-        zh.put("CF_STORAGE_FILE_EXISTS", "文件“%s”已存在，请输入一个存储该${NAME}文件的目录：");
+        zh.put("CF_INPUT_VERSION", "请选择您要下载的${NAME}版本(%d-%d，-1为取消下载)：");
+        zh.put("CF_STORAGE_FILE_EXISTS", "请输入一个存储该${NAME}文件的目录：");
         zh.put("CF_NO_VERSION_FOR_GAME_VERSION", "没有适用于此游戏版本的%s版本。");
         zh.put("CF_INFORMATION_NOTHING", "无任何关于此%s的信息");
         zh.put("CF_INFORMATION_MOD_NAME", "   模组名称：          ");
@@ -377,15 +359,16 @@ public class SimplifiedChinese implements Language {
         zh.put("CF_INFORMATION_AUTHORS", "   作者：              ");
         zh.put("CF_INFORMATION_AUTHOR", "   作者：              ");
         zh.put("CF_INFORMATION_SUMMARY", "   简介：              ");
+        zh.put("CF_INFORMATION_ICON", "   图标：              ");
         zh.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持的游戏版本：");
         zh.put("CF_INFORMATION_DATE_MODIFIED", "   修改日期：          ");
+        zh.put("CF_INFORMATION_DOWNLOAD_COUNT", "   总下载量：          ");
         zh.put("CF_INFORMATION_DATE_CREATED", "   创建日期：          ");
         zh.put("CF_INFORMATION_DATE_RELEASED", "   发布日期：          ");
         zh.put("CF_INFORMATION_ISSUE_TRACKER_URL", "   问题反馈：          ");
         zh.put("CF_INFORMATION_SOURCE_URL", "   源代码仓库：        ");
         zh.put("CF_INFORMATION_WEBSITE_URL", "   网页介绍：          ");
         zh.put("CF_INFORMATION_WIKI_URL", "   维基网站：          ");
-        zh.put("CF_INFORMATION_DOWNLOADS", "   下载量：            ");
         zh.put("CF_INFORMATION_CATEGORIES", "   类别：              ");
         zh.put("CF_INFORMATION_DISCORD_URL", "   Discord 链接：      ");
         zh.put("CF_INFORMATION_DONATION", "   捐赠：              ");
@@ -403,6 +386,8 @@ public class SimplifiedChinese implements Language {
         zh.put("CF_BESEARCHED_MODPACK_FUC", "整合包");
         zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标游戏组件不是一个${NAME}，该组件的类别ID为%d。");
         zh.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "目标游戏组件不是一个${NAME}，该游戏组件是一个${TARGET}。");
+        zh.put("CF_STORAGE_FILE_EXISTS_OPERATIONS", "[0]覆盖目标文件  [1]存储到其他目录  [2]取消下载");
+        zh.put("CF_STORAGE_FILE_EXISTS_SELECT_OPERATION", "文件“%s”已存在，请选择您的操作(0-2)：");
         zh.put("MOD_FAILED_TO_GET_ALL_FILES", "获得${NAME}文件列表失败：%s");
         zh.put("MOD_UNKNOWN_SOURCE", "%s：未知下载源。使用选项 -h 或 --help 以获取更多信息。");
         zh.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n 或 --name 与 --id 不能同时存在。");
@@ -417,6 +402,19 @@ public class SimplifiedChinese implements Language {
         zh.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS 我的世界中文论坛（中国大陆用户推荐）");
         zh.put("MODPACK_CONTAINS_TWO_OR_MORE", "--install、--info、--file 或 --url 只能存在一个。");
         zh.put("MODPACK_CONTAINS_NOTHING", "必须指定 --install、--info、--file 或 --url。");
+        zh.put("YES_SHORT", "是");
+        zh.put("TABLE_ACCOUNTS_LIST_HEADER_SELECTED", "已选择");
+        zh.put("TABLE_ACCOUNTS_LIST_HEADER_ORDER", "序号");
+        zh.put("TABLE_ACCOUNTS_LIST_HEADER_NAME", "名称");
+        zh.put("TABLE_ACCOUNTS_LIST_HEADER_TYPE", "账号类型");
+        zh.put("TABLE_ACCOUNTS_LIST_HEADER_OTHER_INFORMATION", "其他信息");
+        zh.put("TABLE_CONFIG_ALL_NAME", "配置名");
+        zh.put("TABLE_CONFIG_ALL_TYPE", "类型");
+        zh.put("TABLE_CONFIG_ALL_VALUE", "配置值");
+        zh.put("TABLE_CONFIG_ALL_VIEW_SEPARATELY", "请通过“cmcl config %s”单独查看");
+        zh.put("TABLE_SETTABLE_CONFIG_NAME", "配置名");
+        zh.put("TABLE_SETTABLE_CONFIG_TYPE", "类型");
+        zh.put("TABLE_SETTABLE_CONFIG_MEANING", "含义");
         return zh;
     }
 
@@ -424,7 +422,7 @@ public class SimplifiedChinese implements Language {
     public Map<String, String> getHelpMap() {
         Map<String, String> zhHelp = new HashMap<>();
         zhHelp.put("ROOT",
-                "Console Minecraft Launcher " + Constants.CMCL_VERSION_NAME + "：一个在控制台上运行的 Minecraft Java 版启动器\n" +
+                "Console Minecraft Launcher v" + Constants.CMCL_VERSION_NAME + "：一个在命令行上运行的 Minecraft Java 版启动器\n" +
                         "\n" +
                         "注：\n" +
                         "  中括号内的内容是可选的。\n" +
@@ -436,7 +434,7 @@ public class SimplifiedChinese implements Language {
                         "  详细请参考选项说明后面的例子。\n" +
                         "\n" +
                         "用法：\n" +
-                        "cmcl [<版本>]                  启动选择的版本或<版本>所指定的版本。\n" +
+                        "cmcl [<版本>]                  启动通过“cmcl -s <版本>”选择的版本或<版本>所指定的版本。\n" +
                         "                                  例：cmcl 1.19：启动1.19；\n" +
                         "                                  假如现在选择的版本是1.18.2，直接运行（无参数），则为启动1.18.2。\n" +
                         "     -h, --help                获得帮助文档\n" +
@@ -444,12 +442,13 @@ public class SimplifiedChinese implements Language {
                         "                                  例：cmcl -l；cmcl --list=D:\\.minecraft\n" +
                         "     -p, --print[=<版本>]      打印选择的版本或<版本>的启动命令\n" +
                         "                                  例：cmcl -p；cmcl --print=1.19\n" +
-                        "     -s, --select=<版本>       选择版本\n" +
+                        "     -s, --select=<版本>       选择版本，选择后可直接使用“cmcl”进行启动\n" +
                         "     -a, --about               显示关于信息\n" +
                         //"     -i, --immersive           进入沉浸模式*\n" +
                         "     -c, --check-for-updates   检查更新\n" +
                         "     <功能> <选项>...          把“所有功能”中的功能名带入<功能>中（无需横\n" +
                         "                               杠），把选项放在功能名后方，以执行相应的操作。\n" +
+                        "                                  cmcl install -h\n" +
                         /*"\n" +
                         " *沉浸模式：在此模式下，执行上方的命令只能使用完整的选项，如help、list、print；\n" +
                         "            执行下方的命令无需输入“cmcl”，如config maxMemory 2048；\n" +
@@ -461,6 +460,7 @@ public class SimplifiedChinese implements Language {
                         "    version   版本操作\n" +
                         "    account   账号操作\n" +
                         "    config    更改启动器配置\n" +
+                        "    simplify  设置简化命令\n" +
                         "    jvmArgs   自定义JVM参数\n" +
                         "    gameArgs  自定义游戏参数\n" +
                         "    mod       模组搜索与安装\n" +
@@ -507,8 +507,8 @@ public class SimplifiedChinese implements Language {
                         "   -d, --delete                          删除版本。    cmcl version -d\n" +
                         "   --rename=<新名称>                     重命名版本\n" +
                         "   --complete[=assets|libraries|natives] 补全资源（assets）、依赖库（libraries）或原生依赖库（natives），\n" +
-                        "    [-t, --thread=<线程数>]              若不指明补全哪个内容，则为补全版本。补全资源时也可以通过指定\n" +
-                        "                                         -t, --thread=<线程数>以指定线程数。\n" +
+                        "    [-t, --thread=<线程数>]              若不指明补全哪个内容，则为补全使用模组加载器安装的版本。补全资源时\n" +
+                        "                                         也可以通过指定-t, --thread=<线程数>以指定线程数。\n" +
                         "                                            cmcl version 1.19 --complete\n" +
                         "                                            cmcl version --complete=assets\n" +
                         "   --config=<配置名称> [<配置内容>]      为版本单独设置配置，使用“config --view”查看的内容中带有\n" +
@@ -571,13 +571,25 @@ public class SimplifiedChinese implements Language {
                         "                                cmcl config --clear\n" +
                         "   -v, --view                查看所有可设置的配置。\n" +
                         "                                cmcl config -v");
+        zhHelp.put("simplify",
+                "设置简化命令\n" +
+                        "  功能名：simplify\n" +
+                        "  选项：\n" +
+                        "   -p, --print                     查看所有已设置的简化命令。\n" +
+                        "                                      cmcl simplify -p\n" +
+                        "   -s, --set=<简化命令> \"<原命令>\" 设置或修改简化命令。设置后，输入“cmcl <简化命令>”就能运行“cmcl <原命令>”。如示例，\n" +
+                        "                                   设置后输入“cmcl ds2”就能实现“cmcl config downloadSource 2”的功能，更加简便。\n" +
+                        "                                      cmcl simplify -s ds2 \"config downloadSource 2\"\n" +
+                        "   -d, --delete=<简化命令>         删除简化命令。\n" +
+                        "                                      cmcl simplify -d ds2");
         zhHelp.put("jvmArgs",
                 "自定义JVM参数\n" +
                         "  功能名：jvmArgs\n" +
                         "  选项：\n" +
                         "   -p, --print[=<缩进空格数>] [-v, --version=<版本>]    输出所有参数，缩进的空格数默认为2，可指定版本。\n" +
                         "                                                           cmcl jvmArgs -p2 -v1.19\n" +
-                        "   -a, --add=<参数内容> [-v, --version=<版本>]          添加参数，可指定版本。为了防止解析错误，请为内容加上双引号并且使用等号指定内容。\n" +
+                        "   -a, --add=<参数内容> [-v, --version=<版本>]          添加参数，可指定版本。为了防止解析错误，请为内容加上双引\n" +
+                        "                                                        号并且使用等号指定内容。注意：此处不能使用空格代替等于号。\n" +
                         "                                                           cmcl jvmArgs --add=\"-Dfile.encoding=UTF-8\"\n" +
                         "   -d, --delete=<序号，从0开始> [-v, --version=<版本>]  删除参数，可指定版本。\n" +
                         "                                                           cmcl jvmArgs --delete=2 --version=1.19");

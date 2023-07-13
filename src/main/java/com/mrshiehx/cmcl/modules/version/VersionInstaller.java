@@ -20,7 +20,7 @@ package com.mrshiehx.cmcl.modules.version;
 import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.MinecraftLauncher;
 import com.mrshiehx.cmcl.modules.version.downloaders.AssetsDownloader;
@@ -45,6 +45,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,7 +67,7 @@ public class VersionInstaller {
                              Merger optiFineMerger,
                              @Nullable Void onFinished,
                              @Nullable VersionJSONMerger versionJSONMerger,
-                             JSONArray librariesToBeMerged) throws DescriptionException {
+                             JSONArray librariesToBeMerged) throws ExceptionWithDescription {
         /*if (!checkNetwork(DownloadSource.getProvider().versionJSON())) {
             throw new DescriptionException(getString("MESSAGE_FAILED_TO_CONNECT_TO_URL", DownloadSource.getProvider().versionJSON()));
         }*/
@@ -74,7 +75,7 @@ public class VersionInstaller {
         //File versionsFile = new File(cmcl, "versions.json");
         cmcl.mkdirs();
         if (versions == null || versions.length() == 0) {
-            throw new DescriptionException(getString("MESSAGE_VERSIONS_LIST_IS_EMPTY"));
+            throw new ExceptionWithDescription(getString("MESSAGE_VERSIONS_LIST_IS_EMPTY"));
         }
         String url = null;
         for (Object o : versions) {
@@ -88,7 +89,7 @@ public class VersionInstaller {
         }
 
         if (isEmpty(url)) {
-            throw new DescriptionException(getString("EXCEPTION_VERSION_NOT_FOUND", versionName));
+            throw new ExceptionWithDescription(getString("EXCEPTION_VERSION_NOT_FOUND", versionName));
         }
         url = url.replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionJSON()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionJSON());
         File versionDir = new File(versionsDir, storage);
@@ -105,7 +106,7 @@ public class VersionInstaller {
             headVersionFile.put("id", storage);
 
         } catch (IOException e) {
-            throw new DescriptionException(getString("MESSAGE_FAILED_TO_CONTROL_VERSION_JSON_FILE", e));
+            throw new ExceptionWithDescription(getString("MESSAGE_FAILED_TO_CONTROL_VERSION_JSON_FILE", e));
         }
 
         if (installForgeOrFabricOrQuilt == InstallForgeOrFabricOrQuilt.FABRIC) {
@@ -125,14 +126,14 @@ public class VersionInstaller {
         JSONObject downloadsJo = headVersionFile.optJSONObject("downloads");
         JSONObject clientJo = downloadsJo != null ? downloadsJo.optJSONObject("client") : null;
         if (downloadsJo == null) {
-            throw new DescriptionException(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
+            throw new ExceptionWithDescription(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
         }
         if (clientJo == null) {
-            throw new DescriptionException(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
+            throw new ExceptionWithDescription(getString("MESSAGE_INSTALL_NOT_FOUND_JAR_FILE_DOWNLOAD_INFO"));
         }
         String urlClient = clientJo.optString("url").replace("https://launcher.mojang.com/", DownloadSource.getProvider().versionClient());
         if (isEmpty(urlClient)) {
-            throw new DescriptionException(getString("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY"));
+            throw new ExceptionWithDescription(getString("MESSAGE_INSTALL_JAR_FILE_DOWNLOAD_URL_EMPTY"));
         }
 
         try {
@@ -143,7 +144,7 @@ public class VersionInstaller {
                 DownloadUtils.downloadFile(urlClient, jarFile, new PercentageTextProgress());
             } catch (Exception e) {
                 FileUtils.deleteDirectory(versionDir);
-                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("MESSAGE_FAILED_DOWNLOAD_FILE", urlClient));
+                throw new ExceptionWithDescription(getString("MESSAGE_FAILED_DOWNLOAD_FILE", urlClient));
             }
             System.out.println(getString("MESSAGE_INSTALL_DOWNLOADED_JAR_FILE"));
 
@@ -212,7 +213,7 @@ public class VersionInstaller {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new DescriptionException(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION", ex));
+            throw new ExceptionWithDescription(getString("MESSAGE_FAILED_TO_INSTALL_NEW_VERSION", ex));
         }
 
 
@@ -233,7 +234,7 @@ public class VersionInstaller {
                     boolean meet = true;
                     JSONArray rules = jsonObject.optJSONArray("rules");
                     if (rules != null) {
-                        meet = MinecraftLauncher.isMeetConditions(rules, false, false);
+                        meet = MinecraftLauncher.isMeetConditions(rules, Collections.emptyMap());
                     }
                     //System.out.println(meet);
 

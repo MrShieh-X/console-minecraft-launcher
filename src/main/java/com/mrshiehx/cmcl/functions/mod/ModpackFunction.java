@@ -34,7 +34,7 @@ import com.mrshiehx.cmcl.modules.modpack.MultiMCModpackInstaller;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import com.mrshiehx.cmcl.utils.json.XJSONObject;
@@ -43,9 +43,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -102,7 +100,7 @@ public class ModpackFunction implements Function {
                 return;
             }
             String versionStorageName = arguments.opt("storage");
-            if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
+            if (isEmpty(versionStorageName)) versionStorageName = InteractionUtils.inputStringInFilter(
                     getString("MESSAGE_INPUT_VERSION_NAME"),
                     getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"),
                     string -> !isEmpty(string) && !VersionUtils.versionExists(string));
@@ -123,7 +121,7 @@ public class ModpackFunction implements Function {
         } else if (todo == 3) {
             String url = arguments.opt("url");
             String versionStorageName = arguments.opt("storage");
-            if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
+            if (isEmpty(versionStorageName)) versionStorageName = InteractionUtils.inputStringInFilter(
                     getString("MESSAGE_INPUT_VERSION_NAME"),
                     getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"),
                     string -> !isEmpty(string) && !VersionUtils.versionExists(string));
@@ -190,7 +188,7 @@ public class ModpackFunction implements Function {
                 String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), (x, y, z) -> {/*don't know what to do*/});
                 if (isEmpty(modpackDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
-                if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
+                if (isEmpty(versionStorageName)) versionStorageName = InteractionUtils.inputStringInFilter(
                         getString("MESSAGE_INPUT_VERSION_NAME"),
                         getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"),
                         string -> !isEmpty(string) && !VersionUtils.versionExists(string));
@@ -214,7 +212,7 @@ public class ModpackFunction implements Function {
                 String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), (x, y, z) -> {/*don't know what to do*/});
                 if (isEmpty(modDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
-                if (isEmpty(versionStorageName)) versionStorageName = ConsoleUtils.inputStringInFilter(
+                if (isEmpty(versionStorageName)) versionStorageName = InteractionUtils.inputStringInFilter(
                         getString("MESSAGE_INPUT_VERSION_NAME"),
                         getString("MESSAGE_INSTALL_INPUT_NAME_EXISTS"),
                         string -> !isEmpty(string) && !VersionUtils.versionExists(string));
@@ -253,25 +251,10 @@ public class ModpackFunction implements Function {
         return -1;
     }
 
-    private static File askStorage(File last) {
-        System.out.print(getString("CF_STORAGE_FILE_EXISTS", last.getAbsolutePath()).replace("${NAME}", getString("CF_BESEARCHED_MODPACK_ALC")));
-        String path;
-        try {
-            path = new Scanner(System.in).nextLine();
-        } catch (NoSuchElementException e) {
-            return null;
-        }
-        if (isEmpty(path)) return askStorage(last);
-        File file = new File(path, last.getName());
-        if (!file.exists()) return file;
-        return askStorage(file);
-    }
-
     @Override
     public String getUsageName() {
         return "modpack";
     }
-
 
     private static void downloadModpackWithInstalling(String versionName, String modDownloadLink, Arguments arguments, int source) {
         File modpacks = new File(CMCL.getCMCLWorkingDirectory(), "modpacks");
@@ -285,7 +268,7 @@ public class ModpackFunction implements Function {
         if (Utils.isEmpty(fileName)) fileName = System.currentTimeMillis() + ".zip";
         File modpackFile = new File(modpacks, fileName);
         if (modpackFile.exists()) {
-            File file = askStorage(modpackFile);
+            File file = ModFunction.askStorage(modpackFile, getString("CF_BESEARCHED_MODPACK_ALC"));
             if (file != null) {
                 modpackFile = file;
                 modpacks = file.getParentFile();
@@ -321,7 +304,6 @@ public class ModpackFunction implements Function {
             FileUtils.deleteDirectory(versionDir);
         }
     }
-
 
     public static class NotValidModPackFormat extends Exception {
         public NotValidModPackFormat(String message) {

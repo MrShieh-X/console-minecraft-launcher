@@ -158,7 +158,7 @@ public class MCBBSModpackInstaller {
                 Map<String, JSONObject> forges;
 
                 try {
-                    forges = ForgeMerger.getForges(minecraftVersion);
+                    forges = ForgeMerger.getInstallableForges(minecraftVersion);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
                     FileUtils.deleteDirectory(versionDir);

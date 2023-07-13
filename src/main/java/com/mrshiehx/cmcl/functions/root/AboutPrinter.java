@@ -58,8 +58,9 @@ public class AboutPrinter {
                         " - " + getString("MESSAGE_ABOUT_DESCRIPTION_6") + "\n" +
                         " --- json\n" +
                         " ----- Copyright (c) 2002 JSON.org\n" +
+                        " ----- Licensed under the JSON License.\n" +
                         " --- nanohttpd\n" +
-                        " ----- Copyright (C) 2012 - 2015 nanohttpd\n" +
+                        " ----- Copyright (C) 2012 - 2016 nanohttpd\n" +
                         " ----- Licensed under the BSD-3-Clause License.\n" +
                         " --- jansi\n" +
                         " ----- Copyright (C) 2009-2021 the original author(s).\n" +
@@ -67,6 +68,14 @@ public class AboutPrinter {
                         " --- Constant Pool Scanner\n" +
                         " ----- Copyright 1997-2010 Oracle and/or its affiliates.\n" +
                         " ----- Licensed under the GPL 2 or the CDDL.\n" +
+                        " --- JLine\n" +
+                        " ----- Copyright (C) 2022 the original author(s).\n" +
+                        " ----- Distributed under the BSD-3-Clause License.\n" +
+                        " --- Java Native Access (JNA)\n" +
+                        " ----- Copyright (c) 2007-2019 Timothy Wall,\n" +
+                        "       Wayne Meissner and Matthias Blasing\n" +
+                        " ----- Licensed under the LGPL, version 2.1 or later, or (from\n" +
+                        "       version 4.0 onward) the Apache License, version 2.0.\n" +
                         "=======================================================================================");
     }
 }

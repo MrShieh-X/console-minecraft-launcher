@@ -19,7 +19,7 @@
 package com.mrshiehx.cmcl.modules.account.authentication.yggdrasil;
 
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.json.JSONObject;
@@ -115,7 +115,7 @@ public class YggdrasilAuthentication {
             JSONObject jsonObject = availableProfiles.get(i);
             System.out.println((i + 1) + "." + jsonObject.optString("name"));
         }
-        int number = ConsoleUtils.inputInt(Utils.getString("MESSAGE_YGGDRASIL_LOGIN_SELECT_PROFILE", 1, availableProfiles.size()), 1, availableProfiles.size());
+        int number = InteractionUtils.inputInt(Utils.getString("MESSAGE_YGGDRASIL_LOGIN_SELECT_PROFILE", 1, availableProfiles.size()), 1, availableProfiles.size());
 
         if (number != Integer.MAX_VALUE) {
             return availableProfiles.get(number - 1);

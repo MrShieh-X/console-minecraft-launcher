@@ -25,7 +25,8 @@ import com.mrshiehx.cmcl.modSources.Manager;
 import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeManager;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.fusesource.jansi.Ansi;
@@ -97,7 +98,7 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             }
         }
 
-        int number = ConsoleUtils.inputInt(Utils.getString("CF_SELECT_TARGET", 1, list.size()).replace("${NAME}", getSection().nameAllLowerCase), 1, list.size());
+        int number = InteractionUtils.inputInt(Utils.getString("CF_SELECT_TARGET", 1, list.size()).replace("${NAME}", getSection().nameAllLowerCase), 1, list.size());
         if (number != Integer.MAX_VALUE) {
             return list.get(number - 1);
         }
@@ -107,14 +108,13 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
     public void printInformation(@Nullable JSONObject bySearch, JSONObject byID, @Nullable String modName, @Nullable String modId) {
         Map<String, String> information = new LinkedHashMap<>();
         //System.out.println(bySearch);
-
-
         String id = modId;
         String description = null;
         String author = null;
-        String latestGameVersion = null;
         String dateModified = null;
         String dateCreated = null;
+        String iconUrl = null;
+        JSONArray gameVersions = null;
         int downloads = -1;
         Collection<String> categories1 = new HashSet<>();
         List<Pair<String, String>> donations = new LinkedList<>();
@@ -123,9 +123,11 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             id = bySearch.optString("project_id", modId);
             description = bySearch.optString("description");
             author = bySearch.optString("author");
-            latestGameVersion = bySearch.optString("latest_version");
+            //latestGameVersion = bySearch.optString("latest_version");
             dateModified = bySearch.optString("date_modified");
             dateCreated = bySearch.optString("date_created");
+            iconUrl = bySearch.optString("icon_url");
+            gameVersions = bySearch.optJSONArray("versions");
             String a = bySearch.optString("title");
             if (!isEmpty(a))
                 modName = a;
@@ -155,6 +157,10 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
                 downloads = byID.optInt("downloads", -1);
             if (isEmpty(modName))
                 modName = byID.optString("title");
+            if (isEmpty(iconUrl))
+                iconUrl = byID.optString("icon_url");
+            if (gameVersions == null)
+                gameVersions = byID.optJSONArray("game_versions");
 
             String a = byID.optString("title");
             if (!isEmpty(a))
@@ -189,8 +195,19 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             information.put(getSection().informationIdTip, id);
         if (!isEmpty(description))
             information.put(getString("CF_INFORMATION_SUMMARY"), description);
+        if (!isEmpty(iconUrl))
+            information.put(getString("CF_INFORMATION_ICON"), iconUrl);
         if (!isEmpty(author))
             information.put(getString("CF_INFORMATION_AUTHOR"), author);
+
+        String latestGameVersion = null;
+        if (gameVersions != null) {
+            List<String> list = gameVersions.toList().stream().map(String::valueOf).sorted(VersionUtils.VERSION_COMPARATOR).collect(Collectors.toList());
+            if (!list.isEmpty())
+                latestGameVersion = list.get(list.size() - 1);
+        }
+        if (isEmpty(latestGameVersion) && bySearch != null)
+            latestGameVersion = bySearch.optString("latest_version");
 
         if (!isEmpty(latestGameVersion))
             information.put(getString("CF_INFORMATION_LATEST_GAME_VERSION"), latestGameVersion);
@@ -211,7 +228,7 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
         }
 
         if (downloads >= 0)
-            information.put(getString("CF_INFORMATION_DOWNLOADS"), String.valueOf(downloads));
+            information.put(getString("CF_INFORMATION_DOWNLOAD_COUNT"), String.valueOf(downloads));
 
 
         if (donations.size() > 0) {
@@ -258,7 +275,6 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             }
         }
     }
-
 
     public JSONObject getByID(String id) throws IncorrectCategoryAddon, IOException {
         JSONObject mod = new JSONObject(NetworkUtils.get(ROOT + "project/" + id));
@@ -336,7 +352,6 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
 
             //排序算法
             modSupportedMcVer.sort(VersionUtils.VERSION_COMPARATOR);
-            Collections.reverse(modSupportedMcVer);
 
             if (isEmpty(modName)) {
                 try {
@@ -345,23 +360,8 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
                 }
             }
             System.out.println(getString("CF_SUPPORTED_GAME_VERSION", modName));
-
-            System.out.print('[');
-            for (int i = 0; i < modSupportedMcVer.size(); i++) {
-                String version = modSupportedMcVer.get(i);
-                boolean containSpace = version.contains(" ");
-                if (containSpace) System.out.print("\"");
-                System.out.print(version);//legal
-                if (containSpace) System.out.print("\"");
-                if (i + 1 != modSupportedMcVer.size()) {
-                    System.out.print(", ");
-                }
-            }
-
-            System.out.print("]\n");
-
-
-            modSupportMinecraftVersion = ConsoleUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
+            PrintingUtils.printListItems(modSupportedMcVer, false, 6, 3, true);
+            modSupportMinecraftVersion = InteractionUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
         }
 
         List<Pair<JSONObject, JSONObject>> versions = modClassificationMap.get(modSupportMinecraftVersion);
@@ -371,12 +371,6 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             System.out.println(getString("CF_NO_VERSION_FOR_GAME_VERSION", getNameAllLowerCase()));
             return null;
         }
-        /*System.out.print('[');
-        for(JSONObject j:versions){
-            System.out.println(j);
-            System.out.print(',');
-        }
-        System.out.print("\b]");*/
         Pair<JSONObject, JSONObject> targetFile = null;
         if (!isEmpty(addonVersion)) {
             List<Pair<JSONObject, JSONObject>> matches = versions.stream().filter(pair -> {
@@ -396,7 +390,7 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
             AnsiConsole.systemUninstall();
 
 
-            int modVersionOfSingleMcVersion = ConsoleUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
+            int modVersionOfSingleMcVersion = InteractionUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
 
             if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
                 return null;

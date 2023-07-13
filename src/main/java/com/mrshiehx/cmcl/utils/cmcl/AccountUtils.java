@@ -19,6 +19,7 @@
 
 package com.mrshiehx.cmcl.utils.cmcl;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.constants.Constants;
 import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.functions.AccountFunction;
@@ -26,13 +27,15 @@ import com.mrshiehx.cmcl.modules.account.authentication.microsoft.MicrosoftAuthe
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.authlib.AuthlibInjectorAuthentication;
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.nide8auth.Nide8AuthAuthentication;
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.mrshiehx.cmcl.utils.Utils.getString;
 
@@ -88,11 +91,15 @@ public class AccountUtils {
         }
         if (accounts != null && valid > 0) {
             AtomicInteger i1 = new AtomicInteger();
-            Utils.iteratorToStream(accounts.iterator())
-                    .filter(AccountUtils::isValidAccount)
-                    .map(object -> (JSONObject) object)
-                    .forEach(account -> System.out.println(AccountFunction.formatAccountInfo(account, i1.getAndIncrement())));
-            int order = ConsoleUtils.inputInt(getString("MESSAGE_SELECT_ACCOUNT", 0, valid - 1), 0, valid - 1);
+            PrintingUtils.printTable(
+                    new String[]{
+                            CMCL.getString("TABLE_ACCOUNTS_LIST_HEADER_ORDER"),
+                            CMCL.getString("TABLE_ACCOUNTS_LIST_HEADER_NAME"),
+                            CMCL.getString("TABLE_ACCOUNTS_LIST_HEADER_TYPE"),
+                            CMCL.getString("TABLE_ACCOUNTS_LIST_HEADER_OTHER_INFORMATION")},
+                    new int[]{6, 20, 24, 50}, false,
+                    AccountFunction.getAllAccounts(accounts).stream().map(account -> AccountFunction.accountInfoToTableItem(account, i1.getAndIncrement(), false)).collect(Collectors.toList()).toArray(new String[0][0]));
+            int order = InteractionUtils.inputInt(getString("MESSAGE_SELECT_ACCOUNT", 0, valid - 1), 0, valid - 1);
             if (order == Integer.MAX_VALUE) return null;
             JSONObject account = accounts.optJSONObject(order);
 
@@ -117,13 +124,13 @@ public class AccountUtils {
             System.out.println("[1]" + Utils.getString("ACCOUNT_TYPE_MICROSOFT"));
             System.out.println("[2]" + Utils.getString("ACCOUNT_TYPE_OAS"));
             System.out.println("[3]" + Utils.getString("ACCOUNT_TYPE_NIDE8AUTH"));
-            int sel = ConsoleUtils.inputInt(getString("MESSAGE_SELECT_ACCOUNT_TYPE", 0, 3), 0, 3);
+            int sel = InteractionUtils.inputInt(getString("MESSAGE_SELECT_ACCOUNT_TYPE", 0, 3), 0, 3);
             if (accounts == null) {
                 config.put("accounts", accounts = new JSONArray());
             }
             switch (sel) {
                 case 0: {
-                    JSONObject account = new JSONObject().put("playerName", ConsoleUtils.inputString(getString("ACCOUNT_TIP_LOGIN_OFFLINE_PLAYERNAME"))).put("selected", true).put("loginMethod", 0);
+                    JSONObject account = new JSONObject().put("playerName", InteractionUtils.inputString(getString("ACCOUNT_TIP_LOGIN_OFFLINE_PLAYERNAME"))).put("selected", true).put("loginMethod", 0);
                     accounts.put(account);
                     Utils.saveConfig(config);
                     return account;
@@ -144,7 +151,7 @@ public class AccountUtils {
                 }
                 case 2: {
                     try {
-                        JSONObject account = AuthlibInjectorAuthentication.authlibInjectorLogin(ConsoleUtils.inputString(getString("ACCOUNT_TIP_LOGIN_OAS_ADDRESS")), null, true);
+                        JSONObject account = AuthlibInjectorAuthentication.authlibInjectorLogin(InteractionUtils.inputString(getString("ACCOUNT_TIP_LOGIN_OAS_ADDRESS")), null, true);
                         if (account == null) {
                             return null;
                         }
@@ -158,7 +165,7 @@ public class AccountUtils {
                 }
                 case 3: {
                     try {
-                        JSONObject account = Nide8AuthAuthentication.nide8authLogin(ConsoleUtils.inputString(getString("ACCOUNT_TIP_LOGIN_NIDE8AUTH_SERVER_ID")), null, true);
+                        JSONObject account = Nide8AuthAuthentication.nide8authLogin(InteractionUtils.inputString(getString("ACCOUNT_TIP_LOGIN_NIDE8AUTH_SERVER_ID")), null, true);
                         if (account == null) {
                             return null;
                         }

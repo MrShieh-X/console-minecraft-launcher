@@ -20,9 +20,10 @@ package com.mrshiehx.cmcl.functions;
 import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.bean.arguments.*;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import org.json.JSONObject;
 
-import java.util.Map;
+import java.util.Arrays;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isImmersiveMode;
@@ -71,26 +72,28 @@ public class ConfigFunction implements Function {
             switch (key) {
                 case "a":
                 case "all":
-                    Map<String, Object> map = config.toMap();
-                    if (map != null && map.size() > 0) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        int size = map.entrySet().size();
-                        int i = 0;
-                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-                            stringBuilder.append(entry.getKey())
-                                    .append('=')
-                                    .append(entry.getValue())
-                                    .append(" (")
-                                    .append(Utils.getTypeText(entry.getValue().getClass().getSimpleName()))
-                                    .append(")");
-                            if (i + 1 < size) {
-                                stringBuilder.append("\n");
-                            }
-                            i++;
-                        }
-                        System.out.println(stringBuilder);
-
-                    }
+                    PrintingUtils.printTable(
+                            new String[]{getString("TABLE_CONFIG_ALL_NAME"),
+                                    getString("TABLE_CONFIG_ALL_TYPE"),
+                                    getString("TABLE_CONFIG_ALL_VALUE")},
+                            new int[]{25, 11, 30},
+                            false,
+                            config.toMap().entrySet().stream()
+                                    .map(stringObjectEntry -> {
+                                        String value;
+                                        switch (stringObjectEntry.getKey()) {
+                                            case "accounts":
+                                                value = getString("TABLE_CONFIG_ALL_VIEW_SEPARATELY", stringObjectEntry.getKey());
+                                                break;
+                                            default:
+                                                value = String.valueOf(stringObjectEntry.getValue());
+                                                break;
+                                        }
+                                        return new String[]{
+                                                stringObjectEntry.getKey(),
+                                                Utils.getTypeText(stringObjectEntry.getValue().getClass().getSimpleName()),
+                                                value};
+                                    }).toArray(String[][]::new));
                     break;
                 case "c":
                 case "clear":
@@ -101,7 +104,18 @@ public class ConfigFunction implements Function {
                     break;
                 case "v":
                 case "view":
-                    System.out.println(getString("MESSAGE_CONFIGURATIONS"));
+                    PrintingUtils.printTable(
+                            new String[]{getString("TABLE_SETTABLE_CONFIG_NAME"),
+                                    getString("TABLE_SETTABLE_CONFIG_TYPE"),
+                                    getString("TABLE_SETTABLE_CONFIG_MEANING")},
+                            new int[]{25, 11, 30},
+                            false,
+                            Arrays.stream(
+                                            getString("MESSAGE_CONFIGURATIONS_TABLE_CONTENT").split("\n"))
+                                    .map(item -> item.split("\\|"))
+                                    .toArray(String[][]::new)
+                    );
+                    System.out.println(getString("MESSAGE_CONFIGURATIONS_TIP"));
                     break;
                 case "getRaw":
                     System.out.println(config.toString(2));

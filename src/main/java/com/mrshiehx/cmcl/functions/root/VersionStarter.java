@@ -34,7 +34,7 @@ import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.AccountUtils;
 import com.mrshiehx.cmcl.utils.cmcl.ArgumentsUtils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import com.mrshiehx.cmcl.utils.system.SystemUtils;
 import org.json.JSONArray;
@@ -116,13 +116,13 @@ public class VersionStarter {
             }
         }
         if (!config.has("exitWithMinecraft")) {
-            config.put("exitWithMinecraft", ConsoleUtils.yesOrNo(getString("CONSOLE_ASK_EXIT_WITH_MC")));
+            config.put("exitWithMinecraft", InteractionUtils.yesOrNo(getString("CONSOLE_ASK_EXIT_WITH_MC")));
         }
         if (!config.has("printStartupInfo")) {
-            config.put("printStartupInfo", ConsoleUtils.yesOrNo(getString("CONSOLE_ASK_PRINT_STARTUP_INFO")));
+            config.put("printStartupInfo", InteractionUtils.yesOrNo(getString("CONSOLE_ASK_PRINT_STARTUP_INFO")));
         }
         if (!config.has("checkAccountBeforeStart")) {
-            config.put("checkAccountBeforeStart", ConsoleUtils.yesOrNo(getString("CONSOLE_ASK_CHECK_ACCOUNT")));
+            config.put("checkAccountBeforeStart", InteractionUtils.yesOrNo(getString("CONSOLE_ASK_CHECK_ACCOUNT")));
         }
         Utils.saveConfig(config);
 
@@ -222,6 +222,10 @@ public class VersionStarter {
             boolean printStartupInfo = !Utils.isEmpty(versionConfig.printStartupInfo) ? Boolean.parseBoolean(versionConfig.printStartupInfo) : config.optBoolean("printStartupInfo");
             boolean checkAccountBeforeStart = !Utils.isEmpty(versionConfig.checkAccountBeforeStart) ? Boolean.parseBoolean(versionConfig.checkAccountBeforeStart) : config.optBoolean("checkAccountBeforeStart");
 
+            String quickPlayLogFilePath = !Utils.isEmpty(versionConfig.qpLogFile) ? versionConfig.qpLogFile : config.optString("qpLogFile");
+            String quickPlaySaveName = !Utils.isEmpty(versionConfig.qpSaveName) ? versionConfig.qpSaveName : config.optString("qpSaveName");
+            String quickPlayServerAddress = !Utils.isEmpty(versionConfig.qpServerAddress) ? versionConfig.qpServerAddress : config.optString("qpServerAddress");
+            String quickPlayRealmsID = !Utils.isEmpty(versionConfig.qpRealmsID) ? versionConfig.qpRealmsID : config.optString("qpRealmsID");
 
             if (isEmpty(javaPath) || !new File(javaPath).exists()) {
                 System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
@@ -234,7 +238,7 @@ public class VersionStarter {
                         .replace("${VERSION_NAME}", version)
                         .replace("${REAL_VERSION_NAME}", getVersion(versionJsonFile, versionJarFile))
                         .replace("${PLAYER_NAME}", account.optString("playerName", "XPlayer"))
-                        .replace("${ACCOUNT_TYPE}", AccountFunction.getAccountType(account))
+                        .replace("${ACCOUNT_TYPE}", AccountFunction.getAccountTypeWithInformation(account))
                         .replace("${JAVA_PATH}", javaPath)
                         .replace("${EXIT_WITH_MC}", String.valueOf(exitWithMinecraft))
                         .replace("${FULLSCREEN}", String.valueOf(isFullscreen))
@@ -248,6 +252,19 @@ public class VersionStarter {
                 }
                 if (!resourcePackDir.equals(new File(workingDirectory, "resourcepacks"))) {
                     sb.append(getString("MESSAGE_STARTUP_INFO_RESOURCE_PACKS_DIR").replace("${RESOURCE_PACKS_DIR}", resourcePackDir.getAbsolutePath())).append('\n');
+                }
+
+                if (!isEmpty(quickPlayLogFilePath)) {
+                    sb.append(getString("MESSAGE_STARTUP_INFO_QUICK_PLAY_LOG_FILE_PATH").replace("${QUICK_PLAY_LOG_FILE_PATH}", quickPlayLogFilePath)).append('\n');
+                }
+                if (!isEmpty(quickPlaySaveName)) {
+                    sb.append(getString("MESSAGE_STARTUP_INFO_QUICK_PLAY_SAVE_NAME").replace("${QUICK_PLAY_SAVE_NAME}", quickPlaySaveName)).append('\n');
+                }
+                if (!isEmpty(quickPlayServerAddress)) {
+                    sb.append(getString("MESSAGE_STARTUP_INFO_QUICK_PLAY_SERVER_ADDRESS").replace("${QUICK_PLAY_SERVER_ADDRESS}", quickPlayServerAddress)).append('\n');
+                }
+                if (!isEmpty(quickPlayRealmsID)) {
+                    sb.append(getString("MESSAGE_STARTUP_INFO_QUICK_PLAY_REALMS_ID").replace("${QUICK_PLAY_REALMS_ID}", quickPlayRealmsID)).append('\n');
                 }
                 if (jvmArgs.size() > 0 || gameArgs.size() > 0) {
                     sb.append(getString("MESSAGE_STARTUP_INFO_ARGS")
@@ -283,7 +300,11 @@ public class VersionStarter {
                             jvmArgs,
                             gameArgs,
                             AuthlibInjectorInformation.valuesOf(account, accessToken, uuid, true),
-                            account.optInt("loginMethod") == 3 ? Nide8AuthInformation.valueOf(account) : null),
+                            account.optInt("loginMethod") == 3 ? Nide8AuthInformation.valueOf(account) : null,
+                            quickPlayLogFilePath,
+                            quickPlaySaveName,
+                            quickPlayServerAddress,
+                            quickPlayRealmsID),
                     exitWithMinecraft);
 
             final GameCrashError[] crashError = {null};
@@ -336,7 +357,7 @@ public class VersionStarter {
                 Utils.saveConfig(config);
             }
             return true;
-        } catch (DescriptionException e) {
+        } catch (ExceptionWithDescription e) {
             e.print();
             System.out.println(getString("MESSAGE_TELL_USER_CHECK_ACCOUNT_CAN_BE_OFF"));
             return false;

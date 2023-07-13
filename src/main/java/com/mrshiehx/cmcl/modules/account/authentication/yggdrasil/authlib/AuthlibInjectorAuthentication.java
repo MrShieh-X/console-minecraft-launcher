@@ -21,7 +21,7 @@ package com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.authlib;
 import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.YggdrasilAuthentication;
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.YggdrasilAuthenticationApiProvider;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -46,7 +46,7 @@ import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class AuthlibInjectorAuthentication {
-    public static JSONObject authlibInjectorLogin(String address, String username, boolean select) throws DescriptionException {
+    public static JSONObject authlibInjectorLogin(String address, String username, boolean select) throws ExceptionWithDescription {
         if (Utils.isEmpty(username)) {
             System.out.print(getString("INPUT_ACCOUNT"));
             try {
@@ -73,7 +73,7 @@ public class AuthlibInjectorAuthentication {
         return AuthlibInjectorAuthentication.login(address, username, password, select);
     }
 
-    public static JSONObject login(String address, String username, String password, boolean selected) throws DescriptionException {
+    public static JSONObject login(String address, String username, String password, boolean selected) throws ExceptionWithDescription {
         String url = NetworkUtils.addHttpsIfMissing(address);
         String serverName = "AuthlibServer";
         /*metadata存储时变成base64，启动时直接拿来用*/
@@ -110,7 +110,7 @@ public class AuthlibInjectorAuthentication {
                 serverName = meta.optString("serverName", serverName);
             }
         } catch (Exception e) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("FAILED_TO_LOGIN_YGGDRASIL_ACCOUNT_UNAVAILABLE_SERVER"));
+            throw new ExceptionWithDescription(getString("FAILED_TO_LOGIN_YGGDRASIL_ACCOUNT_UNAVAILABLE_SERVER"));
         }
 
 
@@ -125,7 +125,7 @@ public class AuthlibInjectorAuthentication {
         try {
             firstResponse = JSONUtils.parseJSONObject(NetworkUtils.post(authenticationURL, request.toString()));
         } catch (IOException e) {
-            throw new DescriptionException(getString("EXCEPTION_OF_NETWORK_WITH_URL", authenticationURL, e));
+            throw new ExceptionWithDescription(getString("EXCEPTION_OF_NETWORK_WITH_URL", authenticationURL, e));
         }
         if (firstResponse == null) {
             System.out.println(getString("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE"));
@@ -178,12 +178,12 @@ public class AuthlibInjectorAuthentication {
         return account;
     }
 
-    public static boolean refresh(JSONObject selectedAccount, JSONArray accounts) throws DescriptionException {
+    public static boolean refresh(JSONObject selectedAccount, JSONArray accounts) throws ExceptionWithDescription {
         String accessToken = selectedAccount.optString("accessToken");
         String clientToken = selectedAccount.optString("clientToken");
         String url = selectedAccount.optString("url");
         if (Utils.isEmpty((accessToken)) || Utils.isEmpty(clientToken) || Utils.isEmpty(url)) {
-            throw new DescriptionException(getString("MESSAGE_AUTHLIB_ACCOUNT_INCOMPLETE"));
+            throw new ExceptionWithDescription(getString("MESSAGE_AUTHLIB_ACCOUNT_INCOMPLETE"));
         }
         YggdrasilAuthenticationApiProvider provider = new AuthlibInjectorApiProvider(url);
         JSONObject validate;
@@ -191,7 +191,7 @@ public class AuthlibInjectorAuthentication {
             validate = YggdrasilAuthentication.validate(provider, accessToken, clientToken);
         } catch (IOException e) {
             if (Constants.isDebug()) e.printStackTrace();
-            throw new DescriptionException(getString("MESSAGE_ACCOUNT_FAILED_TO_VALIDATE", e));
+            throw new ExceptionWithDescription(getString("MESSAGE_ACCOUNT_FAILED_TO_VALIDATE", e));
         }
         if (validate == null) {
             //无需刷新
@@ -209,20 +209,20 @@ public class AuthlibInjectorAuthentication {
             return false;
         }
         if (!validate.optString("error").equals("ForbiddenOperationException")) {
-            throw new DescriptionException(getString("MESSAGE_ACCOUNT_FAILED_TO_VALIDATE", "\n" + (!validate.optString("error").isEmpty() ? validate.optString("error") : "Error") + ": " + validate.optString("errorMessage")));
+            throw new ExceptionWithDescription(getString("MESSAGE_ACCOUNT_FAILED_TO_VALIDATE", "\n" + (!validate.optString("error").isEmpty() ? validate.optString("error") : "Error") + ": " + validate.optString("errorMessage")));
         }
         JSONObject refreshResponse;
         try {
             refreshResponse = YggdrasilAuthentication.refresh(new AuthlibInjectorApiProvider(url), accessToken, clientToken);
         } catch (IOException e) {
             if (Constants.isDebug()) e.printStackTrace();
-            throw new DescriptionException(getString("MESSAGE_FAILED_REFRESH_TITLE") + ": " + e);
+            throw new ExceptionWithDescription(getString("MESSAGE_FAILED_REFRESH_TITLE") + ": " + e);
         }
         if (refreshResponse.optString("error").equals("ForbiddenOperationException")) {
             System.out.println(getString("MESSAGE_ACCOUNT_INFO_EXPIRED_NEED_RELOGIN"));
             JSONObject accountNew = AuthlibInjectorAuthentication.authlibInjectorLogin(url, selectedAccount.optString("username"), true);
             if (accountNew == null) {
-                throw new DescriptionException(null);
+                throw new ExceptionWithDescription(null);
             }
             for (int i = 0; i < accounts.length(); i++) {
                 if (!AccountUtils.isValidAccount(accounts.opt(i))) continue;
@@ -235,7 +235,7 @@ public class AuthlibInjectorAuthentication {
             return true;
         } else if (!refreshResponse.optString("error").isEmpty()) {
             //報錯
-            throw new DescriptionException(getString("ERROR_WITH_MESSAGE", (!refreshResponse.optString("error").isEmpty() ? refreshResponse.optString("error") : "Error"), refreshResponse.optString("errorMessage")));
+            throw new ExceptionWithDescription(getString("ERROR_WITH_MESSAGE", (!refreshResponse.optString("error").isEmpty() ? refreshResponse.optString("error") : "Error"), refreshResponse.optString("errorMessage")));
         }
         //真刷新
         String newAccessToken = refreshResponse.optString("accessToken");

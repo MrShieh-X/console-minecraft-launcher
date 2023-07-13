@@ -5,7 +5,7 @@
 ---
 
 ### 执行cmcl.exe说 Java 版本不合适？
-使用`cmcl2.exe`代替`cmcl.exe`；也可以下载cmcl.jar，通过`java -jar cmcl.jar`来启动。
+下载cmcl.jar，通过`java -jar cmcl.jar`来启动。
 
 ---
 
@@ -30,7 +30,7 @@ cmcl version <版本> --isolate
 ```
 cmcl version 1.19.3 --config=gameDir D:\wokingdirs\1.19.3
 ```
-其中，与版本有关的用法可以通过`cmcl version -h`获取，然后找到`--config=<配置名称>`一项，相信大家这里看得懂。然后`gameDir`可通过`cmcl config -v`获取或者在[配置](README.md#配置)上找得到。本质上是为版本单独修改配置。
+其中，与版本有关的用法可以通过`cmcl version -h`获取，然后找到`--config=<配置名称>`一项，相信大家这里看得懂。然后`gameDir`可通过`cmcl config -v`获取或者在[配置](README.md#-配置)上找得到。本质上是为版本单独修改配置。
 
 ---
 
@@ -47,6 +47,24 @@ cmcl config proxyPassword <代理验证的密码>
 ```
 最后可通过`cmcl config proxyEnabled true`来开启代理，通过`cmcl config proxyEnabled false`关闭代理。</br>
 注意：如果您开启了代理，进行需要联网的操作时出错，则有可能是您的网络代理不可用，您可以检查您的网络代理是否出现了问题。
+
+---
+
+### 能为经常输入的命令搞个“快捷方式”吗？
+对于某些可能会经常输入的命令，例如切换下载源`cmcl config downloadSource <下载源>`、开关代理`cmcl config proxyEnabled true/false`，
+可以通过`cmcl simplify -s <简化命令> "<原命令>"`设置简化命令，例如：输入命令`cmcl simplify -s pon "config proxyEnabled true"`后，
+输入命令`cmcl pon`即可快速开启代理。但是要注意，不要与已有的选项和本地版本名冲突。通过`cmcl simplify -h`获取其他用法。结合用户实际使用情况，建议设置以下简化命令：
+
+| 简化命令（可随意设置） | 原命令                       | 含义            | 
+|-------------|---------------------------|---------------|
+| ds0         | config downloadSource 0   | 设置下载源为官方      |
+| ds1         | config downloadSource 1   | 设置下载源为BMCLAPI |
+| ds2         | config downloadSource 2   | 设置下载源为MCBBS   |
+| pon         | config proxyEnabled true  | 开启代理          |
+| poff        | config proxyEnabled false | 关闭代理          |
+| als         | account --list            | 列出所有账号        |
+| sr          | install --show=r          | 列出所有可安装的正式版   |
+| ar          | account -r                | 刷新当前登录账号      |
 
 ---
 

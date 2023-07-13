@@ -22,7 +22,9 @@ import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.enums.CurseForgeSection;
 import com.mrshiehx.cmcl.modSources.Manager;
 import com.mrshiehx.cmcl.utils.Utils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.fusesource.jansi.Ansi;
@@ -159,20 +161,8 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
                     modSupportedMcVer.set(i, version.replace(".-1", "-Snapshot"));
                 }
             }
-
-            System.out.print('[');
-            for (int i = 0; i < modSupportedMcVer.size(); i++) {
-                String version = modSupportedMcVer.get(i);
-                boolean containSpace = version.contains(" ");
-                if (containSpace) System.out.print("\"");
-                System.out.print(version);//legal
-                if (containSpace) System.out.print("\"");
-                if (i + 1 != modSupportedMcVer.size()) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.print("]\n");
-            modSupportMinecraftVersion = ConsoleUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
+            PrintingUtils.printListItems(modSupportedMcVer, true, 6, 3, true);
+            modSupportMinecraftVersion = InteractionUtils.inputStringInFilter(getString("CF_INPUT_GAME_VERSION"), getString("CONSOLE_INPUT_STRING_NOT_FOUND"), modSupportedMcVer::contains);
         }
 
         List<JSONObject> versions = modClassificationMap.get(modSupportMinecraftVersion);
@@ -202,7 +192,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
             }
             AnsiConsole.systemUninstall();
 
-            int modVersionOfSingleMcVersion = ConsoleUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
+            int modVersionOfSingleMcVersion = InteractionUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
 
             if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
                 return null;
@@ -299,13 +289,12 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
             }
         }
 
-        int number = ConsoleUtils.inputInt(Utils.getString("CF_SELECT_TARGET", 1, list.size()).replace("${NAME}", getNameAllLowerCase()), 1, list.size());
+        int number = InteractionUtils.inputInt(Utils.getString("CF_SELECT_TARGET", 1, list.size()).replace("${NAME}", getNameAllLowerCase()), 1, list.size());
         if (number != Integer.MAX_VALUE) {
             return list.get(number - 1);
         }
         return null;
     }
-
 
     public static void printOne(int order, String name, String summary, String author, String latestGameVersion, String latestFileName) {
         AnsiConsole.systemInstall();
@@ -355,7 +344,6 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
         if (!Utils.isEmpty(summary)) System.out.println("    " + summary);
     }
 
-
     private static String getAuthor(JSONArray authors) {
         if (authors == null || authors.length() == 0) return null;
 
@@ -394,7 +382,6 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
         return mod;
     }
 
-
     //按时间排序每个 JsonObject
     private static void addonFilesTimeSort(List<JSONObject> list) {
         list.sort((o1, o2) -> {
@@ -420,7 +407,12 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
         String summary = mod.optString("summary");
         if (!isEmpty(summary))
             information.put(getString("CF_INFORMATION_SUMMARY"), summary);
-
+        JSONObject logo = mod.optJSONObject("logo");
+        if (logo != null) {
+            String url = logo.optString("url");
+            if (!isEmpty(summary))
+                information.put(getString("CF_INFORMATION_ICON"), url);
+        }
         JSONArray authorsJSONArray = mod.optJSONArray("authors");
         if (authorsJSONArray != null && authorsJSONArray.length() > 0) {
             StringBuilder author = new StringBuilder();
@@ -437,15 +429,15 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
             }
             information.put(getString("CF_INFORMATION_AUTHORS"), author.toString());
         }
-        JSONArray gameVersionLatestFiles = mod.optJSONArray("latestFilesIndexes");
-        if (gameVersionLatestFiles != null && gameVersionLatestFiles.length() > 0) {
-            List<JSONObject> gameVersionLatestFilesList = JSONUtils.jsonArrayToJSONObjectList(gameVersionLatestFiles);
-            if (gameVersionLatestFilesList.size() > 0) {
-                JSONObject first = gameVersionLatestFilesList.get(0);
-                String gameVersion = first.optString("gameVersion");
-                if (!isEmpty(gameVersion))
-                    information.put(getString("CF_INFORMATION_LATEST_GAME_VERSION"), gameVersion);
-            }
+        List<JSONObject> gameVersionLatestFilesList = JSONUtils.jsonArrayToJSONObjectList(mod.optJSONArray("latestFilesIndexes"));
+        if (gameVersionLatestFilesList.size() > 0) {
+            List<String> list = gameVersionLatestFilesList.stream().map(a -> a.optString("gameVersion")).sorted(VersionUtils.VERSION_COMPARATOR).collect(Collectors.toList());
+            information.put(getString("CF_INFORMATION_LATEST_GAME_VERSION"), list.get(list.size() - 1));
+        }
+
+        int downloadCount = mod.optInt("downloadCount", -1);
+        if (downloadCount >= 0) {
+            information.put(getString("CF_INFORMATION_DOWNLOAD_COUNT"), Integer.toString(downloadCount));
         }
 
         String dateModified = mod.optString("dateModified");

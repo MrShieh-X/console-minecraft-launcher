@@ -20,8 +20,8 @@ package com.mrshiehx.cmcl.exceptions;
 
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
-public class DescriptionException extends Exception {
-    public DescriptionException(String message) {
+public class ExceptionWithDescription extends Exception {
+    public ExceptionWithDescription(String message) {
         super(message);
     }
 

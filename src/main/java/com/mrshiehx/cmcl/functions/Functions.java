@@ -23,18 +23,20 @@ import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 public class Functions {
     public static Function get(String name) {
         switch (name) {
-            case "config":
-                return new ConfigFunction();
-            case "account":
-                return new AccountFunction();
+            case "install":
+                return new InstallFunction();
             case "version":
                 return new VersionFunction();
+            case "account":
+                return new AccountFunction();
+            case "config":
+                return new ConfigFunction();
+            case "simplify":
+                return new SimplifyCommandFunction();
             case "jvmArgs":
                 return new JVMArgsFunction();
             case "gameArgs":
                 return new GameArgsFunction();
-            case "install":
-                return new InstallFunction();
             case "mod":
                 return new ModFunction();
             case "modpack":

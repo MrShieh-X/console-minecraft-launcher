@@ -26,7 +26,7 @@ import java.util.Scanner;
 
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
-public class ConsoleUtils {
+public class InteractionUtils {
     public static boolean yesOrNo(String tip) {
         String text = tip + "(Y/N) ";
         return internalYesOrNo(text);

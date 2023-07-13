@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import static com.mrshiehx.cmcl.CMCL.*;
@@ -58,7 +59,7 @@ public class LibrariesDownloader {
         boolean meet = true;
         JSONArray rules = library.optJSONArray("rules");
         if (rules != null) {
-            meet = MinecraftLauncher.isMeetConditions(rules, false, false);
+            meet = MinecraftLauncher.isMeetConditions(rules, Collections.emptyMap());
         }
 
         if (!meet) return;

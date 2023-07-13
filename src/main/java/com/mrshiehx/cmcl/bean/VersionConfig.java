@@ -34,7 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VersionConfig {
-    public static final VersionConfig EMPTY = new VersionConfig(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "", "", "", "");
+    public static final VersionConfig EMPTY = new VersionConfig(null, null, null, null, null, "", Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null, "", "", "", "", null, null, null, null);
     public final String gameDir;
     public final String javaPath;
     public final String maxMemory;//同下
@@ -51,6 +51,10 @@ public class VersionConfig {
     public final String printStartupInfo;//不用boolean是因为要表示一种“未设置”的状态
     public final String checkAccountBeforeStart;//不用boolean是因为要表示一种“未设置”的状态
     public final String isolate;//同上
+    public final String qpLogFile;
+    public final String qpSaveName;
+    public final String qpServerAddress;
+    public final String qpRealmsID;
 
     public VersionConfig(String gameDir,
                          String javaPath,
@@ -65,7 +69,11 @@ public class VersionConfig {
                          String exitWithMinecraft,
                          String printStartupInfo,
                          String checkAccountBeforeStart,
-                         String isolate) {
+                         String isolate,
+                         String qpLogFile,
+                         String qpSaveName,
+                         String qpServerAddress,
+                         String qpRealmsID) {
         this.gameDir = gameDir;
         this.javaPath = javaPath;
         this.maxMemory = maxMemory;
@@ -80,6 +88,10 @@ public class VersionConfig {
         this.printStartupInfo = printStartupInfo;
         this.checkAccountBeforeStart = checkAccountBeforeStart;
         this.isolate = isolate;
+        this.qpLogFile = qpLogFile;
+        this.qpSaveName = qpSaveName;
+        this.qpServerAddress = qpServerAddress;
+        this.qpRealmsID = qpRealmsID;
     }
 
     public static VersionConfig valueOf(JSONObject origin) {
@@ -96,7 +108,11 @@ public class VersionConfig {
                 origin.optString("exitWithMinecraft"),
                 origin.optString("printStartupInfo"),
                 origin.optString("checkAccountBeforeStart"),
-                origin.optString("isolate"));
+                origin.optString("isolate"),
+                origin.optString("qpLogFile"),
+                origin.optString("qpSaveName"),
+                origin.optString("qpServerAddress"),
+                origin.optString("qpRealmsID"));
     }
 
     public static VersionConfig valueOfPCL2(String setupIni) {
@@ -106,6 +122,7 @@ public class VersionConfig {
         List<String> jvmArgs = Collections.emptyList();
         String javaPath = null;
         String isolate = "";
+        String qpServerAddress = null;
         for (String line : lines) {
             int indexOf = line.indexOf(":");
             if (indexOf <= 0) continue;
@@ -148,10 +165,13 @@ public class VersionConfig {
                             isolate = "";
                         }
                         break;
+                    case "VersionServerEnter":
+                        qpServerAddress = value;
+                        break;
                 }
             }
         }
-        return new VersionConfig(null, javaPath, "", "", "", "", jvmArgs, gameArgs, null, null, "", "", "", isolate);
+        return new VersionConfig(null, javaPath, "", "", "", "", jvmArgs, gameArgs, null, null, "", "", "", isolate, null, null, qpServerAddress, null);
     }
 
     public static VersionConfig valueOfHMCL(JSONObject origin) {
@@ -193,7 +213,11 @@ public class VersionConfig {
                 "",
                 "",
                 "",
-                isolate);
+                isolate,
+                null,
+                null,
+                null,/*I don't know*/
+                null);
     }
 
     /**
@@ -221,6 +245,10 @@ public class VersionConfig {
                 !Utils.isEmpty(versionConfig.exitWithMinecraft) ? versionConfig.exitWithMinecraft : exitWithMinecraft,
                 !Utils.isEmpty(versionConfig.printStartupInfo) ? versionConfig.printStartupInfo : printStartupInfo,
                 !Utils.isEmpty(versionConfig.checkAccountBeforeStart) ? versionConfig.checkAccountBeforeStart : checkAccountBeforeStart,
-                !Utils.isEmpty(versionConfig.isolate) ? versionConfig.isolate : isolate);
+                !Utils.isEmpty(versionConfig.isolate) ? versionConfig.isolate : isolate,
+                !Utils.isEmpty(versionConfig.qpLogFile) ? versionConfig.qpLogFile : qpLogFile,
+                !Utils.isEmpty(versionConfig.qpSaveName) ? versionConfig.qpSaveName : qpSaveName,
+                !Utils.isEmpty(versionConfig.qpServerAddress) ? versionConfig.qpServerAddress : qpServerAddress,
+                !Utils.isEmpty(versionConfig.qpRealmsID) ? versionConfig.qpRealmsID : qpRealmsID);
     }
 }

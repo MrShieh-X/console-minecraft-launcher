@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
@@ -49,7 +50,7 @@ public class NativesDownloader {
                     boolean meet = true;
                     JSONArray rules = jsonObject.optJSONArray("rules");
                     if (rules != null) {
-                        meet = MinecraftLauncher.isMeetConditions(rules, false, false);
+                        meet = MinecraftLauncher.isMeetConditions(rules, Collections.emptyMap());
                     }
 
                     JSONObject downloadsJo1 = jsonObject.optJSONObject("downloads");

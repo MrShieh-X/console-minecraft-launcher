@@ -22,6 +22,7 @@ import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.SplitLibraryName;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -146,16 +147,6 @@ public class Utils {
         }
     }
 
-
-    public static List<String> addDoubleQuotationMark(List<String> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).contains(" ")) {
-                list.set(i, "\"" + list.get(i) + "\"");
-            }
-        }
-        return list;
-    }
-
     public static String randomUUIDNoSymbol() {
         return UUID.randomUUID().toString().replace("-", "");
     }
@@ -207,5 +198,21 @@ public class Utils {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int stringOccupiedSpacesLength(@NotNull String str) {
+        char[] chars = str.toCharArray();
+        int length = 0;
+        for (char aChar : chars) {
+            if (isFullWidth(aChar)) {
+                length++;
+            }
+            length++;
+        }
+        return length;
+    }
+
+    public static boolean isFullWidth(char aChar) {//对于其他语言不一定准确
+        return String.valueOf(aChar).matches("[^\\x00-\\xff]");
     }
 }

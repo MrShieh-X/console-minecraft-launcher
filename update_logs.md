@@ -1,5 +1,39 @@
 # 更新日志
-目前的最新版本为2.1.4，发布日期是2023年5月21日。
+目前的最新版本为2.2，发布日期是2023年7月13日。
+
+## 2.2（2023年7月13日）
+- 解决了由 [Wst-04d12](https://github.com/Wst-04d12) 于 [Issue#29](https://github.com/MrShieh-X/console-minecraft-launcher/issues/29) 提出的问题，并**支持 1.20 的新功能 Quick Play**，通过设置以下配置使用此功能。
+
+| 配置名             | 类型  | 含义                                                                                                      |
+|-----------------|-----|---------------------------------------------------------------------------------------------------------|
+| qpLogFile       | 文本  | [**游戏相关**]快速游玩（Quick Play，Minecraft 1.20 的新功能，设置下面三项配置即可启动游戏后分别直接进入存档、服务器、领域，只能设置一项）的日志文件路径（相对于游戏目录），可选 |
+| qpSaveName      | 文本  | [**游戏相关**]快速游玩直接进入的存档名称                                                                                 |
+| qpServerAddress | 文本  | [**游戏相关**]快速游玩直接进入的服务器地址（包括端口），该配置也适用于1.20之前的版本                                                         |
+| qpRealmsID      | 文本  | [**游戏相关**]快速游玩直接进入的领域ID                                                                                 |
+
+- 显示多个游戏版本、模组加载器版本等时将会**更加直观**，且会**适应命令行窗口大小**，如下图（由 [Dage-Hoo](https://github.com/Dage-Hoo) 于 [Issue#28](https://github.com/MrShieh-X/console-minecraft-launcher/issues/28) 提出）。<br/>
+  ![直观显示版本](images/visually_display_versions.png "直观显示版本")<br/>
+- 通过`cmcl account -l`打印账号与通过`cmcl config -a`和`cmcl config -v`打印配置时，将使用**表格的形式打印**，如下图。<br/>
+  ![表格打印](images/zh/use_form_to_print_accounts_and_configurations.png "表格打印")<br/>
+- 对于某些可能会经常输入的命令，例如切换下载源`cmcl config downloadSource <下载源>`、开关代理`cmcl config proxyEnabled true/false`，
+  可以通过`cmcl simplify -s <简化命令> "<原命令>"`设置简化命令，例如：输入命令`cmcl simplify -s pon "config proxyEnabled true"`后，
+  输入命令`cmcl pon`即可快速开启代理。但是要注意，不要与已有的选项和本地版本名冲突。通过`cmcl simplify -h`获取其他用法。结合用户实际使用情况，建议设置以下简化命令：
+
+| 简化命令（可随意设置） | 原命令                       | 含义            | 
+|-------------|---------------------------|---------------|
+| ds0         | config downloadSource 0   | 设置下载源为官方      |
+| ds1         | config downloadSource 1   | 设置下载源为BMCLAPI |
+| ds2         | config downloadSource 2   | 设置下载源为MCBBS   |
+| pon         | config proxyEnabled true  | 开启代理          |
+| poff        | config proxyEnabled false | 关闭代理          |
+| als         | account --list            | 列出所有账号        |
+| sr          | install --show=r          | 列出所有可安装的正式版   |
+| ar          | account -r                | 刷新当前登录账号      |
+
+- 模组与整合包信息中将会带有**图标链接**与**下载量**（由 [Shapaper](https://github.com/Shapaper) 于 [Issue#33](https://github.com/MrShieh-X/console-minecraft-launcher/issues/33) 提出）。
+- 下载模组和整合包时，如果mods目录内已有同名文件，将会询问是否覆盖目标文件、存储到其他目录或取消下载。
+- 修复了**无法启动某些版本**的问题。
+- 把“字符串”字样修改成了“文本”。
 
 ## 2.1.4（2023年5月21日）
 - 可通过设置配置`proxyEnabled`为`true`或`false`开关代理，网络出错时若检测到开启了代理则会提示用户确认代理是否可用。
@@ -37,7 +71,7 @@
 - 修复了一些问题。
 
 ## 2.0（2023年1月18日）
-- 为了使命令符合规范，本版本对各个功能的操作命令进行了大改动，具体内容请查看[帮助文档](README.md#帮助文档)，也可以查看[视频教程](https://www.bilibili.com/video/BV1bY411R7wa/)。
+- 为了使命令符合规范，本版本对各个功能的操作命令进行了大改动，具体内容请查看[帮助文档](README.md#-帮助文档)，也可以查看[视频教程](https://www.bilibili.com/video/BV1bY411R7wa/)。
 - 支持统一通行证登录，使用`account -h` 获取相关信息。
 - 添加了新的界面语言：粤语（简体）。可通过`config language cantonese`切换。
 - 支持启动游戏时打印启动信息（如Java 路径、最大内存、登录的账号等），可通过`config printStartupInfo true/false`开启或关闭。

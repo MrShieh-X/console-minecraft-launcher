@@ -114,7 +114,11 @@ public class MinecraftLauncher {
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
             @Nullable AuthlibInjectorInformation authlibInjectorInformation,
-            @Nullable Nide8AuthInformation nide8AuthInformation) throws
+            @Nullable Nide8AuthInformation nide8AuthInformation,
+            @Nullable String quickPlayLogFilePath,
+            @Nullable String quickPlaySaveName,
+            @Nullable String quickPlayServerAddress,
+            @Nullable String quickPlayRealmsID) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -267,9 +271,17 @@ public class MinecraftLauncher {
             1.12 minecraftArguments
             */
 
+        Map<String, Boolean> featuresProvided = new HashMap<>();
+        featuresProvided.put("is_demo_user", isDemo);
+        featuresProvided.put("has_custom_resolution", customScreenSize);
+        featuresProvided.put("has_quick_plays_support", !isEmpty(quickPlayLogFilePath));
+        featuresProvided.put("is_quick_play_singleplayer", !isEmpty(quickPlaySaveName));
+        featuresProvided.put("is_quick_play_multiplayer", !isEmpty(quickPlayServerAddress));
+        featuresProvided.put("is_quick_play_realms", !isEmpty(quickPlayRealmsID));
+
         if (headJsonObject.optJSONObject("arguments") != null) {
-            getGameArguments(headJsonObject, isDemo, customScreenSize, minecraftArguments);
-            getJavaVirtualMachineArguments(headJsonObject, isDemo, customScreenSize, jvmArguments);
+            getGameArguments(headJsonObject, featuresProvided, minecraftArguments);
+            getJavaVirtualMachineArguments(headJsonObject, featuresProvided, jvmArguments);
         }
 
         String args = headJsonObject.optString("minecraftArguments");
@@ -358,11 +370,9 @@ public class MinecraftLauncher {
         List<Library> librariesPaths = pair.first;
         List<Library> notFound = pair.second;
 
-
         if (notFound.size() > 0) {
             throw new LibraryDefectException(notFound);
         }
-
 
         File nativesFolder = VersionUtils.getNativesDir(minecraftVersionJsonFile.getParentFile());
         StringBuilder librariesString = new StringBuilder();
@@ -424,7 +434,7 @@ public class MinecraftLauncher {
                 minecraftArguments.set(i, s = s.replace(source, isEmpty(uuid) ? AccountUtils.getUUIDByName(playerName) : uuid));
             }
             if (s.contains(source = "${user_type}")) {
-                minecraftArguments.set(i, s = s.replace(source, "mojang"));
+                minecraftArguments.set(i, s = s.replace(source, "msa"));
             }
             if (s.contains(source = "${game_assets}")) {
                 minecraftArguments.set(i, s = s.replace(source, assetsPath));
@@ -455,6 +465,18 @@ public class MinecraftLauncher {
             }
             if (s.contains(source = "${language}")) {
                 minecraftArguments.set(i, s = s.replace(source, CMCL.getLocale().toString()));
+            }
+            if (s.contains(source = "${quickPlayPath}") && !isEmpty(quickPlayLogFilePath)) {
+                minecraftArguments.set(i, s = s.replace(source, quickPlayLogFilePath));
+            }
+            if (s.contains(source = "${quickPlaySingleplayer}") && !isEmpty(quickPlaySaveName)) {
+                minecraftArguments.set(i, s = s.replace(source, quickPlaySaveName));
+            }
+            if (s.contains(source = "${quickPlayMultiplayer}") && !isEmpty(quickPlayServerAddress)) {
+                minecraftArguments.set(i, s = s.replace(source, quickPlayServerAddress));
+            }
+            if (s.contains(source = "${quickPlayRealms}") && !isEmpty(quickPlayRealmsID)) {
+                minecraftArguments.set(i, s = s.replace(source, quickPlayRealmsID));
             }
         }
 
@@ -677,6 +699,13 @@ public class MinecraftLauncher {
             }
         }
 
+        if (!isEmpty(quickPlayServerAddress) && !minecraftArguments.contains("--quickPlayMultiplayer")) {
+            String[] address = quickPlayServerAddress.split(":");
+            minecraftArguments.add("--server");
+            minecraftArguments.add(address[0]);
+            minecraftArguments.add("--port");
+            minecraftArguments.add(address.length > 1 ? address[1] : "25565");
+        }
 
         arguments.add(javaPath);
         arguments.addAll(addableJvmArgs);
@@ -715,7 +744,11 @@ public class MinecraftLauncher {
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
             @Nullable AuthlibInjectorInformation authlibInjectorInformation,
-            @Nullable Nide8AuthInformation nide8AuthInformation) throws
+            @Nullable Nide8AuthInformation nide8AuthInformation,
+            @Nullable String quickPlayLogFilePath,
+            @Nullable String quickPlaySaveName,
+            @Nullable String quickPlayServerAddress,
+            @Nullable String quickPlayRealmsID) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -742,7 +775,11 @@ public class MinecraftLauncher {
                 jvmArgs,
                 gameArgs,
                 authlibInjectorInformation,
-                nide8AuthInformation);
+                nide8AuthInformation,
+                quickPlayLogFilePath,
+                quickPlaySaveName,
+                quickPlayServerAddress,
+                quickPlayRealmsID);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < args.size(); i++) {
             String str = args.get(i);
@@ -762,107 +799,63 @@ public class MinecraftLauncher {
         return stringBuilder.toString();
     }
 
-    /**
-     * 检测是否符合条件（jvm参数、游戏参数natives文件和依赖库文件）
-     *
-     * @param rules      规则
-     * @param isDemo     游戏参数时用
-     * @param customSize 游戏参数时用
-     **/
-    public static boolean isMeetConditions(JSONArray rules, boolean isDemo, boolean customSize) {
-        if (rules == null || rules.length() <= 0) return false;
-
+    public static boolean isMeetConditions(JSONArray rules, Map<String, Boolean> featuresProvided) {
+        if (rules == null || rules.length() == 0) return true;
+        String action = "disallow";
         for (int i = 0; i < rules.length(); i++) {
-            JSONObject first = rules.optJSONObject(i);
-            if (first == null) continue;
-            if ((!first.has("os") && !first.has("features"))) continue;
-            JSONObject os = first.optJSONObject("os");
-            JSONObject features = first.optJSONObject("features");
-            if (os != null) {
-                String action = first.optString("action");
+            JSONObject rule = rules.optJSONObject(i);
+            if (rule == null) continue;
 
-                String name = os.optString("name");
-                String version = os.optString("version");
-                String arch = os.optString("arch");
+            String thisAction;
 
-
-                boolean hasNoConditionOfRules = false;
-                for (int j = 0; j < rules.length(); j++) {
-                    if (j == i) continue;
-                    JSONObject second = rules.optJSONObject(j);
-                    if (second == null) continue;
-
-                    if (!second.has("name") && !second.has("version") && !second.has("arch")) {
-                        if ("allow".equals(second.optString("action"))) {
-                            hasNoConditionOfRules = true;
-                            break;
+            meetsRule:
+            {
+                JSONObject os = rule.optJSONObject("os");
+                JSONObject features = rule.optJSONObject("features");
+                boolean osMatches;
+                osMatches:
+                {
+                    if (os != null) {
+                        String name = os.optString("name");
+                        String version = os.optString("version");
+                        String arch = os.optString("arch");
+                        if (!isEmpty(name) && !name.equals(OperatingSystem.CURRENT_OS.getCheckedName())) {
+                            osMatches = false;
+                            break osMatches;
                         }
-                    }
-
-
-                }
-                if (isEmpty(name) && isEmpty(version) && isEmpty(arch)) {
-                    if ("disallow".equals(action)) {
-                        return false;
-                    } else {
-                        if (!hasNoConditionOfRules) {
-                            return false;
+                        if (!isEmpty(version) && !Pattern.compile(version).matcher(System.getProperty("os.version")).find()) {
+                            osMatches = false;
+                            break osMatches;
                         }
-                    }
-                }
-                boolean base = true;
-                boolean namae = false;
-                if (!isEmpty(name)) {
-                    base = (namae = name.equals(OperatingSystem.CURRENT_OS.getCheckedName()));
-                }
-                if (base/*如果osname匹配了才能判断version是否匹配*/ && !isEmpty(version)) {
-                    String sversion = /*OperatingSystem.SYSTEM_VERSION*/System.getProperty("os.version");
-                    if ("^10\\.".equals(version)) {
-                        base = base && "10.0".equals(sversion);
-                    } else {
-                        base = base && Pattern.compile(version).matcher(sversion).matches();
-                    }
-                }
-                if (!isEmpty(arch)) {
-                    if (!isEmpty(name)) {
-                        if (namae) {
-                            base = base && arch.equals(System.getProperty("os.arch"));
-                        }
-                    } else {
-                        base = base && arch.equals(System.getProperty("os.arch"));
-                    }
-                }
-                if (base) {
-                    if ("disallow".equals(action)) {
-                        return false;
-                    }
-                } else {
-                    if ("allow".equals(action)) {
-                        if (!hasNoConditionOfRules) {
-                            return false;
-                        }
-                    }
 
+                        if (!isEmpty(arch)) {
+                            osMatches = Pattern.compile(arch).matcher(System.getProperty("os.arch")).matches();
+                            break osMatches;
+                        }
+
+                        osMatches = true;
+                    } else osMatches = false;
                 }
+
+                if (os != null && !osMatches) {
+                    thisAction = null;
+                    break meetsRule;
+                }
+
+                if (features != null)
+                    for (Map.Entry<String, Object> entry : features.toMap().entrySet())
+                        if (!Objects.equals(featuresProvided.get(entry.getKey()), entry.getValue())) {
+                            thisAction = null;
+                            break meetsRule;
+                        }
+
+                thisAction = rule.optString("action");
             }
-            if (features != null) {
-                boolean allow2 = first.optString("action").equals("allow");
-                if (features.has("is_demo_user")) {
-                    boolean is_demo_user = features.optBoolean("is_demo_user");
-                    if (!(allow2 && isDemo == is_demo_user)) return false;
-                } else if (features.has("has_custom_resolution")) {
-                    boolean has_custom_resolution = features.optBoolean("has_custom_resolution");
-                    if (!(allow2 && has_custom_resolution == customSize)) {
-                        return false;
-                    }
-                } else if (!allow2) {
-                    return false;
-                }
-            }
-
-
+            if (!isEmpty(thisAction))
+                action = thisAction;
         }
-        return true;
+
+        return action.equals("allow");
     }
 
 
@@ -893,7 +886,11 @@ public class MinecraftLauncher {
             @Nullable List<String> jvmArgs,
             @Nullable Map<String, String> gameArgs,
             @Nullable AuthlibInjectorInformation authlibInjectorInformation,
-            @Nullable Nide8AuthInformation nide8AuthInformation) throws
+            @Nullable Nide8AuthInformation nide8AuthInformation,
+            @Nullable String quickPlayLogFilePath,
+            @Nullable String quickPlaySaveName,
+            @Nullable String quickPlayServerAddress,
+            @Nullable String quickPlayRealmsID) throws
             LibraryDefectException,
             EmptyNativesException,
             LaunchException,
@@ -920,7 +917,11 @@ public class MinecraftLauncher {
                 jvmArgs,
                 gameArgs,
                 authlibInjectorInformation,
-                nide8AuthInformation);
+                nide8AuthInformation,
+                quickPlayLogFilePath,
+                quickPlaySaveName,
+                quickPlayServerAddress,
+                quickPlayRealmsID);
 
         ProcessBuilder processBuilder = new ProcessBuilder(args);
         processBuilder.directory(versionDir);
@@ -928,15 +929,15 @@ public class MinecraftLauncher {
         return processBuilder.start();
     }
 
-    private static void getJavaVirtualMachineArguments(JSONObject headJsonObject, boolean isDemo, boolean customScreenSize, List<String> args) {
-        getArguments(headJsonObject, "jvm", isDemo, customScreenSize, args);
+    private static void getJavaVirtualMachineArguments(JSONObject headJsonObject, Map<String, Boolean> featuresProvided, List<String> args) {
+        getArguments(headJsonObject, "jvm", featuresProvided, args);
     }
 
-    private static void getGameArguments(JSONObject headJsonObject, boolean isDemo, boolean customScreenSize, List<String> args) {
-        getArguments(headJsonObject, "game", isDemo, customScreenSize, args);
+    private static void getGameArguments(JSONObject headJsonObject, Map<String, Boolean> featuresProvided, List<String> args) {
+        getArguments(headJsonObject, "game", featuresProvided, args);
     }
 
-    private static void getArguments(JSONObject headJsonObject, String name, boolean isDemo, boolean customScreenSize, List<String> args) {
+    private static void getArguments(JSONObject headJsonObject, String name, Map<String, Boolean> featuresProvided, List<String> args) {
         //StringBuilder arguments = new StringBuilder();
         JSONObject argumentsArray = headJsonObject.optJSONObject("arguments");
         JSONArray array = argumentsArray.optJSONArray(name);
@@ -954,7 +955,7 @@ public class MinecraftLauncher {
                         boolean meetConditions = true;
                         JSONArray rules = jsonObject.optJSONArray("rules");
                         if (rules != null) {
-                            meetConditions = isMeetConditions(rules, isDemo, customScreenSize);
+                            meetConditions = isMeetConditions(rules, featuresProvided);
                         }
                         if (meetConditions) {
                             if (value instanceof JSONArray) {
@@ -995,7 +996,7 @@ public class MinecraftLauncher {
             boolean meet = true;
             JSONArray rules = library.optJSONArray("rules");
             if (rules != null) {
-                meet = isMeetConditions(rules, false, false);
+                meet = isMeetConditions(rules, Collections.emptyMap());
             }
             if (meet) {
                 JSONObject downloads = library.optJSONObject("downloads");

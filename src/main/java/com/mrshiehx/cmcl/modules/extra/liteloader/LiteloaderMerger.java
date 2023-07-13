@@ -24,10 +24,11 @@ import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.bean.SplitLibraryName;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.modules.extra.ExtraMerger;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
@@ -50,13 +51,13 @@ import static com.mrshiehx.cmcl.CMCL.isEmpty;
 public class LiteloaderMerger implements ExtraMerger {
     private static final String MODLOADER_NAME = "LiteLoader";
 
-    public static Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String liteloaderVersionString, JSONObject headJSONObject) throws DescriptionException {
+    public static Pair<Boolean, List<JSONObject>> installInternal(String minecraftVersion, String liteloaderVersionString, JSONObject headJSONObject) throws ExceptionWithDescription {
         Map<String, LiteloaderVersion> versionsOfLiteLoader;
         versionsOfLiteLoader = getVersionList(minecraftVersion);
         LiteloaderVersion liteloaderVersion = versionsOfLiteLoader.get(liteloaderVersionString);
 
         if (liteloaderVersion == null) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", liteloaderVersionString).replace("${NAME}", MODLOADER_NAME));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", liteloaderVersionString).replace("${NAME}", MODLOADER_NAME));
         }
 
         return installInternal(liteloaderVersion, headJSONObject);
@@ -65,7 +66,7 @@ public class LiteloaderMerger implements ExtraMerger {
     /**
      * 将 LiteLoader 的JSON合并到原版JSON
      *
-     * @return key: 如果无法安装 LiteLoader，是否继续安装 value:如果成功合并，则为需要安装的依赖库集合，否则为空
+     * @return key: 如果无法安装 LiteLoader，是否继续安装；value：如果成功合并，则为需要安装的依赖库集合，否则为空
      **/
     @Override
     public Pair<Boolean, List<JSONObject>> merge(String minecraftVersion, JSONObject headJSONObject, File jarFile, boolean askContinue, @Nullable String extraVersion) {
@@ -76,29 +77,17 @@ public class LiteloaderMerger implements ExtraMerger {
         } catch (Exception e) {
             if (Constants.isDebug()) e.printStackTrace();
             System.out.println(e.getMessage());
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
+            return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
         }
         LiteloaderVersion liteloaderVersion;
 
         if (isEmpty(extraVersion)) {
             if (versionsOfLiteLoader.size() == 0) {
                 System.out.println(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
-                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
+                return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
             }
-
-            System.out.print('[');
-
             List<String> liteloaderVersions = new ArrayList<>(versionsOfLiteLoader.keySet());
-            for (int i = liteloaderVersions.size() - 1; i >= 0; i--) {
-                String versionName = liteloaderVersions.get(i);
-                if (versionName.contains(" ")) versionName = "\"" + versionName + "\"";
-                System.out.print(versionName);//legal
-                if (i > 0) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.println(']');
-
+            PrintingUtils.printListItems(liteloaderVersions, true, 4, 3);
             String inputLLVersion = ExtraMerger.selectExtraVersion(getString("INSTALL_MODLOADER_SELECT", MODLOADER_NAME, liteloaderVersions.get(0)), versionsOfLiteLoader, liteloaderVersions.get(0), MODLOADER_NAME);
             if (inputLLVersion == null)
                 return new Pair<>(false, null);
@@ -110,7 +99,7 @@ public class LiteloaderMerger implements ExtraMerger {
             liteloaderVersion = versionsOfLiteLoader.get(extraVersion);
             if (liteloaderVersion == null) {
                 System.out.println(getString("INSTALL_MODLOADER_FAILED_NOT_FOUND_TARGET_VERSION", extraVersion).replace("${NAME}", "LiteLoader"));
-                return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
+                return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
             }
         }
 
@@ -118,21 +107,21 @@ public class LiteloaderMerger implements ExtraMerger {
             return installInternal(liteloaderVersion, headJSONObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
+            return new Pair<>(askContinue && InteractionUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
         }
     }
 
-    private static Map<String, LiteloaderVersion> getVersionList(String minecraftVersion) throws DescriptionException {
+    private static Map<String, LiteloaderVersion> getVersionList(String minecraftVersion) throws ExceptionWithDescription {
         JSONObject versions;
         try {
             versions = new JSONObject(NetworkUtils.get(DownloadSource.getProvider().liteLoaderVersion())).optJSONObject("versions");
         } catch (Exception e) {
             //e.printStackTrace();
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", MODLOADER_NAME));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_TO_GET_INSTALLABLE_VERSION", MODLOADER_NAME));
         }
         JSONObject version = versions.optJSONObject(minecraftVersion);
         if (version == null) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_NO_INSTALLABLE_VERSION", MODLOADER_NAME));
         }
         JSONObject repository = version.optJSONObject("repo");
         String repoUrl = null;
@@ -140,7 +129,7 @@ public class LiteloaderMerger implements ExtraMerger {
             repoUrl = repository.optString("url");
         }
         if (isEmpty(repoUrl)) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, "'url' in 'repo' is empty"));
+            throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_WITH_REASON", MODLOADER_NAME, "'url' in 'repo' is empty"));
         }
         Map<String, LiteloaderVersion> versionsOfLiteLoader = new HashMap<>();
         JSONObject artefacts = version.optJSONObject("artefacts");
@@ -156,7 +145,7 @@ public class LiteloaderMerger implements ExtraMerger {
         return versionsOfLiteLoader;
     }
 
-    private static Pair<Boolean, List<JSONObject>> installInternal(LiteloaderVersion liteloaderVersion, JSONObject headJSONObject) throws DescriptionException {
+    private static Pair<Boolean, List<JSONObject>> installInternal(LiteloaderVersion liteloaderVersion, JSONObject headJSONObject) throws ExceptionWithDescription {
 
         String libraryName = "com.mumfrey:liteloader:" + liteloaderVersion.version;
         File libraryFile = new SplitLibraryName(/*libraryName,*/"com.mumfrey", "liteloader", liteloaderVersion.version).getPhysicalFile();
@@ -166,7 +155,7 @@ public class LiteloaderMerger implements ExtraMerger {
                 System.out.print(getString("MESSAGE_DOWNLOADING_FILE", libraryFile.getName()));
                 DownloadUtils.downloadFile(liteloaderVersion.url, libraryFile, new PercentageTextProgress());
             } catch (Exception e) {
-                throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME));
+                throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_DOWNLOAD", MODLOADER_NAME));
                 //return new Pair<>(askContinue && ConsoleUtils.yesOrNo(getString("INSTALL_MODLOADER_UNABLE_DO_YOU_WANT_TO_CONTINUE", MODLOADER_NAME)), null);
             }
         }

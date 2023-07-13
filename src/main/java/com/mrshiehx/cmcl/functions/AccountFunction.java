@@ -19,7 +19,7 @@
 package com.mrshiehx.cmcl.functions;
 
 import com.mrshiehx.cmcl.bean.arguments.*;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.exceptions.NotSelectedException;
 import com.mrshiehx.cmcl.interfaces.filters.JSONObjectFilter;
 import com.mrshiehx.cmcl.modules.account.authentication.AccountRefresher;
@@ -32,7 +32,8 @@ import com.mrshiehx.cmcl.modules.account.skin.SkinDownloader;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.AccountUtils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -79,9 +80,15 @@ public class AccountFunction implements Function {
                 case "l":
                 case "list": {
                     AtomicInteger i = new AtomicInteger();
-                    StringBuilder sb = new StringBuilder();
-                    getAllAccounts(accounts).forEach(account -> sb.append(formatAccountInfo(account, i.getAndIncrement())).append('\n'));
-                    System.out.print(sb);
+                    PrintingUtils.printTable(
+                            new String[]{
+                                    getString("TABLE_ACCOUNTS_LIST_HEADER_SELECTED"),
+                                    getString("TABLE_ACCOUNTS_LIST_HEADER_ORDER"),
+                                    getString("TABLE_ACCOUNTS_LIST_HEADER_NAME"),
+                                    getString("TABLE_ACCOUNTS_LIST_HEADER_TYPE"),
+                                    getString("TABLE_ACCOUNTS_LIST_HEADER_OTHER_INFORMATION")},
+                            new int[]{8, 6, 20, 24, 50}, false,
+                            getAllAccounts(accounts).stream().map(account -> accountInfoToTableItem(account, i.getAndIncrement(), true)).collect(Collectors.toList()).toArray(new String[0][0]));
                 }
                 break;
                 case "r":
@@ -91,7 +98,6 @@ public class AccountFunction implements Function {
                         account = AccountUtils.getSelectedAccount(config, true);
                     } catch (NotSelectedException ignore) {
                     }
-
                     if (account == null) {
                         return;
                     }
@@ -100,7 +106,7 @@ public class AccountFunction implements Function {
                         if (AccountRefresher.execute(account, accounts)) {
                             Utils.saveConfig(config);
                         }
-                    } catch (DescriptionException e) {
+                    } catch (ExceptionWithDescription e) {
                         e.print();
                     }
                 }
@@ -189,7 +195,7 @@ public class AccountFunction implements Function {
                             if (var2 != -1) {
                                 suffix = "/" + file.getName().substring(var2 + 1);
                             }
-                            boolean slim = ConsoleUtils.yesOrNo(getString("SKIN_TYPE_DEFAULT_OR_SLIM"));
+                            boolean slim = InteractionUtils.yesOrNo(getString("SKIN_TYPE_DEFAULT_OR_SLIM"));
                             try {
                                 YggdrasilAuthentication.uploadSkin(new AuthlibInjectorApiProvider(account.optString("url")), account.optString("uuid"), account.optString("accessToken"), file.getName(), suffix, FileUtils.getBytes(file), slim);
                             } catch (Exception e) {
@@ -202,7 +208,7 @@ public class AccountFunction implements Function {
                                 System.out.println(getString("FILE_NOT_FOUND_OR_IS_A_DIRECTORY"));
                                 break;
                             }
-                            if (ConsoleUtils.yesOrNo(getString("SKIN_TYPE_DEFAULT_OR_SLIM"))) {
+                            if (InteractionUtils.yesOrNo(getString("SKIN_TYPE_DEFAULT_OR_SLIM"))) {
                                 account.put("slim", true);
                             } else {
                                 account.remove("slim");
@@ -374,7 +380,7 @@ public class AccountFunction implements Function {
                         account.put("selected", select);
                         account.put("loginMethod", 0);
                         if (indexOf >= 0) {
-                            if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
+                            if (InteractionUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
                                 accounts.put(indexOf, account);
                                 config.put("accounts", accounts);
                                 Utils.saveConfig(config);
@@ -466,7 +472,7 @@ public class AccountFunction implements Function {
             Utils.saveConfig(config);
             System.out.println(getString("MESSAGE_LOGINED_TITLE"));
         } else {
-            if (ConsoleUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
+            if (InteractionUtils.yesOrNo(String.format(getString("CONSOLE_REPLACE_LOGGED_ACCOUNT"), indexOf))) {
                 accounts.put(indexOf, account);
                 config.put("accounts", accounts);
                 Utils.saveConfig(config);
@@ -479,13 +485,35 @@ public class AccountFunction implements Function {
         return Utils.iteratorToStream(accounts.iterator()).filter(AccountUtils::isValidAccount).map(x -> (JSONObject) x).collect(Collectors.toList());
     }
 
-    public static String formatAccountInfo(JSONObject account, int order) {
-        return String.format("%d.%s (%s) %s",
-                order,
+    public static String[] accountInfoToTableItem(JSONObject account, int order, boolean showSelected) {
+        String accountType;
+        String otherInformation;
+        int loginMethod = account.optInt("loginMethod");
+        if (loginMethod == 1) {
+            accountType = getString("ACCOUNT_TYPE_OAS");
+            otherInformation = account.optString("serverName") + " " + account.optString("url");
+        } else if (loginMethod == 2) {
+            accountType = getString("ACCOUNT_TYPE_MICROSOFT");
+            otherInformation = "";
+        } else if (loginMethod == 3) {
+            accountType = getString("ACCOUNT_TYPE_NIDE8AUTH");
+            otherInformation = account.optString("serverName") + " " + account.optString("serverId");
+        } else {
+            accountType = getString("ACCOUNT_TYPE_OFFLINE");
+            otherInformation = "";
+        }
+        return showSelected ? new String[]{
+                account.optBoolean("selected") ? getString("YES_SHORT") : "",
+                String.valueOf(order),
                 account.optString("playerName", "XPlayer"),
-                getAccountType(account),
-                account.optBoolean("selected") ? getString("ACCOUNT_SELECTED") : ""
-        );
+                accountType,
+                otherInformation
+        } : new String[]{
+                String.valueOf(order),
+                account.optString("playerName", "XPlayer"),
+                accountType,
+                otherInformation
+        };
     }
 
 
@@ -495,6 +523,19 @@ public class AccountFunction implements Function {
     }
 
     public static String getAccountType(JSONObject account) {
+        int loginMethod = account.optInt("loginMethod");
+        if (loginMethod == 1) {
+            return getString("ACCOUNT_TYPE_OAS");
+        } else if (loginMethod == 2) {
+            return getString("ACCOUNT_TYPE_MICROSOFT");
+        } else if (loginMethod == 3) {
+            return getString("ACCOUNT_TYPE_NIDE8AUTH");
+        } else {
+            return getString("ACCOUNT_TYPE_OFFLINE");
+        }
+    }
+
+    public static String getAccountTypeWithInformation(JSONObject account) {
         int loginMethod = account.optInt("loginMethod");
         if (loginMethod == 1) {
             return getString("ACCOUNT_TYPE_OAS_WITH_DETAIL", account.optString("serverName"), account.optString("url"));

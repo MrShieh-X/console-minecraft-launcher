@@ -5,7 +5,7 @@ It's not crashing, it's your operation method is wrong. Open cmd, enter `cd /d`,
 ---
 
 ### Executing cmcl.exe says that the Java version is inappropriate?
-Use `cmcl2.exe` instead of `cmcl.exe`; you can also download cmcl.jar and start it with `java -jar cmcl.jar`.
+Download cmcl.jar and start it with `java -jar cmcl.jar`.
 
 ---
 
@@ -30,7 +30,7 @@ Set the game directory of version "1.19.3" to `D:\wokingdirs\1.19.3`:
 ```
 cmcl version 1.19.3 --config=gameDir D:\wokingdirs\1.19.3
 ```
-Among them, the usage related to the version can be obtained through `cmcl version -h`, and then find the item `--config=<config name>`, I believe everyone can understand it here. Then `gameDir` can be obtained by `cmcl config -v` or found on [Configuration](README-en.md#configurations). Essentially modifying configurations individually for versions.
+Among them, the usage related to the version can be obtained through `cmcl version -h`, and then find the item `--config=<config name>`, I believe everyone can understand it here. Then `gameDir` can be obtained by `cmcl config -v` or found on [Configuration](README-en.md#-configurations). Essentially modifying configurations individually for versions.
 
 ---
 
@@ -47,6 +47,27 @@ cmcl config proxyPassword <password for proxy authentication>
 ```
 Finally, the proxy can be enabled by `cmcl config proxyEnabled true`, and disabled by `cmcl config proxyEnabled false`. </br>
 Note: If you have enabled the proxy and an error occurs when performing operations that require networking, it may be that your network proxy is not available. You can check whether there is a problem with your network proxy.
+
+---
+
+### Can I make a "shortcut" for a command I type often?
+For some commands that may be entered frequently, such as switching the download source `cmcl config downloadSource <download source>`, 
+switching the proxy `cmcl config proxyEnabled true/false`, you can set the simplified command through 
+`cmcl simplify -s <Simplified Command> "<Original Command>"`, for example: after entering the command 
+`cmcl simplify -s pon "config proxyEnabled true"`, enter the command `cmcl pon` to quickly start the proxy. 
+But be careful not to conflict with existing options and local version names. Get additional usage via `cmcl simplify -h`. 
+Combined with the actual usage of users, it is recommended to set the following simplified commands:
+
+| Simplified command (can be set freely) | Original command          | Meaning                             |
+|----------------------------------------|---------------------------|-------------------------------------|
+| ds0                                    | config downloadSource 0   | Set the download source to official |
+| ds1                                    | config downloadSource 1   | Set the download source to BMCLAPI  |
+| ds2                                    | config downloadSource 2   | Set the download source to MCBBS    |
+| pon                                    | config proxyEnabled true  | Enable proxy                        |
+| poff                                   | config proxyEnabled false | Disable proxy                       |
+| als                                    | account --list            | List all accounts                   |
+| sr                                     | install --show=r          | List all available release versions |
+| ar                                     | account -r                | Refresh the current login account   |
 
 ---
 

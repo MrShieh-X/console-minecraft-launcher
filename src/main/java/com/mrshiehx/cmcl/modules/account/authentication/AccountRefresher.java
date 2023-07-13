@@ -19,7 +19,7 @@
 
 package com.mrshiehx.cmcl.modules.account.authentication;
 
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.modules.account.authentication.microsoft.MicrosoftAuthentication;
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.authlib.AuthlibInjectorAuthentication;
 import com.mrshiehx.cmcl.modules.account.authentication.yggdrasil.nide8auth.Nide8AuthAuthentication;
@@ -32,7 +32,7 @@ public class AccountRefresher {
      *
      * @return whether the account has been modified
      **/
-    public static boolean execute(JSONObject selectedAccount, JSONArray accounts) throws DescriptionException {
+    public static boolean execute(JSONObject selectedAccount, JSONArray accounts) throws ExceptionWithDescription {
         int loginMethod = selectedAccount.optInt("loginMethod");
         if (loginMethod == 1) {
             return AuthlibInjectorAuthentication.refresh(selectedAccount, accounts);

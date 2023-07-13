@@ -17,7 +17,7 @@
  */
 package com.mrshiehx.cmcl.modules.account.authentication.microsoft;
 
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.server.MicrosoftAuthenticationServer;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.AccountUtils;
@@ -187,7 +187,7 @@ public class MicrosoftAuthentication {
         throw exception;
     }
 
-    public static boolean refresh(JSONObject selectedAccount, JSONArray accounts) throws DescriptionException {
+    public static boolean refresh(JSONObject selectedAccount, JSONArray accounts) throws ExceptionWithDescription {
         boolean needRefresh;
         JSONObject profile = null;
         try {
@@ -215,10 +215,10 @@ public class MicrosoftAuthentication {
             System.out.println(getString("MESSAGE_ACCOUNT_INFO_MISSING_NEED_RELOGIN"));
             JSONObject accountNew = MicrosoftAuthentication.loginMicrosoftAccount();
             if (accountNew == null) {
-                throw new DescriptionException(null);
+                throw new ExceptionWithDescription(null);
             }
             if (!accountNew.optString("id").equals(selectedAccount.optString("id"))) {
-                throw new DescriptionException(getString("ACCOUNT_MICROSOFT_REFRESH_NOT_SAME"));
+                throw new ExceptionWithDescription(getString("ACCOUNT_MICROSOFT_REFRESH_NOT_SAME"));
             }
             accountNew.put("selected", true);
             for (int i = 0; i < accounts.length(); i++) {
@@ -234,16 +234,16 @@ public class MicrosoftAuthentication {
         try {
             JSONObject auth = MicrosoftAuthentication.continueAuthentication(refreshToken);
             if (auth == null)
-                throw new DescriptionException(null);
+                throw new ExceptionWithDescription(null);
             long expiresIn = auth.optInt("expires_in") * 1000L + System.currentTimeMillis();
             String accessToken = auth.optString("access_token");
             JSONObject newProfile = MicrosoftAuthentication.getProfile(selectedAccount.optString("tokenType", "Bearer"), accessToken);
             if (newProfile == null) {
-                throw new DescriptionException(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
+                throw new ExceptionWithDescription(getString("MESSAGE_OFFICIAL_LOGIN_FAILED_TITLE"));
             }
             if (newProfile.has("error") || newProfile.has("errorMessage")) {
                 String var = newProfile.optString("errorMessage");
-                throw new DescriptionException(getString("ERROR_WITH_MESSAGE", newProfile.optString("error"), var));
+                throw new ExceptionWithDescription(getString("ERROR_WITH_MESSAGE", newProfile.optString("error"), var));
             }
 
             String accountID = auth.optString("username");
@@ -255,7 +255,7 @@ public class MicrosoftAuthentication {
             return true;
         } catch (Exception e) {
             //if(Constants.isDebug())e.printStackTrace();
-            throw new DescriptionException(getString("MESSAGE_FAILED_REFRESH_TITLE") + (!Utils.isEmpty(Utils.valueOf(e)) ? (": " + e) : ""));
+            throw new ExceptionWithDescription(getString("MESSAGE_FAILED_REFRESH_TITLE") + (!Utils.isEmpty(Utils.valueOf(e)) ? (": " + e) : ""));
         }
     }
 

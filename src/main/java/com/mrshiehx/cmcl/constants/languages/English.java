@@ -28,8 +28,8 @@ public class English implements Language {
     public Map<String, String> getTextMap() {
         Map<String, String> en = new HashMap<>();
         en.put("APPLICATION_NAME", "Console Minecraft Launcher");
-        en.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher %1$s");
-        en.put("MESSAGE_ABOUT_DESCRIPTION_2", "A Launcher for Minecraft Java Edition");
+        en.put("MESSAGE_ABOUT_DESCRIPTION_1", "Console Minecraft Launcher v%1$s");
+        en.put("MESSAGE_ABOUT_DESCRIPTION_2", "A Minecraft Java Edition Launcher Running on the Command Line");
         en.put("MESSAGE_ABOUT_DESCRIPTION_4", "Source code repository: ");
         en.put("MESSAGE_ABOUT_DESCRIPTION_6", "Dependency Libraries: ");
         en.put("MESSAGE_ABOUT_DESCRIPTION_MAIN_DEVELOPERS", "Main Developers:");
@@ -131,59 +131,43 @@ public class English implements Language {
                 "${JVM_ARGS}\n" +
                 "Custom Game Arguments:\n" +
                 "${GAME_ARGS}");
+        en.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_LOG_FILE_PATH", "Quick Play Log File Path: ${QUICK_PLAY_LOG_FILE_PATH}");
+        en.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_SAVE_NAME", "Quick Play Save Name: ${QUICK_PLAY_SAVE_NAME}");
+        en.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_SERVER_ADDRESS", "Quick Play Server Address: ${QUICK_PLAY_SERVER_ADDRESS}");
+        en.put("MESSAGE_STARTUP_INFO_QUICK_PLAY_REALMS_ID", "Quick Play Realms ID: ${QUICK_PLAY_REALMS_ID}");
         en.put("MESSAGE_TO_SELECT_VERSION", "Please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
         en.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Tip: The startup command is too long, you may not be able to run it directly in cmd or save it to a bat file and execute it. It is recommended that you use \"version [<version>] --export-script-ps=<script file>\" to export it as a PowerShell script file used later.");
         en.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Unable to export the script file: Due to the length limit of the bat script file, the startup command is too long and cannot be exported as a bat file. You can only use \"version [<version>] --export-script-ps=<script file with .ps1 as the suffix>\" to export as a PowerShell script file.");
-        en.put("MESSAGE_CONFIGURATIONS",
-                " Note: For configurations whose type is Boolean, its value can be \"true\" which means \"yes\", or \"false\" which means \"no\".\n" +
-                        "  accounts | JSON Array\n" +
-                        "    Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n\n" +
-                        "  downloadSource | Integer\n" +
-                        "    Download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS\n\n" +
-                        "  language | String\n" +
-                        "    Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)\n\n" +
-                        "  selectedVersion | String\n" +
-                        "    Selected start version\n\n" +
-                        "  [Game related] | maxMemory | Integer\n" +
-                        "    Maximum (Unit: MB)|\n\n" +
-                        "  [Game related] | gameDir | String\n" +
-                        "    Custom the path of the game directory (or set working directory), default is .minecraft\n\n" +
-                        "  [Game related] | assetsDir | String\n" +
-                        "    Custom assets resource directory path, if empty, it is the assets directory in the game directory\n\n" +
-                        "  [Game related] | resourcesDir | String\n" +
-                        "    Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory\n\n" +
-                        "  [Game related] | javaPath | String\n" +
-                        "    Java Path (It will get automatically if it is empty)\n\n" +
-                        "  [Game related] | windowSizeWidth | Integer\n" +
-                        "    The width of the game window\n\n" +
-                        "  [Game related] | windowSizeHeight | Integer\n" +
-                        "    The height of the game window\n\n" +
-                        "  [Game related] | isFullscreen | Boolean\n" +
-                        "    Whether the game window is fullscreen or not\n\n" +
-                        "  [Game related] | exitWithMinecraft | Boolean\n" +
-                        "    When running the game, whether or not you need to exit the launcher and exit the game by the way\n\n" +
-                        "  [Game related] | printStartupInfo | Boolean\n" +
-                        "    When starting the game, whether to output startup information (Java path, maximum memory, etc.)\n\n" +
-                        "  [Game related] | checkAccountBeforeStart | Boolean\n" +
-                        "    Check whether the account is available before starting the game\n\n" +
-                        "  [Game related] | jvmArgs | JSON Array\n" +
-                        "    Customize JVM arguments (Non-direct modification, please use \"jvmArgs -h\" to get the relevant tutorial for modification)\n\n" +
-                        "  [Game related] | gameArgs | JSON Object\n" +
-                        "    Customize game arguments (Non-direct modification, please use \"gameArgs -h\" to get the relevant tutorial for modification)\n\n" +
-                        "  proxyEnabled | Boolean\n" +
-                        "    Whether to enable network proxy\n\n" +
-                        "  proxyHost | String\n" +
-                        "    Proxy Host Address\n\n" +
-                        "  proxyPort | Integer\n" +
-                        "    Proxy Port\n\n" +
-                        "  proxyUsername | String\n" +
-                        "    Proxy authentication username(optional for proxy)\n\n" +
-                        "  proxyPassword | String\n" +
-                        "    Proxy authentication password(optional for proxy)\n\n" +
-                        "  modDownloadSource | String\n" +
-                        "    Mod download source, curseforge or modrinth\n\n" +
-                        "  modpackDownloadSource | String\n" +
-                        "    Modpack download source, curseforge or modrinth");
+        en.put("MESSAGE_CONFIGURATIONS_TIP", "Note: For configurations whose type is Boolean, its value can be \"true\" which means \"yes\", or \"false\" which means \"no\".");
+        en.put("MESSAGE_CONFIGURATIONS_TABLE_CONTENT", "accounts|JSON Array|Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n" +
+                "downloadSource|Integer|Download source, 0 is the official, 1 is BMCLAPI, 2 is MCBBS\n" +
+                "language|Text|Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)\n" +
+                "selectedVersion|Text|Selected start version, you can directly use \"cmcl\" to start it\n" +
+                "maxMemory|Integer|[Game related] Maximum (Unit: MB)\n" +
+                "gameDir|Text|[Game related] Custom the path of the game directory (or set working directory), default is .minecraft\n" +
+                "assetsDir|Text|[Game related] Custom assets resource directory path, if empty, it is the assets directory in the game directory\n" +
+                "resourcesDir|Text|[Game related] Custom resource pack directory path, if empty, it is the resourcepacks directory in the game directory\n" +
+                "javaPath|Text|[Game related] Java Path (It will get automatically if it is empty)\n" +
+                "windowSizeWidth|Integer|[Game related] The width of the game window\n" +
+                "windowSizeHeight|Integer|[Game related] The height of the game window\n" +
+                "isFullscreen|Boolean|[Game related] Whether the game window is fullscreen or not\n" +
+                "exitWithMinecraft|Boolean|[Game related] When running the game, whether or not you need to exit the launcher and exit the game by the way\n" +
+                "printStartupInfo|Boolean|[Game related] When starting the game, whether to output startup information (Java path, maximum memory, etc.)\n" +
+                "checkAccountBeforeStart|Boolean|[Game related] Check whether the account is available before starting the game\n" +
+                "jvmArgs|JSON Array|[Game related] Customize JVM arguments (Use \"jvmArgs -h\" to get the relevant tutorial for modification)\n" +
+                "gameArgs|JSON Object|[Game related] Customize game arguments (Use \"gameArgs -h\" to get the relevant tutorial for modification)\n" +
+                "qpLogFile|Text|[Game related] The log file path (relative to the game directory) of Quick Play (a new feature of Minecraft 1.20, set the following three configurations to start the game and directly enter the save, server or realms, only one item can be set), optional\n" +
+                "qpSaveName|Text|[Game related] The name of the save that the quick play will join directly\n" +
+                "qpServerAddress|Text|[Game related] The address (including port) of the server that the quick play will join directly, this configuration also applies to versions prior to 1.20\n" +
+                "qpRealmsID|Text|[Game related] The ID of the realms that the quick play will join directly\n" +
+                "proxyEnabled|Boolean|Whether to enable network proxy\n" +
+                "proxyHost|Text|Proxy Host Address\n" +
+                "proxyPort|Integer|Proxy Port\n" +
+                "proxyUsername|Text|Proxy authentication username(optional for proxy)\n" +
+                "proxyPassword|Text|Proxy authentication password(optional for proxy)\n" +
+                "modDownloadSource|Text|Mod download source, curseforge or modrinth\n" +
+                "modpackDownloadSource|Text|Modpack download source, curseforge or modrinth\n" +
+                "simplifyCommands|JSON Object|Simplify commands (use \"simplify -h\" to get the relevant tutorial for modification)");
         en.put("ERROR_WITH_MESSAGE", "Error: %1$s\nError Message: %2$s");
         en.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "The JSON file or JAR file of the target version does not exist, please use \"-s <version>\" to select a launch-able version or \"install <version>\" to install a new version and select it.");
         en.put("EXCEPTION_VERSION_NOT_FOUND", "%s: Version does not exist");
@@ -241,7 +225,6 @@ public class English implements Language {
         en.put("CONSOLE_IMMERSIVE_MISSING_PARAMETER", "Missing parameter. Type help for help documentation.");
         en.put("CONSOLE_NOT_FOUND_VERSION_OR_OPTION", "Could not find a start-able version or option with the name \"%s\". You can check the information you entered with the help documentation obtained by typing the option -h or --help.");
         en.put("CONSOLE_HELP_WRONG_WRITE", "The correct format is -h or --help, without parameter value, instead of \"%s\".");
-        en.put("CONSOLE_VERSION_UNCLEAR_MEANING", "The meaning of \"%s\" is unknown, is it a version? Remember to add double quotes.");
         en.put("CONSOLE_UNKNOWN_USAGE", "Unknown usage: %s. Please use the option -h or --help to get the help documentation.");
         en.put("CONSOLE_ARG_CHECKING_ONE", "%s: Option usage is wrong or should not appear here. Please use the option -h or --help to get the help documentation.");
         en.put("CONSOLE_ARG_CHECKING_PLURAL", "The following options are used incorrectly or should not be appear here. Please use the option -h or --help to get the help documentation.\n%s");
@@ -249,7 +232,7 @@ public class English implements Language {
         en.put("CONSOLE_ASK_PRINT_STARTUP_INFO", "Do you need to print startup information when starting the game (such as Java path, maximum memory, login account, etc., which can be turned on or off through \"config printStartupInfo true/false\")?");
         en.put("CONSOLE_ASK_CHECK_ACCOUNT", "Do you need to check whether the account is available before starting the game (it will take time before starting, you can turn it on or off through \"config checkAccountBeforeStart true/false\")?");
         en.put("CONSOLE_CHOOSE_DOWNLOAD_SOURCE_CF_OR_MR", "Please choose a download source (%d by default, stored as configuration \"modDownloadSource\"): ");
-        en.put("DATATYPE_STRING", "String");
+        en.put("DATATYPE_STRING", "Text");
         en.put("DATATYPE_INTEGER", "Integer");
         en.put("DATATYPE_BOOLEAN", "Boolean");
         en.put("DATATYPE_FRACTION", "Fraction");
@@ -259,7 +242,6 @@ public class English implements Language {
         en.put("ACCOUNT_TYPE_OAS", "authlib-injector Account");
         en.put("ACCOUNT_TYPE_NIDE8AUTH", "Nide8Auth Account");
         en.put("ACCOUNT_TYPE_NIDE8AUTH_WITH_DETAIL", "Nide8Auth Account: %s %s");
-        en.put("ACCOUNT_SELECTED", "Selected");
         en.put("ACCOUNT_NOT_EXISTS", "Account does not exist: %d");
         en.put("ACCOUNT_TYPE_OAS_WITH_DETAIL", "authlib-injector Account: %s %s");
         en.put("ACCOUNT_INVALID", "Invalid Account: %d");
@@ -365,8 +347,8 @@ public class English implements Language {
         en.put("CF_SELECT_TARGET", "Please select the target ${NAME} (%d-%d): ");
         en.put("CF_SUPPORTED_GAME_VERSION", "%s supported game versions: ");
         en.put("CF_INPUT_GAME_VERSION", "Please enter the version you want to download: ");
-        en.put("CF_INPUT_VERSION", "Please select the ${NAME} version you want to download (%d-%d, exit if the value is -1): ");
-        en.put("CF_STORAGE_FILE_EXISTS", "The file \"%s\" already exists, please enter a directory to store the ${NAME} file: ");
+        en.put("CF_INPUT_VERSION", "Please select the ${NAME} version you want to download (%d-%d, cancel download if the value is -1): ");
+        en.put("CF_STORAGE_FILE_EXISTS", "Please enter a directory to store the ${NAME} file: ");
         en.put("CF_NO_VERSION_FOR_GAME_VERSION", "There is no %s version available for this game version.");
         en.put("CF_INFORMATION_NOTHING", "There is no information about this %s");
         en.put("CF_INFORMATION_MOD_NAME", "   Mod Name:                      ");
@@ -376,17 +358,18 @@ public class English implements Language {
         en.put("CF_INFORMATION_AUTHORS", "   Authors:                       ");
         en.put("CF_INFORMATION_AUTHOR", "   Author:                        ");
         en.put("CF_INFORMATION_SUMMARY", "   Introduction:                  ");
+        en.put("CF_INFORMATION_ICON", "   Icon:                          ");
         en.put("CF_INFORMATION_LATEST_GAME_VERSION", "   Latest Supported Game Version: ");
         en.put("CF_INFORMATION_DATE_MODIFIED", "   Modified Date:                 ");
+        en.put("CF_INFORMATION_DOWNLOAD_COUNT", "   Download Count:                ");
         en.put("CF_INFORMATION_DATE_CREATED", "   Created Date:                  ");
         en.put("CF_INFORMATION_DATE_RELEASED", "   Released Date:                 ");
         en.put("CF_INFORMATION_ISSUE_TRACKER_URL", "   Feedback:                      ");
         en.put("CF_INFORMATION_SOURCE_URL", "   Source Code Repository:        ");
         en.put("CF_INFORMATION_WEBSITE_URL", "   Webpage Introduction:          ");
         en.put("CF_INFORMATION_WIKI_URL", "   Wiki Website:                  ");
-        en.put("CF_INFORMATION_DOWNLOADS", "   Downloads:                     ");
-        en.put("CF_INFORMATION_CATEGORIES", "   Categories:       ");
-        en.put("CF_INFORMATION_DISCORD_URL", "   Discord URL:      ");
+        en.put("CF_INFORMATION_CATEGORIES", "   Categories:                    ");
+        en.put("CF_INFORMATION_DISCORD_URL", "   Discord URL:                   ");
         en.put("CF_INFORMATION_DONATION", "   Donation:         ");
         en.put("CF_INFORMATION_DONATION_URL", "         Url: ");
         en.put("CF_INFORMATION_AUTHOR_URL", "         Homepage: ");
@@ -402,6 +385,8 @@ public class English implements Language {
         en.put("CF_BESEARCHED_MODPACK_FUC", "Modpack");
         en.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "The target game component is not a ${NAME}, the category ID of this component is %d.");
         en.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "The target game component is not a ${NAME}, the component is a ${TARGET}.");
+        en.put("CF_STORAGE_FILE_EXISTS_OPERATIONS", "[0]Overwrite target file  [1]Save to another directory  [2]Cancel download");
+        en.put("CF_STORAGE_FILE_EXISTS_SELECT_OPERATION", "The file \"%s\" already exists, please choose your action (0-2): ");
         en.put("MOD_FAILED_TO_GET_ALL_FILES", "Failed to get list of ${NAME} files: %s");
         en.put("MOD_UNKNOWN_SOURCE", "%s: Unknown download source. Use option -h or --help for more information.");
         en.put("MOD_CONTAINS_BOTH_NAME_AND_ID", "-n or --name and --id cannot exist at the same time.");
@@ -416,6 +401,19 @@ public class English implements Language {
         en.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS");
         en.put("MODPACK_CONTAINS_TWO_OR_MORE", "Only one of --install, --info, --file or --url can exist.");
         en.put("MODPACK_CONTAINS_NOTHING", "Must specify --install, --info, --file or --url.");
+        en.put("YES_SHORT", "Yes");
+        en.put("TABLE_ACCOUNTS_LIST_HEADER_SELECTED", "Selected");
+        en.put("TABLE_ACCOUNTS_LIST_HEADER_ORDER", "Order");
+        en.put("TABLE_ACCOUNTS_LIST_HEADER_NAME", "Name");
+        en.put("TABLE_ACCOUNTS_LIST_HEADER_TYPE", "Account Type");
+        en.put("TABLE_ACCOUNTS_LIST_HEADER_OTHER_INFORMATION", "Other Information");
+        en.put("TABLE_CONFIG_ALL_NAME", "Config Name");
+        en.put("TABLE_CONFIG_ALL_TYPE", "Type");
+        en.put("TABLE_CONFIG_ALL_VALUE", "Config Value");
+        en.put("TABLE_CONFIG_ALL_VIEW_SEPARATELY", "View separately through \"cmcl config %s\"");
+        en.put("TABLE_SETTABLE_CONFIG_NAME", "Config Name");
+        en.put("TABLE_SETTABLE_CONFIG_TYPE", "Type");
+        en.put("TABLE_SETTABLE_CONFIG_MEANING", "Meaning");
         return en;
     }
 
@@ -423,7 +421,7 @@ public class English implements Language {
     public Map<String, String> getHelpMap() {
         Map<String, String> enHelp = new HashMap<>();
         enHelp.put("ROOT",
-                "Console Minecraft Launcher " + Constants.CMCL_VERSION_NAME + ": A Launcher for Minecraft Java Edition Running On The Console\n" +
+                "Console Minecraft Launcher v" + Constants.CMCL_VERSION_NAME + ": A Minecraft Java Edition Launcher Running on the Command Line\n" +
                         "\n" +
                         "Note:\n" +
                         "  Content in square brackets is optional.\n" +
@@ -435,7 +433,8 @@ public class English implements Language {
                         "  for details, please refer to the example after the option description.\n" +
                         "\n" +
                         "Usage:\n" +
-                        "cmcl [<version>]               Start the selected version or the version specified by <version>.\n" +
+                        "cmcl [<version>]               Start the version selected via \"cmcl -s <version>\"\n" +
+                        "                               or the version specified by <version>.\n" +
                         "                                  e.g cmcl 1.19: to start 1.19;\n" +
                         "                                  If the currently selected version is 1.18.2,\n" +
                         "                                  run it directly (without parameters), it will start 1.18.2.\n" +
@@ -444,12 +443,13 @@ public class English implements Language {
                         "                                  e.g. cmcl -l; cmcl --list=D:\\.minecraft\n" +
                         "     -p, --print[=<version>]   Print the startup command for selected version or <version>.\n" +
                         "                                  e.g. cmcl -p; cmcl --print=1.19\n" +
-                        "     -s, --select=<version>    Select version.\n" +
+                        "     -s, --select=<version>    Select version, after selection, you can directly use \"cmcl\" to start\n" +
                         "     -a, --about               Show about information.\n" +
                         //"     -i, --immersive           Enter immersive mode*\n" +
                         "     -c, --check-for-updates   Check for updates\n" +
                         "     <function> <option>...    Put the function name in \"All functions\" into <function> (without hyphen), and\n" +
                         "                               put the option after the function name to perform the corresponding operation.\n" +
+                        "                                  cmcl install -h\n" +
                         /*"\n" +
                         " * Immersive mode: In this mode, only complete options can be used to execute the above command, such as help,\n" +
                         "   list, print; execute the command below without entering \"cmcl\", such as config maxMemory 2048;\n" +
@@ -461,6 +461,7 @@ public class English implements Language {
                         "     version           Version operation\n" +
                         "     account           Account operation\n" +
                         "     config            Modify launcher configuration\n" +
+                        "     simplify          Set simplified commands\n" +
                         "     jvmArgs           Custom JVM arguments\n" +
                         "     gameArgs          Custom game arguments\n" +
                         "     mod               Mods searching and installation\n" +
@@ -509,9 +510,9 @@ public class English implements Language {
                         "   --info                                View version information. cmcl version 1.19 --info\n" +
                         "   -d, --delete                          Delete the version.       cmcl version -d\n" +
                         "   --rename=<new name>                   Rename the version\n" +
-                        "   --complete[=assets|libraries|natives] Complete assets, libraries or native libraries,\n" +
-                        "    [-t, --thread=<thread count>]        If you don't specify which content to complete,\n" +
-                        "                                         the version will be completed. When completing assets, you can also\n" +
+                        "   --complete[=assets|libraries|natives] Complete assets, libraries or native libraries, if you don't\n" +
+                        "    [-t, --thread=<thread count>]        specify which content to complete, the version installed by the\n" +
+                        "                                         mod loader will be completed. When completing assets, you can also\n" +
                         "                                         specify the number of threads by specifying -t, --thread=<thread count>.\n" +
                         "                                            cmcl version 1.19 --complete\n" +
                         "                                            cmcl version --complete=assets\n" +
@@ -580,6 +581,23 @@ public class English implements Language {
                         "                                       cmcl config --clear\n" +
                         "   -v, --view                       View all settable configurations.\n" +
                         "                                       cmcl config -v");
+        enHelp.put("simplify",
+                "Set simplified commands\n" +
+                        "  Function Name: simplify\n" +
+                        "  Options:\n" +
+                        "   -p, --print\n" +
+                        "        View all simplified commands that have been set.\n" +
+                        "           cmcl simplify -p\n" +
+                        "   -s, --set=<Simplified Command> \"<Original Command>\"\n" +
+                        "        Set or modify simplified commands. After setting, enter\n" +
+                        "        \"cmcl <Simplified Command>\" to run \"cmcl <Original Command>\".\n" +
+                        "        As shown in the example below, after setting, enter \"cmcl ds2\"\n" +
+                        "        to realize the function of \"cmcl config downloadSource 2\",\n" +
+                        "        which is more convenient.\n" +
+                        "           cmcl simplify -s ds2 \"config downloadSource 2\"\n" +
+                        "   -d, --delete=<Simplified Command>\n" +
+                        "        Delete a simplified command.\n" +
+                        "           cmcl simplify -d ds2");
         enHelp.put("jvmArgs",
                 "Custom JVM Arguments\n" +
                         "  Function Name: jvmArgs\n" +
@@ -588,8 +606,10 @@ public class English implements Language {
                         "                                                                  default, and the version can be specified.\n" +
                         "                                                                     cmcl jvmArgs -p2 -v1.19\n" +
                         "   -a, --add=<content> [-v, --version=<version>]                  Add an argument, the version can be specified.\n" +
-                        "                                                                  To prevent parsing errors, enclose content in double\n" +
-                        "                                                                  quotes and use an equals sign to specify the content.\n" +
+                        "                                                                  To prevent parsing errors, enclose content in\n" +
+                        "                                                                  double quotes and use an equals sign to specify\n" +
+                        "                                                                  the content. Note: Spaces cannot be used heres\n" +
+                        "                                                                  instead of the equal sign.\n" +
                         "                                                                     cmcl jvmArgs --add=\"-Dfile.encoding=UTF-8\"\n" +
                         "   -d, --delete=<order, starts from 0> [-v, --version=<version>]  Delete an argument, the version can be specified.\n" +
                         "                                                                     cmcl jvmArgs --delete=2 --version=1.19");

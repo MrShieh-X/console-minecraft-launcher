@@ -20,7 +20,7 @@
 package com.mrshiehx.cmcl.modules.modpack;
 
 import com.mrshiehx.cmcl.bean.Pair;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.exceptions.MissingElementException;
 import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 import com.mrshiehx.cmcl.interfaces.Void;
@@ -58,7 +58,7 @@ public class CurseForgeModpackInstaller {
                                                 boolean installAssets,
                                                 boolean installNatives,
                                                 boolean installLibraries,
-                                                int threadCount) throws DescriptionException, IOException, ModpackFunction.NotValidModPackFormat {
+                                                int threadCount) throws ExceptionWithDescription, IOException, ModpackFunction.NotValidModPackFormat {
         String overrides = NetworkUtils.addSlashIfMissing(manifest.optString("overrides"));
         zipFile.stream().forEach((Consumer<ZipEntry>) zipEntry -> {
             if (!zipEntry.getName().startsWith(overrides)) return;
@@ -103,7 +103,7 @@ public class CurseForgeModpackInstaller {
                     Map<String, JSONObject> forges;
 
                     try {
-                        forges = ForgeMerger.getForges(minecraftVersion12);
+                        forges = ForgeMerger.getInstallableForges(minecraftVersion12);
                     } catch (Exception e) {
                         System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
                         FileUtils.deleteDirectory(versionDir);

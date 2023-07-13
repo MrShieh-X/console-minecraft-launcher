@@ -40,7 +40,7 @@ import com.mrshiehx.cmcl.modules.version.downloaders.NativesDownloader;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import com.mrshiehx.cmcl.utils.system.SystemUtils;
 import org.jetbrains.annotations.Nullable;
@@ -361,7 +361,7 @@ public class VersionFunction implements Function {
             System.out.print("    ");
             System.out.println(library.libraryJSONObject.optString("name"));//legal
         }
-        if (ConsoleUtils.yesOrNo(getString("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD"))) {
+        if (InteractionUtils.yesOrNo(getString("CONSOLE_LACK_LIBRARIES_WHETHER_DOWNLOAD"))) {
             LibrariesDownloader.downloadLibraries(notFound);
         }
     }

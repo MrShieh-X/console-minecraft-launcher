@@ -20,7 +20,7 @@
 package com.mrshiehx.cmcl.modules.modpack;
 
 import com.mrshiehx.cmcl.bean.Pair;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.exceptions.MissingElementException;
 import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 import com.mrshiehx.cmcl.interfaces.Void;
@@ -49,7 +49,7 @@ import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
 
 public class ModrinthModpackInstaller {
-    public static int installModrinthModpack(JSONObject manifest, ZipFile zipFile, File modPackFile, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackFunction.NotValidModPackFormat, DescriptionException, IOException {
+    public static int installModrinthModpack(JSONObject manifest, ZipFile zipFile, File modPackFile, File versionDir, boolean keepFile, boolean installAssets, boolean installNatives, boolean installLibraries, int threadCount) throws ModpackFunction.NotValidModPackFormat, ExceptionWithDescription, IOException {
         zipFile.stream().forEach((Consumer<ZipEntry>) zipEntry -> {
             String overrides;
             if (zipEntry.getName().startsWith("overrides")) {
@@ -135,7 +135,7 @@ public class ModrinthModpackInstaller {
                 Map<String, JSONObject> forges;
 
                 try {
-                    forges = ForgeMerger.getForges(minecraftVersion);
+                    forges = ForgeMerger.getInstallableForges(minecraftVersion);
                 } catch (Exception e) {
                     System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
                     FileUtils.deleteDirectory(versionDir);

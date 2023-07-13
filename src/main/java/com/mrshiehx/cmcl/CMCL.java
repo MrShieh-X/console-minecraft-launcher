@@ -30,6 +30,7 @@ import com.mrshiehx.cmcl.functions.root.VersionStarter;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.AccountUtils;
+import com.mrshiehx.cmcl.utils.console.CommandUtils;
 import com.mrshiehx.cmcl.utils.internet.NetworkUtils;
 import com.mrshiehx.cmcl.utils.system.JavaUtils;
 import com.mrshiehx.cmcl.utils.system.OperatingSystem;
@@ -74,7 +75,10 @@ public class CMCL {
                 }
             }
         }));
-        //if(Constants.isDebug()) System.out.println(Arrays.toString(args));
+        main(args, true);
+    }
+
+    private static void main(String[] args, boolean judgeSimplifiedCommand) {
         if (args.length == 0) {
             JSONObject jsonObject = Utils.getConfig();
             String version = jsonObject.optString("selectedVersion");
@@ -86,17 +90,9 @@ public class CMCL {
         } else {
             String first = args[0];
             Function function = Functions.get(first);
-            boolean isRoot;
-            if (function != null) {
-                isRoot = false;
-            } else {
-                isRoot = true;
-                function = new RootFunction();
-            }
             Arguments arguments = new Arguments(args, true);
-
-            Argument second = arguments.optArgument(1);
-            if (!isRoot) {
+            if (function != null) {
+                Argument second = arguments.optArgument(1);
                 if (second == null) {
                     System.out.println(getHelpDocumentation(function.getUsageName()));
                     return;
@@ -116,7 +112,17 @@ public class CMCL {
                     function.execute(arguments);
                 }
             } else {
-                function.execute(arguments);
+                function = new RootFunction();
+                if (judgeSimplifiedCommand) {
+                    String originCommand = Utils.getConfig().optJSONObject("simplifyCommands", new JSONObject()).optString(first);
+                    if (!isEmpty(originCommand)) {
+                        main(CommandUtils.splitCommand(CommandUtils.clearRedundantSpaces(originCommand)).toArray(new String[0]), false);
+                    } else {
+                        function.execute(arguments);
+                    }
+                } else {
+                    function.execute(arguments);
+                }
             }
         }
     }

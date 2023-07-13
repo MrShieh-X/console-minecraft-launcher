@@ -29,7 +29,7 @@ import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.AccountUtils;
 import com.mrshiehx.cmcl.utils.cmcl.ArgumentsUtils;
 import com.mrshiehx.cmcl.utils.console.CommandUtils;
-import com.mrshiehx.cmcl.utils.console.ConsoleUtils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.system.SystemUtils;
 import org.json.JSONObject;
 
@@ -180,7 +180,7 @@ public class LaunchCommands {
             }
         }
         if (!config.has("checkAccountBeforeStart")) {
-            config.put("checkAccountBeforeStart", ConsoleUtils.yesOrNo(getString("CONSOLE_ASK_CHECK_ACCOUNT")));
+            config.put("checkAccountBeforeStart", InteractionUtils.yesOrNo(getString("CONSOLE_ASK_CHECK_ACCOUNT")));
         }
         Utils.saveConfig(config);
         File versionsFolder = new File(gameDir, "versions");
@@ -274,9 +274,14 @@ public class LaunchCommands {
         gameArgs.putAll(versionConfig.gameArgs);
         File assetsDir = !Utils.isEmpty(versionConfig.assetsDir) ? new File(versionConfig.assetsDir) : CMCL.assetsDir;
         File resourcesDir = !Utils.isEmpty(versionConfig.resourcesDir) ? new File(versionConfig.resourcesDir) : resourcePacksDir;
+
+        String quickPlayLogFilePath = !Utils.isEmpty(versionConfig.qpLogFile) ? versionConfig.qpLogFile : config.optString("qpLogFile");
+        String quickPlaySaveName = !Utils.isEmpty(versionConfig.qpSaveName) ? versionConfig.qpSaveName : config.optString("qpSaveName");
+        String quickPlayServerAddress = !Utils.isEmpty(versionConfig.qpServerAddress) ? versionConfig.qpServerAddress : config.optString("qpServerAddress");
+        String quickPlayRealmsID = !Utils.isEmpty(versionConfig.qpRealmsID) ? versionConfig.qpRealmsID : config.optString("qpRealmsID");
+
         if (isEmpty(javaPath) || !new File(javaPath).exists()) {
             System.out.println(getString("CONSOLE_INCORRECT_JAVA"));
-
             return null;
         }
 
@@ -306,6 +311,10 @@ public class LaunchCommands {
                 jvmArgs,
                 gameArgs,
                 AuthlibInjectorInformation.valuesOf(account, accessToken, uuid, false),
-                account.optInt("loginMethod") == 3 ? Nide8AuthInformation.valueOf(account) : null);
+                account.optInt("loginMethod") == 3 ? Nide8AuthInformation.valueOf(account) : null,
+                quickPlayLogFilePath,
+                quickPlaySaveName,
+                quickPlayServerAddress,
+                quickPlayRealmsID);
     }
 }

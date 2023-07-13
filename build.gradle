@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.mrshiehx'
-String versionString='2.1.4'
+String versionString='2.2'
 version versionString
 
 repositories {
@@ -18,6 +18,8 @@ dependencies {
     implementation 'org.json:json:20220320'
     implementation 'org.fusesource.jansi:jansi:2.4.0'
     implementation 'org.jenkins-ci:constant-pool-scanner:1.2'
+    implementation 'org.jline:jline:3.22.0'
+    implementation 'net.java.dev.jna:jna:5.3.1'
 }
 
 test {

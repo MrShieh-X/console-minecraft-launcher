@@ -1,5 +1,42 @@
 # Update Logs
-Currently, the latest version is 2.1.4, which was updated on May 21, 2023.
+Currently, the latest version is 2.2, which was updated on July 13, 2023.
+
+## 2.2 (Jul. 13, 2023)
+- Solved the problem reported by [Wst-04d12](https://github.com/Wst-04d12) in [Issue#29](https://github.com/MrShieh-X/console-minecraft-launcher/issues/29 ) and **support the new function Quick Play of 1.20**, use this function by setting the following configuration.
+
+| Configuration Name | Type | Meaning                                                                                                                                                                                                                                                           |
+|--------------------|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| qpLogFile          | Text | [**Game related**] The log file path (relative to the game directory) of Quick Play (a new feature of Minecraft 1.20, set the following three configurations to start the game and directly enter the save, server or realms, only one item can be set), optional |
+| qpSaveName         | Text | [**Game related**] The name of the save that the quick play will join directly                                                                                                                                                                                    |
+| qpServerAddress    | Text | [**Game related**] The address (including port) of the server that the quick play will join directly, this configuration also applies to versions prior to 1.20                                                                                                   |
+| qpRealmsID         | Text | [**Game related**] The ID of the realms that the quick play will join directly                                                                                                                                                                                    |
+
+- It will be **more visually** when displaying multiple game versions, mod loader versions, etc., and will **adapt to the size of the command line window**, as shown below (by [Dage-Hoo](https://github.com/Dage-Hoo) in [Issue#28](https://github.com/MrShieh-X/console-minecraft-launcher/issues/28)). <br/>
+  ![Visually Display Versions](images/visually_display_versions.png "Visually Display Versions")<br/>
+- When printing the accounts via `cmcl account -l` and printing the configurations via `cmcl config -a` and `cmcl config -v`, it will be printed in **table format**, as shown in the figure below. <br/>
+  ![Print as Form](images/en/use_form_to_print_accounts_and_configurations.png "Print as Form")<br/>
+- For some commands that may be entered frequently, such as switching the download source `cmcl config downloadSource <download source>`,
+switching the proxy `cmcl config proxyEnabled true/false`, you can set the simplified command through
+`cmcl simplify -s <Simplified Command> "<Original Command>"`, for example: after entering the command
+`cmcl simplify -s pon "config proxyEnabled true"`, enter the command `cmcl pon` to quickly start the proxy.
+But be careful not to conflict with existing options and local version names. Get additional usage via `cmcl simplify -h`.
+Combined with the actual usage of users, it is recommended to set the following simplified commands:
+
+| Simplified command (can be set freely) | Original command          | Meaning                             |
+|----------------------------------------|---------------------------|-------------------------------------|
+| ds0                                    | config downloadSource 0   | Set the download source to official |
+| ds1                                    | config downloadSource 1   | Set the download source to BMCLAPI  |
+| ds2                                    | config downloadSource 2   | Set the download source to MCBBS    |
+| pon                                    | config proxyEnabled true  | Enable proxy                        |
+| poff                                   | config proxyEnabled false | Disable proxy                       |
+| als                                    | account --list            | List all accounts                   |
+| sr                                     | install --show=r          | List all available release versions |
+| ar                                     | account -r                | Refresh the current login account   |
+
+- **Icon URL** and **Download Count** will be included in the mods and modpacks information (by [Shapaper](https://github.com/Shapaper) in [Issue#33](https://github.com/MrShieh-X/console-minecraft-launcher/issues/33)).
+- When downloading mods and modpacks, if there is already a file with the same name in the mods directory, you will be asked whether to overwrite the target file, store it in another directory or cancel the download.
+- Fixed **unable to start some versions**.
+- Changed the word "string" to "text".
 
 ## 2.1.4 (May 21, 2023)
 - You can enable or disable the proxy by setting the configuration `proxyEnabled` to `true` or `false`. When a network error occurs, if the proxy is enabled, the user will be prompted to confirm whether the proxy is available.
@@ -37,7 +74,7 @@ Currently, the latest version is 2.1.4, which was updated on May 21, 2023.
 - Fixed some issues.
 
 ## 2.0 (Jan. 18, 2023)
-- In order to make the commands conform to the specifications, this version has made major changes to the operation commands of each function. For details, please refer to [Help Documentation](README-en.md#help-documentation), or [Video Tutorial](https://www.youtube.com/watch?v=Sqeu_Pahm-0).
+- In order to make the commands conform to the specifications, this version has made major changes to the operation commands of each function. For details, please refer to [Help Documentation](README-en.md#-help-documentation), or [Video Tutorial](https://www.youtube.com/watch?v=Sqeu_Pahm-0).
 - Support nide8auth login, use `account -h` to get related information.
 - Added new interface language: Cantonese (Simplified). It can be switched by `config language cantonese`.
 - Support printing startup information (such as Java path, maximum memory, logged-in account, etc.) when starting the game, which can be turned on or off through `config printStartupInfo true/false`.
@@ -151,7 +188,7 @@ Currently, the latest version is 2.1.4, which was updated on May 21, 2023.
 
 - Support viewing installed version information: `-version -i <Version Name>`
 - Support printing the original content of the configuration file, parameter: `-config -o <The number of spaces to indent, can be empty, defaults to 2>`
-- Support custom JVM virtual machine and game parameters, please refer to [configurations](README-en.md#configurations) for details.
+- Support custom JVM virtual machine and game parameters, please refer to [configurations](README-en.md#-configurations) for details.
 - Added more download sources, modify the download source: `-config downloadSource <target download source, 0 is the default, 1 is BMCLAPI, 2 is MCBBS>`. Note, if the file cannot be downloaded, please try to change the download source.
 - Added a new way to change the configuration (regardless of type, stored as a string, boolean or integer can be read normally): `-config <Configuration Name> <Configuration Value>`
 - Changed the display of printing all configurations.

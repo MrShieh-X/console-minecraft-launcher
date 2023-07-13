@@ -27,10 +27,10 @@ import com.mrshiehx.cmcl.functions.Function;
 import com.mrshiehx.cmcl.modSources.Manager;
 import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeManager;
 import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeModManager;
-import com.mrshiehx.cmcl.modSources.curseforge.CurseForgeModpackManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthManager;
 import com.mrshiehx.cmcl.modSources.modrinth.ModrinthModManager;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.InteractionUtils;
 import com.mrshiehx.cmcl.utils.console.PercentageTextProgress;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
 import org.json.JSONObject;
@@ -40,13 +40,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
 
-import static com.mrshiehx.cmcl.CMCL.*;
+import static com.mrshiehx.cmcl.CMCL.getConfig;
+import static com.mrshiehx.cmcl.CMCL.isEmpty;
+import static com.mrshiehx.cmcl.utils.Utils.getString;
 
 public class ModFunction implements Function {
     public final static Manager.DependencyInstaller MOD_CF_DEPENDENCY_INSTALLER = new Manager.DependencyInstaller() {
         @Override
         public void install(String mcVersion, String name, String id) {
-            downloadMod(new CurseForgeModpackManager().getDownloadLink(id, name, mcVersion, null, MOD_CF_DEPENDENCY_INSTALLER));
+            downloadMod(new CurseForgeModManager().getDownloadLink(id, name, mcVersion, null, MOD_CF_DEPENDENCY_INSTALLER));
         }
     };
     public final static Manager.DependencyInstaller MOD_MR_DEPENDENCY_INSTALLER = new Manager.DependencyInstaller() {
@@ -169,19 +171,37 @@ public class ModFunction implements Function {
         }
     }
 
+    public static File askStorage(File last, String $NAME) {
+        //0覆盖，返回last
+        //1其他路径，返回新路径
+        //2取消下载，返回null
 
-    private static File askStorage(File last) {
-        System.out.print(getString("CF_STORAGE_FILE_EXISTS", last.getAbsolutePath()).replace("${NAME}", getString("CF_BESEARCHED_MOD_ALC")));
+        System.out.println(getString("CF_STORAGE_FILE_EXISTS_OPERATIONS"));
+        int sel = InteractionUtils.inputInt(getString("CF_STORAGE_FILE_EXISTS_SELECT_OPERATION", last.getAbsolutePath()), 0, 2);
+        //if(sel==Integer.MAX_VALUE)return null;
+        switch (sel) {
+            case 0:
+                return last;
+            case 1:
+                return askStorageForNewPath(last, $NAME);
+            case 2:
+            default:
+                return null;
+        }
+    }
+
+    private static File askStorageForNewPath(File last, String $NAME) {
+        System.out.print(getString("CF_STORAGE_FILE_EXISTS").replace("${NAME}", $NAME));
         String path;
         try {
             path = new Scanner(System.in).nextLine();
         } catch (NoSuchElementException e) {
             return null;
         }
-        if (isEmpty(path)) return askStorage(last);
+        if (isEmpty(path)) return askStorageForNewPath(last, $NAME);
         File file = new File(path, last.getName());
         if (!file.exists()) return file;
-        return askStorage(file);
+        return askStorage(file, $NAME);
     }
 
     @Override
@@ -189,8 +209,9 @@ public class ModFunction implements Function {
         return "mod";
     }
 
-
     public static void downloadMod(String modDownloadLink) {
+        if (isEmpty(modDownloadLink))
+            return;
         File mods = new File(CMCL.gameDir, "mods");
         mods.mkdirs();
         String fileName;
@@ -202,7 +223,7 @@ public class ModFunction implements Function {
         if (Utils.isEmpty(fileName)) fileName = System.currentTimeMillis() + ".jar";
         File modFile = new File(mods, fileName);
         if (modFile.exists()) {
-            File file = askStorage(modFile);
+            File file = askStorage(modFile, getString("CF_BESEARCHED_MOD_ALC"));
             if (file != null) {
                 modFile = file;
                 mods = file.getParentFile();

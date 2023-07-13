@@ -24,7 +24,7 @@ public class Cantonese extends SimplifiedChinese {
     @Override
     public Map<String, String> getTextMap() {
         Map<String, String> cantonese = super.getTextMap();
-        cantonese.put("MESSAGE_ABOUT_DESCRIPTION_2", "一个 Minecraft Java 版嘅启动器");
+        cantonese.put("MESSAGE_ABOUT_DESCRIPTION_2", "一个喺命令行上运行嘅 Minecraft Java 版启动器");
         cantonese.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_CONTENT_1", "Minecraft 版权归 Mojang Studios 同 Microsoft 所有，使用CMCL产生嘅所有版权问题，软件制作方概不负责，请支持正版。");
         cantonese.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_CONTENT_2", "用户因使用CMCL而产生嘅一切后果由用户自己承担，任何涉及CMCL嘅法律纠纷与冲突同开发者无关，CMCL同开发者将唔会承担任何责任。");
         cantonese.put("MESSAGE_UNABLE_TO_LOGIN_MICROSOFT", "暂时登录唔到，等阵再试啦。");
@@ -77,52 +77,36 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("MESSAGE_TO_SELECT_VERSION", "唔该用“-s <版本名称>”拣一个可启动嘅版本或者用“install <版本名称>”安装一个新嘅版本并选择。");
         cantonese.put("MESSAGE_PRINT_COMMAND_EXCEEDS_LENGTH_LIMIT", "提示：启动命令过长，你可能唔可以直接喺cmd中运行或保存到bat文件之后执行，推荐你使用“version [<版本>] --export-script-ps=<脚本文件>”导出为 PowerShell 脚本文件后使用。");
         cantonese.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件嘅长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
-        cantonese.put("MESSAGE_CONFIGURATIONS", "  accounts | JSON数组\n" +
-                "    账号（唔系直接改嘅，请通过“account -h”获得相关使用教程先至进行修改）\n\n" +
-                "  downloadSource | 整数\n" +
-                "    下载源，0系默认，1系BMCLAPI，2系MCBBS\n\n" +
-                "  language | 字符串\n" +
-                "    语言，zh系简体中文，en系英文，cantonese系粤语（简体）\n\n" +
-                "  selectedVersion | 字符串\n" +
-                "    已选择嘅版本\n\n" +
-                "  [游戏相关] | maxMemory | 整数\n" +
-                "    最大内存（单位：MB）\n\n" +
-                "  [游戏相关] | gameDir | 字符串\n" +
-                "    自定义游戏目录路径（或设置版本隔离），默认系.minecraft\n\n" +
-                "  [游戏相关] | assetsDir | 字符串\n" +
-                "    自定义assets资源目录路径，如果系空就系游戏目录入面嘅assets目录\n\n" +
-                "  [游戏相关] | resourcesDir | 字符串\n" +
-                "    自定义资源包目录路径，如果系空就系游戏目录入面嘅resourcepacks目录\n\n" +
-                "  [游戏相关] | javaPath | 字符串\n" +
-                "    Java 路径（如果系空会自动获得）\n\n" +
-                "  [游戏相关] | windowSizeWidth | 整数\n" +
-                "    游戏窗口嘅宽\n\n" +
-                "  [游戏相关] | windowSizeHeight | 整数\n" +
-                "    游戏窗口嘅高\n\n" +
-                "  [游戏相关] | isFullscreen | 布尔值\n" +
-                "    系唔系全屏，系嘅话就系true，唔系嘅话就系false\n\n" +
-                "  [游戏相关] | exitWithMinecraft | 布尔值\n" +
-                "    运行游戏嗰阵，使唔使退出启动器嘅时候顺便退出游戏，要就系true，唔要就系false\n\n" +
-                "  [游戏相关] | printStartupInfo | 布尔值\n" +
-                "    开始游戏嘅时候，需唔需要输出启动信息（Java 路径、最大内存之类嘅）\n\n" +
-                "  [游戏相关] | checkAccountBeforeStart | 布尔值\n" +
-                "    开始游戏之前，需唔需要检查账号是否可用\n\n" +
-                "  [游戏相关] | jvmArgs | JSON数组\n" +
-                "    自定义JVM参数（唔系直接改嘅，请通过“jvmArgs -h”获得相关使用教程先至进行修改）\n\n" +
-                "  [游戏相关] | gameArgs | JSON对象\n" +
-                "    自定义游戏参数（唔系直接改嘅，请通过“gameArgs -h”获得相关使用教程先至进行修改）\n\n" +
-                "  proxyHost | 字符串\n" +
-                "    代理主机地址\n\n" +
-                "  proxyPort | 整数\n" +
-                "    代理端口\n\n" +
-                "  proxyUsername | 字符串\n" +
-                "    代理验证嘅账户（代理可选）\n\n" +
-                "  proxyPassword | 字符串\n" +
-                "    代理验证嘅密码（代理可选）\n\n" +
-                "  modDownloadSource | 字符串\n" +
-                "    模组下载源，curseforge或modrinth\n\n" +
-                "  modpackDownloadSource | 字符串\n" +
-                "    整合包下载源，curseforge或modrinth");
+        cantonese.put("MESSAGE_CONFIGURATIONS_TIP", "注：类型为布尔值嘅配置，佢嘅值可以输入表示“是”嘅“true”，亦可以系表示“否”嘅“false”。");
+        cantonese.put("MESSAGE_CONFIGURATIONS_TABLE_CONTENT", "accounts|JSON数组|账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n" +
+                "downloadSource|整数|下载源，0系官方，1系BMCLAPI，2系MCBBS\n" +
+                "language|文本|语言，zh系简体中文，en系英文，cantonese系粤语（简体）\n" +
+                "selectedVersion|文本|已选择嘅版本，可以直接用“cmcl”进行启动\n" +
+                "maxMemory|整数|[游戏相关]最大内存（单位：MB）\n" +
+                "gameDir|文本|[游戏相关]自定义游戏目录路径（或设置版本隔离），默认为.minecraft\n" +
+                "assetsDir|文本|[游戏相关]自定义assets资源目录路径，如果系空嘅话就系游戏目录入边嘅assets目录\n" +
+                "resourcesDir|文本|[游戏相关]自定义资源包目录路径，如果系空嘅话就系游戏目录入边嘅resourcepacks目录\n" +
+                "javaPath|文本|[游戏相关]Java 路径（如果系空嘅话会自动获得）\n" +
+                "windowSizeWidth|整数|[游戏相关]游戏窗口嘅宽\n" +
+                "windowSizeHeight|整数|[游戏相关]游戏窗口嘅高\n" +
+                "isFullscreen|布尔值|[游戏相关]游戏窗口系咪全屏\n" +
+                "exitWithMinecraft|布尔值|[游戏相关]运行游戏嗰阵，需唔需要退出启动器时顺便退出游戏\n" +
+                "printStartupInfo|布尔值|[游戏相关]开始游戏嘅时候，使唔使输出启动信息（Java 路径、最大内存等）\n" +
+                "checkAccountBeforeStart|布尔值|[游戏相关]开始游戏之前，使唔使检查账号系咪可用嘅\n" +
+                "jvmArgs|JSON数组|[游戏相关]自定义JVM参数（通过“jvmArgs -h”获得相关使用教程以进行修改）\n" +
+                "gameArgs|JSON对象|[游戏相关]自定义游戏参数（通过“gameArgs -h”获得相关使用教程以进行修改）\n" +
+                "qpLogFile|文本|[游戏相关]快速游玩（Quick Play，Minecraft 1.20 嘅新功能，设置下边三项配置即可启动游戏后分别直接进入存档、服务器、领域，只能够设置一项）嘅日志文件路径（相对于游戏目录），可选\n" +
+                "qpSaveName|文本|[游戏相关]快速游玩直接进入嘅存档名称\n" +
+                "qpServerAddress|文本|[游戏相关]快速游玩直接进入嘅服务器地址（包括端口），呢个配置都适用于1.20之前嘅版本\n" +
+                "qpRealmsID|文本|[游戏相关]快速游玩直接进入嘅领域ID\n" +
+                "proxyEnabled|布尔值|开唔开启网络代理\n" +
+                "proxyHost|文本|代理主机地址\n" +
+                "proxyPort|整数|代理端口\n" +
+                "proxyUsername|文本|代理验证嘅账户（代理可选）\n" +
+                "proxyPassword|文本|代理验证嘅密码（代理可选）\n" +
+                "modDownloadSource|文本|模组下载源，curseforge或modrinth\n" +
+                "modpackDownloadSource|文本|整合包下载源，curseforge或modrinth\n" +
+                "simplifyCommands|JSON对象|简化命令（通过“simplify -h”获得相关使用教程以进行修改）");
         cantonese.put("EXCEPTION_VERSION_JSON_NOT_FOUND", "目标启动版本嘅JSON文件或JAR文件唔喺度，用“-s <版本名称>”拣一个可启动嘅版本或者用“install <版本名称>”安装一个新嘅版本并选择。");
         cantonese.put("EXCEPTION_VERSION_NOT_FOUND", "%s：游戏版本唔存在");
         cantonese.put("EXCEPTION_NATIVE_LIBRARIES_NOT_FOUND", "搵唔到原生依赖库（natives）目录或者系空嘅，你要用“version <版本名称> --complete=natives”下载原生依赖库文件先至可以启动游戏。");
@@ -157,7 +141,6 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("CONSOLE_IMMERSIVE_MISSING_PARAMETER", "缺少参数。请输入 help 嚟获取帮助文档。");
         cantonese.put("CONSOLE_NOT_FOUND_VERSION_OR_OPTION", "搵唔到名系“%s”嘅可启动版本或选项。你可以借助由输入选项 -h 或 --help 嚟获取嘅帮助文档检查输入嘅信息有冇错误。");
         cantonese.put("CONSOLE_HELP_WRONG_WRITE", "正确嘅写法系 -h 或 --help，唔携带参数值，而唔系“%s”。");
-        cantonese.put("CONSOLE_VERSION_UNCLEAR_MEANING", "“%s”意义唔明确，佢系咪一个版本嚟㗎？系嘅话要加埋双引号哦。");
         cantonese.put("CONSOLE_UNKNOWN_USAGE", "未知用法：%s。请使用选项 -h 或 --help 嚟获取帮助文档。");
         cantonese.put("CONSOLE_ARG_CHECKING_ONE", "%s：选项用法错误或唔应该喺呢度出现。请使用选项 -h 或 --help 嚟获取帮助文档");
         cantonese.put("CONSOLE_ARG_CHECKING_PLURAL", "下边嘅选项用法错误或唔应该喺呢度出现。请使用选项 -h 或 --help 嚟获取帮助文档。\n%s");
@@ -202,8 +185,8 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA", "搵唔到目标游戏版本或 ${NAME} 版本。");
         cantonese.put("CF_SUPPORTED_GAME_VERSION", "%s 支持嘅游戏版本：");
         cantonese.put("CF_INPUT_GAME_VERSION", "请输入你要下载嘅版本：");
-        cantonese.put("CF_INPUT_VERSION", "请拣下你要下载嘅${NAME}版本(%d-%d，-1系退出)：");
-        cantonese.put("CF_STORAGE_FILE_EXISTS", "文件“%s”已经存在，请输入一个存储呢个${NAME}文件嘅目录：");
+        cantonese.put("CF_INPUT_VERSION", "请拣下你要下载嘅${NAME}版本(%d-%d，-1系取消下载)：");
+        cantonese.put("CF_STORAGE_FILE_EXISTS", "请输入一个存储呢个${NAME}文件嘅目录：");
         cantonese.put("CF_NO_VERSION_FOR_GAME_VERSION", "冇适用于呢个游戏版本嘅%s版本。");
         cantonese.put("CF_INFORMATION_NOTHING", "冇任何关于呢个%s嘅信息");
         cantonese.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持嘅游戏版本：");
@@ -212,6 +195,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("CF_DEPENDENCIES_TIP", "呢个${NAME}需要下面嘅前置${NAME}先至能够正常运行，将会先安装以下前置${NAME}。");
         cantonese.put("CF_GET_BY_ID_INCORRECT_CATEGORY", "目标游戏组件唔系一个${NAME}，呢个组件嘅类别ID系%d。");
         cantonese.put("CF_GET_BY_ID_INCORRECT_CATEGORY_DETAIL", "目标游戏组件唔系一个${NAME}，呢个游戏组件系一个${TARGET}。");
+        cantonese.put("CF_STORAGE_FILE_EXISTS_SELECT_OPERATION", "文件“%s”已存在，请选择您嘅操作(0-2)：");
         cantonese.put("INSTALL_MODPACK_FAILED_DOWNLOAD_MOD", "下载 projectId 系 %d 嘅模组失败：%s");
         cantonese.put("INSTALL_MODPACK_EACH_MOD_GET_URL", "遍历获得紧各个模组（文件）嘅下载链接，请耐心等待");
         cantonese.put("INSTALL_OPTIFINE_INCOMPATIBLE_WITH_FORGE_17", "无法安装 OptiFine：当前游戏版本嘅 Forge 同低于 H1 Pre2 版本嘅 OptiFine 唔兼容，请换一个版本更新嘅 OptiFine 之后重试。");
@@ -225,6 +209,8 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("MOD_SEARCH_LIMIT_GREATER_THAN_FIFTY", "如果下载源系 CurseForge，限制数量最大系50。");
         cantonese.put("MOD_ID_LIMIT_COEXIST", "你都唔用-n或者--name嘅搜索功能咯，仲点用--limit限制搜索结果呢？");
         cantonese.put("MODPACK_CONTAINS_TWO_OR_MORE", "--install、--info 或 --file 只能够存在一个。");
+        cantonese.put("YES_SHORT", "系");
+        cantonese.put("TABLE_ACCOUNTS_LIST_HEADER_SELECTED", "选择咗");
         return cantonese;
     }
 

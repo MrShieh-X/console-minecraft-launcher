@@ -31,17 +31,15 @@ import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import static com.mrshiehx.cmcl.CMCL.*;
-import static com.mrshiehx.cmcl.utils.Utils.addDoubleQuotationMark;
 
 public class InstallFunction implements Function {
     @Override
@@ -205,26 +203,38 @@ public class InstallFunction implements Function {
             }
             String typeString = ((ValueArgument) firstArg).value;
             int typeInt;
+            int columnsNum;
+            int separatingSpaceLength;
             switch (typeString.toLowerCase()) {
                 case "a":
                 case "all":
                     typeInt = 0;
+                    columnsNum = 3;
+                    separatingSpaceLength = 1;
                     break;
                 case "r":
                 case "release":
                     typeInt = 1;
+                    columnsNum = 8;
+                    separatingSpaceLength = 2;
                     break;
                 case "s":
                 case "snapshot":
                     typeInt = 2;
+                    columnsNum = 3;
+                    separatingSpaceLength = 1;
                     break;
                 case "oa":
                 case "oldalpha":
                     typeInt = 3;
+                    columnsNum = 5;
+                    separatingSpaceLength = 2;
                     break;
                 case "ob":
                 case "oldbeta":
                     typeInt = 4;
+                    columnsNum = 7;
+                    separatingSpaceLength = 2;
                     break;
                 default:
                     System.out.println(getString("INSTALL_SHOW_UNKNOWN_TYPE", typeString));
@@ -309,10 +319,8 @@ public class InstallFunction implements Function {
                                 break;
                         }
                     }
-
                 }
-                Collections.reverse(versions);
-                System.out.println(Arrays.toString(addDoubleQuotationMark(versions).toArray()));
+                PrintingUtils.printListItems(versions, true, columnsNum, separatingSpaceLength, true);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 Utils.printfln(getString("CONSOLE_FAILED_LIST_VERSIONS"), exception);

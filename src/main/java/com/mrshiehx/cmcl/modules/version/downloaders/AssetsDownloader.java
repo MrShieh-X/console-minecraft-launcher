@@ -21,7 +21,7 @@ package com.mrshiehx.cmcl.modules.version.downloaders;
 import com.mrshiehx.cmcl.api.download.DownloadSource;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.constants.Constants;
-import com.mrshiehx.cmcl.exceptions.DescriptionException;
+import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.internet.DownloadUtils;
@@ -38,7 +38,7 @@ import java.util.Map;
 import static com.mrshiehx.cmcl.CMCL.*;
 
 public class AssetsDownloader {
-    public static void start(JSONObject headVersionFile, int threadCount, com.mrshiehx.cmcl.interfaces.Void onDownloaded) throws DescriptionException {
+    public static void start(JSONObject headVersionFile, int threadCount, com.mrshiehx.cmcl.interfaces.Void onDownloaded) throws ExceptionWithDescription {
         String assetsDirPath = Utils.getConfig().optString("assetsPath");
         File assetsDir = !Utils.isEmpty(assetsDirPath) ? new File(assetsDirPath) : new File(gameDir, "assets");
         File indexesDir = new File(assetsDir, "indexes");
@@ -48,14 +48,14 @@ public class AssetsDownloader {
         objectsDir.mkdirs();
         String assetsIndex = headVersionFile.optString("assets");
         if (isEmpty(assetsIndex)) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("MESSAGE_INSTALL_DOWNLOAD_ASSETS_NO_INDEX"));
+            throw new ExceptionWithDescription(getString("MESSAGE_INSTALL_DOWNLOAD_ASSETS_NO_INDEX"));
         }
         File assetsIndexFile = new File(indexesDir, assetsIndex + ".json");
         JSONObject assetIndexObject = headVersionFile.optJSONObject("assetIndex");
         String assetIndexUrl = assetIndexObject != null ? assetIndexObject.optString("url").replace("https://launchermeta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()).replace("https://piston-meta.mojang.com/", DownloadSource.getProvider().versionAssetsIndex()) : null;
 
         if (isEmpty(assetIndexUrl)) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", getString("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL")));
+            throw new ExceptionWithDescription(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", getString("MESSAGE_EXCEPTION_DETAIL_NOT_FOUND_URL")));
         }
         try {
             DownloadUtils.downloadFile(assetIndexUrl, assetsIndexFile);
@@ -93,14 +93,14 @@ public class AssetsDownloader {
                         list.add(new Pair<>(DownloadSource.getProvider().assets() + hash.substring(0, 2) + "/" + hash, file));
 
                 } catch (Exception e1) {
-                    throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("MESSAGE_FAILED_DOWNLOAD_FILE", hash));
+                    throw new ExceptionWithDescription(getString("MESSAGE_FAILED_DOWNLOAD_FILE", hash));
                 }
             }
             if (Constants.isDebug()) System.out.println("threadCount: " + threadCount);
             ThreadsDownloader threadsDownloader = new ThreadsDownloader(list, onDownloaded, threadCount > 0 ? threadCount : Constants.DEFAULT_DOWNLOAD_THREAD_COUNT, false);
             threadsDownloader.start();
         } catch (Exception e1) {
-            throw new com.mrshiehx.cmcl.exceptions.DescriptionException(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", e1));
+            throw new ExceptionWithDescription(getString("MESSAGE_INSTALL_FAILED_TO_DOWNLOAD_ASSETS", e1));
         }
     }
 }

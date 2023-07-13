@@ -20,10 +20,10 @@ package com.mrshiehx.cmcl.functions.root;
 
 import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.utils.Utils;
+import com.mrshiehx.cmcl.utils.console.PrintingUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class VersionsLister {
@@ -32,7 +32,6 @@ public class VersionsLister {
         File dir2 = !Utils.isEmpty(dir) ? new File(dir, "versions") : CMCL.versionsDir;
         System.out.println(Utils.getString("MESSAGE_BEFORE_LIST_VERSIONS", parent.getAbsolutePath()));
         List<String> list = CMCL.listVersions(dir2);
-        Utils.addDoubleQuotationMark(list);
-        System.out.println(Arrays.toString(list.toArray()));
+        PrintingUtils.printListItems(list, false, 4, 2, true);
     }
 }

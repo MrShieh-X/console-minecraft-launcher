@@ -78,6 +78,12 @@ public class VersionUtils {
                 if ("1.RV-Pre1".equals(o2)) {
                     o2 = "16w13a";
                 }
+                if ("23w13a_or_b".equals(o1)) {
+                    o1 = "23w13b";
+                }
+                if ("23w13a_or_b".equals(o2)) {
+                    o2 = "23w13b";
+                }
                 int[] o1i = new int[]{Integer.parseInt(o1.substring(0, 2)), Integer.parseInt(o1.substring(3, 5)), (int) o1.charAt(5)};
                 int[] o2i = new int[]{Integer.parseInt(o2.substring(0, 2)), Integer.parseInt(o2.substring(3, 5)), (int) o2.charAt(5)};
 
