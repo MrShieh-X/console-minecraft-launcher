@@ -54,8 +54,7 @@ import java.lang.management.ManagementFactory;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static com.mrshiehx.cmcl.CMCL.getString;
-import static com.mrshiehx.cmcl.CMCL.isEmpty;
+import static com.mrshiehx.cmcl.CMCL.*;
 import static com.mrshiehx.cmcl.utils.console.CommandUtils.clearRedundantSpaces;
 import static com.mrshiehx.cmcl.utils.console.CommandUtils.splitCommand;
 
@@ -364,7 +363,7 @@ public class MinecraftLauncher {
         boolean var = hasThree && hasOFTorOFFT && ("net.minecraft.launchwrapper.Launch".equals(mainClass) || "cpw.mods.modlauncher.Launcher".equals(mainClass));
 
         JSONArray libraries = headJsonObject.optJSONArray("libraries");
-        File librariesFile = new File(gameDir, "libraries");
+        File librariesFile = /*new File(gameDir, "libraries")*/librariesDir/*v2.2.1 Issue#36*/;
 
         ThreeReturns<List<Library>, List<Library>, Boolean> pair = getLibraries(libraries, var);
         List<Library> librariesPaths = pair.first;

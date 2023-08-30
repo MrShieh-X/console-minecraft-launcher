@@ -1,5 +1,9 @@
 # 更新日志
-目前的最新版本为2.2，发布日期是2023年7月13日。
+目前的最新版本为2.2.1，发布日期是2023年8月30日。
+
+## 2.2.1（2023年8月30日）
+- 解决了由 [flemon-y](https://github.com/flemon-y) 于 [Issue#36](https://github.com/MrShieh-X/console-minecraft-launcher/issues/36) 提出的问题。
+- 修复了一些问题。
 
 ## 2.2（2023年7月13日）
 - 解决了由 [Wst-04d12](https://github.com/Wst-04d12) 于 [Issue#29](https://github.com/MrShieh-X/console-minecraft-launcher/issues/29) 提出的问题，并**支持 1.20 的新功能 Quick Play**，通过设置以下配置使用此功能。

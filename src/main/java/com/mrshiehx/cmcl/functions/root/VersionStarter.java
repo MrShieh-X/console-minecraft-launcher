@@ -144,12 +144,6 @@ public class VersionStarter {
 
             if (account == null) return;
 
-            String accessToken = Utils.randomUUIDNoSymbol(), uuid = AccountUtils.getUUIDByName(account.optString("playerName", "XPlayer"));
-            if (account.optInt("loginMethod") > 0) {
-                accessToken = account.optString("accessToken", accessToken);
-                uuid = account.optString("uuid", uuid);
-            }
-
             VersionConfig versionConfig = VersionStarter.getVersionInfo(versionFolder);
             File workingDirectory = Boolean.parseBoolean(versionConfig.isolate) ? versionFolder :
                     (!Utils.isEmpty(versionConfig.gameDir)
@@ -277,6 +271,15 @@ public class VersionStarter {
             if (checkAccountBeforeStart) {
                 if (!checkAccount(account, config)) return;
             }
+
+
+            String accessToken = Utils.randomUUIDNoSymbol();
+            String uuid = AccountUtils.getUUIDByName(account.optString("playerName", "XPlayer"));
+            if (account.optInt("loginMethod") > 0) {
+                accessToken = account.optString("accessToken", accessToken);
+                uuid = account.optString("uuid", uuid);
+            }//刷新完账号才获取有关信息
+
 
             runningMc = new RunningMinecraft(
                     launchMinecraft(versionFolder,

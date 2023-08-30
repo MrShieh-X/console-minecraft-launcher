@@ -1,8 +1,8 @@
 # Console Minecraft Launcher
 一个在命令行上运行的 Minecraft Java 版启动器
 
-[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.2-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--07--13-brightgreen)
+[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.2.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--08--30-brightgreen)
 ![软件需求](https://img.shields.io/badge/%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82-Java%208-blue)
 
 ### [English README](README-en.md) | [更新日志](update_logs.md) | [疑难解答](troubleshooting.md)
@@ -118,9 +118,13 @@ java -jar cmcl.jar
 </details>
 
 ## 🌏 支持的界面语言
-- 英语
-- 简体中文
-- 粤语（简体）
+通过`cmcl config language <语言代号>`切换语言。
+
+|   语言   |   语言代号    |
+|:------:|:---------:|
+|   英语   |    en     |
+|  简体中文  |    zh     |
+| 粤语（简体） | cantonese |
 
 ## ©️ 版权
 MrShiehX 拥有该程序的版权。<br/>

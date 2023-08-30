@@ -1,8 +1,8 @@
 # Console Minecraft Launcher
 A Minecraft Java Edition Launcher Running on the Command Line
 
-[![Latest Version](https://img.shields.io/badge/Release-v2.2-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![Release Date](https://img.shields.io/badge/Date-2023--07--13-brightgreen)
+[![Latest Version](https://img.shields.io/badge/Release-v2.2.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![Release Date](https://img.shields.io/badge/Date-2023--08--30-brightgreen)
 ![Software Requires](https://img.shields.io/badge/Software%20Requires-Java%208-blue)
 
 ### [中文README](README.md) | [Update Logs](update_logs-en.md) | [Troubleshooting](troubleshooting-en.md)
@@ -118,9 +118,13 @@ The above content means that the game arguments `--fullscreen --arg1 value1 --ar
 </details>
 
 ## 🌏 Supported Interface Languages
-- English
-- Simplified Chinese
-- Cantonese (Simplified)
+Use `cmcl config language <language code>` to switch languages.
+
+|        Language        | Language Code |
+|:----------------------:|:-------------:|
+|        English         |      en       |
+|   Simplified Chinese   |      zh       |
+| Cantonese (Simplified) |   cantonese   |
 
 ## ©️ Copyright
 MrShiehX owns the copyright of this program.<br/>

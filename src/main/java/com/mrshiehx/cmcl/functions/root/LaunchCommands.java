@@ -196,12 +196,6 @@ public class LaunchCommands {
             System.out.println(getString("PRINT_COMMAND_NOT_SUPPORT_OFFLINE_CUSTOM_SKIN"));
         }
 
-        String accessToken = Utils.randomUUIDNoSymbol(), uuid = AccountUtils.getUUIDByName(account.optString("playerName", "XPlayer"));
-        if (account.optInt("loginMethod") > 0) {
-            accessToken = account.optString("accessToken", accessToken);
-            uuid = account.optString("uuid", uuid);
-        }
-
 
         VersionConfig versionConfig = VersionStarter.getVersionInfo(versionFolder);
         File workingDirectory = Boolean.parseBoolean(versionConfig.isolate) ? versionFolder :
@@ -289,6 +283,13 @@ public class LaunchCommands {
             if (!VersionStarter.checkAccount(account, config))
                 return null;
         }
+
+        String accessToken = Utils.randomUUIDNoSymbol();
+        String uuid = AccountUtils.getUUIDByName(account.optString("playerName", "XPlayer"));
+        if (account.optInt("loginMethod") > 0) {
+            accessToken = account.optString("accessToken", accessToken);
+            uuid = account.optString("uuid", uuid);
+        }//刷新完账号才获取有关信息
 
         return getMinecraftLaunchCommandArguments(versionJarFile,
                 versionJsonFile,

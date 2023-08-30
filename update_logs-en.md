@@ -1,5 +1,9 @@
 # Update Logs
-Currently, the latest version is 2.2, which was updated on July 13, 2023.
+Currently, the latest version is 2.2.1, which was updated on August 30, 2023.
+
+## 2.2.1 (Aug. 30, 2023)
+- Solved the problem reported by [flemon-y](https://github.com/flemon-y) in [Issue#36](https://github.com/MrShieh-X/console-minecraft-launcher/issues/36).
+- Fixed some issues.
 
 ## 2.2 (Jul. 13, 2023)
 - Solved the problem reported by [Wst-04d12](https://github.com/Wst-04d12) in [Issue#29](https://github.com/MrShieh-X/console-minecraft-launcher/issues/29 ) and **support the new function Quick Play of 1.20**, use this function by setting the following configuration.
