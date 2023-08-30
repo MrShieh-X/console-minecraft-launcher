@@ -13,7 +13,7 @@ Chinese: [\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|�
 If you still have any problems after watching the video or using it, you can refer to [Troubleshooting](troubleshooting-en.md) or ask the author through the author's contact information found in [About Author](#-about-author).
 
 ## 🏆 Special Thanks
-- [@Graetpro-X](https://github.com/Graetpro): Developed some functions
+- [@0xpte4r6](https://github.com/0xpte4r6): Developed some functions
 - [@FZZkill](https://github.com/FZZkill): Help to beautify the README
 - [@mail_set](https://space.bilibili.com/435654748) ([Personal Website](https://mailset.top)): Upload CMCL to AUR repository (named`cmcl`)
 

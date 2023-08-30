@@ -13,7 +13,7 @@
 如果你观看完视频后或使用时仍然有任何问题，可以参考[疑难解答](troubleshooting.md)或通过在[关于作者](#-关于作者)中找到的作者联系信息向作者提出疑问。
 
 ## 🏆 特别鸣谢
-- [@Graetpro-X](https://github.com/Graetpro)：开发部分功能
+- [@0xpte4r6](https://github.com/0xpte4r6)：开发部分功能
 - [@FZZkill](https://github.com/FZZkill)：帮助美化README
 - [@mail_set](https://space.bilibili.com/435654748)（[个人网站](https://mailset.top)）：上传CMCL至AUR仓库（名称为`cmcl`）
 
