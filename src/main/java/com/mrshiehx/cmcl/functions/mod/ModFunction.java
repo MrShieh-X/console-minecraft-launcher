@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,13 +48,13 @@ public class ModFunction implements Function {
     public final static Manager.DependencyInstaller MOD_CF_DEPENDENCY_INSTALLER = new Manager.DependencyInstaller() {
         @Override
         public void install(String mcVersion, String name, String id) {
-            downloadMod(new CurseForgeModManager().getDownloadLink(id, name, mcVersion, null, MOD_CF_DEPENDENCY_INSTALLER));
+            downloadMod(new CurseForgeModManager().getDownloadLink(id, name, mcVersion, null, false, MOD_CF_DEPENDENCY_INSTALLER));
         }
     };
     public final static Manager.DependencyInstaller MOD_MR_DEPENDENCY_INSTALLER = new Manager.DependencyInstaller() {
         @Override
         public void install(String mcVersion, String name, String id) {
-            downloadMod(new ModrinthModManager().getDownloadLink(id, name, mcVersion, null, MOD_MR_DEPENDENCY_INSTALLER));
+            downloadMod(new ModrinthModManager().getDownloadLink(id, name, mcVersion, null, false, MOD_MR_DEPENDENCY_INSTALLER));
         }
     };
 
@@ -148,7 +148,7 @@ public class ModFunction implements Function {
             String modName = mod.optString("name");
             if (todo == 0) {
                 int modId = mod.optInt("id");
-                String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), MOD_CF_DEPENDENCY_INSTALLER);
+                String modDownloadLink = cf.getDownloadLink(String.valueOf(modId), modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), false, MOD_CF_DEPENDENCY_INSTALLER);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
             } else if (todo == 1) {
@@ -162,7 +162,7 @@ public class ModFunction implements Function {
             String modName = result.modName, modID = result.modID;
 
             if (todo == 0) {
-                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), MOD_MR_DEPENDENCY_INSTALLER);
+                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), false, MOD_MR_DEPENDENCY_INSTALLER);
                 if (isEmpty(modDownloadLink)) return;
                 downloadMod(modDownloadLink);
             } else if (todo == 1) {

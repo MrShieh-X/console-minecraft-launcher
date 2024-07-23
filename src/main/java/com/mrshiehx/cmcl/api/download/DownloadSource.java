@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import java.util.*;
 public class DownloadSource {
     private static final DefaultApiProvider defaultApiProvider = new DefaultApiProvider();
     private static final BMCLApiProvider bmclApiProvider = new BMCLApiProvider();
-    private static final MCBBSApiProvider mcbbsApiProvider = new MCBBSApiProvider();
 
     public static DownloadApiProvider getProvider() {
         return getProvider(Utils.getConfig());
@@ -39,11 +38,10 @@ public class DownloadSource {
             List<Pair<String, Integer>> sources = new ArrayList<>(3);
             sources.add(0, new Pair<>(Utils.getString("DOWNLOAD_SOURCE_OFFICIAL"), 0));
             sources.add(1, new Pair<>(Utils.getString("DOWNLOAD_SOURCE_BMCLAPI"), 1));
-            sources.add(2, new Pair<>(Utils.getString("DOWNLOAD_SOURCE_MCBBS"), 2));
             for (Pair<String, Integer> pair : sources) {
                 System.out.printf("[%d]%s\n", pair.getValue(), pair.getKey());
             }
-            int defaultDownloadSource = CMCL.getLanguage().locale == Locale.CHINA ? 2 : 0;
+            int defaultDownloadSource = CMCL.getLanguage().locale == Locale.CHINA ? 1 : 0;
             int value = defaultDownloadSource;
             System.out.print(Utils.getString("MESSAGE_SELECT_DOWNLOAD_SOURCE", defaultDownloadSource));
             try {
@@ -56,8 +54,6 @@ public class DownloadSource {
         int s = config.optInt("downloadSource");
         if (s == 1) {
             return bmclApiProvider;
-        } else if (s == 2) {
-            return mcbbsApiProvider;
         } else {
             return defaultApiProvider;
         }

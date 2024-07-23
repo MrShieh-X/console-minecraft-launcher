@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,8 +119,7 @@ public abstract class AbstractFabricMerger implements ExtraMerger {
         if (fabricJSONOrigin == null) {
             throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_FAILED_TO_PARSE_TARGET_JSON", getModLoaderName()));
         }
-
-        if (fabricJSONOrigin.optString("message").equalsIgnoreCase("not found")) {
+        if (fabricJSONOrigin.optString("message").toLowerCase().contains("not found") || fabricJSONOrigin.optString("message").toLowerCase().contains("does not exist") || fabricJSONOrigin.optString("code").toLowerCase().contains("not_found")) {
             throw new ExceptionWithDescription(getString("INSTALL_MODLOADER_SELECT_NOT_FOUND_GAME_OR_TARGET_EXTRA").replace("${NAME}", getModLoaderName()));
         }
 

@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,17 +49,17 @@ public interface DownloadApiProvider {
 
     default String thirdPartyForge() {
         return "https://bmclapi2.bangbang93.com/forge/download";
-    }//https://bmclapi2.bangbang93.com/forge/download or https://download.mcbbs.net/forge/download
+    }//https://bmclapi2.bangbang93.com/forge/download
 
     String liteLoaderVersion();//http://dl.liteloader.com/versions/versions.json
 
     default String thirdPartyLiteLoaderDownload() {
         return "https://bmclapi2.bangbang93.com/liteloader/download";
-    }//https://bmclapi2.bangbang93.com/liteloader/download or https://download.mcbbs.net/liteloader/download
+    }//https://bmclapi2.bangbang93.com/liteloader/download
 
     default String thirdPartyOptiFine() {
         return "https://bmclapi2.bangbang93.com/optifine/";
-    }//https://bmclapi2.bangbang93.com/optifine/ or https://download.mcbbs.net/optifine/
+    }//https://bmclapi2.bangbang93.com/optifine/
 
     default String quiltMeta() {
         return "https://meta.quiltmc.org/";

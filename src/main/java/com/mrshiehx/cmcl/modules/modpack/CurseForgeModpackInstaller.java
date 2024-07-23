@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import com.mrshiehx.cmcl.functions.mod.ModpackFunction;
 import com.mrshiehx.cmcl.interfaces.Void;
 import com.mrshiehx.cmcl.modules.extra.fabric.FabricMerger;
 import com.mrshiehx.cmcl.modules.extra.forge.ForgeMerger;
+import com.mrshiehx.cmcl.modules.extra.quilt.QuiltMerger;
 import com.mrshiehx.cmcl.modules.version.VersionInstaller;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
@@ -93,6 +94,7 @@ public class CurseForgeModpackInstaller {
         VersionInstaller.InstallForgeOrFabricOrQuilt installForgeOrFabricOrQuilt = null;
         String modLoaderVersion;
         VersionInstaller.Merger mergerForFabric = null;
+        VersionInstaller.Merger mergerForQuilt = null;
         VersionInstaller.Merger mergerForForge = null;
         if (!isEmpty(modLoader)) {
             if (modLoader.startsWith("forge-") && modLoader.length() > 6) {
@@ -137,6 +139,22 @@ public class CurseForgeModpackInstaller {
                         return new Pair<>(false, null);
                     }
                 };
+            } else if (modLoader.startsWith("quilt-") && modLoader.length() > 6) {
+                installForgeOrFabricOrQuilt = VersionInstaller.InstallForgeOrFabricOrQuilt.QUILT;
+                modLoaderVersion = modLoader.substring(6);
+                String finalModLoaderVersion = modLoaderVersion;
+                mergerForQuilt = (minecraftVersion1, headJSONObject, minecraftJarFile, askContinue) -> {
+                    try {
+                        return new QuiltMerger().installInternal(minecraftVersion1, finalModLoaderVersion, headJSONObject);
+                    } catch (Exception e) {
+                        System.out.println(getString("EXCEPTION_INSTALL_MODPACK", e.getMessage()));
+                        FileUtils.deleteDirectory(versionDir);
+                        return new Pair<>(false, null);
+                    }
+                };
+            } else if (modLoader.startsWith("neoforge-") && modLoader.length() > 9) {
+                System.out.println(getString("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE"));
+                return;
             }
         }
 
@@ -213,7 +231,7 @@ public class CurseForgeModpackInstaller {
                 threadCount,
                 mergerForFabric,
                 mergerForForge,
-                null,
+                mergerForQuilt,
                 null,
                 null,
                 onFinished, null, null);

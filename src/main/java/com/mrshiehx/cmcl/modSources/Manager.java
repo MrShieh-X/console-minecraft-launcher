@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public abstract class Manager<Section> {
     public abstract Section getSection();
 
-    public abstract String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion, DependencyInstaller dependencyInstaller);
+    public abstract String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion, boolean isModpack, DependencyInstaller dependencyInstaller);
 
     protected abstract String getNameAllLowerCase();
 

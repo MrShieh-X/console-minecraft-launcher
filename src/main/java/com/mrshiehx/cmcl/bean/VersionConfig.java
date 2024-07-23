@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ public class VersionConfig {
         String qpServerAddress = null;
         for (String line : lines) {
             int indexOf = line.indexOf(":");
-            if (indexOf <= 0) continue;
+            if (indexOf <= 0) continue;//小于0的情况：若不存在:则返回-1
             String name = line.substring(0, indexOf);
             String value;
             Matcher matcher = Pattern.compile(name + ":\\s*(?<value>[\\s\\S]*)").matcher(line);

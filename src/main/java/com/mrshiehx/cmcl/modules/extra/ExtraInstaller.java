@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public abstract class ExtraInstaller {
 
     protected abstract ExtraMerger getExtraMerger();
 
-    protected abstract boolean checkInstalled(JSONObject gameJSON);
+    protected abstract boolean checkInstallable(JSONObject gameJSON);
 
     public boolean install(File jsonFile, File jarFile, @Nullable String extraVersion) {
         String fileContent;
@@ -59,7 +59,7 @@ public abstract class ExtraInstaller {
             return false;
         }
 
-        if (!checkInstalled(gameJSON))
+        if (!checkInstallable(gameJSON))
             return false;
 
 

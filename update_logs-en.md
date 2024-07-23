@@ -1,5 +1,11 @@
 # Update Logs
-Currently, the latest version is 2.2.1, which was updated on August 30, 2023.
+Currently, the latest version is 2.2.2, which was updated on July 24, 2024.
+
+## 2.2.2 (Jul. 24, 2024)
+- Removed the MCBBS download source, but it won't be removed from the special thanks list in order to thank it for its contribution to Minecraft.
+- To prevent the automatic redirection to the browser from failing, when logging into a Microsoft account, the link that should be opened using the browser will be displayed for the user to copy and open. ([Shapaper](https://github.com/Shapaper) in [Issue#34](https://github.com/MrShieh-X/console-minecraft-launcher/issues/34) and [BlockyDeer](https://github.com/BlockyDeer) in [Issue#40](https://github.com/MrShieh-X/console-minecraft-launcher/issues/40))
+- Optimized the multi-threaded downloader. When the number of files to be downloaded is less than or equal to the number of threads, only threads equal to the number of files will be created.
+- Fixed some issues.
 
 ## 2.2.1 (Aug. 30, 2023)
 - Solved the problem reported by [flemon-y](https://github.com/flemon-y) in [Issue#36](https://github.com/MrShieh-X/console-minecraft-launcher/issues/36).

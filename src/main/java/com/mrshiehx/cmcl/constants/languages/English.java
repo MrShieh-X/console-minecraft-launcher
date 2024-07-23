@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public class English implements Language {
         en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR", "authlib-injector support");
         en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI", "BMCLAPI download source provider");
         en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS.....................");
-        en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS", "MCBBS download source provider");
+        en.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS", "used to provide MCBBS download source");
         en.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_TITLE", "Disclaimer");
         en.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_CONTENT_1", "The copyright of Minecraft belongs to Mojang Studios and Microsoft. The software producer is not responsible for any copyright issues arising from the use of CMCL. Please support the official game.");
         en.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_CONTENT_2", "All consequences arising from the use of CMCL by the user shall be borne by the user himself. Any legal disputes and conflicts involving CMCL have nothing to do with the developer, and CMCL and the developer will not bear any responsibility.");
@@ -103,6 +103,7 @@ public class English implements Language {
         en.put("MESSAGE_INSTALL_MODPACK_UNKNOWN_TYPE", "Unable to install the modpack: Unknown modpack type.");
         en.put("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION", "Failed to install the modpack: Could not find the version of the game to install.");
         en.put("MESSAGE_INSTALL_MODPACK_COEXIST", "Failed to install the modpack: %1$s and %2$s cannot be installed at the same time.");
+        en.put("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE", "Sorry, this launcher does not support the installation of NeoForge at the moment, so this modpack cannot be installed.");
         en.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "This version is complete and does not need to be completed. If the version is indeed incomplete after checking, please reinstall the version.");
         en.put("MESSAGE_COMPLETED_VERSION", "Version completed successfully");
         en.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "Please select the download source for the first download (default is %d, stored as configuration \"downloadSource\"): ");
@@ -140,7 +141,7 @@ public class English implements Language {
         en.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "Unable to export the script file: Due to the length limit of the bat script file, the startup command is too long and cannot be exported as a bat file. You can only use \"version [<version>] --export-script-ps=<script file with .ps1 as the suffix>\" to export as a PowerShell script file.");
         en.put("MESSAGE_CONFIGURATIONS_TIP", "Note: For configurations whose type is Boolean, its value can be \"true\" which means \"yes\", or \"false\" which means \"no\".");
         en.put("MESSAGE_CONFIGURATIONS_TABLE_CONTENT", "accounts|JSON Array|Accounts (Non-direct modification, please use \"account -h\" to get the relevant tutorial for modification)\n" +
-                "downloadSource|Integer|Download source, 0 is the official, 1 is BMCLAPI, 2 is MCBBS\n" +
+                "downloadSource|Integer|Download source, 0 is the official, 1 is BMCLAPI\n" +
                 "language|Text|Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)\n" +
                 "selectedVersion|Text|Selected start version, you can directly use \"cmcl\" to start it\n" +
                 "maxMemory|Integer|[Game related] Maximum (Unit: MB)\n" +
@@ -201,7 +202,7 @@ public class English implements Language {
         en.put("ON_AUTHENTICATED_PAGE_TEXT", "Microsoft account authorization has been completed. Please close this page and back to the launcher to complete login.");
         en.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "Login Microsoft Account - Console Minecraft Launcher");
         en.put("CONSOLE_UNSUPPORTED_VALUE", "Unsupported value: %s");
-        en.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "Please login your Microsoft account in the browser,\nIf the login is successful, back to launcher and wait for the login to complete.\nIt will take some time to login, please be patient.");
+        en.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "Please login your Microsoft account in the browser, if there is no automatic redirect,\nplease manually copy the link to your browser:\n%s\nIf the login is successful, back to launcher and wait for the login to complete.\nIt will take some time to login, please be patient.");
         en.put("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE", "Server not responding");
         en.put("CONSOLE_FAILED_OPERATE", "Failed to operate: ");
         en.put("CONSOLE_FILE_EXISTS", "The file \"%s\" already exists");
@@ -333,6 +334,7 @@ public class English implements Language {
         en.put("VERSION_INFORMATION_LITELOADER_VERSION", "   LiteLoader Version:       ");
         en.put("VERSION_INFORMATION_OPTIFINE_VERSION", "   OptiFine Version:         ");
         en.put("VERSION_INFORMATION_QUILT_VERSION", "   Quilt Version:            ");
+        en.put("VERSION_INFORMATION_NEOFORGE_VERSION", "   NeoForge Version:         ");
         en.put("VERSION_INFORMATION_VERSION_TYPE", "   Version Type:             ");
         en.put("VERSION_INFORMATION_VERSION_TYPE_RELEASE", "Release");
         en.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "Snapshot");
@@ -350,7 +352,7 @@ public class English implements Language {
         en.put("CF_INPUT_VERSION", "Please select the ${NAME} version you want to download (%d-%d, cancel download if the value is -1): ");
         en.put("CF_STORAGE_FILE_EXISTS", "Please enter a directory to store the ${NAME} file: ");
         en.put("CF_NO_VERSION_FOR_GAME_VERSION", "There is no %s version available for this game version.");
-        en.put("CF_INFORMATION_NOTHING", "There is no information about this %s");
+        en.put("CF_INFORMATION_NOTHING", "There is no information to display about this %s");
         en.put("CF_INFORMATION_MOD_NAME", "   Mod Name:                      ");
         en.put("CF_INFORMATION_MOD_ID", "   Mod ID:                        ");
         en.put("CF_INFORMATION_MODPACK_NAME", "   Modpack Name:                  ");
@@ -398,7 +400,6 @@ public class English implements Language {
         en.put("NO_SEARCH_RESULTS", "No search results.");
         en.put("DOWNLOAD_SOURCE_OFFICIAL", "Official");
         en.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
-        en.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS");
         en.put("MODPACK_CONTAINS_TWO_OR_MORE", "Only one of --install, --info, --file or --url can exist.");
         en.put("MODPACK_CONTAINS_NOTHING", "Must specify --install, --info, --file or --url.");
         en.put("YES_SHORT", "Yes");

@@ -1,3 +1,21 @@
+/*
+ * Console Minecraft Launcher
+ * Copyright (C) 2021-2024  MrShiehX
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
 package com.mrshiehx.cmcl.utils.console;
 
 import com.mrshiehx.cmcl.utils.Utils;
@@ -120,17 +138,21 @@ public class TableUtils {
             } else {
                 if (value.tableChars[actualMaxLengths[i] - 1] instanceof TableHalfChar || value.tableChars[actualMaxLengths[i] - 1] instanceof TableFullCharRight) {
                     TableChar[] tableCharsTemp = new TableChar[actualMaxLengths[i]];
-                    for (int j = 0; j < actualMaxLengths[i]; j++) {//别替换成System.arraycopy，替换后看不懂
-                        tableCharsTemp[j] = value.tableChars[j];
-                    }
+                    //for (int j = 0; j < actualMaxLengths[i]; j++) {
+                    //    tableCharsTemp[j] = value.tableChars[j];
+                    //}
+                    if (actualMaxLengths[i] >= 0)
+                        System.arraycopy(value.tableChars, 0, tableCharsTemp, 0, actualMaxLengths[i]);
 
                     stringBuilder.append(new TableString(tableCharsTemp));
 
 
                     TableChar[] tableCharsTemp2 = new TableChar[value.length - actualMaxLengths[i]];
-                    for (int j = 0; j < value.length - actualMaxLengths[i]; j++) {//别替换成System.arraycopy，替换后看不懂
-                        tableCharsTemp2[j] = value.tableChars[j + actualMaxLengths[i]];
-                    }
+                    //for (int j = 0; j < value.length - actualMaxLengths[i]; j++) {
+                    //    tableCharsTemp2[j] = value.tableChars[j + actualMaxLengths[i]];
+                    //}
+                    if (value.length - actualMaxLengths[i] >= 0)
+                        System.arraycopy(value.tableChars, actualMaxLengths[i], tableCharsTemp2, 0, value.length - actualMaxLengths[i]);
 
 
                     rests[i] = new TableString(tableCharsTemp2);
@@ -138,16 +160,20 @@ public class TableUtils {
                     shouldPrintNext = true;
                 } else if (value.tableChars[actualMaxLengths[i] - 1] instanceof TableFullCharLeft) {
                     TableChar[] tableCharsTemp = new TableChar[actualMaxLengths[i] - 1];
-                    for (int j = 0; j < actualMaxLengths[i] - 1; j++) {//别替换成System.arraycopy，替换后看不懂
-                        tableCharsTemp[j] = value.tableChars[j];
-                    }
+                    //for (int j = 0; j < actualMaxLengths[i] - 1; j++) {
+                    //    tableCharsTemp[j] = value.tableChars[j];
+                    //}
+                    if (actualMaxLengths[i] - 1 >= 0)
+                        System.arraycopy(value.tableChars, 0, tableCharsTemp, 0, actualMaxLengths[i] - 1);
 
                     stringBuilder.append(new TableString(tableCharsTemp));
 
                     TableChar[] tableCharsTemp2 = new TableChar[value.length - (actualMaxLengths[i] - 1)];
-                    for (int j = 0; j < value.length - (actualMaxLengths[i] - 1); j++) {//别替换成System.arraycopy，替换后看不懂
-                        tableCharsTemp2[j] = value.tableChars[j + (actualMaxLengths[i] - 1)];
-                    }
+                    //for (int j = 0; j < value.length - (actualMaxLengths[i] - 1); j++) {
+                    //    tableCharsTemp2[j] = value.tableChars[j + (actualMaxLengths[i] - 1)];
+                    //}
+                    if (value.length - (actualMaxLengths[i] - 1) >= 0)
+                        System.arraycopy(value.tableChars, (actualMaxLengths[i] - 1), tableCharsTemp2, 0, value.length - (actualMaxLengths[i] - 1));
 
 
                     rests[i] = new TableString(tableCharsTemp2);

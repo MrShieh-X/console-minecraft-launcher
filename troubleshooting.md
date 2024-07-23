@@ -59,7 +59,6 @@ cmcl config proxyPassword <代理验证的密码>
 |-------------|---------------------------|---------------|
 | ds0         | config downloadSource 0   | 设置下载源为官方      |
 | ds1         | config downloadSource 1   | 设置下载源为BMCLAPI |
-| ds2         | config downloadSource 2   | 设置下载源为MCBBS   |
 | pon         | config proxyEnabled true  | 开启代理          |
 | poff        | config proxyEnabled false | 关闭代理          |
 | als         | account --list            | 列出所有账号        |

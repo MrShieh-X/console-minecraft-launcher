@@ -1,15 +1,15 @@
 {
-  "latestVersionName": "2.2.1",
-  "latestVersionCode": 21,
+  "latestVersionName": "2.2.2",
+  "latestVersionCode": 22,
   "latestVersionDownloadUrls": [
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.2.1/cmcl.jar",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.2.1/cmcl.exe",
-    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.2.1/cmcl",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.2.1/cmcl.jar",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.2.1/cmcl.exe",
-    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.2.1/cmcl"
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.2.2/cmcl.jar",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.2.2/cmcl.exe",
+    "https://github.com/MrShieh-X/console-minecraft-launcher/releases/download/2.2.2/cmcl",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.2.2/cmcl.jar",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.2.2/cmcl.exe",
+    "https://gitee.com/MrShiehX/console-minecraft-launcher/releases/download/2.2.2/cmcl"
   ],
-  "updateDate": "2023-08-30",
-  "updateContentEn": "- Solved the problem reported by flemon-y in Issue#36.\n- Fixed some issues.",
-  "updateContentZh": "- \u89e3\u51b3\u4e86\u7531 flemon-y \u4e8e Issue#36 \u63d0\u51fa\u7684\u95ee\u9898\u3002\n- \u4fee\u590d\u4e86\u4e00\u4e9b\u95ee\u9898\u3002"
+  "updateDate": "2024-07-24",
+  "updateContentEn": "- Removed the MCBBS download source, but it won't be removed from the special thanks list in order to thank it for its contribution to Minecraft.\n- To prevent the automatic redirection to the browser from failing, when logging into a Microsoft account, the link that should be opened using the browser will be displayed for the user to copy and open. (Shapaper in Issue#34 and BlockyDeer in Issue#40)\n- Optimized the multi-threaded downloader. When the number of files to be downloaded is less than or equal to the number of threads, only threads equal to the number of files will be created.\n- Fixed some issues.",
+  "updateContentZh": "- \u79fb\u9664\u4e86MCBBS\u4e0b\u8f7d\u6e90\uff0c\u4f46\u4e3a\u611f\u8c22\u5176\u66fe\u5bf9 Minecraft \u6240\u505a\u51fa\u7684\u8d21\u732e\uff0c\u5c06\u4e0d\u4f1a\u4ece\u7279\u522b\u9e23\u8c22\u540d\u5355\u4e2d\u5c06\u5b83\u9664\u53bb\u3002\n- \u4e3a\u9632\u6b62\u65e0\u6cd5\u81ea\u52a8\u8df3\u8f6c\u81f3\u6d4f\u89c8\u5668\uff0c\u767b\u5f55\u5fae\u8f6f\u8d26\u53f7\u65f6\u5c06\u4f1a\u663e\u793a\u5e94\u4f7f\u7528\u6d4f\u89c8\u5668\u6253\u5f00\u7684\u94fe\u63a5\u4ee5\u4f9b\u7528\u6237\u81ea\u884c\u590d\u5236\u6253\u5f00\u3002\uff08Shapaper \u4e8e Issue#34 \u4e0e BlockyDeer \u4e8e Issue#40\uff09\n- \u4f18\u5316\u4e86\u591a\u7ebf\u7a0b\u4e0b\u8f7d\u5668\uff0c\u5f53\u6240\u9700\u4e0b\u8f7d\u6587\u4ef6\u6570\u5c0f\u4e8e\u6216\u7b49\u4e8e\u7ebf\u7a0b\u6570\u65f6\uff0c\u5c06\u53ea\u4f1a\u521b\u5efa\u6570\u91cf\u4e0e\u6587\u4ef6\u6570\u76ee\u76f8\u540c\u7684\u7ebf\u7a0b\u3002\n- \u4fee\u590d\u4e86\u4e00\u4e9b\u95ee\u9898\u3002"
 }

@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,10 +60,11 @@ public class AccountFunction implements Function {
                 ArgumentRequirement.ofSingle("s"),
                 ArgumentRequirement.ofSingle("select"),
                 ArgumentRequirement.ofValue("s"),
+                ArgumentRequirement.ofValue("select"),
+                ArgumentRequirement.ofValue("n"),
                 ArgumentRequirement.ofValue("name"),
                 ArgumentRequirement.ofValue("address"),
                 ArgumentRequirement.ofValue("serverId"),
-                ArgumentRequirement.ofValue("select"),
                 ArgumentRequirement.ofValue("d"),
                 ArgumentRequirement.ofValue("delete"),
                 ArgumentRequirement.ofValue("cape"),
@@ -343,7 +344,7 @@ public class AccountFunction implements Function {
                     int loginMethod = account.optInt("loginMethod");
                     File file = new File(value);
                     if ((loginMethod == 1 && !account.optString("url").isEmpty())
-                            || (loginMethod == 2 && !account.optString("uuid").isEmpty() && !account.optString("url").isEmpty())
+                            || (loginMethod == 2 && !account.optString("uuid").isEmpty())
                             || (loginMethod == 3 && !account.optString("uuid").isEmpty() && !account.optString("serverId").isEmpty())) {
                         if (!file.exists())
                             SkinDownloader.start(file, account);

@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,6 +83,12 @@ public class VersionUtils {
                 }
                 if ("23w13a_or_b".equals(o2)) {
                     o2 = "23w13b";
+                }
+                if ("24w14potato".equals(o1)) {
+                    o1 = "24w14`";//有24w13a在24w14potato后，a的ascii码比`后
+                }
+                if ("24w14potato".equals(o2)) {
+                    o2 = "24w14`";//有24w13a在24w14potato后，a的ascii码比`后
                 }
                 int[] o1i = new int[]{Integer.parseInt(o1.substring(0, 2)), Integer.parseInt(o1.substring(3, 5)), (int) o1.charAt(5)};
                 int[] o2i = new int[]{Integer.parseInt(o2.substring(0, 2)), Integer.parseInt(o2.substring(3, 5)), (int) o2.charAt(5)};

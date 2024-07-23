@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -145,6 +145,9 @@ public class PrintVersionInfo {
             String quiltVersion = VersionModuleUtils.getQuiltVersion(head);
             if (!isEmpty(quiltVersion))
                 information.put(getString("VERSION_INFORMATION_QUILT_VERSION"), quiltVersion);
+            String neoForgeVersion = VersionModuleUtils.getNeoForgeVersion(head);
+            if (!isEmpty(neoForgeVersion))
+                information.put(getString("VERSION_INFORMATION_NEOFORGE_VERSION"), neoForgeVersion);
 
 
             System.out.println(versionName + ":");//legal

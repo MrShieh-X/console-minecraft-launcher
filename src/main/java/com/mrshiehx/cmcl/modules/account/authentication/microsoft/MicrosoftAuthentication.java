@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,8 +40,6 @@ public class MicrosoftAuthentication {
     public static final String ACCESS_TOKEN_URL = "https://login.live.com/oauth20_token.srf";
 
     public static JSONObject loginMicrosoftAccount() {
-        System.out.println(Utils.getString("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE"));
-
         MicrosoftAuthenticationServer server = null;
         try {
             server = getServer();
@@ -50,6 +48,7 @@ public class MicrosoftAuthentication {
 
         if (server != null) {
             String url = "https://login.live.com/oauth20_authorize.srf?client_id=" + CLIENT_ID + "&response_type=code&scope=XboxLive.signin+offline_access&prompt=select_account&redirect_uri=" + server.getRedirectURI();
+            System.out.println(Utils.getString("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", url));
             SystemUtils.openLink(url);
             try {
                 return onGotCode(server.getCode(), server.getRedirectURI());

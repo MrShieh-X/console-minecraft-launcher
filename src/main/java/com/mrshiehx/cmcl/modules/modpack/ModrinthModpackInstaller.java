@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 package com.mrshiehx.cmcl.modules.modpack;
 
+import com.mrshiehx.cmcl.CMCL;
 import com.mrshiehx.cmcl.bean.Pair;
 import com.mrshiehx.cmcl.exceptions.ExceptionWithDescription;
 import com.mrshiehx.cmcl.exceptions.MissingElementException;
@@ -77,6 +78,7 @@ public class ModrinthModpackInstaller {
         String forgeVersion = null;
         String fabricVersion = null;
         String quiltVersion = null;
+        String neoforgeVersion = null;
 
         for (Map.Entry<String, Object> entry : dependencies.toMap().entrySet()) {
             if (entry.getValue() instanceof String) {
@@ -95,6 +97,9 @@ public class ModrinthModpackInstaller {
                     case "quilt-loader":
                         quiltVersion = value;
                         break;
+                    case "neoforge":
+                        neoforgeVersion = value;
+                        break;
                     default:
                         System.out.println(getString("INSTALL_MODPACK_MODRINTH_UNKNOWN_MODLOADER", key));
                         break;
@@ -105,6 +110,11 @@ public class ModrinthModpackInstaller {
         if (isEmpty(gameVersion))
             throw new ModpackFunction.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
 
+
+        if (!Utils.isEmpty(neoforgeVersion)) {
+            System.out.println(CMCL.getString("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE"));
+            return -1;
+        }
 
         if (!isEmpty(forgeVersion) && !isEmpty(fabricVersion)) {
             System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Forge", "Fabric"));

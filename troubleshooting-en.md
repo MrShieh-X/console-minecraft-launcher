@@ -62,7 +62,6 @@ Combined with the actual usage of users, it is recommended to set the following 
 |----------------------------------------|---------------------------|-------------------------------------|
 | ds0                                    | config downloadSource 0   | Set the download source to official |
 | ds1                                    | config downloadSource 1   | Set the download source to BMCLAPI  |
-| ds2                                    | config downloadSource 2   | Set the download source to MCBBS    |
 | pon                                    | config proxyEnabled true  | Enable proxy                        |
 | poff                                   | config proxyEnabled false | Disable proxy                       |
 | als                                    | account --list            | List all accounts                   |

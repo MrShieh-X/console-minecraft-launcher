@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public class OptiFineInstaller extends ExtraInstaller {
     }
 
     @Override
-    protected boolean checkInstalled(JSONObject gameJSON) {
+    protected boolean checkInstallable(JSONObject gameJSON) {
         if (!Utils.isEmpty(VersionModuleUtils.getOptifineVersion(gameJSON))) {
             System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL", getExtraName()));
             return false;
@@ -50,6 +50,10 @@ public class OptiFineInstaller extends ExtraInstaller {
         }
         if (!Utils.isEmpty(VersionModuleUtils.getQuiltVersion(gameJSON))) {
             System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "Quilt"));
+            return false;
+        }
+        if (!Utils.isEmpty(VersionModuleUtils.getNeoForgeVersion(gameJSON))) {
+            System.out.println(getString("INSTALL_MODLOADER_ALREADY_INSTALL_ANOTHER_ONE", getExtraName(), "NeoForge"));
             return false;
         }
         return true;

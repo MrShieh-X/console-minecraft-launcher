@@ -1,11 +1,11 @@
 # Console Minecraft Launcher
 一个在命令行上运行的 Minecraft Java 版启动器
 
-[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.2.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2023--08--30-brightgreen)
+[![最新版本](https://img.shields.io/badge/%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-v2.2.2-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![发布日期](https://img.shields.io/badge/%E5%8F%91%E5%B8%83%E6%97%A5%E6%9C%9F-2024--07--24-brightgreen)
 ![软件需求](https://img.shields.io/badge/%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82-Java%208-blue)
 
-### [English README](README-en.md) | [更新日志](update_logs.md) | [疑难解答](troubleshooting.md)
+### [English README](README-en.md) | [更新日志](update_logs.md) | [疑难解答](troubleshooting.md) | [Kotlin 版](https://github.com/MrShieh-X/cmcl-kotlin)
 
 ## 🎬 视频教程
 中文：[\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/) <br/>
@@ -14,7 +14,6 @@
 
 ## 🏆 特别鸣谢
 - [@0xpte4r6](https://github.com/0xpte4r6)：开发部分功能
-- [@FZZkill](https://github.com/FZZkill)：帮助美化README
 - [@mail_set](https://space.bilibili.com/435654748)（[个人网站](https://mailset.top)）：上传CMCL至AUR仓库（名称为`cmcl`）
 
 ## 📕 使用教程
@@ -65,7 +64,7 @@ java -jar cmcl.jar
 | 配置名                     | 类型     | 含义                                                                                                      |
 |-------------------------|--------|---------------------------------------------------------------------------------------------------------|
 | accounts                | JSON数组 | 账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）                                                                  |
-| downloadSource          | 整数     | 下载源，0为官方，1为BMCLAPI，2为MCBBS                                                                              |
+| downloadSource          | 整数     | 下载源，0为官方，1为BMCLAPI                                                                                      |
 | language                | 文本     | 语言，zh为简体中文，en为英文，cantonese是粤语（简体）                                                                       |
 | selectedVersion         | 文本     | 已选择的版本，可直接使用“cmcl”进行启动                                                                                  |
 | maxMemory               | 整数     | [**游戏相关**]最大内存（单位：MB）                                                                                   |
@@ -134,7 +133,7 @@ MrShiehX 拥有该程序的版权。<br/>
 该软件在 [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) 下分发，附带附加条款。
 
     Console Minecraft Launcher
-    Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+    Copyright (C) 2021-2024  MrShiehX
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

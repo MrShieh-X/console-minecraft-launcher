@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -344,7 +344,7 @@ public class VersionFunction implements Function {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver, fabricApiVersion, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
+            String url = new ModrinthModManager().getDownloadLink("P7dR8mSH", "Fabric API", ver, fabricApiVersion, false, ModFunction.MOD_MR_DEPENDENCY_INSTALLER);
             if (!isEmpty(url)) {
                 ModFunction.downloadMod(url);
             }

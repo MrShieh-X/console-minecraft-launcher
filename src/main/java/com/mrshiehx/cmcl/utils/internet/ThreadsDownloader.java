@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,7 @@ import com.mrshiehx.cmcl.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.mrshiehx.cmcl.CMCL.getString;
 import static com.mrshiehx.cmcl.CMCL.isEmpty;
@@ -60,28 +57,27 @@ public class ThreadsDownloader {
     }
 
     public ThreadsDownloader(List<Pair<String, File>> files, Void onDownloaded, int totalThreadsCount, boolean deleteTargetFileIfExist) {
-        this.totalThreadsCount = totalThreadsCount;
-        this.maps = new HashMap<>();
-        for (int i = 0; i < totalThreadsCount; i++) {
-            maps.put(i, new LinkedList<>());
-        }
+        this.totalFilesCount = files.size();
         this.onDownloaded = onDownloaded;
         this.deleteTargetFileIfExist = deleteTargetFileIfExist;
-
-        this.totalFilesCount = files.size();
-        this.preMessage = "[%d/" + totalFilesCount + "]";
         if (totalFilesCount > 0) {
-            if (totalFilesCount <= 10) {
+            this.totalThreadsCount = Math.min(totalFilesCount, totalThreadsCount);
+            this.maps = new HashMap<>(this.totalThreadsCount);
+            for (int i = 0; i < this.totalThreadsCount; i++) {
+                maps.put(i, new LinkedList<>());
+            }
+            this.preMessage = "[%d/" + totalFilesCount + "]";
+            if (totalFilesCount <= totalThreadsCount) {//注意：不是this.totalThreadsCount
                 int i = 0;
                 for (Pair<String, File> entry : files) {
                     getMap(i).add(entry);
                     i++;
                 }
             } else {
-                int quotient = totalFilesCount / totalThreadsCount;
-                int remainder = totalFilesCount % totalThreadsCount;
+                int quotient = totalFilesCount / this.totalThreadsCount;
+                int remainder = totalFilesCount % this.totalThreadsCount;
 
-                for (int i = 0; i < totalThreadsCount; i++) {
+                for (int i = 0; i < this.totalThreadsCount; i++) {
                     List<Pair<String, File>> map = getMap(i);
                     int start = quotient * i;
                     for (int j = start; j < start + quotient; j++) {
@@ -90,8 +86,8 @@ public class ThreadsDownloader {
                     }
                 }
                 if (remainder > 0) {
-                    int start = quotient * totalThreadsCount;
-                    for (int i = 0; i < totalThreadsCount; i++) {
+                    int start = quotient * this.totalThreadsCount;
+                    for (int i = 0; i < this.totalThreadsCount; i++) {
                         List<Pair<String, File>> map = getMap(i);
                         int j = start + i;
                         if (j < totalFilesCount) {
@@ -101,12 +97,22 @@ public class ThreadsDownloader {
                     }
                 }
             }
+        } else {
+            this.totalThreadsCount = 0;
+            this.maps = Collections.emptyMap();
+            this.preMessage = "[%d/0]";
         }
     }
 
     public void start() {
+        if (totalFilesCount <= 0) {
+            started = true;
+            if (onDownloaded != null) {
+                onDownloaded.execute();
+            }
+        }
         if (started) return;
-        for (int i = 0; i < totalThreadsCount; i++) {
+        for (int i = 0; i < this.totalThreadsCount; i++) {
             int finalI = i;
             new Thread(() -> {
                 List<Pair<String, File>> map = getMap(finalI);
@@ -123,7 +129,7 @@ public class ThreadsDownloader {
 
                         doneAddOneFile();
                         //System.out.println(getString("MESSAGE_DOWNLOADING_FILE", url.substring(url.lastIndexOf('/') + 1)));
-                        //不知为何多线程读取MAP会出现读取不了的问题（直接输出MESSAGE_DOWNLOADING_FILE），所以直接输出文件名
+                        //不知为何多线程读取MAP会出现读取不了的问题（直接输出MESSAGE_DOWNLOADING_FILE（正在下载%s）），所以干脆直接输出文件名
                         System.out.println(String.format(preMessage, doneFilesCount) + url.substring(url.lastIndexOf('/') + 1));
                     } catch (IOException e) {
                         doneAddOneFile();
@@ -147,7 +153,7 @@ public class ThreadsDownloader {
             } catch (Exception ignore) {
 
             }
-            if (doneThreadsCount >= totalThreadsCount) {
+            if (doneThreadsCount >= this.totalThreadsCount) {
                 if (onDownloaded != null) {
                     onDownloaded.execute();
                 }

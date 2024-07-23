@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("MESSAGE_INSTALL_MODPACK_UNKNOWN_TYPE", "安装整合包失败：唔知整合包系咩类型。");
         cantonese.put("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION", "安装整合包失败：搵唔到要安装嘅游戏版本。");
         cantonese.put("MESSAGE_INSTALL_MODPACK_COEXIST", "安装整合包失败：%1$s 同 %2$s 唔容许同时安装。");
+        cantonese.put("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE", "唔好意思，本启动器暂时唔支持安装 NeoForge，将无法安装此整合包。");
         cantonese.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "呢个版本系完整嘅版本，唔需要去补全。若经检查版本的确系唔完整，请你手动重新安装呢个版本。");
         cantonese.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "首次下载要拣个下载源(默认系%d，存储为配置 downloadSource)：");
         cantonese.put("MESSAGE_SELECT_ACCOUNT", "请输入要拣嘅账号嘅序号(%d-%d)：");
@@ -79,7 +80,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件嘅长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
         cantonese.put("MESSAGE_CONFIGURATIONS_TIP", "注：类型为布尔值嘅配置，佢嘅值可以输入表示“是”嘅“true”，亦可以系表示“否”嘅“false”。");
         cantonese.put("MESSAGE_CONFIGURATIONS_TABLE_CONTENT", "accounts|JSON数组|账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n" +
-                "downloadSource|整数|下载源，0系官方，1系BMCLAPI，2系MCBBS\n" +
+                "downloadSource|整数|下载源，0系官方，1系BMCLAPI\n" +
                 "language|文本|语言，zh系简体中文，en系英文，cantonese系粤语（简体）\n" +
                 "selectedVersion|文本|已选择嘅版本，可以直接用“cmcl”进行启动\n" +
                 "maxMemory|整数|[游戏相关]最大内存（单位：MB）\n" +
@@ -123,7 +124,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("EXCEPTION_NETWORK_WRONG_PLEASE_CHECK_PROXY", "网络错误：如果唔系目标网站嘅问题，噉就可能系你嘅代理出现咗问题，请检查您嘅网络代理是否可用！");
         cantonese.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭呢个页面跟住返到启动器完成登录。");
         cantonese.put("CONSOLE_UNSUPPORTED_VALUE", "唔支持嘅值：%s");
-        cantonese.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请喺浏览器嗰度登录你嘅微软账户，\n登录成功嘅话，就返嚟呢度，等待完成登录。\n登录要一定嘅时间，唔该畀啲耐心。");
+        cantonese.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请喺浏览器嗰度登录你嘅微软账户，如果冇自动跳转，唔该手动复制呢个链接到浏览器打开：\n%s\n登录成功嘅话，就返嚟呢度，等待完成登录。\n登录要一定嘅时间，唔该畀啲耐心。");
         cantonese.put("CONSOLE_FILE_EXISTS", "文件“%s”已经喺度");
         cantonese.put("CONSOLE_INCORRECT_JAVA", "请通过 “config javaPath <Java路径>”或“version <版本> --config=javaPath <Java 路径>” 改一个啱嘅 Java 路径");
         cantonese.put("CONSOLE_NO_SELECTED_VERSION", "请使用“-s <版本名称>”拣一个版本嚟启动，或通过“cmcl <版本名称>”写埋版本名嚟启动。");
@@ -188,7 +189,7 @@ public class Cantonese extends SimplifiedChinese {
         cantonese.put("CF_INPUT_VERSION", "请拣下你要下载嘅${NAME}版本(%d-%d，-1系取消下载)：");
         cantonese.put("CF_STORAGE_FILE_EXISTS", "请输入一个存储呢个${NAME}文件嘅目录：");
         cantonese.put("CF_NO_VERSION_FOR_GAME_VERSION", "冇适用于呢个游戏版本嘅%s版本。");
-        cantonese.put("CF_INFORMATION_NOTHING", "冇任何关于呢个%s嘅信息");
+        cantonese.put("CF_INFORMATION_NOTHING", "冇任何关于呢个%s嘅可展示信息");
         cantonese.put("CF_INFORMATION_LATEST_GAME_VERSION", "   最新支持嘅游戏版本：");
         cantonese.put("CF_GET_BY_ID_FAILED", "无法获得目标${NAME}：%s\n出现呢个错误可能嘅原因：\n1.目标${NAME}唔存在\n2.网络异常\n3.服务器出现问题");
         cantonese.put("CF_GET_BY_ID_NOT_OF_MC", "目标游戏组件唔系 Minecraft 嘅${NAME}，呢个组件嘅游戏ID为%d。");

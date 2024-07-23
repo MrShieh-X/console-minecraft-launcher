@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import com.mrshiehx.cmcl.bean.arguments.ValueArgument;
 import com.mrshiehx.cmcl.utils.FileUtils;
 import com.mrshiehx.cmcl.utils.Utils;
 import com.mrshiehx.cmcl.utils.cmcl.version.VersionUtils;
-import com.mrshiehx.cmcl.utils.json.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -61,14 +60,14 @@ public class JVMArgsFunction implements Function {
             if (!versionConfigFile.exists()) {
                 try {
                     FileUtils.createFile(versionConfigFile, false);
+                    versionConfigJSONObject = new JSONObject();
                 } catch (IOException e) {
                     System.out.println(getString("EXCEPTION_CREATE_FILE_WITH_PATH", e));
                     return;
                 }
-                versionConfigJSONObject = new JSONObject();
             } else {
                 try {
-                    versionConfigJSONObject = JSONUtils.parseJSONObject(FileUtils.readFileContent(versionConfigFile));
+                    versionConfigJSONObject = new JSONObject(FileUtils.readFileContent(versionConfigFile));
                 } catch (Exception e) {
                     versionConfigJSONObject = new JSONObject();
                 }

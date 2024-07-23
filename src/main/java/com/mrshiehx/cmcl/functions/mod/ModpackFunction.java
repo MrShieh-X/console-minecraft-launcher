@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -185,7 +185,7 @@ public class ModpackFunction implements Function {
             String modpackName = mod.optString("name");
             if (todo == 0) {
                 int modId = mod.optInt("id");
-                String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), (x, y, z) -> {/*don't know what to do*/});
+                String modpackDownloadLink = cf.getDownloadLink(String.valueOf(modId), modpackName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), true, (x, y, z) -> {/*don't know what to do*/});
                 if (isEmpty(modpackDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
                 if (isEmpty(versionStorageName)) versionStorageName = InteractionUtils.inputStringInFilter(
@@ -209,7 +209,7 @@ public class ModpackFunction implements Function {
             String modName = result.modName, modID = result.modID;
 
             if (todo == 0) {
-                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), (x, y, z) -> {/*don't know what to do*/});
+                String modDownloadLink = mr.getDownloadLink(modID, modName, arguments.opt("game-version"), arguments.opt("v", arguments.opt("version")), true, (x, y, z) -> {/*don't know what to do*/});
                 if (isEmpty(modDownloadLink)) return;
                 String versionStorageName = arguments.opt("storage");
                 if (isEmpty(versionStorageName)) versionStorageName = InteractionUtils.inputStringInFilter(

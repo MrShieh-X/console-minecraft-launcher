@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +79,15 @@ public class VersionModuleUtils {
     public static String getForgeVersion(JSONObject head) {
         String first = getModuleVersion(head, "forge");
         if (!Utils.isEmpty(first)) return first;
+        JSONObject arguments = head.optJSONObject("arguments");
+        if (arguments != null) {
+            JSONArray game = arguments.optJSONArray("game");
+            if (game != null) {
+                int indexOf = game.toList().indexOf("--fml.forgeVersion");
+                if (indexOf >= 0 && indexOf + 1 < game.length())
+                    return game.optString(indexOf + 1);
+            }
+        }
         String version = null;
         String second = getModuleVersion(head, null, "net.minecraftforge:forge:");
         if (Utils.isEmpty(second)) {
@@ -109,5 +118,20 @@ public class VersionModuleUtils {
         String first = getModuleVersion(head, "quilt");
         if (!Utils.isEmpty(first)) return first;
         return getModuleVersion(head, "org.quiltmc.loader.impl.launch.knot.KnotClient", "org.quiltmc:quilt-loader:");
+    }
+
+    public static String getNeoForgeVersion(JSONObject head) {
+        String first = getModuleVersion(head, "neoforge");
+        if (!Utils.isEmpty(first)) return first;
+        JSONObject arguments = head.optJSONObject("arguments");
+        if (arguments != null) {
+            JSONArray game = arguments.optJSONArray("game");
+            if (game != null) {
+                int indexOf = game.toList().indexOf("--fml.neoForgeVersion");
+                if (indexOf >= 0 && indexOf + 1 < game.length())
+                    return game.optString(indexOf + 1);
+            }
+        }
+        return null;
     }
 }

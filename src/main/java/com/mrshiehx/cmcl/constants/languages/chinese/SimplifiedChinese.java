@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public class SimplifiedChinese implements Language {
         zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_AUTHLIB_INJECTOR", "authlib-injector 相关支持");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_BMCLAPI", "提供BMCLAPI下载源");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS_NAME", "MCBBS 我的世界中文论坛....");
-        zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS", "提供MCBBS下载源");
+        zh.put("MESSAGE_ABOUT_DESCRIPTION_SPECIAL_THANKS_MCBBS", "曾提供MCBBS下载源");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_TITLE", "免责声明");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_CONTENT_1", "Minecraft 版权归 Mojang Studios 与 Microsoft 所有，使用CMCL产生的所有版权问题，软件制作方概不负责，请支持正版。");
         zh.put("MESSAGE_ABOUT_DESCRIPTION_DISCLAIMER_CONTENT_2", "用户因使用CMCL而产生的一切后果由用户自己承担，任何涉及CMCL的法律纠纷与冲突与开发者无关，CMCL与开发者将不承担任何责任。");
@@ -104,6 +104,7 @@ public class SimplifiedChinese implements Language {
         zh.put("MESSAGE_INSTALL_MODPACK_UNKNOWN_TYPE", "安装整合包失败：未知整合包类型。");
         zh.put("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION", "安装整合包失败：找不到要安装的游戏版本。");
         zh.put("MESSAGE_INSTALL_MODPACK_COEXIST", "安装整合包失败：%1$s 和 %2$s 不能同时安装。");
+        zh.put("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE", "抱歉，本启动器暂时不支持安装 NeoForge，将无法安装此整合包。");
         zh.put("MESSAGE_COMPLETE_VERSION_IS_COMPLETE", "该版本为完整的版本，无需补全。若经检查版本的确不完整，请您手动重新安装该版本。");
         zh.put("MESSAGE_COMPLETED_VERSION", "补充版本成功");
         zh.put("MESSAGE_SELECT_DOWNLOAD_SOURCE", "首次下载请选择下载源(默认为%d，存储为配置 downloadSource)：");
@@ -141,7 +142,7 @@ public class SimplifiedChinese implements Language {
         zh.put("MESSAGE_EXPORT_COMMAND_EXCEEDS_LENGTH_LIMIT", "无法导出脚本文件：由于bat脚本文件的长度限制，启动命令过长，无法导出为bat文件，只能使用“version [<版本>] --export-script-ps=<以.ps1为后缀的脚本文件>”导出为 PowerShell 脚本文件。");
         zh.put("MESSAGE_CONFIGURATIONS_TIP", "注：类型为布尔值的配置，它的值可以输入表示“是”的“true”，也可以是表示“否”的“false”。");
         zh.put("MESSAGE_CONFIGURATIONS_TABLE_CONTENT", "accounts|JSON数组|账号（非直接修改，请通过“account -h”获得相关使用教程以进行修改）\n" +
-                "downloadSource|整数|下载源，0为官方，1为BMCLAPI，2为MCBBS\n" +
+                "downloadSource|整数|下载源，0为官方，1为BMCLAPI\n" +
                 "language|文本|语言，zh为简体中文，en为英文，cantonese是粤语（简体）\n" +
                 "selectedVersion|文本|已选择的版本，可直接使用“cmcl”进行启动\n" +
                 "maxMemory|整数|[游戏相关]最大内存（单位：MB）\n" +
@@ -202,7 +203,7 @@ public class SimplifiedChinese implements Language {
         zh.put("ON_AUTHENTICATED_PAGE_TEXT", "已完成微软账户授权，请关闭此页面并返回到启动器完成登录。");
         zh.put("WEB_TITLE_LOGIN_MICROSOFT_ACCOUNT_RESPONSE", "登录微软账户 - Console Minecraft Launcher");
         zh.put("CONSOLE_UNSUPPORTED_VALUE", "不支持的值：%s");
-        zh.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账户，\n如果登录成功，请返回到此处，等待完成登录。\n登录需要一定的时间，请耐心等待。");
+        zh.put("CONSOLE_LOGIN_MICROSOFT_WAIT_FOR_RESPONSE", "请在浏览器内登录您的微软账户，如果没有自动跳转，请手动复制该链接至浏览器：\n%s\n如果登录成功，请返回到此处，等待完成登录。\n登录需要一定的时间，请耐心等待。");
         zh.put("CONSOLE_FAILED_REFRESH_OFFICIAL_NO_RESPONSE", "服务器无响应");
         zh.put("CONSOLE_FAILED_OPERATE", "操作失败：");
         zh.put("CONSOLE_FILE_EXISTS", "文件“%s”已存在");
@@ -334,6 +335,7 @@ public class SimplifiedChinese implements Language {
         zh.put("VERSION_INFORMATION_LITELOADER_VERSION", "   LiteLoader 版本：");
         zh.put("VERSION_INFORMATION_OPTIFINE_VERSION", "   OptiFine 版本：  ");
         zh.put("VERSION_INFORMATION_QUILT_VERSION", "   Quilt 版本：     ");
+        zh.put("VERSION_INFORMATION_NEOFORGE_VERSION", "   NeoForge 版本：  ");
         zh.put("VERSION_INFORMATION_VERSION_TYPE", "   版本类型：       ");
         zh.put("VERSION_INFORMATION_VERSION_TYPE_RELEASE", "正式版");
         zh.put("VERSION_INFORMATION_VERSION_TYPE_SNAPSHOT", "快照版");
@@ -351,7 +353,7 @@ public class SimplifiedChinese implements Language {
         zh.put("CF_INPUT_VERSION", "请选择您要下载的${NAME}版本(%d-%d，-1为取消下载)：");
         zh.put("CF_STORAGE_FILE_EXISTS", "请输入一个存储该${NAME}文件的目录：");
         zh.put("CF_NO_VERSION_FOR_GAME_VERSION", "没有适用于此游戏版本的%s版本。");
-        zh.put("CF_INFORMATION_NOTHING", "无任何关于此%s的信息");
+        zh.put("CF_INFORMATION_NOTHING", "无任何关于此%s的可展示信息");
         zh.put("CF_INFORMATION_MOD_NAME", "   模组名称：          ");
         zh.put("CF_INFORMATION_MOD_ID", "   模组ID：            ");
         zh.put("CF_INFORMATION_MODPACK_NAME", "   整合包名称：        ");
@@ -399,7 +401,6 @@ public class SimplifiedChinese implements Language {
         zh.put("NO_SEARCH_RESULTS", "无任何搜索结果。");
         zh.put("DOWNLOAD_SOURCE_OFFICIAL", "官方");
         zh.put("DOWNLOAD_SOURCE_BMCLAPI", "BMCLAPI");
-        zh.put("DOWNLOAD_SOURCE_MCBBS", "MCBBS 我的世界中文论坛（中国大陆用户推荐）");
         zh.put("MODPACK_CONTAINS_TWO_OR_MORE", "--install、--info、--file 或 --url 只能存在一个。");
         zh.put("MODPACK_CONTAINS_NOTHING", "必须指定 --install、--info、--file 或 --url。");
         zh.put("YES_SHORT", "是");

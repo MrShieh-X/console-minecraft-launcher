@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -105,6 +105,8 @@ public class MultiMCModpackInstaller {
         String fabricVersion = null;
         String quiltVersion = null;
 
+        String neoforgeVersion = null;
+
         if (components != null) {
             for (Object o : components) {
                 if (o instanceof JSONObject) {
@@ -127,6 +129,9 @@ public class MultiMCModpackInstaller {
                             case "org.quiltmc.quilt-loader":
                                 quiltVersion = version;
                                 break;
+                            case "net.neoforged":
+                                neoforgeVersion = version;
+                                break;
                         }
                     }
                 }
@@ -138,6 +143,12 @@ public class MultiMCModpackInstaller {
             return -1;*/
             throw new ModpackFunction.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
         }
+
+        if (!Utils.isEmpty(neoforgeVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE"));
+            return -1;
+        }
+
         if (!isEmpty(forgeVersion) && !isEmpty(fabricVersion)) {
             System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Forge", "Fabric"));
             return -1;

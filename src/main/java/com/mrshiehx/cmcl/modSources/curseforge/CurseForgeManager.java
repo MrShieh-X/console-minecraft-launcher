@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
 
     protected abstract String getNameFirstUpperCase();
 
-    public String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion, Manager.DependencyInstaller dependencyInstaller) {
+    public String getDownloadLink(String modId, String modName, @Nullable String mcversion, @Nullable String addonVersion, boolean isModpack, Manager.DependencyInstaller dependencyInstaller) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             JSONObject jsonObject = new JSONObject(NetworkUtils.curseForgeGet(GET_ADDON_INFORMATION + modId + "/files?pageSize=10000"));
@@ -194,9 +194,9 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
 
             int modVersionOfSingleMcVersion = InteractionUtils.inputInt(getString("CF_INPUT_VERSION", 1, versions.size()).replace("${NAME}", getNameAllLowerCase()), 1, versions.size(), true, -1);
 
-            if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1)
+            if (modVersionOfSingleMcVersion == Integer.MAX_VALUE || modVersionOfSingleMcVersion == -1) {
                 return null;
-
+            }
             targetFile = versions.get(modVersionOfSingleMcVersion - 1);
         }
 
@@ -230,10 +230,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
                     String name = entry.getValue();
                     stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_ID", id)).append('\n');
                     if (!isEmpty(name)) {
-                        stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_NAME", name));
-                    }
-                    if (i + 1 < list.size()) {
-                        stringBuilder.append('\n');
+                        stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_NAME", name)).append('\n');
                     }
                     System.out.println(stringBuilder);//legal
                     i++;
@@ -243,7 +240,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
                 }
             }
         }
-        return targetFile.optString("downloadUrl");
+        return targetFile.optString("downloadUrl", String.format("https://edge.forgecdn.net/files/%d/%d/%s", targetFile.optInt("id") / 1000, targetFile.optInt("id") % 1000, targetFile.optString("fileName")));
     }
 
     @Override
@@ -410,7 +407,7 @@ public abstract class CurseForgeManager extends Manager<CurseForgeSection> {
         JSONObject logo = mod.optJSONObject("logo");
         if (logo != null) {
             String url = logo.optString("url");
-            if (!isEmpty(summary))
+            if (!isEmpty(url))
                 information.put(getString("CF_INFORMATION_ICON"), url);
         }
         JSONArray authorsJSONArray = mod.optJSONArray("authors");

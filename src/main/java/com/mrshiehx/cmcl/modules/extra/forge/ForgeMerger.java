@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -173,7 +173,6 @@ public class ForgeMerger implements ExtraMerger {
         String second = DownloadSource.getProvider().forgeMaven() + "net/minecraftforge/forge/" + s + "-" + minecraftVersion + "/" + fileName2;
 
         //https://bmclapi2.bangbang93.com/forge/download?mcversion=1.18.2&version=40.0.35&category=installer&format=jar
-        //https://download.mcbbs.net/forge/download?mcversion=1.18.2&version=40.0.1&category=installer&format=jar
 
 
         File installer = new File(CMCL.getCMCLWorkingDirectory(), "forge-" + s + ".jar");

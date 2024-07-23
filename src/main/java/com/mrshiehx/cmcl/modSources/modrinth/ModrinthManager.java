@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -291,7 +291,7 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
         return mod;
     }
 
-    public String getDownloadLink(String modID, String modName, @Nullable String mcversion, @Nullable String addonVersion, Manager.DependencyInstaller dependencyInstaller) {
+    public String getDownloadLink(String modID, String modName, @Nullable String mcversion, @Nullable String addonVersion, boolean isModpack, Manager.DependencyInstaller dependencyInstaller) {
         JSONArray modAllVersionsJsonArrayFather;
         try {
             modAllVersionsJsonArrayFather = new JSONArray(NetworkUtils.get(ROOT + "project/" + modID + "/version"));
@@ -397,46 +397,44 @@ public abstract class ModrinthManager extends Manager<ModrinthSection> {
 
             targetFile = versions.get(modVersionOfSingleMcVersion - 1);
         }
-
-        //System.out.println(targetFile.getValue());
-        JSONArray jsonArray = targetFile.getValue().optJSONArray("dependencies");
-        if (jsonArray != null && jsonArray.length() > 0) {
-            Map<String, String> list = new HashMap<>();
-            for (Object object : jsonArray) {
-                if (object instanceof JSONObject) {
-                    JSONObject jsonObject = (JSONObject) object;
-                    String dmodid = jsonObject.optString("project_id");
-                    String name = null;
-                    try {
-                        JSONObject head = getByID(dmodid);
-                        name = head.optString("title");
-                    } catch (Exception ignore) {
+        if (!isModpack) {
+            //System.out.println(targetFile.getValue());
+            JSONArray jsonArray = targetFile.getValue().optJSONArray("dependencies");
+            if (jsonArray != null && jsonArray.length() > 0) {
+                Map<String, String> list = new HashMap<>();
+                for (Object object : jsonArray) {
+                    if (object instanceof JSONObject) {
+                        JSONObject jsonObject = (JSONObject) object;
+                        String dmodid = jsonObject.optString("project_id");
+                        String name = null;
+                        try {
+                            JSONObject head = getByID(dmodid);
+                            name = head.optString("title");
+                        } catch (Exception ignore) {
+                        }
+                        if (!isEmpty(dmodid))
+                            list.put(dmodid, name);
                     }
-                    if (!isEmpty(dmodid))
-                        list.put(dmodid, name);
                 }
-            }
-            if (list.size() > 0) {
-                System.out.println();
-                System.out.println(getString("CF_DEPENDENCIES_TIP").replace("${NAME}", getNameAllLowerCase()));
-                int i = 0;
-                for (Map.Entry<String, String> entry : list.entrySet()) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String id = entry.getKey();
-                    String name = entry.getValue();
-                    stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_ID_STRING", id)).append('\n');
-                    if (!isEmpty(name)) {
-                        stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_NAME", name));
+                if (list.size() > 0) {
+                    System.out.println();
+                    System.out.println(getString("CF_DEPENDENCIES_TIP").replace("${NAME}", getNameAllLowerCase()));
+                    int i = 0;
+                    for (Map.Entry<String, String> entry : list.entrySet()) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        String id = entry.getKey();
+                        String name = entry.getValue();
+                        stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_ID_STRING", id)).append('\n');
+                        if (!isEmpty(name)) {
+                            stringBuilder.append(getString("CF_DEPENDENCY_INFORMATION_NAME", name)).append('\n');
+                        }
+                        System.out.println(stringBuilder);//legal
+                        i++;
                     }
-                    if (i + 1 < list.size()) {
-                        stringBuilder.append('\n');
+                    System.out.println();
+                    for (Map.Entry<String, String> entry : list.entrySet()) {
+                        dependencyInstaller.install(modSupportMinecraftVersion, entry.getValue(), entry.getKey());
                     }
-                    System.out.println(stringBuilder);//legal
-                    i++;
-                }
-                System.out.println();
-                for (Map.Entry<String, String> entry : list.entrySet()) {
-                    dependencyInstaller.install(modSupportMinecraftVersion, entry.getValue(), entry.getKey());
                 }
             }
         }

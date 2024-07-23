@@ -1,3 +1,21 @@
+/*
+ * Console Minecraft Launcher
+ * Copyright (C) 2021-2024  MrShiehX
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
 package com.mrshiehx.cmcl.utils.console;
 
 import com.mrshiehx.cmcl.utils.Utils;
@@ -12,24 +30,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PrintingUtils {
-    public static String oldNormalizeListItemsToText(List<String> list, boolean reserve) {
+    public static String oldNormalizeListItemsToText(List<String> list, boolean reverse) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append('[');
-        for (int i = reserve ? (list.size() - 1) : 0; reserve ? (i >= 0) : (i < list.size()); ) {
+        for (int i = reverse ? (list.size() - 1) : 0; reverse ? (i >= 0) : (i < list.size()); ) {
             String item = list.get(i);
             if (item.contains(" ")) item = "\"" + item + "\"";
             stringBuilder.append(item);//legal
             if (i > 0) {
                 stringBuilder.append(", ");
             }
-            if (reserve) i--;
+            if (reverse) i--;
             else i++;
         }
         stringBuilder.append(']');
         return stringBuilder.toString();
     }
 
-    public static String normalizeListItemsToText(List<String> items, boolean reserve, int columnsNumIfFullLineCannot, int separatingSpaceLength, boolean tryFullLine) {
+    public static String normalizeListItemsToText(List<String> items, boolean reverse, int columnsNumIfFullLineCannot, int separatingSpaceLength, boolean tryFullLine) {
         int windowWidth = 0;
         if (tryFullLine) {
             try (Terminal terminal = TerminalBuilder.terminal()) {
@@ -40,7 +58,7 @@ public class PrintingUtils {
             }
         }
         if (!tryFullLine) {
-            return normalizeListItemsToText(items, reserve, columnsNumIfFullLineCannot, separatingSpaceLength);
+            return normalizeListItemsToText(items, reverse, columnsNumIfFullLineCannot, separatingSpaceLength);
         }
         int i = 1;
         String previous = null;
@@ -48,7 +66,7 @@ public class PrintingUtils {
         int max = 0;
         while (max <= windowWidth) {
             previous = now;
-            now = normalizeListItemsToText(items, reserve, i++, separatingSpaceLength);
+            now = normalizeListItemsToText(items, reverse, i++, separatingSpaceLength);
             String[] split = now.split("\n");
             if (split.length == 1) {
                 return now;
@@ -61,14 +79,14 @@ public class PrintingUtils {
                 }
             }
         }
-        return previous != null ? previous : normalizeListItemsToText(items, reserve, columnsNumIfFullLineCannot, separatingSpaceLength);
+        return previous != null ? previous : normalizeListItemsToText(items, reverse, columnsNumIfFullLineCannot, separatingSpaceLength);
     }
 
-    public static String normalizeListItemsToText(List<String> items, boolean reserve, int columnsNum, int separatingSpaceLength) {
+    public static String normalizeListItemsToText(List<String> items, boolean reverse, int columnsNum, int separatingSpaceLength) {
         int[] maxLength = new int[columnsNum];
 
         items = items.stream().map(item -> item.contains(" ") ? ("\"" + item + "\"") : item).collect(Collectors.toList());
-        if (reserve) Collections.reverse(items);
+        if (reverse) Collections.reverse(items);
 
         for (int i = 0; i < items.size(); i++) {
             int itemLength = Utils.stringOccupiedSpacesLength(items.get(i));
@@ -95,12 +113,12 @@ public class PrintingUtils {
         return stringBuilder.toString();
     }
 
-    public static void printListItems(List<String> list, boolean reserved, int columnsNum, int separatingSpaceLength) {
-        System.out.println(normalizeListItemsToText(list, reserved, columnsNum, separatingSpaceLength));
+    public static void printListItems(List<String> list, boolean reversed, int columnsNum, int separatingSpaceLength) {
+        System.out.println(normalizeListItemsToText(list, reversed, columnsNum, separatingSpaceLength));
     }
 
-    public static void printListItems(List<String> list, boolean reserved, int columnsNum, int separatingSpaceLength, boolean tryFullLine) {
-        System.out.println(normalizeListItemsToText(list, reserved, columnsNum, separatingSpaceLength, tryFullLine));
+    public static void printListItems(List<String> list, boolean reversed, int columnsNum, int separatingSpaceLength, boolean tryFullLine) {
+        System.out.println(normalizeListItemsToText(list, reversed, columnsNum, separatingSpaceLength, tryFullLine));
     }
 
     public static void printTable(@Nullable String[] headers, int @NotNull [] lengthsRatio, boolean splitSymbolForItems, @Nullable String[]... items) {

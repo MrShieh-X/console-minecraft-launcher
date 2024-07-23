@@ -1,6 +1,6 @@
 /*
  * Console Minecraft Launcher
- * Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+ * Copyright (C) 2021-2024  MrShiehX
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,6 +85,7 @@ public class MCBBSModpackInstaller {
         String fabricVersion = null;
         String quiltVersion = null;//not sure
         String optifineVersion = null;
+        String neoforgeVersion = null;
         for (JSONObject addon : addons) {
             String id = addon.optString("id");
             String version = addon.optString("version");
@@ -107,11 +108,18 @@ public class MCBBSModpackInstaller {
                 case "optifine":
                     optifineVersion = version;
                     break;
+                case "neoforge":
+                    neoforgeVersion = version;
+                    break;
             }
         }
 
         if (isEmpty(gameVersion)) {
             throw new ModpackFunction.NotValidModPackFormat(getString("MESSAGE_INSTALL_MODPACK_NOT_FOUND_GAME_VERSION"));
+        }
+        if (!isEmpty(neoforgeVersion)) {
+            System.out.println(getString("MESSAGE_INSTALL_MODPACK_NOT_SUPPORTED_NEOFORGE"));
+            return -1;
         }
         if (!isEmpty(forgeVersion) && !isEmpty(fabricVersion)) {
             System.out.println(getString("MESSAGE_INSTALL_MODPACK_COEXIST", "Forge", "Fabric"));

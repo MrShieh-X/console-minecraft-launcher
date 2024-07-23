@@ -1,11 +1,11 @@
 # Console Minecraft Launcher
 A Minecraft Java Edition Launcher Running on the Command Line
 
-[![Latest Version](https://img.shields.io/badge/Release-v2.2.1-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
-![Release Date](https://img.shields.io/badge/Date-2023--08--30-brightgreen)
+[![Latest Version](https://img.shields.io/badge/Release-v2.2.2-brightgreen)](https://github.com/MrShieh-X/console-minecraft-launcher/releases)
+![Release Date](https://img.shields.io/badge/Date-2024--07--24-brightgreen)
 ![Software Requires](https://img.shields.io/badge/Software%20Requires-Java%208-blue)
 
-### [中文README](README.md) | [Update Logs](update_logs-en.md) | [Troubleshooting](troubleshooting-en.md)
+### [中文README](README.md) | [Update Logs](update_logs-en.md) | [Troubleshooting](troubleshooting-en.md) | [Kotlin Version](https://github.com/MrShieh-X/cmcl-kotlin)
 
 ## 🎬 Video Tutorial
 English: [\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
@@ -14,7 +14,6 @@ If you still have any problems after watching the video or using it, you can ref
 
 ## 🏆 Special Thanks
 - [@0xpte4r6](https://github.com/0xpte4r6): Developed some functions
-- [@FZZkill](https://github.com/FZZkill): Help to beautify the README
 - [@mail_set](https://space.bilibili.com/435654748) ([Personal Website](https://mailset.top)): Upload CMCL to AUR repository (named`cmcl`)
 
 ## 📕 Tutorial
@@ -65,7 +64,7 @@ Note: For configurations whose type is Boolean, its value can be `true` which me
 | Configuration Name      | Type        | Meaning                                                                                                                                                                                                                                                           |
 |-------------------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | accounts                | JSON Array  | Accounts (Non-direct modification, please use "account -h" to get the relevant tutorial for modification)                                                                                                                                                         |
-| downloadSource          | Integer     | Download source, 0 is the official, 1 is BMCLAPI, 2 is MCBBS                                                                                                                                                                                                      |
+| downloadSource          | Integer     | Download source, 0 is the official, 1 is BMCLAPI                                                                                                                                                                                                                  |
 | language                | Text        | Language, zh is Simplified Chinese, en is English and cantonese is Cantonese (Simplified)                                                                                                                                                                         |
 | selectedVersion         | Text        | Selected start version, you can directly use "cmcl" to start it                                                                                                                                                                                                   |
 | maxMemory               | Integer     | [**Game related**] Maximum (Unit: MB)                                                                                                                                                                                                                             |
@@ -134,7 +133,7 @@ Anyone can take advices of this program to us.
 The software is distributed under [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) with additional terms.
 
     Console Minecraft Launcher
-    Copyright (C) 2021-2023  MrShiehX <3553413882@qq.com>
+    Copyright (C) 2021-2024  MrShiehX
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
