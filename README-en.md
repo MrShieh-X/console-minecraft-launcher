@@ -8,7 +8,6 @@ A Minecraft Java Edition Launcher Running on the Command Line
 ### [中文README](README.md) | [Update Logs](update_logs-en.md) | [Troubleshooting](troubleshooting-en.md) | [Kotlin Version](https://github.com/MrShieh-X/cmcl-kotlin)
 
 ## 🎬 Video Tutorial
-English: [\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
 Chinese: [\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/)<br/>
 If you still have any problems after watching the video or using it, you can refer to [Troubleshooting](troubleshooting-en.md) or ask the author through the author's contact information found in [About Author](#-about-author).
 
@@ -159,7 +158,5 @@ You must <b>not</b> remove the copyright declaration displayed in the software. 
 MrShiehX<br/>
 - Bilibili:<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
-- Youtube:<br/>
-  [@MrShiehX](https://www.youtube.com/channel/UC03_vrWM8TfaU1k9VYVzW0A) <br/>
 
 ## If you find any bugs in CMCL, or have new ideas, please leave a message on Bilibili or raise an issue.
