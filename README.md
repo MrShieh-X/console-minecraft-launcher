@@ -8,8 +8,7 @@
 ### [English README](README-en.md) | [更新日志](update_logs.md) | [疑难解答](troubleshooting.md) | [Kotlin 版](https://github.com/MrShieh-X/cmcl-kotlin)
 
 ## 🎬 视频教程
-中文：[\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/) <br/>
-英语：[\[CMCL2.0\]MC Launcher operates by command, supports Microsoft login|authlib-injector|nide8auth|mod/modpack searching and installation|custom skin and cape](https://www.youtube.com/watch?v=Sqeu_Pahm-0) <br/>
+[\[CMCL2.0\]命令行版MC启动器, 支持正版登录|外置登录|统一通行证|模组/整合包搜索安装|自定义皮肤披风](https://www.bilibili.com/video/BV1bY411R7wa/) <br/>
 如果你观看完视频后或使用时仍然有任何问题，可以参考[疑难解答](troubleshooting.md)或通过在[关于作者](#-关于作者)中找到的作者联系信息向作者提出疑问。
 
 ## 🏆 特别鸣谢
@@ -159,7 +158,5 @@ MrShiehX 拥有该程序的版权。<br/>
 MrShiehX<br/>
 - 哔哩哔哩：<br/>
   [@MrShiehX](https://space.bilibili.com/323674091) <br/>
-- Youtube：<br/>
-  [@MrShiehX](https://www.youtube.com/channel/UC03_vrWM8TfaU1k9VYVzW0A) <br/>
 
 ## 如果您在CMCL发现任何BUG，或者有新的想法，欢迎在哔哩哔哩私信留言或提出 Issue
